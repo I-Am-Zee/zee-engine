@@ -1,0 +1,304 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Heading from "../components/primitives/Heading.astro";
+import Text from "../components/primitives/Text.astro";
+import Button from "../components/primitives/Button.astro";
+import Link from "../components/primitives/Link.astro";
+import Icon from "../components/primitives/Icon.astro";
+import Image from "../components/primitives/Image.astro";
+import Badge from "../components/primitives/Badge.astro";
+import Input from "../components/primitives/Input.astro";
+---
+
+<BaseLayout title="Design System Kitchen Sink | Zaviona">
+  <div class="mx-auto max-w-6xl px-4 py-12">
+    <!-- Page Header -->
+    <div class="mb-12 border-b border-[var(--color-border-subtle)] pb-8">
+      <Heading as="h1" class="mb-4">Design System Kitchen Sink</Heading>
+      <Text variant="lead">
+        A comprehensive showcase of all primitive components in the Zaviona e-commerce design
+        system, built with Astro, TailwindCSS, and atomic design principles.
+      </Text>
+    </div>
+
+    <!-- Typography Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Typography</Heading>
+
+      <div class="space-y-6">
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Headings (Fraunces Font)</Text>
+          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+            <Heading as="h1">Heading 1 - The Quick Brown Fox</Heading>
+            <Heading as="h2">Heading 2 - The Quick Brown Fox</Heading>
+            <Heading as="h3">Heading 3 - The Quick Brown Fox</Heading>
+            <Heading as="h4">Heading 4 - The Quick Brown Fox</Heading>
+            <Heading as="h5">Heading 5 - The Quick Brown Fox</Heading>
+            <Heading as="h6">Heading 6 - The Quick Brown Fox</Heading>
+          </div>
+        </div>
+
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Text Variants (Plus Jakarta Sans)</Text>
+          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+            <div>
+              <Text variant="caption" class="mb-1">Lead Paragraph:</Text>
+              <Text variant="lead">
+                This is a lead paragraph with larger text, perfect for introducing sections or
+                highlighting important content.
+              </Text>
+            </div>
+            <div>
+              <Text variant="caption" class="mb-1">Default Paragraph:</Text>
+              <Text>
+                This is default body text using Plus Jakarta Sans. It provides excellent readability
+                for e-commerce content, product descriptions, and general website copy.
+              </Text>
+            </div>
+            <div>
+              <Text variant="caption">
+                This is caption text, smaller and muted, ideal for timestamps, metadata, or
+                supplementary information.
+              </Text>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buttons Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Buttons</Heading>
+
+      <div class="space-y-8">
+        <!-- Button Types -->
+        {
+          ["primary", "secondary", "neutral", "ghost"].map((type) => (
+            <div>
+              <Text variant="caption" class="mb-3 uppercase">
+                {type} Buttons
+              </Text>
+              <div class="flex flex-wrap items-center gap-4 rounded-lg bg-[var(--color-surface)] p-6">
+                {["sm", "md", "lg"].map((size) => (
+                  <>
+                    <Button type={type as any} size={size as any}>
+                      {size.toUpperCase()} Button
+                    </Button>
+                    <Button type={type as any} size={size as any} variant="icon-left">
+                      <Icon name="check" />
+                      With Icon
+                    </Button>
+                    <Button type={type as any} size={size as any} variant="icon-right">
+                      Next
+                      <Icon name="chevron-down" />
+                    </Button>
+                    <Button type={type as any} size={size as any} variant="icon-only">
+                      <Icon name="cart" />
+                    </Button>
+                  </>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+
+        <!-- Disabled State -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Disabled State</Text>
+          <div class="flex flex-wrap gap-4 rounded-lg bg-[var(--color-surface)] p-6">
+            <Button disabled>Disabled Primary</Button>
+            <Button type="secondary" disabled>Disabled Secondary</Button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Links Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Links</Heading>
+      <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+        <Text>
+          This paragraph contains a <Link href="#" variant="plain">plain inline link</Link> that inherits
+          the font size of its parent and transitions smoothly on hover.
+        </Text>
+        <Text>
+          This paragraph contains an{" "}
+          <Link href="#" variant="underline">underlined inline link</Link> with skip-ink decoration for
+          better readability.
+        </Text>
+      </div>
+    </section>
+
+    <!-- Icons Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Icons</Heading>
+      <div class="space-y-4">
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Icon Examples</Text>
+          <div class="flex flex-wrap items-center gap-6 rounded-lg bg-[var(--color-surface)] p-6">
+            <div class="flex items-center gap-2">
+              <Icon name="search" />
+              <Text>Search</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <Icon name="cart" />
+              <Text>Cart</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <Icon name="check" />
+              <Text>Check</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <Icon name="chevron-down" />
+              <Text>Chevron</Text>
+            </div>
+          </div>
+        </div>
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Icon Sizes (inherits from text size)</Text>
+          <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
+            <p class="flex items-center gap-2 text-sm font-sans text-[var(--color-text-main)]">
+              <Icon name="cart" /> Small text with icon
+            </p>
+            <p class="flex items-center gap-2 text-base font-sans text-[var(--color-text-main)]">
+              <Icon name="cart" /> Base text with icon
+            </p>
+            <p class="flex items-center gap-2 text-lg font-sans text-[var(--color-text-main)]">
+              <Icon name="cart" /> Large text with icon
+            </p>
+            <p class="flex items-center gap-2 text-2xl font-sans text-[var(--color-text-main)]">
+              <Icon name="cart" /> 2XL text with icon
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Images Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Images</Heading>
+      <Text variant="caption" class="mb-3 uppercase">Aspect Ratios</Text>
+      <div class="grid gap-6 sm:grid-cols-3">
+        <div>
+          <Image
+            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400"
+            alt="Product demo - Portrait"
+            ratio="portrait"
+          />
+          <Text variant="caption" class="mt-2 text-center">Portrait (4:5)</Text>
+        </div>
+        <div>
+          <Image
+            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400"
+            alt="Product demo - Square"
+            ratio="square"
+          />
+          <Text variant="caption" class="mt-2 text-center">Square (1:1)</Text>
+        </div>
+        <div>
+          <Image
+            src="https://images.unsplash.com/photo--1491553895911-0055eca6402d?w=400"
+            alt="Product demo - Landscape"
+            ratio="landscape"
+          />
+          <Text variant="caption" class="mt-2 text-center">Landscape (16:9)</Text>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Badges</Heading>
+      <div class="space-y-4">
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Small Badges (for cart counts)</Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-[var(--color-surface)] p-6">
+            <Badge size="sm" intent="surface">New</Badge>
+            <Badge size="sm" intent="primary">Sale</Badge>
+            <Badge size="sm" intent="accent">Hot</Badge>
+            <Badge size="sm" intent="outline">3</Badge>
+          </div>
+        </div>
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Medium Badges (for product labels)</Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-[var(--color-surface)] p-6">
+            <Badge size="md" intent="surface">In Stock</Badge>
+            <Badge size="md" intent="primary">Bestseller</Badge>
+            <Badge size="md" intent="accent">Limited</Badge>
+            <Badge size="md" intent="outline">Featured</Badge>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs Section -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Inputs</Heading>
+      <div class="space-y-4">
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Normal State</Text>
+          <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
+            <Input type="text" placeholder="Enter your name" />
+            <Input type="email" placeholder="Enter your email" />
+            <Input type="password" placeholder="Enter your password" />
+          </div>
+        </div>
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Error State</Text>
+          <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
+            <Input type="email" placeholder="invalid@email" error={true} />
+            <Text variant="caption" class="text-red-500">Please enter a valid email address</Text>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color System Reference -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">Color System (Greyscale)</Heading>
+      <div class="space-y-6">
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Brand Actions</Text>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
+              <div class="mb-2 h-16 rounded bg-[var(--color-primary)]"></div>
+              <Text variant="caption">Primary (#0f172a)</Text>
+            </div>
+            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
+              <div class="mb-2 h-16 rounded bg-[var(--color-secondary)]"></div>
+              <Text variant="caption">Secondary (#e2e8f0)</Text>
+            </div>
+            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
+              <div class="mb-2 h-16 rounded bg-[var(--color-ghost-hover)]"></div>
+              <Text variant="caption">Ghost Hover (#f1f5f9)</Text>
+            </div>
+          </div>
+        </div>
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Surfaces</Text>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
+              <div class="mb-2 h-16 rounded border bg-[var(--color-background)]"></div>
+              <Text variant="caption">Background (#ffffff)</Text>
+            </div>
+            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
+              <div class="mb-2 h-16 rounded bg-[var(--color-surface)]"></div>
+              <Text variant="caption">Surface (#f8fafc)</Text>
+            </div>
+            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
+              <div class="mb-2 h-16 rounded bg-[var(--color-surface-muted)]"></div>
+              <Text variant="caption">Surface Muted (#f1f5f9)</Text>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-[var(--color-border-subtle)] pt-8 text-center">
+      <Text variant="caption">
+        Design System for Zaviona E-commerce | Built with Astro, TailwindCSS & Atomic Design
+      </Text>
+    </footer>
+  </div>
+</BaseLayout>
