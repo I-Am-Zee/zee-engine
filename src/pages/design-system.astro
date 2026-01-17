@@ -8,6 +8,17 @@ import Icon from "../components/primitives/Icon.astro";
 import Image from "../components/primitives/Image.astro";
 import Badge from "../components/primitives/Badge.astro";
 import Input from "../components/primitives/Input.astro";
+
+// UI Molecules
+import PriceTag from "../components/ui/PriceTag.astro";
+import QuantitySelector from "../components/ui/QuantitySelector.astro";
+import SearchInput from "../components/ui/SearchInput.astro";
+import RatingStars from "../components/ui/RatingStars.astro";
+import Breadcrumbs from "../components/ui/Breadcrumbs.astro";
+import FormField from "../components/ui/FormField.astro";
+import Alert from "../components/ui/Alert.astro";
+import MenuToggle from "../components/ui/MenuToggle.astro";
+import Pagination from "../components/ui/Pagination.astro";
 ---
 
 <BaseLayout title="Design System Kitchen Sink | Zaviona">
@@ -288,6 +299,164 @@ import Input from "../components/primitives/Input.astro";
             <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
               <div class="mb-2 h-16 rounded bg-[var(--color-surface-muted)]"></div>
               <Text variant="caption">Surface Muted (#f1f5f9)</Text>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Molecules (UI) Section -->
+    <section class="mb-16">
+      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+        <Heading as="h2" class="mb-2">Molecules (UI)</Heading>
+        <Text variant="caption">
+          Composed components built using Primitives. These follow the headless pattern where logic lives in TypeScript and UI binds to it.
+        </Text>
+      </div>
+
+      <div class="space-y-8">
+        <!-- PriceTag -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">PriceTag</Text>
+          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-[var(--color-surface)] p-6">
+            <div>
+              <Text variant="caption" class="mb-2">Regular Price:</Text>
+              <PriceTag price={2500} />
+            </div>
+            <div>
+              <Text variant="caption" class="mb-2">Sale Price (20% off):</Text>
+              <PriceTag price={2500} salePrice={2000} />
+            </div>
+            <div>
+              <Text variant="caption" class="mb-2">Big Discount (50% off):</Text>
+              <PriceTag price={5000} salePrice={2500} />
+            </div>
+          </div>
+        </div>
+
+        <!-- QuantitySelector -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">QuantitySelector (Headless)</Text>
+          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-[var(--color-surface)] p-6">
+            <div>
+              <Text variant="caption" class="mb-2">Default (1-99):</Text>
+              <QuantitySelector />
+            </div>
+            <div>
+              <Text variant="caption" class="mb-2">Custom Range (1-5):</Text>
+              <QuantitySelector min={1} max={5} initial={3} />
+            </div>
+          </div>
+        </div>
+
+        <!-- SearchInput -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">SearchInput</Text>
+          <div class="max-w-md rounded-lg bg-[var(--color-surface)] p-6">
+            <SearchInput placeholder="Search products..." />
+          </div>
+        </div>
+
+        <!-- RatingStars -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">RatingStars</Text>
+          <div class="flex flex-wrap items-center gap-6 rounded-lg bg-[var(--color-surface)] p-6">
+            <div class="flex items-center gap-2">
+              <RatingStars rating={5} />
+              <Text variant="caption">5.0</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <RatingStars rating={4} />
+              <Text variant="caption">4.0</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <RatingStars rating={3.5} />
+              <Text variant="caption">3.5</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <RatingStars rating={2} />
+              <Text variant="caption">2.0</Text>
+            </div>
+            <div class="flex items-center gap-2">
+              <RatingStars rating={0} />
+              <Text variant="caption">0.0</Text>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breadcrumbs -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Breadcrumbs</Text>
+          <div class="rounded-lg bg-[var(--color-surface)] p-6">
+            <Breadcrumbs
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Products", href: "/products" },
+                { label: "Accessories", href: "/products/accessories" },
+                { label: "Watch" },
+              ]}
+            />
+          </div>
+        </div>
+
+        <!-- FormField -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">FormField</Text>
+          <div class="grid gap-6 rounded-lg bg-[var(--color-surface)] p-6 sm:grid-cols-2">
+            <FormField label="Email Address" name="email" placeholder="you@example.com" />
+            <FormField
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              error="Password must be at least 8 characters"
+            />
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Alert</Text>
+          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+            <Alert intent="info" title="Information">
+              <Text as="span" variant="caption">Your order has been received and is being processed.</Text>
+            </Alert>
+            <Alert intent="warning" title="Warning">
+              <Text as="span" variant="caption">Only 3 items left in stock!</Text>
+            </Alert>
+            <Alert intent="success" title="Success">
+              <Text as="span" variant="caption">Your payment was successful. Thank you for your order!</Text>
+            </Alert>
+          </div>
+        </div>
+
+        <!-- MenuToggle -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">MenuToggle (Headless)</Text>
+          <div class="rounded-lg bg-[var(--color-surface)] p-6">
+            <MenuToggle label="Navigation menu">
+              <div class="w-48 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] p-2 shadow-lg">
+                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Dashboard</a>
+                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Products</a>
+                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Orders</a>
+                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Settings</a>
+              </div>
+            </MenuToggle>
+            <Text variant="caption" class="mt-2">Click the hamburger icon to toggle the dropdown menu.</Text>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Pagination</Text>
+          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+            <div>
+              <Text variant="caption" class="mb-2">Few Pages:</Text>
+              <Pagination currentPage={2} totalPages={5} />
+            </div>
+            <div>
+              <Text variant="caption" class="mb-2">Many Pages (with ellipsis):</Text>
+              <Pagination currentPage={5} totalPages={20} />
             </div>
           </div>
         </div>
