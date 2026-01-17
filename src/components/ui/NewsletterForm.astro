@@ -1,0 +1,32 @@
+---
+/**
+ * NewsletterForm - Email subscription form
+ * Responsive layout: side-by-side on desktop, stacked on mobile
+ */
+
+import Input from "../primitives/Input.astro";
+import Button from "../primitives/Button.astro";
+
+interface Props {
+  placeholder?: string;
+  buttonText?: string;
+  class?: string;
+}
+
+const { placeholder = "Your email...", buttonText = "Subscribe", class: className, ...rest } = Astro.props;
+---
+
+<form
+  class:list={["flex flex-col gap-3 sm:flex-row sm:gap-2", className]}
+  {...rest}
+>
+  <Input
+    type="email"
+    name="email"
+    placeholder={placeholder}
+    class="flex-1"
+  />
+  <Button type="primary">
+    {buttonText}
+  </Button>
+</form>

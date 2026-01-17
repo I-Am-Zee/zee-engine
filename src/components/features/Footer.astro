@@ -1,0 +1,99 @@
+---
+/**
+ * Footer - Main site footer
+ * Responsive grid: 1 column mobile, 4 columns desktop
+ */
+
+import Logo from "../primitives/Logo.astro";
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+import Link from "../primitives/Link.astro";
+import SocialLinks from "../ui/SocialLinks.astro";
+import NewsletterForm from "../ui/NewsletterForm.astro";
+import { navigation, supportLinks } from "../../config/navigation";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+// Get shop categories from navigation
+const shopNav = navigation.find((item) => item.label === "Shop");
+const shopCategories = shopNav?.items || [];
+---
+
+<footer
+  class:list={[
+    "border-t border-[var(--color-border-subtle)] bg-[var(--color-surface)]",
+    className,
+  ]}
+  {...rest}
+>
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      {/* Brand Column */}
+      <div class="space-y-4">
+        <Logo variant="full" />
+        <Text variant="caption" class="max-w-xs">
+          Handcrafted celestial jewelry for those who seek to adorn themselves with the beauty of the cosmos.
+        </Text>
+        <SocialLinks orientation="horizontal" />
+      </div>
+
+      {/* Shop Column */}
+      <div>
+        <Heading as="h6" class="mb-4">Shop</Heading>
+        <ul class="space-y-2">
+          {shopCategories.map((item) => (
+            <li>
+              <Link href={item.href} variant="plain" class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Support Column */}
+      <div>
+        <Heading as="h6" class="mb-4">Support</Heading>
+        <ul class="space-y-2">
+          {supportLinks.map((item) => (
+            <li>
+              <Link href={item.href} variant="plain" class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Newsletter Column */}
+      <div>
+        <Heading as="h6" class="mb-4">Join the Celestial Club</Heading>
+        <Text variant="caption" class="mb-4">
+          Subscribe to get exclusive offers, new arrivals, and celestial inspirations.
+        </Text>
+        <NewsletterForm />
+      </div>
+    </div>
+
+    {/* Bottom Bar */}
+    <div class="mt-12 border-t border-[var(--color-border-subtle)] pt-8">
+      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <Text variant="caption">
+          © {new Date().getFullYear()} Zaviona. All rights reserved.
+        </Text>
+        <div class="flex gap-4">
+          <Link href="/privacy" variant="plain" class="text-xs text-[var(--color-text-muted)]">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" variant="plain" class="text-xs text-[var(--color-text-muted)]">
+            Terms of Service
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

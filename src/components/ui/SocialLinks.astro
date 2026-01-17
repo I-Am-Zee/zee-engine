@@ -1,0 +1,44 @@
+---
+/**
+ * SocialLinks - Social media icon links
+ * Reusable in Footer and Mobile Drawer
+ */
+
+import Icon from "../primitives/Icon.astro";
+import Link from "../primitives/Link.astro";
+
+interface Props {
+  orientation?: "horizontal" | "vertical";
+  class?: string;
+}
+
+const { orientation = "horizontal", class: className, ...rest } = Astro.props;
+
+// Social platform configuration
+const socialPlatforms = [
+  { name: "instagram", href: "https://instagram.com/zaviona", label: "Follow us on Instagram" },
+  { name: "pinterest", href: "https://pinterest.com/zaviona", label: "Follow us on Pinterest" },
+  { name: "whatsapp", href: "https://wa.me/919999999999", label: "Chat on WhatsApp" },
+];
+
+const layoutClasses = orientation === "horizontal" 
+  ? "flex-row gap-4" 
+  : "flex-col gap-3";
+---
+
+<div
+  class:list={["flex items-center", layoutClasses, className]}
+  {...rest}
+>
+  {socialPlatforms.map((platform) => (
+    <a
+      href={platform.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={platform.label}
+      class="text-[var(--color-text-muted)] transition-colors duration-200 hover:text-[var(--color-text-main)]"
+    >
+      <Icon name={platform.name} class="h-5 w-5" />
+    </a>
+  ))}
+</div>

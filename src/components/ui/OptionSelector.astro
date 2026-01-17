@@ -43,7 +43,7 @@ const defaultSelected = selected || (options.length > 0 ? options[0] : "");
         <span
           class="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2"
           x-bind:class={`selected === '${option}'
-            ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+            ? 'border-[var(--color-primary)] bg-[var(--color-surface)] text-[var(--color-text-main)] ring-2 ring-[var(--color-primary)] ring-offset-1 shadow-md'
             : 'border-[var(--color-border-subtle)] bg-[var(--color-background)] text-[var(--color-text-main)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)]'`}
         >
           {option}

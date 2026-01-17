@@ -21,6 +21,9 @@ import MenuToggle from "../components/ui/MenuToggle.astro";
 import Pagination from "../components/ui/Pagination.astro";
 import OptionSelector from "../components/ui/OptionSelector.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
+
+// Organisms (Features)
+import Footer from "../components/features/Footer.astro";
 ---
 
 <BaseLayout title="Design System Kitchen Sink | Zaviona">
@@ -524,6 +527,41 @@ import EmptyState from "../components/ui/EmptyState.astro";
               />
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Organisms Section -->
+    <section class="mb-16">
+      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+        <Heading as="h2" class="mb-2">Organisms (Features)</Heading>
+        <Text variant="caption">
+          Complex, reusable features composed of multiple molecules. These are major site sections.
+        </Text>
+      </div>
+
+      <div class="space-y-8">
+        <!-- Footer Demo -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Footer</Text>
+          <Text variant="caption" class="mb-4">
+            4-column responsive footer with brand info, navigation, support links, and newsletter signup.
+          </Text>
+          <div class="-mx-4 rounded-lg border border-[var(--color-border-subtle)] overflow-hidden">
+            <Footer />
+          </div>
+        </div>
+
+        <!-- Navbar Note -->
+        <div class="rounded-lg bg-[var(--color-surface)] p-6">
+          <Text variant="caption" class="uppercase mb-2">Navbar</Text>
+          <Alert intent="info" title="Navbar Component Ready">
+            <Text as="span" variant="caption">
+              The Navbar component is implemented at `src/components/features/Navbar.astro`. 
+              It includes desktop navigation with dropdowns and a mobile slide-over drawer with exclusive accordion menu. 
+              Cannot be embedded here due to fixed positioning.
+            </Text>
+          </Alert>
         </div>
       </div>
     </section>

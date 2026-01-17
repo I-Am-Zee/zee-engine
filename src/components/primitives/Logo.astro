@@ -1,0 +1,34 @@
+---
+/**
+ * Logo - Brand identity component
+ * Placeholder for actual brand logo/mark
+ */
+
+interface Props {
+  variant?: "full" | "mark";
+  color?: "black" | "white";
+  class?: string;
+}
+
+const { variant = "full", color = "black", class: className, ...rest } = Astro.props;
+
+const textColor = color === "white" ? "text-white" : "text-[var(--color-text-main)]";
+---
+
+{variant === "full" ? (
+  <a
+    href="/"
+    class:list={["inline-flex items-center font-serif text-2xl font-bold tracking-tight", textColor, className]}
+    {...rest}
+  >
+    Zaviona
+  </a>
+) : (
+  <a
+    href="/"
+    class:list={["inline-flex items-center justify-center font-serif text-xl font-bold", textColor, className]}
+    {...rest}
+  >
+    Z
+  </a>
+)}
