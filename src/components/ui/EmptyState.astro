@@ -1,0 +1,56 @@
+---
+/**
+ * EmptyState - User Experience Saver
+ * Handles "sad paths" when there's nothing to show (empty cart, no search results, empty wishlist)
+ */
+
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface ActionProps {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  icon: string;
+  heading: string;
+  description: string;
+  action?: ActionProps;
+  class?: string;
+}
+
+const { icon, heading, description, action, class: className, ...rest } = Astro.props;
+---
+
+<div
+  class:list={[
+    "flex flex-col items-center justify-center text-center py-12 px-6",
+    className,
+  ]}
+  {...rest}
+>
+  {/* Large muted icon */}
+  <div class="mb-6 text-[var(--color-text-muted)]">
+    <Icon name={icon} class="h-16 w-16" />
+  </div>
+
+  {/* Heading */}
+  <Heading as="h3" class="mb-2">
+    {heading}
+  </Heading>
+
+  {/* Description */}
+  <Text variant="caption" class="mb-6 max-w-sm">
+    {description}
+  </Text>
+
+  {/* Optional CTA button */}
+  {action && (
+    <Button as="a" href={action.href} type="primary">
+      {action.label}
+    </Button>
+  )}
+</div>

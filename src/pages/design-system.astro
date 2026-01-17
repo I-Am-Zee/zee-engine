@@ -19,6 +19,8 @@ import FormField from "../components/ui/FormField.astro";
 import Alert from "../components/ui/Alert.astro";
 import MenuToggle from "../components/ui/MenuToggle.astro";
 import Pagination from "../components/ui/Pagination.astro";
+import OptionSelector from "../components/ui/OptionSelector.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
 ---
 
 <BaseLayout title="Design System Kitchen Sink | Zaviona">
@@ -208,7 +210,7 @@ import Pagination from "../components/ui/Pagination.astro";
         </div>
         <div>
           <Image
-            src="https://images.unsplash.com/photo--1491553895911-0055eca6402d?w=400"
+            src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400"
             alt="Product demo - Landscape"
             ratio="landscape"
           />
@@ -457,6 +459,69 @@ import Pagination from "../components/ui/Pagination.astro";
             <div>
               <Text variant="caption" class="mb-2">Many Pages (with ellipsis):</Text>
               <Pagination currentPage={5} totalPages={20} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Choices & States Section -->
+    <section class="mb-16">
+      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+        <Heading as="h2" class="mb-2">User Choices & States</Heading>
+        <Text variant="caption">
+          Components for handling user selections and empty/error states.
+        </Text>
+      </div>
+
+      <div class="space-y-8">
+        <!-- OptionSelector -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">OptionSelector (Variant Picker)</Text>
+          <div class="grid gap-8 rounded-lg bg-[var(--color-surface)] p-6 sm:grid-cols-2">
+            <OptionSelector
+              legend="Ring Size"
+              options={["6", "7", "8", "9"]}
+              name="ring_size"
+              selected="7"
+            />
+            <OptionSelector
+              legend="Material"
+              options={["Gold", "Silver", "Rose Gold"]}
+              name="material"
+            />
+          </div>
+          <Text variant="caption" class="mt-2">
+            Click to select an option. Uses Alpine.js for state management.
+          </Text>
+        </div>
+
+        <!-- EmptyState -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">EmptyState (Sad Paths)</Text>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]">
+              <EmptyState
+                icon="bag"
+                heading="Your Cart is Empty"
+                description="Looks like you haven't added anything yet. Start shopping to fill your bag!"
+                action={{ label: "Start Shopping", href: "/shop" }}
+              />
+            </div>
+            <div class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]">
+              <EmptyState
+                icon="search"
+                heading="No Results Found"
+                description="We couldn't find any products matching your search. Try different keywords."
+              />
+            </div>
+            <div class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]">
+              <EmptyState
+                icon="heart"
+                heading="Save Your Favorites"
+                description="Items you love will appear here. Start adding to your wishlist!"
+                action={{ label: "Explore Collection", href: "/collection" }}
+              />
             </div>
           </div>
         </div>

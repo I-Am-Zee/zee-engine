@@ -1,0 +1,57 @@
+---
+/**
+ * OptionSelector - Generic Variant Picker
+ * A flexible chip/pill-based selector for product options (sizes, materials, colors, etc.)
+ * Uses Alpine.js for headless state management
+ */
+
+interface Props {
+  legend: string;
+  options: string[];
+  name: string;
+  selected?: string;
+  class?: string;
+}
+
+const { legend, options, name, selected, class: className, ...rest } = Astro.props;
+
+const defaultSelected = selected || (options.length > 0 ? options[0] : "");
+---
+
+<fieldset
+  class:list={["flex flex-col gap-3", className]}
+  x-data={`{ selected: '${defaultSelected}' }`}
+  {...rest}
+>
+  <legend class="font-sans text-sm font-medium text-[var(--color-text-main)]">
+    {legend}
+  </legend>
+
+  <div class="flex flex-wrap gap-2" role="radiogroup" aria-label={legend}>
+    {options.map((option) => (
+      <label
+        class="relative cursor-pointer"
+        x-bind:class={`selected === '${option}' ? 'z-10' : ''`}
+      >
+        <input
+          type="radio"
+          name={name}
+          value={option}
+          x-model="selected"
+          class="peer sr-only"
+        />
+        <span
+          class="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2"
+          x-bind:class={`selected === '${option}'
+            ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+            : 'border-[var(--color-border-subtle)] bg-[var(--color-background)] text-[var(--color-text-main)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)]'`}
+        >
+          {option}
+        </span>
+      </label>
+    ))}
+  </div>
+
+  {/* Hidden input to ensure form submission includes the selected value */}
+  <input type="hidden" name={`${name}_selected`} x-bind:value="selected" />
+</fieldset>
