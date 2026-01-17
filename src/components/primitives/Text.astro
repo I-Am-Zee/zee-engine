@@ -1,0 +1,25 @@
+---
+interface Props {
+  as?: "p" | "span" | "div" | "label" | "blockquote";
+  variant?: "default" | "caption" | "lead";
+  class?: string;
+}
+
+const { as: Tag = "p", variant = "default", class: className, ...rest } = Astro.props;
+
+// Base styles - uses Plus Jakarta Sans (sans-serif), no size forcing for class override
+const baseStyles = "font-sans text-[var(--color-text-main)]";
+
+// Variant-specific styles (default includes text-base, others don't or have own sizes)
+const variantStyles = {
+  default: "text-base leading-relaxed",
+  caption: "text-sm text-[var(--color-text-muted)] leading-normal",
+  lead: "text-lg md:text-xl leading-relaxed font-light",
+};
+
+const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${className || ""}`.trim();
+---
+
+<Tag class={combinedClasses} {...rest}>
+  <slot />
+</Tag>

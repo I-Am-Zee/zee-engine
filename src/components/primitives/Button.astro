@@ -1,0 +1,62 @@
+---
+interface Props {
+  as?: "button" | "a";
+  type?: "primary" | "secondary" | "neutral" | "ghost";
+  variant?: "default" | "icon-left" | "icon-right" | "icon-only";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  class?: string;
+  href?: string;
+}
+
+const {
+  as: Tag = "button",
+  type = "primary",
+  variant = "default",
+  size = "md",
+  disabled = false,
+  class: className,
+  href,
+  ...rest
+} = Astro.props;
+
+// Base styles shared across all buttons
+const baseStyles =
+  "inline-flex items-center justify-center font-sans font-medium transition-all duration-200 rounded-md outline-none disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2";
+
+// Paint logic - type determines color scheme
+const typeStyles = {
+  primary:
+    "bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90 active:opacity-80",
+  secondary:
+    "bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:bg-[var(--color-border-strong)] active:bg-[var(--color-border-subtle)]",
+  neutral:
+    "bg-[var(--color-surface)] text-[var(--color-text-main)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-muted)]  active:bg-[var(--color-border-subtle)]",
+  ghost:
+    "bg-transparent text-[var(--color-text-main)] hover:bg-[var(--color-ghost-hover)] active:bg-[var(--color-surface-muted)]",
+};
+
+// Size styles
+const sizeStyles = {
+  sm: variant === "icon-only" ? "h-8 w-8 text-sm" : "h-8 px-3 text-sm gap-2",
+  md: variant === "icon-only" ? "h-10 w-10 text-base" : "h-10 px-4 text-base gap-2",
+  lg: variant === "icon-only" ? "h-12 w-12 text-lg" : "h-12 px-6 text-lg gap-3",
+};
+
+// Layout logic - variant determines icon position
+const variantStyles = {
+  default: "",
+  "icon-left": "flex-row",
+  "icon-right": "flex-row-reverse",
+  "icon-only": "",
+};
+
+const combinedClasses =
+  `${baseStyles} ${typeStyles[type]} ${sizeStyles[size]} ${variantStyles[variant]} ${className || ""}`.trim();
+
+const componentProps = Tag === "a" ? { href, ...rest } : { type: "button", disabled, ...rest };
+---
+
+<Tag class={combinedClasses} {...componentProps}>
+  <slot />
+</Tag>

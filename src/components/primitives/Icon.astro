@@ -1,0 +1,38 @@
+---
+interface Props {
+  name: string;
+  class?: string;
+}
+
+const { name, class: className, ...rest } = Astro.props;
+
+// Try to load the SVG icon dynamically
+let svgContent = "";
+try {
+  const iconModule = await import(`../../icons/${name}.svg?raw`);
+  svgContent = iconModule.default;
+} catch (error) {
+  console.warn(`Icon "${name}" not found in /src/icons/`);
+}
+
+// Default icon styles for optical balance with text
+const baseStyles = "inline-block align-middle";
+const defaultSize = "w-[1.2em] h-[1.2em]";
+
+const combinedClasses = `${baseStyles} ${defaultSize} ${className || ""}`.trim();
+---
+
+{
+  svgContent ? (
+    <span class={combinedClasses} set:html={svgContent} style="fill: currentColor;" {...rest} />
+  ) : (
+    <span
+      class={combinedClasses}
+      title={`Icon: ${name}`}
+      style="display: inline-block; background: var(--color-border-subtle); fill: currentColor;"
+      {...rest}
+    >
+      ?
+    </span>
+  )
+}

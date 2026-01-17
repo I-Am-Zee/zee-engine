@@ -1,0 +1,40 @@
+---
+interface Props {
+  type?: string;
+  placeholder?: string;
+  error?: boolean;
+  class?: string;
+  name?: string;
+  value?: string;
+}
+
+const {
+  type = "text",
+  placeholder,
+  error = false,
+  class: className,
+  name,
+  value,
+  ...rest
+} = Astro.props;
+
+// Base input styles
+const baseStyles =
+  "w-full font-sans px-4 py-2 rounded-md bg-[var(--color-background)] border transition-colors duration-200 outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-[var(--color-text-muted)]";
+
+// Error state changes border color
+const stateStyles = error
+  ? "border-red-500 focus:border-red-500"
+  : "border-[var(--color-border-strong)] focus:border-[var(--color-primary)]";
+
+const combinedClasses = `${baseStyles} ${stateStyles} ${className || ""}`.trim();
+---
+
+<input
+  type={type}
+  placeholder={placeholder}
+  name={name}
+  value={value}
+  class={combinedClasses}
+  {...rest}
+/>

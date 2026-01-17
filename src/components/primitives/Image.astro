@@ -1,0 +1,24 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  ratio?: "portrait" | "square" | "landscape";
+  class?: string;
+}
+
+const { src, alt, ratio = "square", class: className, ...rest } = Astro.props;
+
+// Base styles with object-fit cover
+const baseStyles = "w-full object-cover";
+
+// Aspect ratio enforcement
+const ratioStyles = {
+  portrait: "aspect-[4/5]",
+  square: "aspect-square",
+  landscape: "aspect-video",
+};
+
+const combinedClasses = `${baseStyles} ${ratioStyles[ratio]} ${className || ""}`.trim();
+---
+
+<img src={src} alt={alt} class={combinedClasses} {...rest} loading="lazy" />

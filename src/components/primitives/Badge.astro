@@ -1,0 +1,36 @@
+---
+interface Props {
+  intent?: "surface" | "primary" | "accent" | "outline";
+  size?: "sm" | "md";
+  class?: string;
+}
+
+const { intent = "surface", size = "sm", class: className, ...rest } = Astro.props;
+
+// Base pill-shaped styles with uppercase tracking
+const baseStyles =
+  "inline-flex items-center justify-center rounded-full uppercase tracking-wide font-sans font-medium";
+
+// Intent determines color scheme
+const intentStyles = {
+  surface:
+    "bg-[var(--color-surface)] text-[var(--color-text-main)] border border-[var(--color-border-subtle)]",
+  primary: "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]",
+  accent: "bg-[var(--color-text-main)] text-[var(--color-text-inverse)]",
+  outline:
+    "bg-transparent text-[var(--color-text-main)] border border-[var(--color-border-strong)]",
+};
+
+// Size variants - using leading-none for precise vertical centering
+const sizeStyles = {
+  sm: "text-xs px-2 py-0.5 min-w-[1.5rem] h-5 leading-none",
+  md: "text-sm px-3 py-1.5 min-w-[2rem] h-7 leading-none",
+};
+
+const combinedClasses =
+  `${baseStyles} ${intentStyles[intent]} ${sizeStyles[size]} ${className || ""}`.trim();
+---
+
+<span class={combinedClasses} {...rest}>
+  <slot />
+</span>

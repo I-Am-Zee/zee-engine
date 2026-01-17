@@ -1,0 +1,25 @@
+---
+interface Props {
+  href: string;
+  variant?: "plain" | "underline";
+  class?: string;
+}
+
+const { href, variant = "plain", class: className, ...rest } = Astro.props;
+
+// Base styles - inherits font size from parent
+const baseStyles =
+  "inline font-sans text-[var(--color-text-main)] transition-colors duration-200 hover:text-[var(--color-text-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:rounded-sm";
+
+// Variant styles
+const variantStyles = {
+  plain: "no-underline",
+  underline: "underline decoration-1 underline-offset-2 [text-decoration-skip-ink:auto]",
+};
+
+const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${className || ""}`.trim();
+---
+
+<a href={href} class={combinedClasses} {...rest}>
+  <slot />
+</a>
