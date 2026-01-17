@@ -1,0 +1,49 @@
+---
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label, class: className, ...rest } = Astro.props;
+---
+
+<div
+  class:list={["relative", className]}
+  x-data="{ isOpen: false }"
+  {...rest}
+>
+  <Button
+    type="ghost"
+    variant="icon-only"
+    size="md"
+    x-on:click="isOpen = !isOpen"
+    aria-expanded="false"
+    x-bind:aria-expanded="isOpen.toString()"
+    aria-label={label || "Toggle menu"}
+  >
+    <template x-if="!isOpen">
+      <Icon name="menu" />
+    </template>
+    <template x-if="isOpen">
+      <Icon name="close" />
+    </template>
+  </Button>
+
+  {/* Menu content slot - will be shown/hidden based on isOpen */}
+  <div
+    x-show="isOpen"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-95"
+    x-on:click.away="isOpen = false"
+    class="absolute top-full left-0 z-50 mt-2"
+  >
+    <slot />
+  </div>
+</div>

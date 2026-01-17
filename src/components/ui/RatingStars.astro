@@ -1,0 +1,39 @@
+---
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  rating: number;
+  max?: number;
+  class?: string;
+}
+
+const { rating, max = 5, class: className, ...rest } = Astro.props;
+
+// Clamp rating between 0 and max
+const clampedRating = Math.max(0, Math.min(max, rating));
+const fullStars = Math.floor(clampedRating);
+const hasHalfStar = clampedRating % 1 >= 0.5;
+const emptyStars = max - fullStars - (hasHalfStar ? 1 : 0);
+---
+
+<div
+  class:list={["inline-flex items-center gap-0.5", className]}
+  role="img"
+  aria-label={`Rating: ${rating} out of ${max} stars`}
+  {...rest}
+>
+  {/* Full stars */}
+  {Array.from({ length: fullStars }).map(() => (
+    <Icon name="star" class="text-[var(--color-primary)]" />
+  ))}
+
+  {/* Half star (rendered as full for simplicity, using muted color) */}
+  {hasHalfStar && (
+    <Icon name="star" class="text-[var(--color-border-strong)]" />
+  )}
+
+  {/* Empty stars */}
+  {Array.from({ length: emptyStars }).map(() => (
+    <Icon name="star" class="text-[var(--color-border-subtle)]" />
+  ))}
+</div>

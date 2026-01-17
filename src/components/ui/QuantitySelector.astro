@@ -1,0 +1,47 @@
+---
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+import Input from "../primitives/Input.astro";
+
+interface Props {
+  min?: number;
+  max?: number;
+  initial?: number;
+  class?: string;
+}
+
+const { min = 1, max = 99, initial = 1, class: className, ...rest } = Astro.props;
+---
+
+<div
+  class:list={["inline-flex items-center gap-1", className]}
+  x-data={`{ count: ${initial}, min: ${min}, max: ${max}, increment() { if(this.count < this.max) this.count++ }, decrement() { if(this.count > this.min) this.count-- } }`}
+  {...rest}
+>
+  <Button
+    type="neutral"
+    variant="icon-only"
+    size="sm"
+    x-on:click="decrement()"
+    x-bind:disabled="count <= min"
+  >
+    <Icon name="minus" />
+  </Button>
+
+  <input
+    type="text"
+    readonly
+    x-bind:value="count"
+    class="h-8 w-12 rounded-md border border-[var(--color-border-strong)] bg-[var(--color-background)] text-center font-sans text-sm focus:outline-none"
+  />
+
+  <Button
+    type="neutral"
+    variant="icon-only"
+    size="sm"
+    x-on:click="increment()"
+    x-bind:disabled="count >= max"
+  >
+    <Icon name="plus" />
+  </Button>
+</div>

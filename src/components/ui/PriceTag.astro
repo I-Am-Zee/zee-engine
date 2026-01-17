@@ -1,0 +1,34 @@
+---
+import Text from "../primitives/Text.astro";
+import Badge from "../primitives/Badge.astro";
+import { formatCurrency, calculateDiscount } from "../../scripts/utils/currency";
+
+interface Props {
+  price: number;
+  salePrice?: number;
+  currency?: string;
+  class?: string;
+}
+
+const { price, salePrice, currency = "INR", class: className, ...rest } = Astro.props;
+
+const hasSale = salePrice !== undefined && salePrice < price;
+const displayPrice = hasSale ? salePrice : price;
+const discountPercent = hasSale ? calculateDiscount(price, salePrice!) : 0;
+---
+
+<div class:list={["inline-flex items-center gap-2 flex-wrap", className]} {...rest}>
+  {hasSale && (
+    <Text as="span" variant="caption" class="line-through">
+      {formatCurrency(price, currency)}
+    </Text>
+  )}
+  <Text as="span" class="font-semibold text-lg">
+    {formatCurrency(displayPrice, currency)}
+  </Text>
+  {hasSale && discountPercent > 0 && (
+    <Badge intent="primary" size="sm">
+      {discountPercent}% OFF
+    </Badge>
+  )}
+</div>

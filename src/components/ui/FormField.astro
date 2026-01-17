@@ -1,0 +1,38 @@
+---
+import Text from "../primitives/Text.astro";
+import Input from "../primitives/Input.astro";
+
+interface Props {
+  label: string;
+  name: string;
+  error?: string;
+  type?: string;
+  placeholder?: string;
+  class?: string;
+}
+
+const { label, name, error, type = "text", placeholder, class: className, ...rest } = Astro.props;
+
+const hasError = Boolean(error);
+---
+
+<div class:list={["flex flex-col gap-1.5", className]} {...rest}>
+  <Text as="label" variant="caption" class="font-medium text-[var(--color-text-main)]">
+    {label}
+  </Text>
+
+  <slot>
+    <Input
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      error={hasError}
+    />
+  </slot>
+
+  {hasError && (
+    <Text as="span" variant="caption" class="text-red-500">
+      {error}
+    </Text>
+  )}
+</div>
