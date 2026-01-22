@@ -39,38 +39,40 @@ const {
   x-data="{ liked: false }"
   {...rest}
 >
-  {/* Image Container - Overflow hidden for zoom effect */}
-  <a href={href} class="relative mb-3 block overflow-hidden rounded-lg bg-[var(--color-surface)]">
-    {/* Image with hover zoom */}
-    <img
-      src={image}
-      alt={title}
-      class="aspect-[4/5] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-      loading="lazy"
-    />
+  {/* Image Container - Overflow hidden for zoom effect + relative wrapper for absolute positioned button */}
+  <div class="relative mb-3">
+    <a href={href} class="block overflow-hidden rounded-lg bg-[var(--color-surface)]">
+      {/* Image with hover zoom */}
+      <img
+        src={image}
+        alt={title}
+        class="aspect-[4/5] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        loading="lazy"
+      />
 
-    {/* Top-left badges overlay */}
-    {badges.length > 0 && (
-      <div class="absolute left-3 top-3 flex flex-col gap-2">
-        {badges.map((badgeText) => (
-          <Badge intent="primary" size="sm">
-            {badgeText}
-          </Badge>
-        ))}
-      </div>
-    )}
+      {/* Top-left badges overlay */}
+      {badges.length > 0 && (
+        <div class="absolute left-3 top-3 flex flex-col gap-2 pointer-events-none">
+          {badges.map((badgeText) => (
+            <Badge intent="primary" size="sm">
+              {badgeText}
+            </Badge>
+          ))}
+        </div>
+      )}
+    </a>
 
-    {/* Top-right wishlist button */}
+    {/* Top-right wishlist button - Outside link to prevent navigation */}
     <button
       type="button"
-      @click.stop="liked = !liked"
-      class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--color-text-main)] shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]"
+      @click="liked = !liked"
+      class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--color-text-main)] shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]"
       :aria-label="liked ? 'Remove from wishlist' : 'Add to wishlist'"
     >
       <Icon name="heart" class="h-5 w-5 transition-opacity duration-200" x-show="!liked" />
       <Icon name="heart-fill" class="h-5 w-5 text-red-500 transition-opacity duration-200" x-show="liked" x-cloak />
     </button>
-  </a>
+  </div>
 
   {/* Content */}
   <div class="flex flex-1 flex-col">
