@@ -32,7 +32,8 @@
   /* Borders & Interactive States */
   --color-border-subtle: #e2e8f0; /* Slate-200 - Dividers */
   --color-border-strong: #94a3b8; /* Slate-400 - Input outlines */
-  --color-ring: #020617; /* Slate-950 - Focus rings for a11y */
+  --color-ring: #64748b; /* Slate-500 - Focus rings (softer) */
+  --color-ring-glow: rgba(100, 116, 139, 0.4); /* Slate-500 with opacity for glow */
 }
 
 /* Base Styles */
@@ -49,4 +50,17 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Focus Glow Styles */
+*:focus-visible {
+  outline: none;
+}
+
+/* Utility class for glow focus effect */
+.focus-glow:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 4px var(--color-ring),
+    0 0 12px var(--color-ring-glow);
 }
