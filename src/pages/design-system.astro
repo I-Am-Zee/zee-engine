@@ -24,6 +24,8 @@ import EmptyState from "../components/ui/EmptyState.astro";
 
 // Organisms (Features)
 import Footer from "../components/features/Footer.astro";
+import ProductCard from "../components/features/ProductCard.astro";
+import ProductGrid from "../components/features/ProductGrid.astro";
 ---
 
 <BaseLayout title="Design System Kitchen Sink | Zaviona">
@@ -560,6 +562,97 @@ import Footer from "../components/features/Footer.astro";
               The Navbar component is implemented at `src/components/features/Navbar.astro`. 
               It includes desktop navigation with dropdowns and a mobile slide-over drawer with exclusive accordion menu. 
               Cannot be embedded here due to fixed positioning.
+            </Text>
+          </Alert>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shop Components Section -->
+    <section class="mb-16">
+      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+        <Heading as="h2" class="mb-2">Shop Components</Heading>
+        <Text variant="caption">
+          Product display components for the shopping experience. Test cases include products with various states.
+        </Text>
+      </div>
+
+      <div class="space-y-8">
+        <!-- ProductCard Examples -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">ProductCard States</Text>
+          <Text variant="caption" class="mb-6">
+            Cards feature image zoom on hover, wishlist toggle (click heart), conditional rating display, and responsive badges.
+          </Text>
+          
+          <ProductGrid>
+            <!-- Test Case A: Sale + Badge + Rating -->
+            <ProductCard
+              title="Celestial Moon Necklace"
+              price={3500}
+              salePrice={2800}
+              image="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=500&fit=crop"
+              href="/shop/celestial-moon-necklace"
+              badges={["New", "Sale"]}
+              rating={4.8}
+            />
+
+            <!-- Test Case B: Standard (no rating, no badges) -->
+            <ProductCard
+              title="Minimalist Gold Ring"
+              price={2200}
+              image="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=500&fit=crop"
+              href="/shop/minimalist-gold-ring"
+            />
+
+            <!-- With Sale Price only -->
+            <ProductCard
+              title="Vintage Pearl Earrings"
+              price={4200}
+              salePrice={3500}
+              image="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=500&fit=crop"
+              href="/shop/vintage-pearl-earrings"
+              rating={4.5}
+            />
+
+            <!-- With Badge only -->
+            <ProductCard
+              title="Diamond Stud Earrings"
+              price={5800}
+              image="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=400&h=500&fit=crop"
+              href="/shop/diamond-stud-earrings"
+              badges={["Bestseller"]}
+              rating={4.9}
+            />
+
+            <!-- New product (no rating yet) -->
+            <ProductCard
+              title="Delicate Chain Bracelet"
+              price={1800}
+              image="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=500&fit=crop"
+              href="/shop/delicate-chain-bracelet"
+              badges={["New"]}
+            />
+
+            <!-- Regular product with rating -->
+            <ProductCard
+              title="Rose Gold Bangle Set"
+              price={3200}
+              image="https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=400&h=500&fit=crop"
+              href="/shop/rose-gold-bangle-set"
+              rating={4.6}
+            />
+          </ProductGrid>
+        </div>
+
+        <!-- Grid Responsiveness Note -->
+        <div class="rounded-lg bg-[var(--color-surface)] p-6">
+          <Text variant="caption" class="uppercase mb-2">Responsive Grid</Text>
+          <Alert intent="info" title="ProductGrid Layout">
+            <Text as="span" variant="caption">
+              The grid automatically adapts: <strong>2 columns</strong> on mobile for detail visibility, 
+              <strong>3 columns</strong> on tablet, and <strong>4 columns</strong> on desktop for a premium, airy feel. 
+              Try resizing your browser to see the responsive behavior.
             </Text>
           </Alert>
         </div>

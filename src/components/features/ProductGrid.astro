@@ -1,0 +1,23 @@
+---
+/**
+ * ProductGrid - Responsive grid layout for product cards
+ * 2 cols mobile → 3 cols tablet → 4 cols desktop
+ * Tight spacing on mobile, airy on desktop for premium feel
+ */
+
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+  class:list={[
+    "grid grid-cols-2 gap-x-4 gap-y-6 sm:gap-x-6 sm:gap-y-8 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-12",
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</div>
