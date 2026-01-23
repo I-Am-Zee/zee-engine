@@ -14,6 +14,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
 import Navbar from "../../components/features/Navbar.astro";
 import Footer from "../../components/features/Footer.astro";
+import Icon from "../../components/primitives/Icon.astro";
 
 // Generate static paths for all products
 export async function getStaticPaths() {
@@ -41,7 +42,7 @@ const galleryImages =
 <BaseLayout title={`${product.data.title} | Zaviona`}>
   <Navbar />
 
-  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8" x-data="{ liked: false }">
     {/* Breadcrumbs */}
     <div class="mt-4 mb-8">
       <Breadcrumbs
@@ -119,15 +120,33 @@ const galleryImages =
         }
 
         {/* Action Zone: Quantity + Add to Cart */}
-        <div class="mt-10 space-y-4">
+        <div class="mt-10 space-y-6">
           {/* Quantity Selector */}
           <div class="flex items-center gap-3">
             <Text variant="caption" class="font-medium"> Quantity: </Text>
             <QuantitySelector initial={1} min={1} max={10} />
           </div>
 
-          {/* Add to Cart Button */}
-          <Button type="primary" size="lg" class="w-full"> Add to Cart </Button>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+            {/* Add to Cart Button */}
+            <Button type="primary" size="lg" class="flex-1"> Add to Cart </Button>
+
+            {/* Wishlist Button */}
+            <button
+              type="button"
+              @click="liked = !liked"
+              class="flex h-12 w-12 items-center justify-center rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] text-[var(--color-text-main)] transition-all duration-200 hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus-visible:outline-none"
+              :aria-label="liked ? 'Remove from wishlist' : 'Add to wishlist'"
+            >
+              <Icon name="heart" class="h-6 w-6 transition-opacity duration-200" x-show="!liked" />
+              <Icon
+                name="heart-fill"
+                class="h-6 w-6 text-red-500 transition-opacity duration-200"
+                x-show="liked"
+                x-cloak
+              />
+            </button>
+          </div>
         </div>
 
         {/* Divider */}
