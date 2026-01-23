@@ -10,6 +10,10 @@ import PriceTag from "../../components/ui/PriceTag.astro";
 import RatingStars from "../../components/ui/RatingStars.astro";
 import OptionSelector from "../../components/ui/OptionSelector.astro";
 import QuantitySelector from "../../components/ui/QuantitySelector.astro";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import ProductGallery from "../../components/features/ProductGallery.astro";
+import Navbar from "../../components/features/Navbar.astro";
+import Footer from "../../components/features/Footer.astro";
 
 // Generate static paths for all products
 export async function getStaticPaths() {
@@ -26,137 +30,189 @@ interface Props {
 
 const { product } = Astro.props;
 const { Content } = await product.render();
+
+// Use gallery if available, fallback to single image
+const galleryImages =
+  product.data.gallery && product.data.gallery.length > 0
+    ? product.data.gallery
+    : [product.data.image];
 ---
 
 <BaseLayout title={`${product.data.title} | Zaviona`}>
-  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-    {/* Product Layout - Two Columns */}
-    <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
-      {/* Left Column - Images */}
-      <div class="relative">
-        <img
-          src={product.data.image}
-          alt={product.data.title}
-          class="w-full rounded-lg bg-[var(--color-surface)] object-cover"
-        />
+  <Navbar />
+
+  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+    {/* Breadcrumbs */}
+    <div class="mt-4 mb-8">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Shop", href: "/shop" },
+          { label: product.data.title, href: "#" },
+        ]}
+      />
+    </div>
+
+    {/* Main Grid - Sticky Split Layout */}
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+      {/* Left Column - Gallery (Sticky on Desktop) */}
+      <div class="lg:sticky lg:top-24 lg:col-span-7 lg:self-start">
+        <ProductGallery images={galleryImages} alt={product.data.title} />
       </div>
 
       {/* Right Column - Product Info */}
-      <div class="flex flex-col">
-        {/* Badges */}
-        {product.data.badges && product.data.badges.length > 0 && (
-          <div class="mb-4 flex gap-2">
-            {product.data.badges.map((badge) => (
-              <Badge intent="primary" size="sm">
-                {badge}
-              </Badge>
-            ))}
-          </div>
-        )}
+      <div class="lg:col-span-5 lg:pl-12">
+        {/* Header Zone: Badges, Title, Price */}
+        <div class="mb-8">
+          {/* Badges */}
+          {
+            product.data.badges && product.data.badges.length > 0 && (
+              <div class="mb-4 flex gap-2">
+                {product.data.badges.map((badge) => (
+                  <Badge intent="primary" size="sm">
+                    {badge}
+                  </Badge>
+                ))}
+              </div>
+            )
+          }
 
-        {/* Title */}
-        <Heading as="h1" class="mb-4">{product.data.title}</Heading>
+          {/* Title */}
+          <Heading as="h1" class="mb-4">
+            {product.data.title}
+          </Heading>
 
-        {/* Price */}
-        <PriceTag
-          price={product.data.price}
-          salePrice={product.data.salePrice}
-          class="mb-4"
-        />
+          {/* Price */}
+          <PriceTag price={product.data.price} salePrice={product.data.salePrice} class="mb-4" />
 
-        {/* Rating */}
-        {product.data.rating && product.data.rating > 0 && (
-          <div class="mb-6 flex items-center gap-2">
-            <RatingStars rating={product.data.rating} />
-            <Text variant="caption">
-              ({product.data.rating.toFixed(1)} out of 5)
-            </Text>
-          </div>
-        )}
-
-        {/* Description (Short) */}
-        <Text class="mb-6">{product.data.description}</Text>
-
-        {/* Divider */}
-        <div class="mb-6 border-t border-[var(--color-border-subtle)]"></div>
-
-        {/* Product Options */}
-        {product.data.options && product.data.options.length > 0 && (
-          <div class="mb-6 space-y-4">
-            {product.data.options.map((option) => (
-              <OptionSelector
-                legend={option.name}
-                options={option.values}
-                name={option.name.toLowerCase().replace(/\s+/g, "-")}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Quantity & Add to Cart */}
-        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-          <div class="flex items-center gap-3">
-            <Text variant="caption" class="font-medium">Quantity:</Text>
-            <QuantitySelector initial={1} min={1} max={10} />
-          </div>
+          {/* Rating */}
+          {
+            product.data.rating && product.data.rating > 0 && (
+              <div class="flex items-center gap-2">
+                <RatingStars rating={product.data.rating} />
+                <Text variant="caption">({product.data.rating.toFixed(1)} out of 5)</Text>
+              </div>
+            )
+          }
         </div>
 
-        <Button type="primary" size="lg" class="w-full sm:w-auto">
-          Add to Cart
-        </Button>
+        {/* Description Zone */}
+        <div class="my-8">
+          <Text class="leading-relaxed text-[var(--color-text-main)]">
+            {product.data.description}
+          </Text>
+        </div>
+
+        {/* Options Zone */}
+        {
+          product.data.options && product.data.options.length > 0 && (
+            <div class="space-y-6">
+              {product.data.options.map((option) => (
+                <OptionSelector
+                  legend={option.name}
+                  options={option.values}
+                  name={option.name.toLowerCase().replace(/\s+/g, "-")}
+                />
+              ))}
+            </div>
+          )
+        }
+
+        {/* Action Zone: Quantity + Add to Cart */}
+        <div class="mt-10 space-y-4">
+          {/* Quantity Selector */}
+          <div class="flex items-center gap-3">
+            <Text variant="caption" class="font-medium"> Quantity: </Text>
+            <QuantitySelector initial={1} min={1} max={10} />
+          </div>
+
+          {/* Add to Cart Button */}
+          <Button type="primary" size="lg" class="w-full"> Add to Cart </Button>
+        </div>
 
         {/* Divider */}
-        <div class="my-8 border-t border-[var(--color-border-subtle)]"></div>
+        <hr class="my-12 border-[var(--color-border-subtle)]" />
 
-        {/* Full Description from Markdown */}
-        <div class="prose prose-slate max-w-none">
+        {/* Details Zone: The Story (Markdown Content) */}
+        <div class="product-story prose prose-slate max-w-none">
           <Content />
         </div>
       </div>
     </div>
   </div>
+
+  <Footer />
 </BaseLayout>
 
 <style>
-  /* Prose styling for markdown content */
-  .prose {
+  /* Enhanced Prose styling for product story */
+  .product-story {
     color: var(--color-text-main);
   }
-  
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4,
-  .prose h5,
-  .prose h6 {
+
+  /* Use :global() to target elements inside the injected Markdown content */
+  .product-story :global(h1),
+  .product-story :global(h2),
+  .product-story :global(h3),
+  .product-story :global(h4),
+  .product-story :global(h5),
+  .product-story :global(h6) {
     font-family: var(--font-serif);
     color: var(--color-text-main);
     font-weight: 600;
-  }
-  
-  .prose h2 {
-    font-size: 1.5rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
   }
-  
-  .prose p {
-    margin-bottom: 1rem;
-    line-height: 1.7;
+
+  .product-story :global(h2) {
+    font-size: 1.5rem;
   }
-  
-  .prose strong {
+
+  .product-story :global(h3) {
+    font-size: 1.25rem;
+  }
+
+  /* Generous paragraph spacing */
+  .product-story :global(p) {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+  }
+
+  .product-story :global(strong) {
     font-weight: 600;
     color: var(--color-text-main);
   }
-  
-  .prose ul {
+
+  /* Well-spaced, visually appealing bullets */
+  .product-story :global(ul) {
     list-style: disc;
     margin-left: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
   }
-  
-  .prose li {
-    margin-bottom: 0.5rem;
+
+  .product-story :global(li) {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    padding-left: 0.5rem;
+  }
+
+  /* Custom bullet styling for luxury feel */
+  .product-story :global(ul li::marker) {
+    color: var(--color-text-muted);
+  }
+
+  /* Ordered lists */
+  .product-story :global(ol) {
+    list-style: decimal;
+    margin-left: 1.5rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+  }
+
+  .product-story :global(ol li) {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    padding-left: 0.5rem;
   }
 </style>
