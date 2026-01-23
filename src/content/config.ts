@@ -1,0 +1,28 @@
+import { defineCollection, z } from "astro:content";
+
+const products = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    price: z.number(),
+    salePrice: z.number().optional(),
+    image: z.string(),
+    gallery: z.array(z.string()).optional(),
+    badges: z.array(z.string()).optional(),
+    rating: z.number().min(0).max(5).optional(),
+    description: z.string(),
+    tags: z.array(z.string()).optional(),
+    options: z
+      .array(
+        z.object({
+          name: z.string(),
+          values: z.array(z.string()),
+        })
+      )
+      .optional(),
+  }),
+});
+
+export const collections = {
+  products,
+};

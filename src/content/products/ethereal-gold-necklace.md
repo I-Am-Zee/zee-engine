@@ -1,0 +1,34 @@
+---
+title: "Ethereal Gold Necklace"
+price: 3200
+image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop"
+gallery:
+  - "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop"
+  - "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
+badges:
+  - "Bestseller"
+rating: 4.9
+description: "A delicate gold necklace featuring an intricate pendant design. Handcrafted from 14k gold with attention to every detail."
+tags:
+  - "necklaces"
+  - "gold"
+  - "pendant"
+  - "everyday"
+options:
+  - name: "Chain Length"
+    values: ["16 inches", "18 inches", "20 inches"]
+---
+
+The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.
+
+The pendant features a unique celestial-inspired design that catches light beautifully, creating a subtle shimmer with every movement. The delicate chain ensures comfortable all-day wear without compromising on style.
+
+**Features:**
+
+- Premium 14k yellow gold
+- Adjustable chain length
+- Lobster clasp closure
+- Hypoallergenic materials
+- Comes in luxury gift packaging
+
+Layer it with other necklaces for a contemporary look, or wear it alone as a statement of refined simplicity. Each piece is individually crafted, making yours truly one-of-a-kind.

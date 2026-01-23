@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Heading from "../components/primitives/Heading.astro";
+import ProductCard from "../components/features/ProductCard.astro";
+import ProductGrid from "../components/features/ProductGrid.astro";
+
+// Fetch all products from the content collection
+const allProducts = await getCollection("products");
+---
+
+<BaseLayout title="Shop All Jewelry | Zaviona">
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    {/* Page Header */}
+    <div class="mb-8 border-b border-[var(--color-border-subtle)] pb-6">
+      <Heading as="h1" class="mb-2">All Jewelry</Heading>
+      <p class="text-[var(--color-text-muted)]">
+        Discover our curated collection of handcrafted pieces
+      </p>
+    </div>
+
+    {/* Product Grid */}
+    <ProductGrid>
+      {allProducts.map((product) => (
+        <ProductCard
+          title={product.data.title}
+          price={product.data.price}
+          salePrice={product.data.salePrice}
+          image={product.data.image}
+          href={`/products/${product.slug}`}
+          badges={product.data.badges}
+          rating={product.data.rating}
+        />
+      ))}
+    </ProductGrid>
+  </div>
+</BaseLayout>

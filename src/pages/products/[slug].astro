@@ -1,0 +1,162 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import Text from "../../components/primitives/Text.astro";
+import Badge from "../../components/primitives/Badge.astro";
+import Button from "../../components/primitives/Button.astro";
+import PriceTag from "../../components/ui/PriceTag.astro";
+import RatingStars from "../../components/ui/RatingStars.astro";
+import OptionSelector from "../../components/ui/OptionSelector.astro";
+import QuantitySelector from "../../components/ui/QuantitySelector.astro";
+
+// Generate static paths for all products
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: CollectionEntry<"products">;
+}
+
+const { product } = Astro.props;
+const { Content } = await product.render();
+---
+
+<BaseLayout title={`${product.data.title} | Zaviona`}>
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    {/* Product Layout - Two Columns */}
+    <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
+      {/* Left Column - Images */}
+      <div class="relative">
+        <img
+          src={product.data.image}
+          alt={product.data.title}
+          class="w-full rounded-lg bg-[var(--color-surface)] object-cover"
+        />
+      </div>
+
+      {/* Right Column - Product Info */}
+      <div class="flex flex-col">
+        {/* Badges */}
+        {product.data.badges && product.data.badges.length > 0 && (
+          <div class="mb-4 flex gap-2">
+            {product.data.badges.map((badge) => (
+              <Badge intent="primary" size="sm">
+                {badge}
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {/* Title */}
+        <Heading as="h1" class="mb-4">{product.data.title}</Heading>
+
+        {/* Price */}
+        <PriceTag
+          price={product.data.price}
+          salePrice={product.data.salePrice}
+          class="mb-4"
+        />
+
+        {/* Rating */}
+        {product.data.rating && product.data.rating > 0 && (
+          <div class="mb-6 flex items-center gap-2">
+            <RatingStars rating={product.data.rating} />
+            <Text variant="caption">
+              ({product.data.rating.toFixed(1)} out of 5)
+            </Text>
+          </div>
+        )}
+
+        {/* Description (Short) */}
+        <Text class="mb-6">{product.data.description}</Text>
+
+        {/* Divider */}
+        <div class="mb-6 border-t border-[var(--color-border-subtle)]"></div>
+
+        {/* Product Options */}
+        {product.data.options && product.data.options.length > 0 && (
+          <div class="mb-6 space-y-4">
+            {product.data.options.map((option) => (
+              <OptionSelector
+                legend={option.name}
+                options={option.values}
+                name={option.name.toLowerCase().replace(/\s+/g, "-")}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Quantity & Add to Cart */}
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div class="flex items-center gap-3">
+            <Text variant="caption" class="font-medium">Quantity:</Text>
+            <QuantitySelector initial={1} min={1} max={10} />
+          </div>
+        </div>
+
+        <Button type="primary" size="lg" class="w-full sm:w-auto">
+          Add to Cart
+        </Button>
+
+        {/* Divider */}
+        <div class="my-8 border-t border-[var(--color-border-subtle)]"></div>
+
+        {/* Full Description from Markdown */}
+        <div class="prose prose-slate max-w-none">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Prose styling for markdown content */
+  .prose {
+    color: var(--color-text-main);
+  }
+  
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    font-family: var(--font-serif);
+    color: var(--color-text-main);
+    font-weight: 600;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .prose p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+  
+  .prose strong {
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
+  
+  .prose ul {
+    list-style: disc;
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .prose li {
+    margin-bottom: 0.5rem;
+  }
+</style>

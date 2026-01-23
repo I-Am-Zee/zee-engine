@@ -1,0 +1,39 @@
+---
+title: "Celestial Diamond Ring"
+price: 4500
+salePrice: 3600
+image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=1000&fit=crop"
+gallery:
+  - "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=1000&fit=crop"
+  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
+  - "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop"
+badges:
+  - "New"
+  - "Sale"
+rating: 4.8
+description: "An exquisite diamond ring crafted with precision and care. Features a brilliant-cut diamond set in 18k white gold, perfect for engagements or special occasions."
+tags:
+  - "rings"
+  - "diamond"
+  - "engagement"
+  - "white-gold"
+options:
+  - name: "Ring Size"
+    values: ["6", "7", "8", "9", "10"]
+  - name: "Material"
+    values: ["White Gold", "Yellow Gold", "Rose Gold"]
+---
+
+This stunning celestial diamond ring captures the essence of timeless elegance. Hand-crafted by master jewelers, each piece features a carefully selected diamond that sparkles with exceptional brilliance.
+
+The ring's design draws inspiration from celestial bodies, with delicate details that catch the light from every angle. Made from premium 18k gold, it combines modern sophistication with classic beauty.
+
+**Features:**
+
+- Brilliant-cut diamond (0.75 carats)
+- 18k gold setting
+- Conflict-free diamond certification
+- Includes premium presentation box
+- Lifetime warranty on craftsmanship
+
+Perfect for engagements, anniversaries, or as a statement piece for any special occasion.
