@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ProductGrid from "./ProductGrid.astro";
+import ProductCard from "./ProductCard.astro";
+import Heading from "../primitives/Heading.astro";
+
+interface Props {
+  currentProduct: CollectionEntry<"products">;
+}
+
+const { currentProduct } = Astro.props;
+const allProducts = await getCollection("products");
+
+// 1. Score products based on shared tags
+const displayProducts = allProducts
+  .filter((p) => p.id !== currentProduct.id)
+  .map((p) => {
+    const currentTags = currentProduct.data.tags || [];
+    const targetTags = p.data.tags || [];
+    const sharedTags = targetTags.filter((tag) => currentTags.includes(tag));
+    return { product: p, score: sharedTags.length };
+  })
+  .sort((a, b) => b.score - a.score || Math.random() - 0.5) // Sort by score (tags), then shuffle
+  .slice(0, 4)
+  .map((p) => p.product);
+---
+
+{
+  displayProducts.length > 0 && (
+    <section class="mt-24 border-t border-[var(--color-border-subtle)] pt-16 pb-8">
+      <div class="mb-10 lg:mb-12">
+        <Heading as="h2" class="mb-2">
+          You May Also Like
+        </Heading>
+        <p class="text-[var(--color-text-muted)]">
+          Complement your look with these handpicked pieces
+        </p>
+      </div>
+
+      <ProductGrid>
+        {displayProducts.map((p) => (
+          <ProductCard
+            title={p.data.title}
+            price={p.data.price}
+            salePrice={p.data.salePrice}
+            image={p.data.image}
+            href={`/products/${p.slug}`}
+            badges={p.data.badges}
+            rating={p.data.rating}
+          />
+        ))}
+      </ProductGrid>
+    </section>
+  )
+}
