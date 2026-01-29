@@ -67,7 +67,7 @@ const allProducts = await getCollection("products");
       <div class="mt-12 flex justify-center">
         <Button
           type="ghost"
-          @click="$store.wishlist.items = []; location.reload()"
+          @click="$store.wishlist.items = []; $store.wishlist.save(); location.reload()"
           class="text-red-500 hover:text-red-600"
         >
           <Icon name="PhTrash" class="mr-2 h-4 w-4" />

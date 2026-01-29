@@ -18,6 +18,7 @@ export const navigation: NavItem[] = [
     label: "Shop",
     href: "/shop",
     items: [
+      { label: "All Collections", href: "/shop" },
       { label: "Rings", href: "/shop/rings" },
       { label: "Necklaces", href: "/shop/necklaces" },
       { label: "Earrings", href: "/shop/earrings" },
