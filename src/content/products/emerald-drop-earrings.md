@@ -1,0 +1,31 @@
+---
+title: "Emerald Drop Earrings"
+price: 4200
+salePrice: 3500
+image: "https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=800&h=1000&fit=crop"
+gallery:
+  - "https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=800&h=1000&fit=crop"
+  - "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&h=1000&fit=crop"
+category: "earrings"
+badges:
+  - "Sale"
+  - "New"
+rating: 4.7
+description: "Stunning emerald drop earrings featuring Colombian emeralds surrounded by a halo of diamonds."
+tags:
+  - "emerald"
+  - "diamond"
+  - "luxury"
+  - "formal"
+publishDate: 2026-01-10
+---
+
+The Emerald Drop Earrings showcase the mesmerizing beauty of Colombian emeralds, each stone displaying the rich, verdant green that has captivated jewelry lovers for millennia.
+
+**Features:**
+
+- 2 carats total emerald weight
+- Diamond halo accents (0.5ct total)
+- 18k white gold settings
+- Lever-back closures
+- Certificate of authenticity

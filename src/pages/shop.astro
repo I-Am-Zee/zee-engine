@@ -6,41 +6,129 @@ import Footer from "../components/features/Footer.astro";
 import Heading from "../components/primitives/Heading.astro";
 import ProductCard from "../components/features/ProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
+import FilterSortBar from "../components/ui/FilterSortBar.astro";
+import Pagination from "../components/ui/Pagination.astro";
+
+// Products per page for pagination
+const PRODUCTS_PER_PAGE = 12;
 
 // Fetch all products from the content collection
 const allProducts = await getCollection("products");
+
+// Get current page from URL (for static site, this is just for display)
+const currentPage = 1;
+const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
 ---
 
 <BaseLayout title="Shop All Jewelry | Zaviona">
   <Navbar />
 
-  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data="productSorter">
     {/* Page Header */}
-    <div class="mb-8 border-b border-(--color-border-subtle) pb-6">
+    <div class="mb-8">
       <Heading as="h1" class="mb-2">All Jewelry</Heading>
       <p class="text-(--color-text-muted)">
         Discover our curated collection of handcrafted pieces
       </p>
     </div>
 
-    {/* Product Grid */}
-    <ProductGrid>
-      {
-        allProducts.map((product) => (
-          <ProductCard
-            id={product.slug}
-            title={product.data.title}
-            price={product.data.price}
-            salePrice={product.data.salePrice}
-            image={product.data.image}
-            href={`/products/${product.slug}`}
-            badges={product.data.badges}
-            rating={product.data.rating}
-          />
-        ))
-      }
-    </ProductGrid>
+    {/* Filter/Sort Bar */}
+    <FilterSortBar productCount={allProducts.length} />
+
+    {/* Product Grid with Alpine.js sorting */}
+    <div id="product-grid">
+      <ProductGrid>
+        {
+          allProducts.map((product) => (
+            <div
+              class="product-item"
+              data-price={product.data.salePrice || product.data.price}
+              data-original-price={product.data.price}
+              data-sale-price={product.data.salePrice || ""}
+              data-name={product.data.title}
+              data-rating={product.data.rating || 0}
+              data-publish-date={product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0}
+              data-discount={product.data.salePrice ? Math.round((1 - product.data.salePrice / product.data.price) * 100) : 0}
+            >
+              <ProductCard
+                id={product.slug}
+                title={product.data.title}
+                price={product.data.price}
+                salePrice={product.data.salePrice}
+                image={product.data.image}
+                href={`/products/${product.slug}`}
+                badges={product.data.badges}
+                rating={product.data.rating}
+              />
+            </div>
+          ))
+        }
+      </ProductGrid>
+    </div>
+    
+    {/* Pagination - shown when more than 12 products */}
+    {totalPages > 1 && (
+      <Pagination 
+        currentPage={currentPage} 
+        totalPages={totalPages} 
+        baseUrl="/shop"
+      />
+    )}
   </div>
 
   <Footer />
 </BaseLayout>
+
+<script>
+  import Alpine from "alpinejs";
+
+  // Product sorter component for client-side sorting
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("productSorter", () => ({
+      sortBy: "default",
+      
+      sort(criteria: string) {
+        this.sortBy = criteria;
+        const grid = document.querySelector("#product-grid .grid");
+        if (!grid) return;
+        
+        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
+        
+        items.sort((a, b) => {
+          const aPrice = parseFloat(a.dataset.price || "0");
+          const bPrice = parseFloat(b.dataset.price || "0");
+          const aName = a.dataset.name || "";
+          const bName = b.dataset.name || "";
+          const aRating = parseFloat(a.dataset.rating || "0");
+          const bRating = parseFloat(b.dataset.rating || "0");
+          const aDate = parseFloat(a.dataset.publishDate || "0");
+          const bDate = parseFloat(b.dataset.publishDate || "0");
+          const aDiscount = parseFloat(a.dataset.discount || "0");
+          const bDiscount = parseFloat(b.dataset.discount || "0");
+          
+          switch (criteria) {
+            case "price-asc":
+              return aPrice - bPrice;
+            case "price-desc":
+              return bPrice - aPrice;
+            case "name-asc":
+              return aName.localeCompare(bName);
+            case "name-desc":
+              return bName.localeCompare(aName);
+            case "rating-desc":
+              return bRating - aRating;
+            case "date-desc":
+              return bDate - aDate; // Newest first
+            case "discount-desc":
+              return bDiscount - aDiscount; // Highest discount first
+            default:
+              return 0;
+          }
+        });
+        
+        // Re-append items in new order
+        items.forEach((item) => grid.appendChild(item));
+      },
+    }));
+  });
+</script>

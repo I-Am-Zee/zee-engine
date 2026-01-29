@@ -9,13 +9,13 @@ gallery:
   - "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop"
   - "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=1000&fit=crop"
   - "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop"
+category: "rings"
 badges:
   - "New"
   - "Sale"
 rating: 4.8
 description: "An exquisite diamond ring crafted with precision and care. Features a brilliant-cut diamond set in 18k white gold, perfect for engagements or special occasions."
 tags:
-  - "rings"
   - "diamond"
   - "engagement"
   - "white-gold"
@@ -24,6 +24,7 @@ options:
     values: ["6", "7", "8", "9", "10"]
   - name: "Material"
     values: ["White Gold", "Yellow Gold", "Rose Gold"]
+publishDate: 2026-01-15
 ---
 
 This stunning celestial diamond ring captures the essence of timeless elegance. Hand-crafted by master jewelers, each piece features a carefully selected diamond that sparkles with exceptional brilliance.

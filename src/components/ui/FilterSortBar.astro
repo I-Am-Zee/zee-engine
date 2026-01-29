@@ -1,0 +1,48 @@
+---
+/**
+ * FilterSortBar - Horizontal bar for filtering and sorting products
+ * Uses Alpine.js for client-side sorting without page reload
+ */
+
+import Text from "../primitives/Text.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  productCount: number;
+  categoryName?: string;
+}
+
+const { productCount, categoryName } = Astro.props;
+---
+
+<div
+  class="mb-6 flex flex-col items-start justify-between gap-4 border-b border-(--color-border-subtle) pb-4 sm:flex-row sm:items-center"
+>
+  {/* Product Count */}
+  <Text class="text-(--color-text-muted)">
+    {productCount} {categoryName ? ` ${categoryName}` : " products"}
+  </Text>
+
+  {/* Sort Dropdown */}
+  <div class="relative">
+    <label for="sort-select" class="sr-only">Sort products</label>
+    <select
+      id="sort-select"
+      x-model="sortBy"
+      @change="sort(sortBy)"
+      class="appearance-none rounded-md border border-(--color-border-subtle) bg-(--color-background) py-2 pr-10 pl-4 text-sm text-(--color-text-main) transition-colors hover:border-(--color-primary) focus:border-(--color-primary) focus:outline-none focus:ring-2 focus:ring-(--color-ring) focus:ring-opacity-50"
+    >
+      <option value="default">Sort by: Featured</option>
+      <option value="date-desc">Newest Arrivals</option>
+      <option value="discount-desc">On Sale</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="name-asc">Name: A to Z</option>
+      <option value="name-desc">Name: Z to A</option>
+      <option value="rating-desc">Rating: High to Low</option>
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+      <Icon name="PhCaretDown" class="h-4 w-4 text-(--color-text-muted)" />
+    </div>
+  </div>
+</div>

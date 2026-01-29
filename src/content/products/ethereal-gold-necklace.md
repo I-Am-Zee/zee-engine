@@ -7,18 +7,19 @@ gallery:
   - "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=1000&fit=crop"
   - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
   - "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
+category: "necklaces"
 badges:
   - "Bestseller"
 rating: 4.9
 description: "A delicate gold necklace featuring an intricate pendant design. Handcrafted from 14k gold with attention to every detail."
 tags:
-  - "necklaces"
   - "gold"
   - "pendant"
   - "everyday"
 options:
   - name: "Chain Length"
     values: ["16 inches", "18 inches", "20 inches"]
+publishDate: 2025-03-15
 ---
 
 The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.
