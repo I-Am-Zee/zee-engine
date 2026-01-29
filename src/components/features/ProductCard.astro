@@ -6,11 +6,12 @@
 
 import Heading from "../primitives/Heading.astro";
 import Badge from "../primitives/Badge.astro";
-import Icon from "../primitives/Icon.astro";
 import PriceTag from "../ui/PriceTag.astro";
 import RatingStars from "../ui/RatingStars.astro";
+import WishlistButton from "./WishlistButton.astro";
 
 interface Props {
+  id: string;
   title: string;
   price: number;
   salePrice?: number;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const {
+  id,
   title,
   price,
   salePrice,
@@ -34,11 +36,7 @@ const {
 } = Astro.props;
 ---
 
-<article
-  class:list={["group relative flex flex-col", className]}
-  x-data="{ liked: false }"
-  {...rest}
->
+<article class:list={["group relative flex flex-col", className]} {...rest}>
   {
     /* Image Container - Overflow hidden for zoom effect + relative wrapper for absolute positioned button */
   }
@@ -66,22 +64,10 @@ const {
       }
     </a>
 
-    {/* Top-right wishlist button - Outside link to prevent navigation */}
-    <button
-      type="button"
-      @click="liked = !liked"
-      class="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--color-text-main)] shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus-visible:outline-none"
-      :aria-label="liked ? 'Remove from wishlist' : 'Add to wishlist'"
-    >
-      <Icon name="PhHeart" class="h-5 w-5 transition-opacity duration-200" x-show="!liked" />
-      <Icon
-        name="PhHeart"
-        weight="fill"
-        class="h-5 w-5 text-red-500 transition-opacity duration-200"
-        x-show="liked"
-        x-cloak
-      />
-    </button>
+    {/* Top-right wishlist button - Uses global store */}
+    <div class="absolute top-3 right-3 z-10">
+      <WishlistButton productId={id} size="md" />
+    </div>
   </div>
 
   {/* Content */}

@@ -1,0 +1,125 @@
+---
+/**
+ * WishlistButton - Reusable wishlist toggle button (Molecule)
+ * Built with: Button primitive + Icon primitive
+ * Uses global Alpine.store('wishlist') for persistent state
+ */
+
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  productId: string;
+  size?: "sm" | "md" | "lg";
+  variant?: "icon-only" | "with-label";
+  class?: string;
+}
+
+const { 
+  productId, 
+  size = "md", 
+  variant = "icon-only",
+  class: className,
+  ...rest 
+} = Astro.props;
+
+// Size configurations for icon
+const iconSizes = {
+  sm: "h-4 w-4",
+  md: "h-5 w-5",
+  lg: "h-6 w-6"
+};
+
+// Icon numerical sizes for Phosphor (to avoid em/rem issues)
+const iconNumSizes = {
+  sm: 16,
+  md: 20,
+  lg: 24
+};
+
+// Button size mappings
+const buttonSizes = {
+  sm: "sm" as const,
+  md: "md" as const,
+  lg: "lg" as const
+};
+---
+
+{variant === "icon-only" ? (
+  <Button
+    type="ghost"
+    variant="icon-only"
+    size={buttonSizes[size]}
+    class:list={[
+      "!rounded-full bg-white/90 backdrop-blur-sm shadow-md hover:bg-white hover:scale-110",
+      "relative overflow-hidden", // Contain the icons
+      className
+    ]}
+    x-data
+    @click={`$store.wishlist.toggle('${productId}')`}
+    x-bind:class={`$store.wishlist.has('${productId}') ? '!text-red-500' : ''`}
+    x-bind:aria-label={`$store.wishlist.has('${productId}') ? 'Remove from wishlist' : 'Add to wishlist'`}
+    {...rest}
+  >
+    {/* 
+        NOTE: No !important display classes here to allow x-show (inline style) to work.
+        The wrapper is a flex container (from Button primitive), so we just need 
+        the icons to be positioned correctly when shown.
+    */}
+    <Icon 
+      name="PhHeart" 
+      size={iconNumSizes[size]}
+      class:list={[iconSizes[size], "transition-colors block"]}
+      x-show={`!$store.wishlist.has('${productId}')`}
+    />
+    <Icon 
+      name="PhHeart" 
+      weight="fill" 
+      size={iconNumSizes[size]}
+      class:list={[iconSizes[size], "transition-colors block"]}
+      x-show={`$store.wishlist.has('${productId}')`}
+      x-cloak
+    />
+  </Button>
+) : (
+  <Button
+    type="neutral"
+    variant="icon-left"
+    size={buttonSizes[size]}
+    class:list={[
+      "transition-all duration-300",
+      className
+    ]}
+    x-data
+    @click={`$store.wishlist.toggle('${productId}')`}
+    x-bind:class={`$store.wishlist.has('${productId}') ? 'border-red-200 bg-red-50 !text-red-600' : ''`}
+    x-bind:aria-label={`$store.wishlist.has('${productId}') ? 'Remove from wishlist' : 'Add to wishlist'`}
+    {...rest}
+  >
+    <div class="relative flex items-center justify-center">
+      <Icon 
+        name="PhHeart" 
+        size={iconNumSizes[size]}
+        class:list={[iconSizes[size], "block"]}
+        x-show={`!$store.wishlist.has('${productId}')`}
+      />
+      <Icon 
+        name="PhHeart" 
+        weight="fill" 
+        size={iconNumSizes[size]}
+        class:list={[iconSizes[size], "block"]}
+        x-show={`$store.wishlist.has('${productId}')`}
+        x-cloak
+      />
+    </div>
+    <span x-text={`$store.wishlist.has('${productId}') ? 'In Wishlist' : 'Add to Wishlist'`}>
+      Add to Wishlist
+    </span>
+  </Button>
+)}
+
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+/**
+ * Wishlist Page - Display user's saved products
+ * Uses global Alpine.store('wishlist') for state
+ */
+
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/features/Navbar.astro";
+import Footer from "../components/features/Footer.astro";
+import Heading from "../components/primitives/Heading.astro";
+import Text from "../components/primitives/Text.astro";
+import Button from "../components/primitives/Button.astro";
+import Icon from "../components/primitives/Icon.astro";
+import ProductCard from "../components/features/ProductCard.astro";
+import ProductGrid from "../components/features/ProductGrid.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+
+// Fetch all products - filtering will happen client-side with Alpine
+const allProducts = await getCollection("products");
+---
+
+<BaseLayout title="My Wishlist | Zaviona">
+  <Navbar />
+
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data>
+    {/* Page Header */}
+    <div class="mb-8 border-b border-[var(--color-border-subtle)] pb-6">
+      <Heading as="h1" class="mb-2">My Wishlist</Heading>
+      <Text class="text-[var(--color-text-muted)]">
+        <span x-text="$store.wishlist.count">0</span> saved items
+      </Text>
+    </div>
+
+    {/* Empty State - shown when no items */}
+    <div x-show="$store.wishlist.count === 0" x-cloak>
+      <EmptyState
+        icon="PhHeart"
+        heading="Your Wishlist is Empty"
+        description="Save your favorite pieces to view them later. Start exploring our collection!"
+        action={{ label: "Explore Collection", href: "/shop" }}
+      />
+    </div>
+
+    {/* Wishlist Grid - shown when there are items */}
+    <div x-show="$store.wishlist.count > 0" x-cloak>
+      <ProductGrid>
+        {
+          allProducts.map((product) => (
+            <div x-show={`$store.wishlist.has('${product.slug}')`} x-cloak>
+              <ProductCard
+                id={product.slug}
+                title={product.data.title}
+                price={product.data.price}
+                salePrice={product.data.salePrice}
+                image={product.data.image}
+                href={`/products/${product.slug}`}
+                badges={product.data.badges}
+                rating={product.data.rating}
+              />
+            </div>
+          ))
+        }
+      </ProductGrid>
+
+      {/* Clear All Button */}
+      <div class="mt-12 flex justify-center">
+        <Button
+          type="ghost"
+          @click="$store.wishlist.items = []; location.reload()"
+          class="text-red-500 hover:text-red-600"
+        >
+          <Icon name="PhTrash" class="mr-2 h-4 w-4" />
+          Clear Wishlist
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <Footer />
+</BaseLayout>

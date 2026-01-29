@@ -41,6 +41,7 @@ const displayProducts = allProducts
       <ProductGrid>
         {displayProducts.map((p) => (
           <ProductCard
+            id={p.slug}
             title={p.data.title}
             price={p.data.price}
             salePrice={p.data.salePrice}

@@ -21,17 +21,20 @@ const allProducts = await getCollection("products");
 
     {/* Product Grid */}
     <ProductGrid>
-      {allProducts.map((product) => (
-        <ProductCard
-          title={product.data.title}
-          price={product.data.price}
-          salePrice={product.data.salePrice}
-          image={product.data.image}
-          href={`/products/${product.slug}`}
-          badges={product.data.badges}
-          rating={product.data.rating}
-        />
-      ))}
+      {
+        allProducts.map((product) => (
+          <ProductCard
+            id={product.slug}
+            title={product.data.title}
+            price={product.data.price}
+            salePrice={product.data.salePrice}
+            image={product.data.image}
+            href={`/products/${product.slug}`}
+            badges={product.data.badges}
+            rating={product.data.rating}
+          />
+        ))
+      }
     </ProductGrid>
   </div>
 </BaseLayout>

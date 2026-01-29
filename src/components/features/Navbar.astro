@@ -53,9 +53,18 @@ const { class: className, ...rest } = Astro.props;
       <Button type="ghost" variant="icon-only" size="sm">
         <Icon name="PhMagnifyingGlass" />
       </Button>
-      <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="PhHeart" />
-      </Button>
+      <a href="/wishlist" class="relative">
+        <Button type="ghost" variant="icon-only" size="sm" as="span">
+          <Icon name="PhHeart" />
+        </Button>
+        <span
+          x-data
+          x-show="$store.wishlist.count > 0"
+          x-text="$store.wishlist.count"
+          x-cloak
+          class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
+        ></span>
+      </a>
       <Button type="ghost" variant="icon-only" size="sm">
         <Icon name="PhShoppingCart" />
       </Button>
@@ -167,9 +176,17 @@ const { class: className, ...rest } = Astro.props;
           {/* Drawer Footer */}
           <div class="border-t border-[var(--color-border-subtle)] px-4 py-4">
             <div class="flex items-center gap-4">
-              <Button type="ghost" variant="icon-only" size="sm">
-                <Icon name="PhHeart" />
-              </Button>
+              <a href="/wishlist" class="relative">
+                <Button type="ghost" variant="icon-only" size="sm" as="span">
+                  <Icon name="PhHeart" />
+                </Button>
+                <span
+                  x-show="$store.wishlist.count > 0"
+                  x-text="$store.wishlist.count"
+                  x-cloak
+                  class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
+                ></span>
+              </a>
               <Button type="ghost" variant="icon-only" size="sm">
                 <Icon name="PhUser" />
               </Button>

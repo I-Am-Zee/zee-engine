@@ -14,7 +14,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
 import Navbar from "../../components/features/Navbar.astro";
 import Footer from "../../components/features/Footer.astro";
-import Icon from "../../components/primitives/Icon.astro";
+import WishlistButton from "../../components/features/WishlistButton.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 
 // Generate static paths for all products
@@ -43,7 +43,7 @@ const galleryImages =
 <BaseLayout title={`${product.data.title} | Zaviona`}>
   <Navbar />
 
-  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8" x-data="{ liked: false }">
+  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
     {/* Breadcrumbs */}
     <div class="mt-4 mb-8">
       <Breadcrumbs
@@ -132,34 +132,8 @@ const galleryImages =
             {/* Add to Cart Button */}
             <Button type="primary" size="lg" class="w-full md:flex-1"> Add to Cart </Button>
 
-            {/* Wishlist Button */}
-            <button
-              type="button"
-              @click="liked = !liked"
-              class="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] px-6 text-[var(--color-text-main)] transition-all duration-200 hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus-visible:outline-none md:w-12 md:px-0"
-              :aria-label="liked ? 'Remove from wishlist' : 'Add to wishlist'"
-            >
-              <div class="relative flex items-center justify-center">
-                <Icon
-                  name="PhHeart"
-                  class="h-6 w-6 transition-opacity duration-200"
-                  x-show="!liked"
-                />
-                <Icon
-                  name="PhHeart"
-                  weight="fill"
-                  class="h-6 w-6 text-red-500 transition-opacity duration-200"
-                  x-show="liked"
-                  x-cloak
-                />
-              </div>
-              <span
-                class="font-medium md:hidden"
-                x-text="liked ? 'In Wishlist' : 'Add to Wishlist'"
-              >
-                Add to Wishlist
-              </span>
-            </button>
+            {/* Wishlist Button - Uses global store */}
+            <WishlistButton productId={product.slug} variant="with-label" size="lg" />
           </div>
         </div>
 

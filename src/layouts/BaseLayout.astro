@@ -14,13 +14,13 @@ const { title = "Zaviona E-commerce" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
-    <!-- Alpine.js for interactivity -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
     <!-- Global Styles including TailwindCSS and Theme -->
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
     <slot />
+
+    <!-- Alpine.js is now handled by @astrojs/alpinejs integration -->
+    <!-- The entrypoint in astro.config.mjs registers the wishlist store before Alpine starts -->
   </body>
 </html>
