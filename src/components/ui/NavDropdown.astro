@@ -28,12 +28,16 @@ const { trigger, items, class: className, ...rest } = Astro.props;
   {/* Trigger button */}
   <button
     type="button"
-    class="inline-flex items-center gap-1 rounded-md px-3 py-2 font-sans text-sm font-medium text-[var(--color-text-main)] transition-all duration-200 hover:text-[var(--color-text-muted)] focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]"
+    class="inline-flex items-center gap-1 rounded-md px-3 py-2 font-sans text-sm font-medium text-[var(--color-text-main)] transition-all duration-200 hover:text-[var(--color-text-muted)] focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus-visible:outline-none"
     @click="isOpen = !isOpen"
     :aria-expanded="isOpen"
   >
     {trigger}
-    <Icon name="chevron-down" class="h-4 w-4 transition-transform duration-200" x-bind:class="isOpen ? 'rotate-180' : ''" />
+    <Icon
+      name="PhCaretDown"
+      class="h-4 w-4 transition-transform duration-200"
+      x-bind:class="isOpen ? 'rotate-180' : ''"
+    />
   </button>
 
   {/* Dropdown panel */}
@@ -45,16 +49,18 @@ const { trigger, items, class: className, ...rest } = Astro.props;
     x-transition:leave="transition ease-in duration-150"
     x-transition:leave-start="opacity-100 translate-y-0"
     x-transition:leave-end="opacity-0 translate-y-1"
-    class="absolute left-0 top-full z-50 mt-1 min-w-[180px] rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] p-2 shadow-lg"
+    class="absolute top-full left-0 z-50 mt-1 min-w-[180px] rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] p-2 shadow-lg"
     x-cloak
   >
-    {items.map((item) => (
-      <a
-        href={item.href}
-        class="block rounded-md px-3 py-2 text-sm text-[var(--color-text-main)] transition-colors duration-150 hover:bg-[var(--color-surface)]"
-      >
-        {item.label}
-      </a>
-    ))}
+    {
+      items.map((item) => (
+        <a
+          href={item.href}
+          class="block rounded-md px-3 py-2 text-sm text-[var(--color-text-main)] transition-colors duration-150 hover:bg-[var(--color-surface)]"
+        >
+          {item.label}
+        </a>
+      ))
+    }
   </div>
 </div>

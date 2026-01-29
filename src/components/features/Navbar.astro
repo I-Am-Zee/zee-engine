@@ -32,50 +32,47 @@ const { class: className, ...rest } = Astro.props;
 
     {/* Desktop Navigation - Hidden on mobile */}
     <nav class="hidden items-center gap-1 md:flex">
-      {navigation.map((item) =>
-        item.items && item.items.length > 0 ? (
-          <NavDropdown trigger={item.label} items={item.items} />
-        ) : (
-          <a
-            href={item.href}
-            class="px-3 py-2 font-sans text-sm font-medium text-[var(--color-text-main)] transition-colors duration-200 hover:text-[var(--color-text-muted)]"
-          >
-            {item.label}
-          </a>
+      {
+        navigation.map((item) =>
+          item.items && item.items.length > 0 ? (
+            <NavDropdown trigger={item.label} items={item.items} />
+          ) : (
+            <a
+              href={item.href}
+              class="px-3 py-2 font-sans text-sm font-medium text-[var(--color-text-main)] transition-colors duration-200 hover:text-[var(--color-text-muted)]"
+            >
+              {item.label}
+            </a>
+          )
         )
-      )}
+      }
     </nav>
 
     {/* Desktop Actions - Hidden on mobile */}
     <div class="hidden items-center gap-2 md:flex">
       <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="search" />
+        <Icon name="PhMagnifyingGlass" />
       </Button>
       <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="heart" />
+        <Icon name="PhHeart" />
       </Button>
       <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="cart" />
+        <Icon name="PhShoppingCart" />
       </Button>
     </div>
 
     {/* Mobile: Actions + Menu Toggle */}
     <div class="flex items-center gap-2 md:hidden" x-data="{ mobileMenuOpen: false }">
       <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="search" />
+        <Icon name="PhMagnifyingGlass" />
       </Button>
       <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="cart" />
+        <Icon name="PhShoppingCart" />
       </Button>
-      
+
       {/* Mobile Menu Toggle */}
-      <Button
-        type="ghost"
-        variant="icon-only"
-        size="sm"
-        @click="mobileMenuOpen = true"
-      >
-        <Icon name="menu" />
+      <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = true">
+        <Icon name="PhList" />
       </Button>
 
       {/* Mobile Drawer Overlay */}
@@ -90,7 +87,8 @@ const { class: className, ...rest } = Astro.props;
         class="fixed inset-0 z-50 bg-black/50"
         @click="mobileMenuOpen = false"
         x-cloak
-      ></div>
+      >
+      </div>
 
       {/* Mobile Drawer Panel */}
       <div
@@ -106,59 +104,63 @@ const { class: className, ...rest } = Astro.props;
       >
         <div class="flex h-full flex-col" x-data="{ activeAccordion: null }">
           {/* Drawer Header */}
-          <div class="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-4">
+          <div
+            class="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-4"
+          >
             <Logo variant="full" />
             <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false">
-              <Icon name="close" />
+              <Icon name="PhX" />
             </Button>
           </div>
 
           {/* Mobile Navigation */}
           <nav class="flex-1 px-4 py-6">
             <ul class="space-y-1">
-              {navigation.map((item) => (
-                <li>
-                  {item.items && item.items.length > 0 ? (
-                    <div>
-                      <button
-                        type="button"
-                        class="flex w-full items-center justify-between rounded-md px-3 py-3 font-sans text-base font-medium text-[var(--color-text-main)] transition-colors hover:bg-[var(--color-surface)]"
-                        @click={`activeAccordion = activeAccordion === '${item.label}' ? null : '${item.label}'`}
+              {
+                navigation.map((item) => (
+                  <li>
+                    {item.items && item.items.length > 0 ? (
+                      <div>
+                        <button
+                          type="button"
+                          class="flex w-full items-center justify-between rounded-md px-3 py-3 font-sans text-base font-medium text-[var(--color-text-main)] transition-colors hover:bg-[var(--color-surface)]"
+                          @click={`activeAccordion = activeAccordion === '${item.label}' ? null : '${item.label}'`}
+                        >
+                          {item.label}
+                          <Icon
+                            name="PhCaretDown"
+                            class="h-4 w-4 transition-transform duration-200"
+                            x-bind:class={`activeAccordion === '${item.label}' ? 'rotate-180' : ''`}
+                          />
+                        </button>
+                        <ul
+                          x-show={`activeAccordion === '${item.label}'`}
+                          x-collapse
+                          class="mt-1 ml-4 space-y-1"
+                        >
+                          {item.items.map((subItem) => (
+                            <li>
+                              <a
+                                href={subItem.href}
+                                class="block rounded-md px-3 py-2 text-sm text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-main)]"
+                              >
+                                {subItem.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <a
+                        href={item.href}
+                        class="block rounded-md px-3 py-3 font-sans text-base font-medium text-[var(--color-text-main)] transition-colors hover:bg-[var(--color-surface)]"
                       >
                         {item.label}
-                        <Icon
-                          name="chevron-down"
-                          class="h-4 w-4 transition-transform duration-200"
-                          x-bind:class={`activeAccordion === '${item.label}' ? 'rotate-180' : ''`}
-                        />
-                      </button>
-                      <ul
-                        x-show={`activeAccordion === '${item.label}'`}
-                        x-collapse
-                        class="ml-4 mt-1 space-y-1"
-                      >
-                        {item.items.map((subItem) => (
-                          <li>
-                            <a
-                              href={subItem.href}
-                              class="block rounded-md px-3 py-2 text-sm text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-main)]"
-                            >
-                              {subItem.label}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : (
-                    <a
-                      href={item.href}
-                      class="block rounded-md px-3 py-3 font-sans text-base font-medium text-[var(--color-text-main)] transition-colors hover:bg-[var(--color-surface)]"
-                    >
-                      {item.label}
-                    </a>
-                  )}
-                </li>
-              ))}
+                      </a>
+                    )}
+                  </li>
+                ))
+              }
             </ul>
           </nav>
 
@@ -166,10 +168,10 @@ const { class: className, ...rest } = Astro.props;
           <div class="border-t border-[var(--color-border-subtle)] px-4 py-4">
             <div class="flex items-center gap-4">
               <Button type="ghost" variant="icon-only" size="sm">
-                <Icon name="heart" />
+                <Icon name="PhHeart" />
               </Button>
               <Button type="ghost" variant="icon-only" size="sm">
-                <Icon name="user" />
+                <Icon name="PhUser" />
               </Button>
             </div>
           </div>

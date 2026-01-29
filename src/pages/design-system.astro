@@ -103,15 +103,15 @@ import ProductGrid from "../components/features/ProductGrid.astro";
                       {size.toUpperCase()} Button
                     </Button>
                     <Button type={type as any} size={size as any} variant="icon-left">
-                      <Icon name="check" />
+                      <Icon name="PhCheck" />
                       With Icon
                     </Button>
                     <Button type={type as any} size={size as any} variant="icon-right">
                       Next
-                      <Icon name="chevron-down" />
+                      <Icon name="PhCaretDown" />
                     </Button>
                     <Button type={type as any} size={size as any} variant="icon-only">
-                      <Icon name="cart" />
+                      <Icon name="PhShoppingCart" />
                     </Button>
                   </>
                 ))}
@@ -155,19 +155,19 @@ import ProductGrid from "../components/features/ProductGrid.astro";
           <Text variant="caption" class="mb-3 uppercase">Icon Examples</Text>
           <div class="flex flex-wrap items-center gap-6 rounded-lg bg-[var(--color-surface)] p-6">
             <div class="flex items-center gap-2">
-              <Icon name="search" />
+              <Icon name="PhMagnifyingGlass" />
               <Text>Search</Text>
             </div>
             <div class="flex items-center gap-2">
-              <Icon name="cart" />
+              <Icon name="PhShoppingCart" />
               <Text>Cart</Text>
             </div>
             <div class="flex items-center gap-2">
-              <Icon name="check" />
+              <Icon name="PhCheck" />
               <Text>Check</Text>
             </div>
             <div class="flex items-center gap-2">
-              <Icon name="chevron-down" />
+              <Icon name="PhCaretDown" />
               <Text>Chevron</Text>
             </div>
           </div>
@@ -175,17 +175,17 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">Icon Sizes (inherits from text size)</Text>
           <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
-            <p class="flex items-center gap-2 text-sm font-sans text-[var(--color-text-main)]">
-              <Icon name="cart" /> Small text with icon
+            <p class="flex items-center gap-2 font-sans text-sm text-[var(--color-text-main)]">
+              <Icon name="PhShoppingCart" /> Small text with icon
             </p>
-            <p class="flex items-center gap-2 text-base font-sans text-[var(--color-text-main)]">
-              <Icon name="cart" /> Base text with icon
+            <p class="flex items-center gap-2 font-sans text-base text-[var(--color-text-main)]">
+              <Icon name="PhShoppingCart" /> Base text with icon
             </p>
-            <p class="flex items-center gap-2 text-lg font-sans text-[var(--color-text-main)]">
-              <Icon name="cart" /> Large text with icon
+            <p class="flex items-center gap-2 font-sans text-lg text-[var(--color-text-main)]">
+              <Icon name="PhShoppingCart" /> Large text with icon
             </p>
-            <p class="flex items-center gap-2 text-2xl font-sans text-[var(--color-text-main)]">
-              <Icon name="cart" /> 2XL text with icon
+            <p class="flex items-center gap-2 font-sans text-2xl text-[var(--color-text-main)]">
+              <Icon name="PhShoppingCart" /> 2XL text with icon
             </p>
           </div>
         </div>
@@ -317,7 +317,8 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
         <Heading as="h2" class="mb-2">Molecules (UI)</Heading>
         <Text variant="caption">
-          Composed components built using Primitives. These follow the headless pattern where logic lives in TypeScript and UI binds to it.
+          Composed components built using Primitives. These follow the headless pattern where logic
+          lives in TypeScript and UI binds to it.
         </Text>
       </div>
 
@@ -426,13 +427,17 @@ import ProductGrid from "../components/features/ProductGrid.astro";
           <Text variant="caption" class="mb-3 uppercase">Alert</Text>
           <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
             <Alert intent="info" title="Information">
-              <Text as="span" variant="caption">Your order has been received and is being processed.</Text>
+              <Text as="span" variant="caption"
+                >Your order has been received and is being processed.</Text
+              >
             </Alert>
             <Alert intent="warning" title="Warning">
               <Text as="span" variant="caption">Only 3 items left in stock!</Text>
             </Alert>
             <Alert intent="success" title="Success">
-              <Text as="span" variant="caption">Your payment was successful. Thank you for your order!</Text>
+              <Text as="span" variant="caption"
+                >Your payment was successful. Thank you for your order!</Text
+              >
             </Alert>
           </div>
         </div>
@@ -442,14 +447,34 @@ import ProductGrid from "../components/features/ProductGrid.astro";
           <Text variant="caption" class="mb-3 uppercase">MenuToggle (Headless)</Text>
           <div class="rounded-lg bg-[var(--color-surface)] p-6">
             <MenuToggle label="Navigation menu">
-              <div class="w-48 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] p-2 shadow-lg">
-                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Dashboard</a>
-                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Products</a>
-                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Orders</a>
-                <a href="#" class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]">Settings</a>
+              <div
+                class="w-48 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] p-2 shadow-lg"
+              >
+                <a
+                  href="#"
+                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  >Dashboard</a
+                >
+                <a
+                  href="#"
+                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  >Products</a
+                >
+                <a
+                  href="#"
+                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  >Orders</a
+                >
+                <a
+                  href="#"
+                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  >Settings</a
+                >
               </div>
             </MenuToggle>
-            <Text variant="caption" class="mt-2">Click the hamburger icon to toggle the dropdown menu.</Text>
+            <Text variant="caption" class="mt-2"
+              >Click the hamburger icon to toggle the dropdown menu.</Text
+            >
           </div>
         </div>
 
@@ -505,24 +530,30 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">EmptyState (Sad Paths)</Text>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]">
+            <div
+              class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]"
+            >
               <EmptyState
-                icon="bag"
+                icon="PhBag"
                 heading="Your Cart is Empty"
                 description="Looks like you haven't added anything yet. Start shopping to fill your bag!"
                 action={{ label: "Start Shopping", href: "/shop" }}
               />
             </div>
-            <div class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]">
+            <div
+              class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]"
+            >
               <EmptyState
-                icon="search"
+                icon="PhMagnifyingGlass"
                 heading="No Results Found"
                 description="We couldn't find any products matching your search. Try different keywords."
               />
             </div>
-            <div class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]">
+            <div
+              class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]"
+            >
               <EmptyState
-                icon="heart"
+                icon="PhHeart"
                 heading="Save Your Favorites"
                 description="Items you love will appear here. Start adding to your wishlist!"
                 action={{ label: "Explore Collection", href: "/collection" }}
@@ -547,21 +578,22 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">Footer</Text>
           <Text variant="caption" class="mb-4">
-            4-column responsive footer with brand info, navigation, support links, and newsletter signup.
+            4-column responsive footer with brand info, navigation, support links, and newsletter
+            signup.
           </Text>
-          <div class="-mx-4 rounded-lg border border-[var(--color-border-subtle)] overflow-hidden">
+          <div class="-mx-4 overflow-hidden rounded-lg border border-[var(--color-border-subtle)]">
             <Footer />
           </div>
         </div>
 
         <!-- Navbar Note -->
         <div class="rounded-lg bg-[var(--color-surface)] p-6">
-          <Text variant="caption" class="uppercase mb-2">Navbar</Text>
+          <Text variant="caption" class="mb-2 uppercase">Navbar</Text>
           <Alert intent="info" title="Navbar Component Ready">
             <Text as="span" variant="caption">
-              The Navbar component is implemented at `src/components/features/Navbar.astro`. 
-              It includes desktop navigation with dropdowns and a mobile slide-over drawer with exclusive accordion menu. 
-              Cannot be embedded here due to fixed positioning.
+              The Navbar component is implemented at `src/components/features/Navbar.astro`. It
+              includes desktop navigation with dropdowns and a mobile slide-over drawer with
+              exclusive accordion menu. Cannot be embedded here due to fixed positioning.
             </Text>
           </Alert>
         </div>
@@ -573,7 +605,8 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
         <Heading as="h2" class="mb-2">Shop Components</Heading>
         <Text variant="caption">
-          Product display components for the shopping experience. Test cases include products with various states.
+          Product display components for the shopping experience. Test cases include products with
+          various states.
         </Text>
       </div>
 
@@ -582,9 +615,10 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">ProductCard States</Text>
           <Text variant="caption" class="mb-6">
-            Cards feature image zoom on hover, wishlist toggle (click heart), conditional rating display, and responsive badges.
+            Cards feature image zoom on hover, wishlist toggle (click heart), conditional rating
+            display, and responsive badges.
           </Text>
-          
+
           <ProductGrid>
             <!-- Test Case A: Sale + Badge + Rating -->
             <ProductCard
@@ -647,12 +681,12 @@ import ProductGrid from "../components/features/ProductGrid.astro";
 
         <!-- Grid Responsiveness Note -->
         <div class="rounded-lg bg-[var(--color-surface)] p-6">
-          <Text variant="caption" class="uppercase mb-2">Responsive Grid</Text>
+          <Text variant="caption" class="mb-2 uppercase">Responsive Grid</Text>
           <Alert intent="info" title="ProductGrid Layout">
             <Text as="span" variant="caption">
-              The grid automatically adapts: <strong>2 columns</strong> on mobile for detail visibility, 
-              <strong>3 columns</strong> on tablet, and <strong>4 columns</strong> on desktop for a premium, airy feel. 
-              Try resizing your browser to see the responsive behavior.
+              The grid automatically adapts: <strong>2 columns</strong> on mobile for detail visibility,
+              <strong>3 columns</strong> on tablet, and <strong>4 columns</strong> on desktop for a premium,
+              airy feel. Try resizing your browser to see the responsive behavior.
             </Text>
           </Alert>
         </div>

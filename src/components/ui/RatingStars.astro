@@ -23,17 +23,19 @@ const emptyStars = max - fullStars - (hasHalfStar ? 1 : 0);
   {...rest}
 >
   {/* Full stars */}
-  {Array.from({ length: fullStars }).map(() => (
-    <Icon name="star" class="text-[var(--color-primary)]" />
-  ))}
+  {
+    Array.from({ length: fullStars }).map(() => (
+      <Icon name="PhStar" weight="fill" class="text-[var(--color-primary)]" />
+    ))
+  }
 
   {/* Half star (rendered as full for simplicity, using muted color) */}
-  {hasHalfStar && (
-    <Icon name="star" class="text-[var(--color-border-strong)]" />
-  )}
+  {hasHalfStar && <Icon name="PhStar" weight="fill" class="text-[var(--color-border-strong)]" />}
 
   {/* Empty stars */}
-  {Array.from({ length: emptyStars }).map(() => (
-    <Icon name="star" class="text-[var(--color-border-subtle)]" />
-  ))}
+  {
+    Array.from({ length: emptyStars }).map(() => (
+      <Icon name="PhStar" class="text-[var(--color-border-subtle)]" />
+    ))
+  }
 </div>

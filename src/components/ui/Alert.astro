@@ -17,12 +17,12 @@ const intentStyles = {
   success: "bg-green-50 border-green-200",
 };
 
-// Intent icon mapping
+// Intent icon mapping (Phosphor names with Ph prefix)
 const intentIcons = {
-  info: "info",
-  warning: "warning",
-  success: "check",
-};
+  info: "PhInfo",
+  warning: "PhWarning",
+  success: "PhCheck",
+} as const;
 
 // Intent text colors
 const intentTextColors = {
@@ -33,21 +33,19 @@ const intentTextColors = {
 ---
 
 <div
-  class:list={[
-    "flex items-start gap-3 rounded-lg border p-4",
-    intentStyles[intent],
-    className,
-  ]}
+  class:list={["flex items-start gap-3 rounded-lg border p-4", intentStyles[intent], className]}
   role="alert"
   {...rest}
 >
   <Icon name={intentIcons[intent]} class:list={["mt-0.5 shrink-0", intentTextColors[intent]]} />
   <div class="flex-1">
-    {title && (
-      <Text as="span" class:list={["font-medium", intentTextColors[intent]]}>
-        {title}
-      </Text>
-    )}
+    {
+      title && (
+        <Text as="span" class:list={["font-medium", intentTextColors[intent]]}>
+          {title}
+        </Text>
+      )
+    }
     <div class:list={[intentTextColors[intent], title ? "mt-1" : ""]}>
       <slot />
     </div>

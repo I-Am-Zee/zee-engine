@@ -10,11 +10,7 @@ interface Props {
 const { label, class: className, ...rest } = Astro.props;
 ---
 
-<div
-  class:list={["relative", className]}
-  x-data="{ isOpen: false }"
-  {...rest}
->
+<div class:list={["relative", className]} x-data="{ isOpen: false }" {...rest}>
   <Button
     type="ghost"
     variant="icon-only"
@@ -25,10 +21,10 @@ const { label, class: className, ...rest } = Astro.props;
     aria-label={label || "Toggle menu"}
   >
     <template x-if="!isOpen">
-      <Icon name="menu" />
+      <Icon name="PhList" />
     </template>
     <template x-if="isOpen">
-      <Icon name="close" />
+      <Icon name="PhX" />
     </template>
   </Button>
 

@@ -50,11 +50,7 @@ const canGoPrev = currentPage > 1;
 const canGoNext = currentPage < totalPages;
 ---
 
-<nav
-  class:list={["flex items-center gap-1", className]}
-  aria-label="Pagination"
-  {...rest}
->
+<nav class:list={["flex items-center gap-1", className]} aria-label="Pagination" {...rest}>
   <Button
     as="a"
     href={canGoPrev ? `${baseUrl}?page=${currentPage - 1}` : "#"}
@@ -64,24 +60,26 @@ const canGoNext = currentPage < totalPages;
     disabled={!canGoPrev}
     aria-label="Previous page"
   >
-    <Icon name="chevron-left" />
+    <Icon name="PhCaretLeft" />
   </Button>
 
-  {pageNumbers.map((page) =>
-    page === "..." ? (
-      <span class="px-2 text-[var(--color-text-muted)]">...</span>
-    ) : (
-      <Button
-        as="a"
-        href={`${baseUrl}?page=${page}`}
-        type={page === currentPage ? "primary" : "ghost"}
-        size="sm"
-        aria-current={page === currentPage ? "page" : undefined}
-      >
-        {page}
-      </Button>
+  {
+    pageNumbers.map((page) =>
+      page === "..." ? (
+        <span class="px-2 text-[var(--color-text-muted)]">...</span>
+      ) : (
+        <Button
+          as="a"
+          href={`${baseUrl}?page=${page}`}
+          type={page === currentPage ? "primary" : "ghost"}
+          size="sm"
+          aria-current={page === currentPage ? "page" : undefined}
+        >
+          {page}
+        </Button>
+      )
     )
-  )}
+  }
 
   <Button
     as="a"
@@ -92,6 +90,6 @@ const canGoNext = currentPage < totalPages;
     disabled={!canGoNext}
     aria-label="Next page"
   >
-    <Icon name="chevron-right" />
+    <Icon name="PhCaretRight" />
   </Button>
 </nav>
