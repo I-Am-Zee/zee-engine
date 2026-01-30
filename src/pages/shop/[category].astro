@@ -150,9 +150,10 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
         <div id="product-grid">
           <ProductGrid>
             {
-              products.map((product) => (
+              products.map((product, index) => (
                 <div
                   class="product-item"
+                  data-index={index}
                   data-slug={product.slug}
                   data-price={product.data.salePrice || product.data.price}
                   data-original-price={product.data.price}
@@ -201,17 +202,17 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 </BaseLayout>
 
 <script>
-  import Alpine from "alpinejs";
-
-  // Product sorter component for client-side sorting
+  // @ts-ignore
   document.addEventListener("alpine:init", () => {
-    Alpine.data("productSorter", (initialProducts = []) => ({
+    // @ts-ignore
+    const Alpine = window.Alpine;
+    
+    Alpine.data("productSorter", () => ({
       sortBy: "default",
-      products: initialProducts,
       
       sort(criteria: string) {
         this.sortBy = criteria;
-        const grid = document.querySelector("#product-grid .grid");
+        const grid = document.querySelector("[data-product-grid]");
         if (!grid) return;
         
         const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
@@ -223,33 +224,27 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
           const bName = b.dataset.name || "";
           const aRating = parseFloat(a.dataset.rating || "0");
           const bRating = parseFloat(b.dataset.rating || "0");
-          const aDate = parseFloat(a.dataset.publishDate || "0");
-          const bDate = parseFloat(b.dataset.publishDate || "0");
+          const aDate = parseInt(a.dataset.publishDate || "0");
+          const bDate = parseInt(b.dataset.publishDate || "0");
           const aDiscount = parseFloat(a.dataset.discount || "0");
           const bDiscount = parseFloat(b.dataset.discount || "0");
+          const aIndex = parseInt(a.dataset.index || "0");
+          const bIndex = parseInt(b.dataset.index || "0");
           
           switch (criteria) {
-            case "price-asc":
-              return aPrice - bPrice;
-            case "price-desc":
-              return bPrice - aPrice;
-            case "name-asc":
-              return aName.localeCompare(bName);
-            case "name-desc":
-              return bName.localeCompare(aName);
-            case "rating-desc":
-              return bRating - aRating;
-            case "date-desc":
-              return bDate - aDate; // Newest first
-            case "discount-desc":
-              return bDiscount - aDiscount; // Highest discount first
-            default:
-              return 0;
+            case "price-asc": return aPrice - bPrice;
+            case "price-desc": return bPrice - aPrice;
+            case "name-asc": return aName.localeCompare(bName);
+            case "name-desc": return bName.localeCompare(aName);
+            case "rating-desc": return bRating - aRating;
+            case "date-desc": return bDate - aDate;
+            case "discount-desc": return bDiscount - aDiscount;
+            case "default": return aIndex - bIndex;
+            default: return 0;
           }
         });
         
-        // Re-append items in new order
-        items.forEach((item) => grid.appendChild(item));
+        items.forEach(item => grid.appendChild(item));
       },
     }));
   });

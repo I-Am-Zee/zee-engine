@@ -1,10 +1,10 @@
 ---
 title: "Pearl Strand Necklace"
 price: 1850
-image: "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
+image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
 gallery:
-  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
   - "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
+  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
 category: "necklaces"
 badges:
   - "Classic"

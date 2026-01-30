@@ -16,6 +16,8 @@ tags:
   - "gold"
   - "pendant"
   - "everyday"
+  - "waterproof"
+  - "pvd-coated"
 options:
   - name: "Chain Length"
     values: ["16 inches", "18 inches", "20 inches"]

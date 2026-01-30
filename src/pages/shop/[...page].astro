@@ -1,23 +1,26 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/features/Navbar.astro";
-import Footer from "../components/features/Footer.astro";
-import Heading from "../components/primitives/Heading.astro";
-import ProductCard from "../components/features/ProductCard.astro";
-import ProductGrid from "../components/features/ProductGrid.astro";
-import FilterSortBar from "../components/ui/FilterSortBar.astro";
-import Pagination from "../components/ui/Pagination.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/features/Navbar.astro";
+import Footer from "../../components/features/Footer.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import ProductCard from "../../components/features/ProductCard.astro";
+import ProductGrid from "../../components/features/ProductGrid.astro";
+import FilterSortBar from "../../components/ui/FilterSortBar.astro";
+import Pagination from "../../components/ui/Pagination.astro";
+import type { Page, PaginateFunction } from "astro";
 
-// Products per page for pagination
-const PRODUCTS_PER_PAGE = 12;
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
+  const allProducts = await getCollection("products");
+  return paginate(allProducts, { pageSize: 12 });
+}
 
-// Fetch all products from the content collection
-const allProducts = await getCollection("products");
+interface Props {
+  page: Page<any>;
+}
 
-// Get current page from URL (for static site, this is just for display)
-const currentPage = 1;
-const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
+const { page } = Astro.props;
+const products = page.data;
 ---
 
 <BaseLayout title="Shop All Jewelry | Zaviona">
@@ -33,15 +36,16 @@ const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
     </div>
 
     {/* Filter/Sort Bar */}
-    <FilterSortBar productCount={allProducts.length} />
+    <FilterSortBar productCount={page.total} />
 
     {/* Product Grid with Alpine.js sorting */}
     <div id="product-grid">
       <ProductGrid>
         {
-          allProducts.map((product) => (
+          products.map((product, index) => (
             <div
               class="product-item"
+              data-index={index}
               data-price={product.data.salePrice || product.data.price}
               data-original-price={product.data.price}
               data-sale-price={product.data.salePrice || ""}
@@ -67,10 +71,10 @@ const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
     </div>
     
     {/* Pagination - shown when more than 12 products */}
-    {totalPages > 1 && (
+    {page.lastPage > 1 && (
       <Pagination 
-        currentPage={currentPage} 
-        totalPages={totalPages} 
+        currentPage={page.currentPage} 
+        totalPages={page.lastPage} 
         baseUrl="/shop"
       />
     )}
@@ -80,16 +84,17 @@ const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
 </BaseLayout>
 
 <script>
-  import Alpine from "alpinejs";
-
-  // Product sorter component for client-side sorting
+  // @ts-ignore
   document.addEventListener("alpine:init", () => {
+    // @ts-ignore
+    const Alpine = window.Alpine;
+    
     Alpine.data("productSorter", () => ({
       sortBy: "default",
       
       sort(criteria: string) {
         this.sortBy = criteria;
-        const grid = document.querySelector("#product-grid .grid");
+        const grid = document.querySelector("[data-product-grid]");
         if (!grid) return;
         
         const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
@@ -101,33 +106,27 @@ const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
           const bName = b.dataset.name || "";
           const aRating = parseFloat(a.dataset.rating || "0");
           const bRating = parseFloat(b.dataset.rating || "0");
-          const aDate = parseFloat(a.dataset.publishDate || "0");
-          const bDate = parseFloat(b.dataset.publishDate || "0");
+          const aDate = parseInt(a.dataset.publishDate || "0");
+          const bDate = parseInt(b.dataset.publishDate || "0");
           const aDiscount = parseFloat(a.dataset.discount || "0");
           const bDiscount = parseFloat(b.dataset.discount || "0");
+          const aIndex = parseInt(a.dataset.index || "0");
+          const bIndex = parseInt(b.dataset.index || "0");
           
           switch (criteria) {
-            case "price-asc":
-              return aPrice - bPrice;
-            case "price-desc":
-              return bPrice - aPrice;
-            case "name-asc":
-              return aName.localeCompare(bName);
-            case "name-desc":
-              return bName.localeCompare(aName);
-            case "rating-desc":
-              return bRating - aRating;
-            case "date-desc":
-              return bDate - aDate; // Newest first
-            case "discount-desc":
-              return bDiscount - aDiscount; // Highest discount first
-            default:
-              return 0;
+            case "price-asc": return aPrice - bPrice;
+            case "price-desc": return bPrice - aPrice;
+            case "name-asc": return aName.localeCompare(bName);
+            case "name-desc": return bName.localeCompare(aName);
+            case "rating-desc": return bRating - aRating;
+            case "date-desc": return bDate - aDate;
+            case "discount-desc": return bDiscount - aDiscount;
+            case "default": return aIndex - bIndex;
+            default: return 0;
           }
         });
         
-        // Re-append items in new order
-        items.forEach((item) => grid.appendChild(item));
+        items.forEach(item => grid.appendChild(item));
       },
     }));
   });

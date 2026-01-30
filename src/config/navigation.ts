@@ -18,12 +18,12 @@ export const navigation: NavItem[] = [
     label: "Shop",
     href: "/shop",
     items: [
-      { label: "All Collections", href: "/shop" },
+      { label: "All Jewelry", href: "/shop" },
       { label: "Rings", href: "/shop/rings" },
       { label: "Necklaces", href: "/shop/necklaces" },
       { label: "Earrings", href: "/shop/earrings" },
       { label: "Bracelets", href: "/shop/bracelets" },
-      { label: "Gifts", href: "/shop/gifts" },
+      { label: "Explore Collections", href: "/collections" },
     ],
   },
   {

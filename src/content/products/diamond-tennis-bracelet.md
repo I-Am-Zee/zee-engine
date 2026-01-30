@@ -1,9 +1,9 @@
 ---
 title: "Diamond Tennis Bracelet"
 price: 6500
-image: "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
+image: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&h=1000&fit=crop"
 gallery:
-  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
+  - "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&h=1000&fit=crop"
   - "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1000&fit=crop"
 category: "bracelets"
 badges:

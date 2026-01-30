@@ -14,6 +14,8 @@ tags:
   - "gold"
   - "everyday"
   - "chain"
+  - "waterproof"
+  - "pvd-coated"
 options:
   - name: "Size"
     values: ["6.5 inches", "7 inches", "7.5 inches"]

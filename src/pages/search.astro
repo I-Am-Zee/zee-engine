@@ -1,0 +1,151 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/features/Navbar.astro";
+import Footer from "../components/features/Footer.astro";
+import Heading from "../components/primitives/Heading.astro";
+import Text from "../components/primitives/Text.astro";
+import ProductCard from "../components/features/ProductCard.astro";
+import ProductGrid from "../components/features/ProductGrid.astro";
+import EmptyState from "../components/ui/EmptyState.astro";
+
+const allProducts = await getCollection("products");
+
+// Prepare data for Fuse.js
+const searchableProducts = allProducts.map(p => ({
+  title: p.data.title,
+  description: p.data.description,
+  tags: p.data.tags || [],
+  category: p.data.category,
+  slug: p.slug,
+  image: p.data.image,
+  price: p.data.price,
+  salePrice: p.data.salePrice,
+  badges: p.data.badges || [],
+  rating: p.data.rating
+}));
+---
+
+<BaseLayout title="Search Products | Zaviona">
+  <Navbar />
+
+  <main class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data={`searchApp(${JSON.stringify(searchableProducts)})`}>
+    <div class="mb-12 text-center">
+      <Heading as="h1" class="text-4xl font-bold mb-4 uppercase tracking-wider">Search Our Collection</Heading>
+      <div class="relative mx-auto max-w-2xl">
+        <input
+          type="text"
+          x-model="query"
+          @input.debounce.300ms="performSearch()"
+          placeholder="Search for diamonds, rings, gold..."
+          class="w-full rounded-full border border-(--color-border-subtle) bg-(--color-background) py-4 pl-12 pr-4 text-lg focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-ring) focus:outline-none transition-all shadow-sm"
+        />
+        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+          <svg class="h-6 w-6 text-(--color-text-muted)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+      <template x-if="query.length > 0">
+        <Text class="mt-4 text-(--color-text-muted)">
+          Found <span x-text="results.length" class="font-bold text-(--color-text-main)"></span> results for "<span x-text="query" class="font-bold text-(--color-text-main)"></span>"
+        </Text>
+      </template>
+    </div>
+
+    {/* Search Results Grid */}
+    <div id="search-results">
+      <ProductGrid>
+        {allProducts.map((product) => (
+          <div 
+            class="search-item" 
+            x-show="matchingSlugs.includes($el.dataset.slug)"
+            data-slug={product.slug}
+            x-cloak
+          >
+            <ProductCard
+              id={product.slug}
+              title={product.data.title}
+              price={product.data.price}
+              salePrice={product.data.salePrice}
+              image={product.data.image}
+              href={`/products/${product.slug}`}
+              badges={product.data.badges}
+              rating={product.data.rating}
+            />
+          </div>
+        ))}
+      </ProductGrid>
+    </div>
+
+    {/* Empty State */}
+    <div x-show="query.length >= 2 && matchingSlugs.length === 0" x-cloak>
+      <EmptyState
+        icon="shopping-bag"
+        heading="No results found"
+        description="Try adjusting your search to find what you're looking for."
+        action={{ label: "View All Products", href: "/shop" }}
+      />
+    </div>
+
+    {/* Initial State (when query is empty) */}
+    <div x-show="query.length < 2" class="text-center py-20">
+      <div class="mb-6 opacity-30">
+        <svg class="mx-auto h-24 w-24 text-(--color-text-muted)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <Heading as="h3" class="text-xl text-(--color-text-muted)">Type above to start searching...</Heading>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import Fuse from "fuse.js";
+
+  // @ts-ignore
+  document.addEventListener("alpine:init", () => {
+    // @ts-ignore
+    const Alpine = window.Alpine;
+    
+    Alpine.data("searchApp", (products: any[]) => ({
+      query: "",
+      allProducts: products,
+      matchingSlugs: [],
+      fuse: null as any,
+
+      init() {
+        this.fuse = new Fuse(this.allProducts, {
+          keys: ["title", "description", "tags", "category"],
+          threshold: 0.3,
+          includeMatches: true
+        });
+        
+        // Handle initial query from URL if any
+        const urlParams = new URLSearchParams(window.location.search);
+        const q = urlParams.get('q');
+        if (q) {
+          this.query = q;
+          this.performSearch();
+        }
+      },
+
+      performSearch() {
+        if (this.query.length < 2) {
+          this.matchingSlugs = [];
+          return;
+        }
+        
+        // @ts-ignore
+        const searchResults = this.fuse.search(this.query);
+        this.matchingSlugs = searchResults.map((r: any) => r.item.slug);
+      }
+    }));
+  });
+</script>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>

@@ -46,12 +46,19 @@ const getPageNumbers = () => {
 const pageNumbers = getPageNumbers();
 const hasPrev = currentPage > 1;
 const hasNext = currentPage < totalPages;
+
+const getUrl = (pg: number) => {
+  if (pg === 1) return baseUrl;
+  // Ensure baseUrl doesn't end with slash before appending
+  const cleanBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  return `${cleanBase}/${pg}`;
+};
 ---
 
 <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
   {/* Previous Button */}
   <a
-    href={hasPrev ? `${baseUrl}?page=${currentPage - 1}` : "#"}
+    href={hasPrev ? getUrl(currentPage - 1) : "#"}
     class:list={[
       "flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
       hasPrev 
@@ -73,7 +80,7 @@ const hasNext = currentPage < totalPages;
         <span class="flex h-10 w-10 items-center justify-center text-(--color-text-muted)">...</span>
       ) : (
         <a
-          href={page === currentPage ? "#" : `${baseUrl}?page=${page}`}
+          href={page === currentPage ? "#" : getUrl(page)}
           class:list={[
             "flex h-10 w-10 items-center justify-center rounded-md border text-sm font-medium transition-colors",
             page === currentPage
@@ -90,7 +97,7 @@ const hasNext = currentPage < totalPages;
 
   {/* Next Button */}
   <a
-    href={hasNext ? `${baseUrl}?page=${currentPage + 1}` : "#"}
+    href={hasNext ? getUrl(currentPage + 1) : "#"}
     class:list={[
       "flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
       hasNext 

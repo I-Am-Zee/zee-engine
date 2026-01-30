@@ -50,9 +50,11 @@ const { class: className, ...rest } = Astro.props;
 
     {/* Desktop Actions - Hidden on mobile */}
     <div class="hidden items-center gap-2 md:flex">
-      <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="PhMagnifyingGlass" />
-      </Button>
+      <a href="/search">
+        <Button type="ghost" variant="icon-only" size="sm" as="span">
+          <Icon name="PhMagnifyingGlass" />
+        </Button>
+      </a>
       <a href="/wishlist" class="relative">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhHeart" />
@@ -72,9 +74,11 @@ const { class: className, ...rest } = Astro.props;
 
     {/* Mobile: Actions + Menu Toggle */}
     <div class="flex items-center gap-2 md:hidden" x-data="{ mobileMenuOpen: false }">
-      <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="PhMagnifyingGlass" />
-      </Button>
+      <a href="/search">
+        <Button type="ghost" variant="icon-only" size="sm" as="span">
+          <Icon name="PhMagnifyingGlass" />
+        </Button>
+      </a>
       <Button type="ghost" variant="icon-only" size="sm">
         <Icon name="PhShoppingCart" />
       </Button>

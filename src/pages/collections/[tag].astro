@@ -1,0 +1,164 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/features/Navbar.astro";
+import Footer from "../../components/features/Footer.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import ProductCard from "../../components/features/ProductCard.astro";
+import ProductGrid from "../../components/features/ProductGrid.astro";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import FilterSortBar from "../../components/ui/FilterSortBar.astro";
+import EmptyState from "../../components/ui/EmptyState.astro";
+import Pagination from "../../components/ui/Pagination.astro";
+
+export async function getStaticPaths() {
+  const allProducts = await getCollection("products");
+  
+  // Extract all unique tags
+  const tags = [...new Set(allProducts.flatMap(p => p.data.tags || []))];
+  
+  return tags.map(tag => {
+    const filteredProducts = allProducts.filter(p => p.data.tags?.includes(tag));
+    return {
+      params: { tag },
+      props: { products: filteredProducts, tagName: tag }
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { products, tagName } = Astro.props;
+
+// Formatting tag for display (e.g., "pvd-coated" -> "PVD Coated")
+const formattedTagName = tagName
+  .split('-')
+  .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+  .join(' ');
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "Collections", href: "/collections" },
+  { label: formattedTagName, active: true },
+];
+
+const PRODUCTS_PER_PAGE = 12;
+const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+const currentPage = 1; // For now, handle as single page or implement full pagination if needed
+---
+
+<BaseLayout title={`${formattedTagName} Collection | Zaviona`}>
+  <Navbar />
+
+  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8" x-data="productSorter">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <div class="mb-8 mt-6">
+      <Heading as="h1" class="mb-2 tracking-wider">{formattedTagName} Collection</Heading>
+      <p class="text-(--color-text-muted)">
+        Showing all {products.length} products in the {formattedTagName} collection.
+      </p>
+    </div>
+
+    {products.length > 0 ? (
+      <>
+        <FilterSortBar productCount={products.length} categoryName={formattedTagName} />
+        
+        <div id="product-grid">
+          <ProductGrid>
+            {products.map((product, index) => (
+              <div
+                class="product-item"
+                data-index={index}
+                data-slug={product.slug}
+                data-price={product.data.salePrice || product.data.price}
+                data-original-price={product.data.price}
+                data-sale-price={product.data.salePrice || ""}
+                data-name={product.data.title}
+                data-rating={product.data.rating || 0}
+                data-publish-date={product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0}
+                data-discount={product.data.salePrice ? Math.round((1 - product.data.salePrice / product.data.price) * 100) : 0}
+              >
+                <ProductCard
+                  id={product.slug}
+                  title={product.data.title}
+                  price={product.data.price}
+                  salePrice={product.data.salePrice}
+                  image={product.data.image}
+                  href={`/products/${product.slug}`}
+                  badges={product.data.badges}
+                  rating={product.data.rating}
+                />
+              </div>
+            ))}
+          </ProductGrid>
+        </div>
+
+        {totalPages > 1 && (
+          <Pagination 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            baseUrl={`/collections/${tag}`}
+          />
+        )}
+      </>
+    ) : (
+      <EmptyState 
+        icon="shopping-bag"
+        heading="No products found" 
+        description={`We couldn't find any products in the ${formattedTagName} collection.`}
+        action={{ label: "Back to Shop", href: "/shop" }}
+      />
+    )}
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // @ts-ignore
+  document.addEventListener("alpine:init", () => {
+    // @ts-ignore
+    const Alpine = window.Alpine;
+    
+    Alpine.data("productSorter", () => ({
+      sortBy: "default",
+      
+      sort(criteria: string) {
+        this.sortBy = criteria;
+        const grid = document.querySelector("[data-product-grid]");
+        if (!grid) return;
+        
+        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
+        
+        items.sort((a, b) => {
+          const aPrice = parseFloat(a.dataset.price || "0");
+          const bPrice = parseFloat(b.dataset.price || "0");
+          const aName = a.dataset.name || "";
+          const bName = b.dataset.name || "";
+          const aRating = parseFloat(a.dataset.rating || "0");
+          const bRating = parseFloat(b.dataset.rating || "0");
+          const aDate = parseInt(a.dataset.publishDate || "0");
+          const bDate = parseInt(b.dataset.publishDate || "0");
+          const aDiscount = parseFloat(a.dataset.discount || "0");
+          const bDiscount = parseFloat(b.dataset.discount || "0");
+          const aIndex = parseInt(a.dataset.index || "0");
+          const bIndex = parseInt(b.dataset.index || "0");
+          
+          switch (criteria) {
+            case "price-asc": return aPrice - bPrice;
+            case "price-desc": return bPrice - aPrice;
+            case "name-asc": return aName.localeCompare(bName);
+            case "name-desc": return bName.localeCompare(aName);
+            case "rating-desc": return bRating - aRating;
+            case "date-desc": return bDate - aDate;
+            case "discount-desc": return bDiscount - aDiscount;
+            case "default": return aIndex - bIndex;
+            default: return 0;
+          }
+        });
+        
+        items.forEach(item => grid.appendChild(item));
+      },
+    }));
+  });
+</script>
