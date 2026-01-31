@@ -22,6 +22,10 @@ options:
   - name: "Chain Length"
     values: ["16 inches", "18 inches", "20 inches"]
 publishDate: 2025-03-15
+sku: "EGN-003"
+stock: 25
+weight: 5.2
+taxable: true
 ---
 
 The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.

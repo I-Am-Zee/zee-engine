@@ -24,6 +24,16 @@ const products = defineCollection({
         })
       )
       .optional(),
+    // Snipcart-specific fields for e-commerce
+    sku: z.string().optional(),
+    stock: z.number().optional(),
+    weight: z.number().optional(), // in grams, for shipping calculations
+    dimensions: z.object({
+      length: z.number(), // in cm
+      width: z.number(),
+      height: z.number(),
+    }).optional(),
+    taxable: z.boolean().default(true),
   }),
 });
 

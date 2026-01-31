@@ -1,0 +1,76 @@
+---
+/**
+ * AddToCartButton - UI Molecule
+ * 
+ * Snipcart-powered add to cart button built on Button primitive.
+ * Automatically generates data attributes for Snipcart from product data.
+ * 
+ * @component Molecule (ui/)
+ * @uses Button (primitive)
+ * @uses Icon (primitive)
+ */
+
+import Button from '../primitives/Button.astro';
+import Icon from '../primitives/Icon.astro';
+
+interface Props {
+  product: any; // Product collection entry from getCollection('products')
+  variant?: 'primary' | 'secondary' | 'neutral';
+  size?: 'sm' | 'md' | 'lg';
+  showIcon?: boolean;
+  class?: string;
+}
+
+const {
+  product,
+  variant = 'primary',
+  size = 'md',
+  showIcon = true,
+  class: className,
+} = Astro.props;
+
+// Get site URL from environment or config
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.site?.href || 'http://localhost:4321';
+
+// Build product URL for Snipcart validation
+const productUrl = `${siteUrl}/api/products/${product.slug}.json`;
+
+// Format options for Snipcart (e.g., "6|7|8|9")
+const formatOptions = (options: { name: string; values: string[] }[]) => {
+  if (!options || options.length === 0) return null;
+  return options[0].values.join('|');
+};
+
+// Build data attributes object
+const snipcartAttributes = {
+  'data-item-id': product.slug,
+  'data-item-name': product.data.title,
+  'data-item-price': product.data.salePrice || product.data.price,
+  'data-item-url': productUrl,
+  'data-item-description': product.data.description,
+  'data-item-image': product.data.image,
+  ...(product.data.weight && { 'data-item-weight': product.data.weight }),
+  ...(product.data.sku && { 'data-item-sku': product.data.sku }),
+  ...(product.data.stock && { 'data-item-quantity': product.data.stock }),
+  ...(product.data.taxable !== undefined && { 'data-item-taxable': product.data.taxable }),
+  // Custom fields (product options)
+  ...(product.data.options && product.data.options[0] && {
+    'data-item-custom1-name': product.data.options[0].name,
+    'data-item-custom1-options': formatOptions(product.data.options),
+  }),
+};
+---
+
+<Button
+  type={variant}
+  size={size}
+  variant={showIcon ? 'icon-left' : 'default'}
+  class:list={[
+    'snipcart-add-item',
+    className
+  ]}
+  {...snipcartAttributes}
+>
+  {showIcon && <Icon name="PhShoppingCart" size={size === 'sm' ? 16 : size === 'lg' ? 20 : 18} />}
+  <slot>Add to Cart</slot>
+</Button>

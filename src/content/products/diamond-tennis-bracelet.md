@@ -19,6 +19,10 @@ options:
   - name: "Size"
     values: ["6.5 inches", "7 inches"]
 publishDate: 2025-02-14
+sku: "DTB-002"
+stock: 8
+weight: 12.3
+taxable: true
 ---
 
 The Diamond Tennis Bracelet is the ultimate statement of elegance. Each diamond is carefully selected and set to create a continuous line of brilliant sparkle around your wrist.

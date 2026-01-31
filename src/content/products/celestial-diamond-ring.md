@@ -25,6 +25,11 @@ options:
   - name: "Material"
     values: ["White Gold", "Yellow Gold", "Rose Gold"]
 publishDate: 2026-01-15
+# Snipcart fields for e-commerce
+sku: "CDR-001"
+stock: 15
+weight: 4.5 # grams
+taxable: true
 ---
 
 This stunning celestial diamond ring captures the essence of timeless elegance. Hand-crafted by master jewelers, each piece features a carefully selected diamond that sparkles with exceptional brilliance.
