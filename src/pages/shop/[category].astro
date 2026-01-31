@@ -21,11 +21,13 @@ import Pagination from "../../components/ui/Pagination.astro";
 const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
   rings: {
     name: "Rings",
-    description: "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
+    description:
+      "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
   },
   necklaces: {
     name: "Necklaces",
-    description: "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
+    description:
+      "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
   },
   earrings: {
     name: "Earrings",
@@ -46,23 +48,25 @@ const PRODUCTS_PER_PAGE = 12;
 
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
-  
+
   // Auto-detect categories from products - no hardcoded list needed!
   const categoriesSet = new Set<string>();
   allProducts.forEach((product) => {
     categoriesSet.add(product.data.category);
   });
   const categories = Array.from(categoriesSet);
-  
+
   // Category display info fallback for auto-detected categories
   const categoryInfo: Record<string, { name: string; description: string }> = {
     rings: {
       name: "Rings",
-      description: "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
+      description:
+        "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
     },
     necklaces: {
       name: "Necklaces",
-      description: "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
+      description:
+        "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
     },
     earrings: {
       name: "Earrings",
@@ -77,11 +81,9 @@ export async function getStaticPaths() {
       description: "Thoughtfully curated gift sets for life's special moments.",
     },
   };
-  
+
   return categories.map((category) => {
-    const categoryProducts = allProducts.filter(
-      (product) => product.data.category === category
-    );
+    const categoryProducts = allProducts.filter((product) => product.data.category === category);
     // Default fallback for new categories
     const info = categoryInfo[category] || {
       name: category.charAt(0).toUpperCase() + category.slice(1),
@@ -89,7 +91,7 @@ export async function getStaticPaths() {
     };
     return {
       params: { category },
-      props: { 
+      props: {
         products: categoryProducts,
         categoryName: info.name,
         categoryDescription: info.description,
@@ -114,16 +116,21 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 <BaseLayout title={`${categoryName} | Zaviona`}>
   <Navbar />
 
-  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data={`productSorter(${JSON.stringify(products.map(p => ({
-    slug: p.slug,
-    price: p.data.salePrice || p.data.price,
-    originalPrice: p.data.price,
-    salePrice: p.data.salePrice,
-    name: p.data.title,
-    rating: p.data.rating || 0,
-    publishDate: p.data.publishDate ? new Date(p.data.publishDate).getTime() : 0,
-    discount: p.data.salePrice ? Math.round((1 - p.data.salePrice / p.data.price) * 100) : 0
-  })))})`}>
+  <div
+    class="mx-auto max-w-7xl px-4 py-12 lg:px-8"
+    x-data={`productSorter(${JSON.stringify(
+      products.map((p) => ({
+        slug: p.slug,
+        price: p.data.salePrice || p.data.price,
+        originalPrice: p.data.price,
+        salePrice: p.data.salePrice,
+        name: p.data.title,
+        rating: p.data.rating || 0,
+        publishDate: p.data.publishDate ? new Date(p.data.publishDate).getTime() : 0,
+        discount: p.data.salePrice ? Math.round((1 - p.data.salePrice / p.data.price) * 100) : 0,
+      }))
+    )})`}
+  >
     {/* Breadcrumbs */}
     <div class="mb-6">
       <Breadcrumbs
@@ -141,16 +148,16 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
       <Text class="text-(--color-text-muted)">{categoryDescription}</Text>
     </div>
 
-    {products.length > 0 ? (
-      <>
-        {/* Filter/Sort Bar */}
-        <FilterSortBar productCount={products.length} categoryName={categoryName.toLowerCase()} />
+    {
+      products.length > 0 ? (
+        <>
+          {/* Filter/Sort Bar */}
+          <FilterSortBar productCount={products.length} categoryName={categoryName.toLowerCase()} />
 
-        {/* Product Grid with Alpine.js sorting */}
-        <div id="product-grid">
-          <ProductGrid>
-            {
-              products.map((product, index) => (
+          {/* Product Grid with Alpine.js sorting */}
+          <div id="product-grid">
+            <ProductGrid>
+              {products.map((product, index) => (
                 <div
                   class="product-item"
                   data-index={index}
@@ -160,8 +167,14 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                   data-sale-price={product.data.salePrice || ""}
                   data-name={product.data.title}
                   data-rating={product.data.rating || 0}
-                  data-publish-date={product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0}
-                  data-discount={product.data.salePrice ? Math.round((1 - product.data.salePrice / product.data.price) * 100) : 0}
+                  data-publish-date={
+                    product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0
+                  }
+                  data-discount={
+                    product.data.salePrice
+                      ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
+                      : 0
+                  }
                 >
                   <ProductCard
                     id={product.slug}
@@ -174,28 +187,24 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                     rating={product.data.rating}
                   />
                 </div>
-              ))
-            }
-          </ProductGrid>
-        </div>
-        
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <Pagination 
-            currentPage={1} 
-            totalPages={totalPages} 
-            baseUrl={`/shop/${category}`}
-          />
-        )}
-      </>
-    ) : (
-      <EmptyState
-        icon="PhMagnifyingGlass"
-        heading={`No ${categoryName} Found`}
-        description={`We don't have any ${categoryName.toLowerCase()} in our collection yet. Check back soon!`}
-        action={{ label: "View All Products", href: "/shop" }}
-      />
-    )}
+              ))}
+            </ProductGrid>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Pagination currentPage={1} totalPages={totalPages} baseUrl={`/shop/${category}`} />
+          )}
+        </>
+      ) : (
+        <EmptyState
+          icon="PhMagnifyingGlass"
+          heading={`No ${categoryName} Found`}
+          description={`We don't have any ${categoryName.toLowerCase()} in our collection yet. Check back soon!`}
+          action={{ label: "View All Products", href: "/shop" }}
+        />
+      )
+    }
   </div>
 
   <Footer />
@@ -206,17 +215,17 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
   document.addEventListener("alpine:init", () => {
     // @ts-ignore
     const Alpine = window.Alpine;
-    
+
     Alpine.data("productSorter", () => ({
       sortBy: "default",
-      
+
       sort(criteria: string) {
         this.sortBy = criteria;
         const grid = document.querySelector("[data-product-grid]");
         if (!grid) return;
-        
+
         const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
-        
+
         items.sort((a, b) => {
           const aPrice = parseFloat(a.dataset.price || "0");
           const bPrice = parseFloat(b.dataset.price || "0");
@@ -230,21 +239,30 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
           const bDiscount = parseFloat(b.dataset.discount || "0");
           const aIndex = parseInt(a.dataset.index || "0");
           const bIndex = parseInt(b.dataset.index || "0");
-          
+
           switch (criteria) {
-            case "price-asc": return aPrice - bPrice;
-            case "price-desc": return bPrice - aPrice;
-            case "name-asc": return aName.localeCompare(bName);
-            case "name-desc": return bName.localeCompare(aName);
-            case "rating-desc": return bRating - aRating;
-            case "date-desc": return bDate - aDate;
-            case "discount-desc": return bDiscount - aDiscount;
-            case "default": return aIndex - bIndex;
-            default: return 0;
+            case "price-asc":
+              return aPrice - bPrice;
+            case "price-desc":
+              return bPrice - aPrice;
+            case "name-asc":
+              return aName.localeCompare(bName);
+            case "name-desc":
+              return bName.localeCompare(aName);
+            case "rating-desc":
+              return bRating - aRating;
+            case "date-desc":
+              return bDate - aDate;
+            case "discount-desc":
+              return bDiscount - aDiscount;
+            case "default":
+              return aIndex - bIndex;
+            default:
+              return 0;
           }
         });
-        
-        items.forEach(item => grid.appendChild(item));
+
+        items.forEach((item) => grid.appendChild(item));
       },
     }));
   });

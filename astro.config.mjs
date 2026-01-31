@@ -8,7 +8,6 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server', // Enable SSR for API routes
   site: 'http://localhost:4321', // Will be updated for production
   
   vite: {
@@ -21,5 +20,6 @@ export default defineConfig({
     })
   ],
 
+  // Netlify adapter for deployment (supports static by default)
   adapter: netlify()
 });

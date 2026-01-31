@@ -30,9 +30,7 @@ const products = page.data;
     {/* Page Header */}
     <div class="mb-8">
       <Heading as="h1" class="mb-2">All Jewelry</Heading>
-      <p class="text-(--color-text-muted)">
-        Discover our curated collection of handcrafted pieces
-      </p>
+      <p class="text-(--color-text-muted)">Discover our curated collection of handcrafted pieces</p>
     </div>
 
     {/* Filter/Sort Bar */}
@@ -51,8 +49,14 @@ const products = page.data;
               data-sale-price={product.data.salePrice || ""}
               data-name={product.data.title}
               data-rating={product.data.rating || 0}
-              data-publish-date={product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0}
-              data-discount={product.data.salePrice ? Math.round((1 - product.data.salePrice / product.data.price) * 100) : 0}
+              data-publish-date={
+                product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0
+              }
+              data-discount={
+                product.data.salePrice
+                  ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
+                  : 0
+              }
             >
               <ProductCard
                 id={product.slug}
@@ -69,15 +73,13 @@ const products = page.data;
         }
       </ProductGrid>
     </div>
-    
+
     {/* Pagination - shown when more than 12 products */}
-    {page.lastPage > 1 && (
-      <Pagination 
-        currentPage={page.currentPage} 
-        totalPages={page.lastPage} 
-        baseUrl="/shop"
-      />
-    )}
+    {
+      page.lastPage > 1 && (
+        <Pagination currentPage={page.currentPage} totalPages={page.lastPage} baseUrl="/shop" />
+      )
+    }
   </div>
 
   <Footer />
@@ -88,17 +90,17 @@ const products = page.data;
   document.addEventListener("alpine:init", () => {
     // @ts-ignore
     const Alpine = window.Alpine;
-    
+
     Alpine.data("productSorter", () => ({
       sortBy: "default",
-      
+
       sort(criteria: string) {
         this.sortBy = criteria;
         const grid = document.querySelector("[data-product-grid]");
         if (!grid) return;
-        
+
         const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
-        
+
         items.sort((a, b) => {
           const aPrice = parseFloat(a.dataset.price || "0");
           const bPrice = parseFloat(b.dataset.price || "0");
@@ -112,21 +114,30 @@ const products = page.data;
           const bDiscount = parseFloat(b.dataset.discount || "0");
           const aIndex = parseInt(a.dataset.index || "0");
           const bIndex = parseInt(b.dataset.index || "0");
-          
+
           switch (criteria) {
-            case "price-asc": return aPrice - bPrice;
-            case "price-desc": return bPrice - aPrice;
-            case "name-asc": return aName.localeCompare(bName);
-            case "name-desc": return bName.localeCompare(aName);
-            case "rating-desc": return bRating - aRating;
-            case "date-desc": return bDate - aDate;
-            case "discount-desc": return bDiscount - aDiscount;
-            case "default": return aIndex - bIndex;
-            default: return 0;
+            case "price-asc":
+              return aPrice - bPrice;
+            case "price-desc":
+              return bPrice - aPrice;
+            case "name-asc":
+              return aName.localeCompare(bName);
+            case "name-desc":
+              return bName.localeCompare(aName);
+            case "rating-desc":
+              return bRating - aRating;
+            case "date-desc":
+              return bDate - aDate;
+            case "discount-desc":
+              return bDiscount - aDiscount;
+            case "default":
+              return aIndex - bIndex;
+            default:
+              return 0;
           }
         });
-        
-        items.forEach(item => grid.appendChild(item));
+
+        items.forEach((item) => grid.appendChild(item));
       },
     }));
   });
