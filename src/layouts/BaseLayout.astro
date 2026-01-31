@@ -1,4 +1,9 @@
 ---
+import CartToast from "../components/ui/CartToast.astro";
+
+// Import custom Snipcart styling
+import "../styles/snipcart-custom.css";
+
 interface Props {
   title?: string;
 }
@@ -30,11 +35,17 @@ const { title = "Zaviona E-commerce" } = Astro.props;
   <body>
     <slot />
 
+    <!-- Cart Toast Notification -->
+    <CartToast autoDismissMs={4000} />
+
     <!-- Snipcart Root Container -->
     <div
       hidden
       id="snipcart"
       data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}
+      data-config-modal-style="side"
+      data-currency="inr"
+      data-config-add-product-behavior="none"
     >
     </div>
 
