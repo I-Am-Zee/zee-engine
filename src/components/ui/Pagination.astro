@@ -7,10 +7,10 @@
 interface Props {
   currentPage: number;
   totalPages: number;
-  baseUrl: string;
+  baseUrl?: string; // Optional with default fallback
 }
 
-const { currentPage, totalPages, baseUrl } = Astro.props;
+const { currentPage, totalPages, baseUrl = "#" } = Astro.props;
 
 // Generate page numbers to display
 const getPageNumbers = () => {
