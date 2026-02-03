@@ -32,8 +32,8 @@ const {
 // Get site URL from environment or config
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.site?.href || "http://localhost:4321";
 
-// Build product URL for Snipcart validation (uses actual product page, not API endpoint)
-const productUrl = `/products/${product.slug}`;
+// Build product URL for Snipcart validation (Astro.url.pathname provides the path, siteUrl adds the domain)
+const productUrl = new URL(Astro.url.pathname, siteUrl).toString();
 
 // Format options for Snipcart (e.g., "6|7|8|9")
 const formatOptions = (options: { name: string; values: string[] }[]) => {

@@ -31,6 +31,15 @@ const { title = "Zaviona E-commerce" } = Astro.props;
 
     <!-- Snipcart JS (using v3.4.0 as in reference, async loading) -->
     <script async src="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.js"></script>
+
+    <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }}>
+      window.SnipcartSettings = {
+        publicApiKey: apiKey,
+        loadStrategy: 'on-idle',
+        modalStyle: 'overlay',
+        addProductBehavior: 'none'
+      };
+    </script>
   </head>
   <body>
     <slot />
@@ -43,8 +52,8 @@ const { title = "Zaviona E-commerce" } = Astro.props;
       hidden
       id="snipcart"
       data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}
-      data-config-modal-style="side"
-      data-currency="inr"
+      data-config-modal-style="overlay"
+      data-currency="INR"
       data-config-add-product-behavior="none"
     >
     </div>

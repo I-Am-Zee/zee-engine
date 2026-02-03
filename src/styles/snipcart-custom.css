@@ -89,9 +89,41 @@
 }
 
 .snipcart-modal__container {
+  width: 100%;
   max-width: 420px;
   background: var(--bgColor-modal);
   box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
+  margin-left: auto; /* Keep sidebar on the right if in side mode */
+}
+
+/* Force overlay mode behavior regardless of default Snipcart classes */
+.snipcart-modal__container {
+  width: 95% !important;
+  max-width: 1100px !important;
+  margin: 2vh auto !important;
+  border-radius: 0.75rem !important;
+  height: 96vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  background: var(--bgColor-default) !important;
+}
+
+.snipcart-modal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(8px) !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1000 !important;
 }
 
 /* Header */
@@ -143,16 +175,47 @@
 }
 
 /* Quantity Controls */
+.snipcart-item-quantity {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  margin-top: 0.75rem !important;
+}
+
 .snipcart-item-quantity__button {
-  border: 1px solid var(--borderColor-default);
-  border-radius: 0.25rem;
-  background: var(--bgColor-default);
-  transition: all 0.2s ease;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid var(--borderColor-default) !important;
+  border-radius: 4px !important;
+  background: var(--bgColor-default) !important;
+  cursor: pointer !important;
+  color: var(--color-default) !important;
+  flex-shrink: 0 !important;
+}
+
+.snipcart-item-quantity__button svg {
+  width: 10px !important;
+  height: 10px !important;
+  margin: 0 !important;
+  display: block !important;
 }
 
 .snipcart-item-quantity__button:hover {
-  border-color: var(--color-default);
-  background: var(--bgColor-alt);
+  border-color: var(--color-default) !important;
+  background: var(--bgColor-alt) !important;
+}
+
+.snipcart-item-quantity__amount {
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  min-width: 1.5rem !important;
+  text-align: center !important;
+  line-height: 1 !important;
 }
 
 /* Price */
@@ -197,11 +260,18 @@
 /* Total */
 .snipcart-cart-summary__total {
   font-family: var(--font-heading);
-  font-size: 1.125rem;
-  font-weight: 600;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--borderColor-default);
-  margin-top: 0.75rem;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  padding-top: 1rem !important;
+  border-top: 1px solid var(--borderColor-default) !important;
+  margin-top: 1rem !important;
+  color: var(--color-default) !important;
+}
+
+.snipcart-cart-summary-fees {
+  gap: 0.75rem !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 /* ============================================
@@ -209,21 +279,28 @@
    ============================================ */
 
 .snipcart-button-primary {
-  background: var(--color-buttonPrimary);
-  color: #ffffff;
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 0.875rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--borderRadius-button);
-  text-transform: none;
-  letter-spacing: 0;
-  transition: all 0.2s ease;
+  background: var(--color-default) !important;
+  color: #ffffff !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 1.25rem 2rem !important;
+  border-radius: 4px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: none !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
 }
 
 .snipcart-button-primary:hover {
-  background: var(--color-buttonPrimary-hover);
-  transform: translateY(-1px);
+  background: #333 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.15) !important;
 }
 
 .snipcart-button-secondary {

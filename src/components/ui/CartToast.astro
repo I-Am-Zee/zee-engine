@@ -19,7 +19,42 @@ const { autoDismissMs = 4000 } = Astro.props;
 
 <!-- Cart Toast Container - Fixed position at top-right -->
 <div
-  x-data="cartToast"
+  id="cart-toast"
+  x-data="{ 
+    visible: false, 
+    productName: '', 
+    productPrice: 0, 
+    productImage: '',
+    dismissTimeout: null,
+    init() {
+      document.addEventListener('snipcart.ready', () => {
+        Snipcart.events.on('item.added', (item) => {
+          this.productName = item.name || item.title || 'Product added';
+          this.productPrice = item.price || 0;
+          this.productImage = item.image || '/placeholder.jpg';
+          if (this.dismissTimeout) clearTimeout(this.dismissTimeout);
+          this.visible = true;
+          this.dismissTimeout = setTimeout(() => { this.visible = false; }, 4000);
+        });
+      });
+      // Also try immediate attachment if Snipcart is already there
+      if (window.Snipcart) {
+        Snipcart.events.on('item.added', (item) => {
+          this.productName = item.name || item.title || 'Product added';
+          this.productPrice = item.price || 0;
+          this.productImage = item.image || '/placeholder.jpg';
+          if (this.dismissTimeout) clearTimeout(this.dismissTimeout);
+          this.visible = true;
+          this.dismissTimeout = setTimeout(() => { this.visible = false; }, 4000);
+        });
+      }
+    },
+    formatPrice(price) {
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency', currency: 'INR', maximumFractionDigits: 0
+      }).format(price || 0);
+    }
+  }"
   x-show="visible"
   x-cloak
   x-transition:enter="transition ease-out duration-300"
@@ -28,28 +63,22 @@ const { autoDismissMs = 4000 } = Astro.props;
   x-transition:leave="transition ease-in duration-200"
   x-transition:leave-start="opacity-100 translate-x-0"
   x-transition:leave-end="opacity-0 translate-x-full"
-  class="fixed top-20 right-4 z-50 w-80 max-w-[calc(100vw-2rem)]"
+  class="fixed top-20 right-4 z-[9999] w-80 max-w-[calc(100vw-2rem)]"
   role="alert"
   aria-live="polite"
 >
-  <div class="overflow-hidden rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] shadow-lg">
+  <div class="overflow-hidden rounded-lg border border-(--color-border-subtle) bg-(--color-surface) shadow-xl">
     <!-- Success Header -->
     <div class="flex items-center gap-2 border-b border-(--color-border-subtle) bg-(--color-surface) px-4 py-2.5">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4 shrink-0 text-emerald-600"
-        viewBox="0 0 256 256"
-        fill="currentColor"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 256 256" fill="currentColor">
         <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
       </svg>
       <span class="font-sans text-sm font-medium text-(--color-text-main)">Added to Cart</span>
       
       <!-- Dismiss Button -->
       <button
-        @click="dismiss()"
+        @click="visible = false"
         class="ml-auto rounded p-1 text-(--color-text-muted) transition-colors hover:bg-(--color-ghost-hover) hover:text-(--color-text-main)"
-        aria-label="Dismiss notification"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
           <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
@@ -58,40 +87,32 @@ const { autoDismissMs = 4000 } = Astro.props;
     </div>
     
     <!-- Product Info -->
-    <div class="flex items-center gap-3 p-4">
-      <!-- Product Thumbnail -->
-      <div class="h-14 w-14 shrink-0 overflow-hidden rounded bg-(--color-surface)">
+    <div class="flex items-center gap-3 bg-(--color-background) p-4">
+      <div class="h-14 w-14 shrink-0 overflow-hidden rounded bg-(--color-surface) border border-(--color-border-subtle)">
         <img
-          :src="productImage"
-          :alt="productName"
+          :src="productImage || '/placeholder.jpg'"
+          alt="Product"
           class="h-full w-full object-cover"
         />
       </div>
       
-      <!-- Product Details -->
       <div class="min-w-0 flex-1">
-        <p
-          class="truncate font-sans text-sm font-medium text-(--color-text-main)"
-          x-text="productName"
-        ></p>
-        <p
-          class="mt-0.5 font-sans text-sm text-(--color-text-muted)"
-          x-text="formatPrice(productPrice)"
-        ></p>
+        <p class="truncate font-sans text-sm font-medium text-(--color-text-main)" x-text="productName"></p>
+        <p class="mt-0.5 font-sans text-sm text-(--color-text-muted)" x-text="formatPrice(productPrice)"></p>
       </div>
     </div>
     
     <!-- Actions -->
-    <div class="flex gap-2 border-t border-(--color-border-subtle) p-3">
+    <div class="flex gap-2 border-t border-(--color-border-subtle) bg-(--color-surface) p-3">
       <button
-        @click="dismiss()"
-        class="flex-1 rounded-md border border-(--color-border-subtle) bg-transparent px-3 py-2 font-sans text-sm font-medium text-(--color-text-main) transition-colors hover:bg-(--color-ghost-hover)"
+        @click="visible = false"
+        class="flex-1 rounded border border-(--color-border-subtle) bg-transparent px-3 py-1.5 font-sans text-xs font-medium text-(--color-text-main) hover:bg-(--color-ghost-hover)"
       >
-        Continue Shopping
+        Continue
       </button>
       <button
-        @click="openCart()"
-        class="flex-1 rounded-md border border-transparent bg-(--color-primary) px-3 py-2 font-sans text-sm font-medium text-white transition-colors hover:bg-(--color-primary-hover)"
+        @click="visible = false; Snipcart.api.theme.cart.open()"
+        class="flex-1 rounded border border-transparent bg-(--color-primary) px-3 py-1.5 font-sans text-xs font-medium text-white hover:bg-(--color-primary-hover)"
       >
         View Cart
       </button>
@@ -104,76 +125,3 @@ const { autoDismissMs = 4000 } = Astro.props;
     display: none !important;
   }
 </style>
-
-<script define:vars={{ autoDismissMs }}>
-  // Make autoDismissMs available globally for Alpine
-  window.CART_TOAST_CONFIG = {
-    autoDismissMs: autoDismissMs
-  };
-</script>
-
-<script>
-  document.addEventListener('alpine:init', () => {
-    Alpine.data('cartToast', () => ({
-      visible: false,
-      productName: '',
-      productPrice: 0,
-      productImage: '',
-      dismissTimeout: null as ReturnType<typeof setTimeout> | null,
-
-      init() {
-        // Listen for Snipcart item.added event
-        document.addEventListener('snipcart.ready', () => {
-          (window as any).Snipcart.events.on('item.added', (item: any) => {
-            this.showToast(item);
-          });
-        });
-      },
-
-      showToast(item: any) {
-        // Extract product info from Snipcart item
-        this.productName = item.name || 'Product';
-        this.productPrice = item.price || 0;
-        this.productImage = item.image || '/placeholder.jpg';
-        
-        // Clear any existing timeout
-        if (this.dismissTimeout) {
-          clearTimeout(this.dismissTimeout);
-        }
-        
-        // Show the toast
-        this.visible = true;
-        
-        // Auto-dismiss after configured time
-        const config = (window as any).CART_TOAST_CONFIG || { autoDismissMs: 4000 };
-        this.dismissTimeout = setTimeout(() => {
-          this.dismiss();
-        }, config.autoDismissMs);
-      },
-
-      dismiss() {
-        this.visible = false;
-        if (this.dismissTimeout) {
-          clearTimeout(this.dismissTimeout);
-          this.dismissTimeout = null;
-        }
-      },
-
-      openCart() {
-        this.dismiss();
-        // Open Snipcart cart
-        if (typeof (window as any).Snipcart !== 'undefined') {
-          (window as any).Snipcart.api.theme.cart.open();
-        }
-      },
-
-      formatPrice(price: number) {
-        return new Intl.NumberFormat('en-IN', {
-          style: 'currency',
-          currency: 'INR',
-          maximumFractionDigits: 0
-        }).format(price);
-      }
-    }));
-  });
-</script>
