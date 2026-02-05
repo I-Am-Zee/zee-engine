@@ -18,6 +18,9 @@ import WishlistButton from "../../components/features/WishlistButton.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
 
+// Pre-render at build time (required in server mode)
+export const prerender = true;
+
 // Generate static paths for all products
 export async function getStaticPaths() {
   const products = await getCollection("products");

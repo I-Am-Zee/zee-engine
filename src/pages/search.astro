@@ -1,4 +1,7 @@
 ---
+// Pre-render at build time (required in server mode)
+export const prerender = true;
+
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/features/Navbar.astro";

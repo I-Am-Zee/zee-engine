@@ -10,6 +10,9 @@ import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import type { Page, PaginateFunction } from "astro";
 
+// Pre-render at build time (required in server mode)
+export const prerender = true;
+
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const allProducts = await getCollection("products");
   return paginate(allProducts, { pageSize: 12 });

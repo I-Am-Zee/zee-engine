@@ -11,6 +11,9 @@ import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 
+// Pre-render at build time (required in server mode)
+export const prerender = true;
+
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
 

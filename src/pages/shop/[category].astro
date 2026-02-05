@@ -46,6 +46,9 @@ const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
 // Products per page for pagination
 const PRODUCTS_PER_PAGE = 12;
 
+// Pre-render at build time (required in server mode)
+export const prerender = true;
+
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
 
