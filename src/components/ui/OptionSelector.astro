@@ -32,7 +32,6 @@ const defaultSelected = selected || (options.length > 0 ? options[0] : "");
       options.map((option) => (
         <label
           class="relative cursor-pointer"
-          x-bind:class={`selected === '${option}' ? 'z-10' : ''`}
         >
           <input type="radio" name={name} value={option} x-model="selected" class="peer sr-only" />
           <span

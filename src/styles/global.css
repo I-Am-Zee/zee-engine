@@ -64,3 +64,8 @@ body {
     0 0 0 4px var(--color-ring),
     0 0 12px var(--color-ring-glow);
 }
+
+/* Alpine.js cloak - prevent flash of unstyled content */
+[x-cloak] {
+  display: none !important;
+}

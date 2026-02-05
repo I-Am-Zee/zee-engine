@@ -51,7 +51,8 @@ const snipcartAttributes = {
   "data-item-image": product.data.image,
   ...(product.data.weight && { "data-item-weight": product.data.weight }),
   ...(product.data.sku && { "data-item-sku": product.data.sku }),
-  ...(product.data.stock && { "data-item-quantity": product.data.stock }),
+  // Note: data-item-quantity is NOT set here - Snipcart defaults to 1
+  // To support quantity picker, we'd need JavaScript to update this dynamically
   ...(product.data.taxable !== undefined && { "data-item-taxable": product.data.taxable }),
   // Custom fields (product options)
   ...(product.data.options &&
