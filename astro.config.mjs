@@ -8,10 +8,21 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'http://localhost:4321', // Will be updated for production
+  site: 'https://zaviona-dev.netlify.app', // Production domain for Netlify deployment
+  
+  // Server mode: Enables SSR for API routes
+  output: 'server',
+
+  server: {
+    host: '127.0.0.1',
+    port: 4321
+  },
   
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    server: {
+      allowedHosts: true
+    }
   },
 
   integrations: [
@@ -20,6 +31,6 @@ export default defineConfig({
     })
   ],
 
-  // Netlify adapter for deployment (supports static by default)
+  // Netlify adapter for deployment (supports hybrid mode)
   adapter: netlify()
 });

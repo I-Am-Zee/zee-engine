@@ -1,0 +1,27 @@
+# Netlify configuration for Astro SSR
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Environment variables for Netlify Functions (SSR)
+[build.environment]
+  NODE_VERSION = "20"
+
+# Required for Astro Netlify adapter
+[functions]
+  directory = ".netlify/functions-internal"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
