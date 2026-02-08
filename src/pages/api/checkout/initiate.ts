@@ -6,7 +6,6 @@
  */
 
 import type { APIRoute } from 'astro';
-import Razorpay from 'razorpay';
 
 interface InitiateRequest {
   amount: number;        // Amount in currency subunits (paise for INR)
