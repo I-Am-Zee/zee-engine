@@ -1,11 +1,11 @@
 ---
 title: "Vintage Rose Gold Ring"
 price: 2950
-image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop"
+image: "/images/products/1611591437281-460bfbe1220a.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1000&fit=crop"
+  - "/images/products/1611591437281-460bfbe1220a.jpg"
+  - "/images/products/1605100804763-247f67b3557e.jpg"
+  - "/images/products/1573408301185-9146fe634ad0.jpg"
 category: "rings"
 badges:
   - "Bestseller"
@@ -30,3 +30,4 @@ The Vintage Rose Gold Ring embodies timeless romance with its warm, blush-toned 
 - Comfortable fit band
 - Hypoallergenic
 - Includes authentication certificate
+

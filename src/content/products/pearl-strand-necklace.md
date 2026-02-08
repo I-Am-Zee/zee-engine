@@ -1,10 +1,10 @@
 ---
 title: "Pearl Strand Necklace"
 price: 1850
-image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
+image: "/images/products/1535632066927-ab7c9ab60908.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
+  - "/images/products/1535632066927-ab7c9ab60908.jpg"
+  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "necklaces"
 badges:
   - "Classic"
@@ -29,3 +29,4 @@ The Pearl Strand Necklace features hand-selected Akoya pearls, each chosen for t
 - 14k gold clasp
 - AAA quality grading
 - Velvet presentation box
+

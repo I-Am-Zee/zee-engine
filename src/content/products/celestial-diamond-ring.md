@@ -2,13 +2,13 @@
 title: "Celestial Diamond Ring"
 price: 4500
 salePrice: 3600
-image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=1000&fit=crop"
+image: "/images/products/1605100804763-247f67b3557e.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop"
+  - "/images/products/1605100804763-247f67b3557e.jpg"
+  - "/images/products/1573408301185-9146fe634ad0.jpg"
+  - "/images/products/1611591437281-460bfbe1220a.jpg"
+  - "/images/products/1515562141207-7a88fb7ce338.jpg"
+  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "rings"
 badges:
   - "New"
@@ -45,3 +45,4 @@ The ring's design draws inspiration from celestial bodies, with delicate details
 - Lifetime warranty on craftsmanship
 
 Perfect for engagements, anniversaries, or as a statement piece for any special occasion.
+

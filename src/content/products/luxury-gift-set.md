@@ -2,10 +2,10 @@
 title: "Luxury Gift Set"
 price: 2200
 salePrice: 1800
-image: "https://images.unsplash.com/photo-1549492423-400259a2e574?w=800&h=1000&fit=crop"
+image: "/images/products/1549492423-400259a2e574.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1549492423-400259a2e574?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
+  - "/images/products/1549492423-400259a2e574.jpg"
+  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "gifts"
 badges:
   - "Sale"
@@ -28,3 +28,4 @@ The Luxury Gift Set is perfect for celebrating life's special moments. This thou
 - Gift wrapping included
 - Personalized gift card option
 - Certificate of authenticity
+

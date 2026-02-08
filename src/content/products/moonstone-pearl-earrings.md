@@ -1,12 +1,12 @@
 ---
 title: "Moonstone Pearl Earrings"
 price: 2800
-image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&h=1000&fit=crop"
+image: "/images/products/1617038220319-276d3cfab638.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop"
+  - "/images/products/1617038220319-276d3cfab638.jpg"
+  - "/images/products/1535632066927-ab7c9ab60908.jpg"
+  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
+  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "earrings"
 badges:
   - "Limited Edition"
@@ -32,3 +32,4 @@ The combination of classic pearls with ethereal moonstones creates a unique piec
 - Arrives in velvet jewelry box
 
 These limited edition earrings are produced in small batches, ensuring exclusivity and meticulous quality control. Each pair is inspected for perfection before leaving our atelier.
+

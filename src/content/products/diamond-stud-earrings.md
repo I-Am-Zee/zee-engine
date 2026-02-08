@@ -1,10 +1,10 @@
 ---
 title: "Diamond Stud Earrings"
 price: 3800
-image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
+image: "/images/products/1535632066927-ab7c9ab60908.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&h=1000&fit=crop"
+  - "/images/products/1535632066927-ab7c9ab60908.jpg"
+  - "/images/products/1617038220319-276d3cfab638.jpg"
 category: "earrings"
 badges:
   - "Essential"
@@ -26,3 +26,4 @@ Diamond Stud Earrings are the essential piece every jewelry collection needs. Th
 - 14k white gold settings
 - Push-back closures
 - GIA certified
+

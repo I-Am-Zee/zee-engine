@@ -1,10 +1,10 @@
 ---
 title: "Gold Chain Bracelet"
 price: 1650
-image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1000&fit=crop"
+image: "/images/products/1573408301185-9146fe634ad0.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=1000&fit=crop"
+  - "/images/products/1573408301185-9146fe634ad0.jpg"
+  - "/images/products/1611591437281-460bfbe1220a.jpg"
 category: "bracelets"
 badges:
   - "Bestseller"
@@ -31,3 +31,4 @@ The Gold Chain Bracelet combines classic elegance with contemporary style. Its c
 - Adjustable length
 - Hypoallergenic
 - Perfect for layering
+

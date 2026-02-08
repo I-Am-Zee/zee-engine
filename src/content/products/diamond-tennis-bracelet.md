@@ -1,10 +1,10 @@
 ---
 title: "Diamond Tennis Bracelet"
 price: 6500
-image: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&h=1000&fit=crop"
+image: "/images/products/1602173574767-37ac01994b2a.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&h=1000&fit=crop"
+  - "/images/products/1602173574767-37ac01994b2a.jpg"
+  - "/images/products/1573408301185-9146fe634ad0.jpg"
 category: "bracelets"
 badges:
   - "Luxury"
@@ -34,3 +34,4 @@ The Diamond Tennis Bracelet is the ultimate statement of elegance. Each diamond 
 - Secure box clasp with safety
 - Lifetime warranty
 - GIA certified diamonds
+
