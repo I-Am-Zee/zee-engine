@@ -1,4 +1,7 @@
 ---
+// Import global CSS so Astro bundles it for production
+import '../styles/global.css';
+
 interface Props {
   title?: string;
 }
@@ -14,8 +17,7 @@ const { title = "Zaviona E-commerce" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
-    <!-- Global Styles including TailwindCSS and Theme -->
-    <link rel="stylesheet" href="/src/styles/global.css" />
+
 
     <!-- Snipcart v3 Preconnect for performance -->
     <link rel="preconnect" href="https://cdn.snipcart.com" />
