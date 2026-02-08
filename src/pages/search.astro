@@ -51,7 +51,7 @@ const searchableProducts = allProducts.map(p => ({
       </div>
       <template x-if="query.length > 0">
         <Text class="mt-4 text-(--color-text-muted)">
-          Found <span x-text="results.length" class="font-bold text-(--color-text-main)"></span> results for "<span x-text="query" class="font-bold text-(--color-text-main)"></span>"
+          Found <span x-text="matchingSlugs.length" class="font-bold text-(--color-text-main)"></span> results for "<span x-text="query" class="font-bold text-(--color-text-main)"></span>"
         </Text>
       </template>
     </div>

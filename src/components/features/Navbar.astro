@@ -103,7 +103,7 @@ const { class: className, ...rest } = Astro.props;
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-50 bg-black/50"
+        class="fixed inset-0 z-[999] bg-black/50"
         @click="mobileMenuOpen = false"
         x-cloak
       >
@@ -118,7 +118,7 @@ const { class: className, ...rest } = Astro.props;
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-x-0"
         x-transition:leave-end="translate-x-full"
-        class="fixed inset-y-0 right-0 z-50 w-full max-w-sm overflow-y-auto bg-[var(--color-background)] shadow-xl"
+        class="fixed inset-y-0 right-0 z-[999] w-full max-w-sm overflow-y-auto bg-[var(--color-background)] shadow-xl"
         x-cloak
       >
         <div class="flex h-full flex-col" x-data="{ activeAccordion: null }">
