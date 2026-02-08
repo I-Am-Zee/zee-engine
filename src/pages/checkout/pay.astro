@@ -262,12 +262,14 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
       updateStatus('Opening payment gateway...');
       
       // Calculate amount in paise for Razorpay
+      // Note: We force INR currency because Razorpay only supports INR for Indian merchants
+      // If Snipcart sends USD/CAD, we need to handle currency conversion separately
       const amountInPaise = Math.round(paymentSession.invoice.amount * 100);
       
       const options = {
         key: razorpayKeyId,
         amount: amountInPaise,
-        currency: paymentSession.invoice.currency || 'INR',
+        currency: 'INR', // Force INR - Razorpay only supports INR for Indian merchants
         name: 'Zaviona',
         description: `Order #${paymentSession.id.substring(0, 8)}`,
         // order_id: razorpayOrder.orderId, // No longer needed
