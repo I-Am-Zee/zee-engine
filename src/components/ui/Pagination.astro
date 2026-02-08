@@ -48,9 +48,10 @@ const hasPrev = currentPage > 1;
 const hasNext = currentPage < totalPages;
 
 const getUrl = (pg: number) => {
-  if (pg === 1) return baseUrl;
+  const url = baseUrl || "#";
+  if (pg === 1) return url;
   // Ensure baseUrl doesn't end with slash before appending
-  const cleanBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  const cleanBase = url.endsWith("/") ? url.slice(0, -1) : url;
   return `${cleanBase}/${pg}`;
 };
 ---
