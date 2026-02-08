@@ -484,11 +484,11 @@ import ProductGrid from "../components/features/ProductGrid.astro";
           <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
             <div>
               <Text variant="caption" class="mb-2">Few Pages:</Text>
-              <Pagination currentPage={2} totalPages={5} />
+              <Pagination currentPage={2} totalPages={5} baseUrl="#" />
             </div>
             <div>
               <Text variant="caption" class="mb-2">Many Pages (with ellipsis):</Text>
-              <Pagination currentPage={5} totalPages={20} />
+              <Pagination currentPage={5} totalPages={20} baseUrl="#" />
             </div>
           </div>
         </div>
