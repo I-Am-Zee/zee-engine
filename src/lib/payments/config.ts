@@ -1,6 +1,16 @@
 /**
  * Payment Gateway Configuration
  * Central registry of all available payment gateways
+ * 
+ * NOTE: Razorpay supports multiple Indian payment methods through Razorpay Optimizer:
+ * - UPI (PhonePe, Google Pay, etc.)
+ * - Cards (Debit/Credit)
+ * - Wallets
+ * - Net Banking
+ * - Other Indian payment methods (Cashfree integration happens via Razorpay Optimizer)
+ * 
+ * Razorpay Optimizer is an AI-powered payment router that automatically routes
+ * transactions to the best-performing gateway, no additional integration needed.
  */
 
 import type { PaymentGateway } from './types';
@@ -8,10 +18,10 @@ import type { PaymentGateway } from './types';
 export const GATEWAYS: Record<string, PaymentGateway> = {
   razorpay: {
     id: 'razorpay',
-    name: 'UPI, Cards, Wallets', // Generic name for Razorpay Optimizer
+    name: 'UPI, Cards, Wallets', // Generic name - Razorpay Optimizer handles routing
     supportedCountries: ['IN'],
     supportedCurrencies: ['INR'],
-    enabled: true, // Active now
+    enabled: true, // Active for Indian customers
   },
   
   stripe: {
@@ -20,23 +30,6 @@ export const GATEWAYS: Record<string, PaymentGateway> = {
     supportedCountries: ['US', 'GB', 'CA', 'AU', 'SG', 'AE'], // Add more as needed
     supportedCurrencies: ['USD', 'GBP', 'CAD', 'AUD', 'SGD', 'AED'],
     enabled: false, // Will enable when ready for international
-  },
-  
-  // Future Indian gateways
-  cashfree: {
-    id: 'cashfree',
-    name: 'Cashfree',
-    supportedCountries: ['IN'],
-    supportedCurrencies: ['INR'],
-    enabled: false, // Add when needed
-  },
-  
-  phonepe: {
-    id: 'phonepe',
-    name: 'PhonePe',
-    supportedCountries: ['IN'],
-    supportedCurrencies: ['INR'],
-    enabled: false, // Add when needed
   },
 };
 

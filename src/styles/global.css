@@ -69,3 +69,13 @@ body {
 [x-cloak] {
   display: none !important;
 }
+
+/* Snipcart z-index overrides - ensure cart appears above navbar (z-50) */
+#snipcart {
+  z-index: 100 !important;
+}
+
+.snipcart-modal,
+.snipcart-modal__container {
+  z-index: 100 !important;
+}

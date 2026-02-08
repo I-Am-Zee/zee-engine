@@ -36,13 +36,17 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:wght@300;400;500;600;700&display=swap");
+    
     :root {
-      --color-background: #0a0a0a;
-      --color-surface: #141414;
-      --color-text: #fafafa;
-      --color-text-muted: #a1a1aa;
-      --color-primary: #d4af37;
-      --color-border: #27272a;
+      /* Use Zaviona's color system */
+      --color-background: #ffffff;
+      --color-surface: #f8fafc;
+      --color-text: #0f172a;
+      --color-text-muted: #64748b;
+      --color-primary: #0f172a;
+      --color-border: #e2e8f0;
+      --color-accent: #0f172a;
     }
     
     * {
@@ -52,42 +56,44 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
     }
     
     body {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       background: var(--color-background);
       color: var(--color-text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
     }
     
     .container {
       max-width: 480px;
       width: 100%;
-      padding: 2rem;
     }
     
     .card {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
-      border-radius: 16px;
-      padding: 2rem;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
       text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
     
     .logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
       font-weight: 500;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.05em;
       color: var(--color-primary);
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
     
     .title {
       font-size: 1.25rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: var(--color-text);
     }
     
     .subtitle {
@@ -100,35 +106,42 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
       font-size: 2.5rem;
       font-weight: 700;
       color: var(--color-primary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+      font-family: 'Fraunces', serif;
     }
     
     .currency {
-      font-size: 1rem;
+      font-size: 0.875rem;
       color: var(--color-text-muted);
       margin-bottom: 2rem;
     }
     
     .pay-button {
       width: 100%;
-      padding: 1rem 2rem;
-      font-size: 1rem;
+      padding: 0.875rem 2rem;
+      font-size: 0.9375rem;
       font-weight: 600;
-      color: #000;
+      color: #ffffff;
       background: var(--color-primary);
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    .pay-button:hover {
-      background: #e5c04b;
+    .pay-button:hover:not(:disabled) {
+      background: #1e293b;
       transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+    
+    .pay-button:active:not(:disabled) {
+      transform: translateY(0);
     }
     
     .pay-button:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
       transform: none;
     }
@@ -140,12 +153,12 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
     }
     
     .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid transparent;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-top-color: currentColor;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
     
     @keyframes spin {
@@ -153,13 +166,14 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
     }
     
     .error {
-      background: #450a0a;
-      border: 1px solid #7f1d1d;
-      color: #fecaca;
-      padding: 1rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 0.875rem 1rem;
       border-radius: 8px;
       margin-top: 1rem;
       font-size: 0.875rem;
+      line-height: 1.5;
     }
     
     .status {
@@ -170,6 +184,16 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
     
     .hidden {
       display: none;
+    }
+    
+    @media (max-width: 480px) {
+      .card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .amount {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
