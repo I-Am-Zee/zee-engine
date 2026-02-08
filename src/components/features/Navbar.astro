@@ -76,7 +76,11 @@ const { class: className, ...rest } = Astro.props;
     </div>
 
     {/* Mobile: Actions + Menu Toggle */}
-    <div class="flex items-center gap-2 md:hidden" x-data="{ mobileMenuOpen: false }">
+    <div 
+      class="flex items-center gap-2 md:hidden" 
+      x-data="{ mobileMenuOpen: false }"
+      x-effect="mobileMenuOpen ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden')"
+    >
       <a href="/search">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhMagnifyingGlass" />
