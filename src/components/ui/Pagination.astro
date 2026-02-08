@@ -43,15 +43,22 @@ const getPageNumbers = () => {
   return pages;
 };
 
+// Ensure baseUrl is always a valid string
+const safeBaseUrl = (baseUrl !== null && baseUrl !== undefined && typeof baseUrl === 'string' && baseUrl !== '') 
+  ? baseUrl 
+  : "#";
+
 const pageNumbers = getPageNumbers();
 const hasPrev = currentPage > 1;
 const hasNext = currentPage < totalPages;
 
-const getUrl = (pg: number) => {
-  const url = baseUrl || "#";
-  if (pg === 1) return url;
-  // Ensure baseUrl doesn't end with slash before appending
-  const cleanBase = url.endsWith("/") ? url.slice(0, -1) : url;
+const getUrl = (pg: number): string => {
+  // Always use safeBaseUrl which is guaranteed to be a string
+  if (pg === 1) return safeBaseUrl;
+  // Type-safe endsWith check
+  const cleanBase = (typeof safeBaseUrl === 'string' && safeBaseUrl.endsWith("/")) 
+    ? safeBaseUrl.slice(0, -1) 
+    : safeBaseUrl;
   return `${cleanBase}/${pg}`;
 };
 ---
