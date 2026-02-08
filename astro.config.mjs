@@ -22,6 +22,12 @@ export default defineConfig({
     plugins: [tailwindcss()],
     server: {
       allowedHosts: true
+    },
+    build: {
+      rollupOptions: {
+        // Externalize packages that are dynamically imported in API routes
+        external: ['stripe']
+      }
     }
   },
 

@@ -10,12 +10,17 @@
  */
 
 import type { APIRoute } from 'astro';
+import { getGatewaysForCountry } from '../../../lib/payments/config';
 
 // Snipcart sends this payload when requesting payment methods
 interface SnipcartPaymentRequest {
   invoice: {
-    shippingAddress: object;
-    billingAddress: object;
+    shippingAddress: {
+      country?: string;
+    };
+    billingAddress: {
+      country?: string;
+    };
     email: string;
     language: string;
     currency: string;
@@ -45,41 +50,47 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body: SnipcartPaymentRequest = await request.json();
     
-    // Log for debugging (helpful during ngrok testing)
+    // Log for debugging
     console.log('[payment-methods] Received request from Snipcart');
     console.log('[payment-methods] Mode:', body.mode);
     console.log('[payment-methods] Amount:', body.invoice.amount, body.invoice.currency);
+    console.log('[payment-methods] Billing Country:', body.invoice.billingAddress?.country);
     console.log('[payment-methods] Public Token:', body.publicToken?.substring(0, 20) + '...');
 
-    // Optional: Validate the publicToken with Snipcart API
-    // This ensures the request is genuinely from Snipcart
-    /* 
-    const isValid = await validateSnipcartToken(body.publicToken);
-    if (!isValid) {
-      console.error('[payment-methods] Invalid Snipcart token');
-      return new Response(JSON.stringify({ error: 'Invalid token' }), {
-        status: 401,
+    // Get customer's country (prefer billing, fallback to shipping)
+    const customerCountry = body.invoice.billingAddress?.country || 
+                           body.invoice.shippingAddress?.country || 
+                           'IN'; // Default to India for now
+    
+    console.log('[payment-methods] Selected country:', customerCountry);
+
+    // Get the base URL for the checkout page
+    const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'http://localhost:4321';
+    
+    // Get available gateways for customer's country
+    const availableGateways = getGatewaysForCountry(customerCountry);
+    
+    if (availableGateways.length === 0) {
+      console.error('[payment-methods] No gateways available for country:', customerCountry);
+      return new Response(JSON.stringify({ 
+        error: `Payment is not available for your location (${customerCountry}). Please contact support.` 
+      }), {
+        status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
-    */
 
-    // Get the base URL for the checkout page
-    // In production, use PUBLIC_SITE_URL env var
-    // During development with ngrok, this should be the ngrok URL
-    const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'http://localhost:4321';
-    
-    const paymentMethods: PaymentMethod[] = [
-      {
-        id: 'razorpay',
-        name: 'Pay with Razorpay (UPI, Cards, Wallets)',
-        checkoutUrl: `${siteUrl}/checkout/pay`,
-        // Optional: Add Razorpay logo
-        // iconUrl: 'https://razorpay.com/favicon.png'
-      }
-    ];
+    // Map gateways to Snipcart payment methods
+    const paymentMethods: PaymentMethod[] = availableGateways.map((gateway) => ({
+      id: gateway.id,
+      name: gateway.name,
+      checkoutUrl: `${siteUrl}/checkout/${gateway.id}`,
+      // Future: Add gateway-specific icons
+      // iconUrl: gateway.iconUrl
+    }));
 
-    console.log('[payment-methods] Returning checkout URL:', paymentMethods[0].checkoutUrl);
+    console.log('[payment-methods] Returning', paymentMethods.length, 'payment methods');
+    console.log('[payment-methods] Methods:', paymentMethods.map(m => m.id).join(', '));
 
     return new Response(JSON.stringify(paymentMethods), {
       status: 200,
