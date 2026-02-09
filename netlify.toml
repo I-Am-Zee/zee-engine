@@ -1,7 +1,7 @@
 # Netlify configuration for Astro SSR
 
 [build]
-  command = "npm run build"
+  # command = "npm run build"
   publish = "dist"
 
 # Environment variables for Netlify Functions (SSR)

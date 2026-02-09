@@ -20,12 +20,12 @@ const {
 
 // Base input styles - using shadow glow for focus
 const baseStyles =
-  "w-full font-sans px-4 py-2 rounded-md bg-[var(--color-background)] border transition-all duration-200 outline-none focus:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-[var(--color-text-muted)]";
+  "w-full font-sans px-4 py-2 rounded-md bg-(--color-background) border transition-all duration-200 outline-none focus:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-(--color-text-muted)";
 
 // Error state changes border color
 const stateStyles = error
   ? "border-red-500 focus:border-red-500"
-  : "border-[var(--color-border-strong)] focus:border-[var(--color-primary)]";
+  : "border-(--color-border-strong) focus:border-(--color-primary)";
 
 const combinedClasses = `${baseStyles} ${stateStyles} ${className || ""}`.trim();
 ---

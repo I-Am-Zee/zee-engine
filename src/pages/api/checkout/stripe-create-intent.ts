@@ -9,6 +9,9 @@
  * 3. Enable stripe gateway in src/lib/payments/config.ts
  */
 
+// This route must be server-rendered
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 
 interface CreateIntentRequest {

@@ -5,6 +5,9 @@
  * This must be done server-side because it requires the secret key.
  */
 
+// This route must be server-rendered
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 
 interface InitiateRequest {

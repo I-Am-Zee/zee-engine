@@ -67,6 +67,15 @@ const { class: className, ...rest } = Astro.props;
           class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
         ></span>
       </a>
+      <Button
+        type="ghost"
+        variant="icon-only"
+        size="sm"
+        class="snipcart-customerlogin"
+        aria-label="Customer Account"
+      >
+        <Icon name="PhUser" />
+      </Button>
       <button class="snipcart-checkout relative">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhShoppingCart" />
@@ -201,7 +210,13 @@ const { class: className, ...rest } = Astro.props;
                   class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
                 ></span>
               </a>
-              <Button type="ghost" variant="icon-only" size="sm">
+              <Button
+                type="ghost"
+                variant="icon-only"
+                size="sm"
+                class="snipcart-customerlogin"
+                aria-label="Customer Account"
+              >
                 <Icon name="PhUser" />
               </Button>
             </div>

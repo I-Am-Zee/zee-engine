@@ -6,12 +6,18 @@ import alpinejs from '@astrojs/alpinejs';
 
 import netlify from '@astrojs/netlify';
 
+// Site URL for Snipcart product URL validation
+// Using production URL because Snipcart crawls product pages to verify prices.
+// For Draft deploys: Add "*.netlify.app" to Snipcart Dashboard > Domains & URLs
+const siteUrl = 'https://zaviona-dev.netlify.app';
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://zaviona-dev.netlify.app', // Production domain for Netlify deployment
+  site: siteUrl,
   
-  // Server mode: Enables SSR for API routes
-  output: 'server',
+  // Static mode: Pre-renders everything by default. 
+  // We opt-out of pre-rendering for dynamic routes using export const prerender = false.
+  output: 'static',
 
   server: {
     host: '127.0.0.1',

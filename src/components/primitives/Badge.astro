@@ -14,11 +14,11 @@ const baseStyles =
 // Intent determines color scheme
 const intentStyles = {
   surface:
-    "bg-[var(--color-surface)] text-[var(--color-text-main)] border border-[var(--color-border-subtle)]",
-  primary: "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]",
-  accent: "bg-[var(--color-secondary)] text-[var(--color-primary)] border-2 border-[var(--color-primary)]",
+    "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle)",
+  primary: "bg-(--color-primary) text-(--color-primary-foreground)",
+  accent: "bg-(--color-secondary) text-(--color-primary) border-2 border-(--color-primary)",
   outline:
-    "bg-transparent text-[var(--color-text-main)] border border-[var(--color-border-strong)]",
+    "bg-transparent text-(--color-text-main) border border-(--color-border-strong)",
 };
 
 // Size variants - using leading-none for precise vertical centering

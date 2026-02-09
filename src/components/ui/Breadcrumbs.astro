@@ -21,13 +21,13 @@ const { items, class: className, ...rest } = Astro.props;
     {
       items.map((item, index) => (
         <li class="inline-flex items-center gap-1">
-          {index > 0 && <Icon name="PhCaretRight" class="text-[var(--color-text-muted)]" />}
+          {index > 0 && <Icon name="PhCaretRight" class="text-(--color-text-muted)" />}
           {item.href && index < items.length - 1 ? (
             <Link href={item.href} variant="plain">
               {item.label}
             </Link>
           ) : (
-            <Text as="span" variant="caption" class="text-[var(--color-text-main)]">
+            <Text as="span" variant="caption" class="text-(--color-text-main)">
               {item.label}
             </Text>
           )}

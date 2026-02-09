@@ -12,6 +12,7 @@
 
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
+import { siteConfig } from "../../lib/site.config";
 
 interface Props {
   product: any; // Product collection entry from getCollection('products')
@@ -29,11 +30,10 @@ const {
   class: className,
 } = Astro.props;
 
-// Get site URL from environment (DEPLOY_PRIME_URL for free Deploy Previews)
-const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.site?.href || "http://localhost:4321";
-
-// Build product URL for Snipcart validation (Astro.url.pathname provides the path, siteUrl adds the domain)
-const productUrl = new URL(Astro.url.pathname, siteUrl).toString();
+// Snipcart product URL validation: Use PRODUCTION URL from site config
+// Snipcart crawls the production site to verify prices, so we MUST use the production URL.
+// For Draft deploys: Add "*.netlify.app" to Snipcart Dashboard > Domains & URLs
+const productUrl = new URL(Astro.url.pathname, siteConfig.url).toString();
 
 // Format options for Snipcart (e.g., "6|7|8|9")
 const formatOptions = (options: { name: string; values: string[] }[]) => {

@@ -6,6 +6,9 @@
  * 2. Confirm the payment to Snipcart
  */
 
+// This route must be server-rendered
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 import crypto from 'crypto';
 

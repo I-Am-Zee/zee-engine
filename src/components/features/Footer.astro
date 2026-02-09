@@ -11,6 +11,7 @@ import Link from "../primitives/Link.astro";
 import SocialLinks from "../ui/SocialLinks.astro";
 import NewsletterForm from "../ui/NewsletterForm.astro";
 import { navigation, supportLinks } from "../../config/navigation";
+import { siteConfig } from "../../lib/site.config";
 
 interface Props {
   class?: string;
@@ -83,7 +84,7 @@ const shopCategories = shopNav?.items || [];
     <div class="mt-12 border-t border-[var(--color-border-subtle)] pt-8">
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <Text variant="caption">
-          © {new Date().getFullYear()} Zaviona. All rights reserved.
+          {siteConfig.copyright}
         </Text>
         <div class="flex gap-4">
           <Link href="/privacy" variant="plain" class="text-xs text-[var(--color-text-muted)]">

@@ -41,7 +41,7 @@ const {
     /* Image Container - Overflow hidden for zoom effect + relative wrapper for absolute positioned button */
   }
   <div class="relative mb-3">
-    <a href={href} class="block overflow-hidden rounded-lg bg-[var(--color-surface)]">
+    <a href={href} class="block overflow-hidden rounded-lg bg-(--color-surface)">
       {/* Image with hover zoom */}
       <img
         src={image}
@@ -75,7 +75,7 @@ const {
     <a href={href} class="mb-2 block">
       <Heading
         as="h3"
-        class="line-clamp-2 text-base font-medium transition-colors duration-200 group-hover:text-[var(--color-text-muted)]"
+        class="line-clamp-2 text-base font-medium transition-colors duration-200 group-hover:text-(--color-text-muted)"
       >
         {title}
       </Heading>
@@ -88,7 +88,7 @@ const {
       rating && rating > 0 && (
         <div class="flex items-center gap-2">
           <RatingStars rating={rating} />
-          <span class="text-xs text-[var(--color-text-muted)]">({rating.toFixed(1)})</span>
+          <span class="text-xs text-(--color-text-muted)">({rating.toFixed(1)})</span>
         </div>
       )
     }

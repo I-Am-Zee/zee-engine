@@ -1,0 +1,68 @@
+# PagesCMS Configuration (https://pagescms.org)
+# This file defines how PagesCMS will display and edit your content.
+
+content:
+  - name: products
+    label: Products
+    type: collection
+    path: src/content/products
+    format: md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: price
+        label: Price
+        type: number
+      - name: salePrice
+        label: Sale Price
+        type: number
+      - name: image
+        label: Main Image
+        type: string
+        help: Path to image in /public/images/
+      - name: gallery
+        label: Gallery
+        type: list
+        field:
+          type: string
+      - name: category
+        label: Category
+        type: string
+      - name: badges
+        label: Badges
+        type: list
+        field:
+          type: string
+      - name: rating
+        label: Rating
+        type: number
+        min: 0
+        max: 5
+      - name: description
+        label: Description
+        type: text
+      - name: tags
+        label: Tags
+        type: list
+        field:
+          type: string
+      - name: publishDate
+        label: Publish Date
+        type: date
+      - name: sku
+        label: SKU
+        type: string
+      - name: stock
+        label: Stock
+        type: number
+      - name: weight
+        label: Weight (grams)
+        type: number
+      - name: taxable
+        label: Taxable
+        type: boolean
+        default: true
+      - name: body
+        label: Body Content
+        type: rich-text

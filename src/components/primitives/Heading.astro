@@ -8,7 +8,7 @@ const { as: Tag, class: className, ...rest } = Astro.props;
 
 // Responsive heading styles using clamp() for fluid typography
 const baseStyles =
-  "font-serif font-bold tracking-tight leading-tight text-[var(--color-text-main)]";
+  "font-serif font-bold tracking-tight leading-tight text-(--color-text-main)";
 
 const sizeStyles = {
   h1: "text-[clamp(2rem,5vw,3.5rem)]",

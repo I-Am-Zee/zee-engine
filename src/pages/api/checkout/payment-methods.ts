@@ -9,6 +9,9 @@
  *   Payment Methods URL: https://your-domain/api/checkout/payment-methods
  */
 
+// This route must be server-rendered
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 import { getGatewaysForCountry } from '../../../lib/payments/config';
 

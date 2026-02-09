@@ -27,13 +27,13 @@ const baseStyles =
 // Paint logic - type determines color scheme
 const typeStyles = {
   primary:
-    "bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90 active:opacity-80",
+    "bg-(--color-primary) text-(--color-primary-foreground) hover:opacity-90 active:opacity-80",
   secondary:
-    "bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:bg-[var(--color-border-strong)] active:bg-[var(--color-border-subtle)]",
+    "bg-(--color-secondary) text-(--color-secondary-foreground) hover:bg-(--color-border-strong) active:bg-(--color-border-subtle)",
   neutral:
-    "bg-[var(--color-surface)] text-[var(--color-text-main)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-muted)]  active:bg-[var(--color-border-subtle)]",
+    "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle) hover:bg-(--color-surface-muted) active:bg-(--color-border-subtle)",
   ghost:
-    "bg-transparent text-[var(--color-text-main)] hover:bg-[var(--color-ghost-hover)] active:bg-[var(--color-surface-muted)]",
+    "bg-transparent text-(--color-text-main) hover:bg-(--color-ghost-hover) active:bg-(--color-surface-muted)",
 };
 
 // Size styles
