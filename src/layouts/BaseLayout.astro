@@ -1,9 +1,17 @@
 ---
+// Import global CSS so Astro bundles it for production
+import '../styles/global.css';
+import { siteConfig } from '../lib/site.config';
+
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title = "Zaviona E-commerce" } = Astro.props;
+const { 
+  title = `${siteConfig.name} | ${siteConfig.tagline}`,
+  description = siteConfig.description 
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -12,13 +20,110 @@ const { title = "Zaviona E-commerce" } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={siteConfig.assets.favicon} />
     <title>{title}</title>
 
-    <!-- Global Styles including TailwindCSS and Theme -->
-    <link rel="stylesheet" href="/src/styles/global.css" />
+
+
+    <!-- Snipcart v3 Preconnect for performance -->
+    <link rel="preconnect" href="https://cdn.snipcart.com" />
+    <link rel="preconnect" href="https://app.snipcart.com" />
+
+    <!-- Snipcart CSS (using v3.4.0 - Vanilla/Default styling) -->
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.css" />
+
+    <!-- Snipcart JS (using v3.4.0, async loading) -->
+    <script async src="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.js"></script>
+
+    <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }}>
+      window.SnipcartSettings = {
+        publicApiKey: apiKey,
+        loadStrategy: 'on-idle',
+        modalStyle: 'overlay',
+        addProductBehavior: 'none' // Don't auto-open cart
+      };
+    </script>
+
+
   </head>
   <body>
     <slot />
+
+    <!-- Cart Alert Notification (styled like Alert.astro success variant) -->
+    <div
+      id="cart-alert"
+      role="alert"
+      style="display: none; position: fixed; top: 80px; right: 16px; z-index: 9997; max-width: 320px; animation: alertSlideIn 0.3s ease-out;"
+      class="flex items-start gap-3 rounded-lg border p-4 bg-green-50 border-green-200 shadow-lg"
+    >
+      <!-- Success check icon (Phosphor Check) -->
+      <svg class="mt-0.5 shrink-0 w-5 h-5 text-green-800" viewBox="0 0 256 256" fill="currentColor">
+        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/>
+      </svg>
+      <div class="flex-1">
+        <span class="font-medium text-green-800">Product added to cart</span>
+      </div>
+    </div>
+
+    <style>
+      @keyframes alertSlideIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+    </style>
+
+    <script is:inline>
+      // Cart alert notification for every item addition
+      // Robust event registration that works regardless of Snipcart load timing
+      (function() {
+        var alert = document.getElementById('cart-alert');
+        var timeout = null;
+        var registered = false;
+
+        function showAlert() {
+          if (!alert) return;
+          
+          // Show alert
+          alert.style.display = 'flex';
+          alert.style.animation = 'none';
+          alert.offsetHeight; // Trigger reflow
+          alert.style.animation = 'alertSlideIn 0.3s ease-out';
+
+          // Clear existing timeout and set new one
+          if (timeout) clearTimeout(timeout);
+          timeout = setTimeout(function() {
+            alert.style.display = 'none';
+          }, 3000);
+        }
+
+        function registerEventListener() {
+          if (registered) return;
+          if (window.Snipcart && window.Snipcart.events) {
+            Snipcart.events.on('item.added', showAlert);
+            registered = true;
+          }
+        }
+
+        // Try to register immediately if Snipcart is already loaded
+        registerEventListener();
+
+        // Also listen for snipcart.ready in case it loads later
+        document.addEventListener('snipcart.ready', registerEventListener);
+      })();
+    </script>
+
+    <!-- Snipcart Root Container -->
+    <div
+      hidden
+      id="snipcart"
+      data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}
+      data-config-modal-style="overlay"
+      data-currency="INR"
+      data-config-add-product-behavior="none"
+
+    >
+    </div>
 
     <!-- Alpine.js is now handled by @astrojs/alpinejs integration -->
     <!-- The entrypoint in astro.config.mjs registers the wishlist store before Alpine starts -->

@@ -64,3 +64,18 @@ body {
     0 0 0 4px var(--color-ring),
     0 0 12px var(--color-ring-glow);
 }
+
+/* Alpine.js cloak - prevent flash of unstyled content */
+[x-cloak] {
+  display: none !important;
+}
+
+/* Snipcart z-index overrides - ensure cart appears above navbar (z-50) */
+#snipcart {
+  z-index: 100 !important;
+}
+
+.snipcart-modal,
+.snipcart-modal__container {
+  z-index: 100 !important;
+}

@@ -12,7 +12,7 @@ const { intent = "info", title, class: className, ...rest } = Astro.props;
 
 // Intent styles for background and border
 const intentStyles = {
-  info: "bg-[var(--color-surface)] border-[var(--color-border-subtle)]",
+  info: "bg-(--color-surface) border-(--color-border-subtle)",
   warning: "bg-amber-50 border-amber-200",
   success: "bg-green-50 border-green-200",
 };
@@ -26,7 +26,7 @@ const intentIcons = {
 
 // Intent text colors
 const intentTextColors = {
-  info: "text-[var(--color-text-main)]",
+  info: "text-(--color-text-main)",
   warning: "text-amber-800",
   success: "text-green-800",
 };

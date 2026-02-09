@@ -2,10 +2,10 @@
 title: "Emerald Drop Earrings"
 price: 4200
 salePrice: 3500
-image: "https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=800&h=1000&fit=crop"
+image: "/images/products/1629224316810-9d8805b95e76.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&h=1000&fit=crop"
+  - "/images/products/1629224316810-9d8805b95e76.jpg"
+  - "/images/products/1617038220319-276d3cfab638.jpg"
 category: "earrings"
 badges:
   - "Sale"
@@ -29,3 +29,4 @@ The Emerald Drop Earrings showcase the mesmerizing beauty of Colombian emeralds,
 - 18k white gold settings
 - Lever-back closures
 - Certificate of authenticity
+

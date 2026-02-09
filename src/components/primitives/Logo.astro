@@ -12,7 +12,7 @@ interface Props {
 
 const { variant = "full", color = "black", class: className, ...rest } = Astro.props;
 
-const textColor = color === "white" ? "text-white" : "text-[var(--color-text-main)]";
+const textColor = color === "white" ? "text-white" : "text-(--color-text-main)";
 ---
 
 {variant === "full" ? (

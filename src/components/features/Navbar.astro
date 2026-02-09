@@ -21,7 +21,7 @@ const { class: className, ...rest } = Astro.props;
 
 <header
   class:list={[
-    "sticky top-0 z-40 w-full border-b border-[var(--color-border-subtle)] bg-[var(--color-background)]",
+    "sticky top-0 z-50 w-full border-b border-(--color-border-subtle) bg-(--color-background)",
     className,
   ]}
   {...rest}
@@ -39,7 +39,7 @@ const { class: className, ...rest } = Astro.props;
           ) : (
             <a
               href={item.href}
-              class="px-3 py-2 font-sans text-sm font-medium text-[var(--color-text-main)] transition-colors duration-200 hover:text-[var(--color-text-muted)]"
+              class="px-3 py-2 font-sans text-sm font-medium text-(--color-text-main) transition-colors duration-200 hover:text-(--color-text-muted)"
             >
               {item.label}
             </a>
@@ -67,21 +67,40 @@ const { class: className, ...rest } = Astro.props;
           class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
         ></span>
       </a>
-      <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="PhShoppingCart" />
+      <Button
+        type="ghost"
+        variant="icon-only"
+        size="sm"
+        class="snipcart-customer-signin"
+        aria-label="Customer Account"
+      >
+        <Icon name="PhUser" />
       </Button>
+      <button class="snipcart-checkout relative">
+        <Button type="ghost" variant="icon-only" size="sm" as="span">
+          <Icon name="PhShoppingCart" />
+        </Button>
+        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--color-primary) text-xs font-bold text-white"></span>
+      </button>
     </div>
 
     {/* Mobile: Actions + Menu Toggle */}
-    <div class="flex items-center gap-2 md:hidden" x-data="{ mobileMenuOpen: false }">
+    <div 
+      class="flex items-center gap-2 md:hidden" 
+      x-data="{ mobileMenuOpen: false }"
+      x-effect="mobileMenuOpen ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden')"
+    >
       <a href="/search">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhMagnifyingGlass" />
         </Button>
       </a>
-      <Button type="ghost" variant="icon-only" size="sm">
-        <Icon name="PhShoppingCart" />
-      </Button>
+      <button class="snipcart-checkout relative">
+        <Button type="ghost" variant="icon-only" size="sm" as="span">
+          <Icon name="PhShoppingCart" />
+        </Button>
+        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--color-primary) text-xs font-bold text-white"></span>
+      </button>
 
       {/* Mobile Menu Toggle */}
       <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = true">
@@ -97,7 +116,7 @@ const { class: className, ...rest } = Astro.props;
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-50 bg-black/50"
+        class="fixed inset-0 z-999 bg-black/50"
         @click="mobileMenuOpen = false"
         x-cloak
       >
@@ -112,13 +131,13 @@ const { class: className, ...rest } = Astro.props;
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-x-0"
         x-transition:leave-end="translate-x-full"
-        class="fixed inset-y-0 right-0 z-50 w-full max-w-sm overflow-y-auto bg-[var(--color-background)] shadow-xl"
+        class="fixed inset-y-0 right-0 z-999 w-full max-w-sm overflow-y-auto bg-(--color-background) shadow-xl"
         x-cloak
       >
         <div class="flex h-full flex-col" x-data="{ activeAccordion: null }">
           {/* Drawer Header */}
           <div
-            class="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-4"
+            class="flex items-center justify-between border-b border-(--color-border-subtle) px-4 py-4"
           >
             <Logo variant="full" />
             <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false">
@@ -136,7 +155,7 @@ const { class: className, ...rest } = Astro.props;
                       <div>
                         <button
                           type="button"
-                          class="flex w-full items-center justify-between rounded-md px-3 py-3 font-sans text-base font-medium text-[var(--color-text-main)] transition-colors hover:bg-[var(--color-surface)]"
+                          class="flex w-full items-center justify-between rounded-md px-3 py-3 font-sans text-base font-medium text-(--color-text-main) transition-colors hover:bg-(--color-surface)"
                           @click={`activeAccordion = activeAccordion === '${item.label}' ? null : '${item.label}'`}
                         >
                           {item.label}
@@ -155,7 +174,7 @@ const { class: className, ...rest } = Astro.props;
                             <li>
                               <a
                                 href={subItem.href}
-                                class="block rounded-md px-3 py-2 text-sm text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-main)]"
+                                class="block rounded-md px-3 py-2 text-sm text-(--color-text-muted) transition-colors hover:bg-(--color-surface) hover:text-(--color-text-main)"
                               >
                                 {subItem.label}
                               </a>
@@ -166,7 +185,7 @@ const { class: className, ...rest } = Astro.props;
                     ) : (
                       <a
                         href={item.href}
-                        class="block rounded-md px-3 py-3 font-sans text-base font-medium text-[var(--color-text-main)] transition-colors hover:bg-[var(--color-surface)]"
+                        class="block rounded-md px-3 py-3 font-sans text-base font-medium text-(--color-text-main) transition-colors hover:bg-(--color-surface)"
                       >
                         {item.label}
                       </a>
@@ -178,7 +197,7 @@ const { class: className, ...rest } = Astro.props;
           </nav>
 
           {/* Drawer Footer */}
-          <div class="border-t border-[var(--color-border-subtle)] px-4 py-4">
+          <div class="border-t border-(--color-border-subtle) px-4 py-4">
             <div class="flex items-center gap-4">
               <a href="/wishlist" class="relative">
                 <Button type="ghost" variant="icon-only" size="sm" as="span">
@@ -191,7 +210,13 @@ const { class: className, ...rest } = Astro.props;
                   class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
                 ></span>
               </a>
-              <Button type="ghost" variant="icon-only" size="sm">
+              <Button
+                type="ghost"
+                variant="icon-only"
+                size="sm"
+                class="snipcart-customer-signin"
+                aria-label="Customer Account"
+              >
                 <Icon name="PhUser" />
               </Button>
             </div>

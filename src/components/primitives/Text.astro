@@ -8,12 +8,12 @@ interface Props {
 const { as: Tag = "p", variant = "default", class: className, ...rest } = Astro.props;
 
 // Base styles - uses Plus Jakarta Sans (sans-serif), no size forcing for class override
-const baseStyles = "font-sans text-[var(--color-text-main)]";
+const baseStyles = "font-sans text-(--color-text-main)";
 
 // Variant-specific styles (default includes text-base, others don't or have own sizes)
 const variantStyles = {
   default: "text-base leading-relaxed",
-  caption: "text-sm text-[var(--color-text-muted)] leading-normal",
+  caption: "text-sm text-(--color-text-muted) leading-normal",
   lead: "text-lg md:text-xl leading-relaxed font-light",
 };
 

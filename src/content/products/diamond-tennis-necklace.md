@@ -2,10 +2,10 @@
 title: "Diamond Tennis Necklace"
 price: 8500
 salePrice: 7200
-image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=1000&fit=crop"
+image: "/images/products/1515562141207-7a88fb7ce338.jpg"
 gallery:
-  - "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=1000&fit=crop"
-  - "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop"
+  - "/images/products/1515562141207-7a88fb7ce338.jpg"
+  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "necklaces"
 badges:
   - "Sale"
@@ -32,3 +32,4 @@ The Diamond Tennis Necklace is the pinnacle of luxury jewelry. Each diamond is c
 - Secure box clasp with safety
 - Conflict-free certified diamonds
 - Lifetime warranty
+

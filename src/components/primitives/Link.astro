@@ -9,7 +9,7 @@ const { href, variant = "plain", class: className, ...rest } = Astro.props;
 
 // Base styles - inherits font size from parent, using shadow glow for focus
 const baseStyles =
-  "inline font-sans text-[var(--color-text-main)] transition-all duration-200 hover:text-[var(--color-text-muted)] focus-visible:outline-none focus-visible:rounded-sm focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]";
+  "inline font-sans text-(--color-text-main) transition-all duration-200 hover:text-(--color-text-muted) focus-visible:outline-none focus-visible:rounded-sm focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]";
 
 // Variant styles
 const variantStyles = {

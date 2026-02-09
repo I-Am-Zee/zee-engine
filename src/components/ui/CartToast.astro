@@ -1,0 +1,138 @@
+---
+/**
+ * CartToast - UI Molecule
+ * 
+ * Toast notification that appears when a product is added to cart.
+ * Uses Alpine.js for state management and auto-dismissal.
+ * Follows Zaviona design system aesthetics.
+ * 
+ * @component Molecule (ui/)
+ * @uses Alpine.js for reactivity
+ */
+
+interface Props {
+  autoDismissMs?: number;
+}
+
+const { autoDismissMs = 4000 } = Astro.props;
+---
+
+<!-- Cart Toast Container - Fixed position at top-right -->
+<div
+  id="cart-toast"
+  data-auto-dismiss-ms={autoDismissMs}
+  x-data="{ 
+    visible: false, 
+    productName: '', 
+    productPrice: 0, 
+    productImage: '',
+    dismissTimeout: null,
+    autoDismissMs: 4000,
+    registered: false,
+    init() {
+      this.autoDismissMs = parseInt(this.$el.dataset.autoDismissMs) || 4000;
+      
+      const showToast = (item) => {
+        this.productName = item.name || item.title || 'Product added';
+        this.productPrice = item.price || 0;
+        this.productImage = item.image || '/placeholder.jpg';
+        if (this.dismissTimeout) clearTimeout(this.dismissTimeout);
+        this.visible = true;
+        this.dismissTimeout = setTimeout(() => { this.visible = false; }, this.autoDismissMs);
+      };
+      
+      // Register only once using a flag
+      if (!this.registered) {
+        this.registered = true;
+        
+        // Wait for Snipcart to be ready
+        const registerEvents = () => {
+          if (window.Snipcart && window.Snipcart.events) {
+            window.Snipcart.events.on('item.added', showToast);
+          }
+        };
+        
+        document.addEventListener('snipcart.ready', registerEvents);
+        
+        // Also try if Snipcart is already ready
+        if (window.Snipcart && window.Snipcart.events) {
+          registerEvents();
+        }
+      }
+    },
+    formatPrice(price) {
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency', currency: 'INR', maximumFractionDigits: 0
+      }).format(price || 0);
+    }
+  }"
+  x-show="visible"
+  x-cloak
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 translate-x-full"
+  x-transition:enter-end="opacity-100 translate-x-0"
+  x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100 translate-x-0"
+  x-transition:leave-end="opacity-0 translate-x-full"
+  class="fixed top-20 right-4 z-[9999] w-80 max-w-[calc(100vw-2rem)]"
+  role="alert"
+  aria-live="polite"
+>
+  <div class="overflow-hidden rounded-lg border border-(--color-border-subtle) bg-(--color-surface) shadow-xl">
+    <!-- Success Header -->
+    <div class="flex items-center gap-2 border-b border-(--color-border-subtle) bg-(--color-surface) px-4 py-2.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 256 256" fill="currentColor">
+        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
+      </svg>
+      <span class="font-sans text-sm font-medium text-(--color-text-main)">Added to Cart</span>
+      
+      <!-- Dismiss Button -->
+      <button
+        @click="visible = false"
+        class="ml-auto rounded p-1 text-(--color-text-muted) transition-colors hover:bg-(--color-ghost-hover) hover:text-(--color-text-main)"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
+          <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Product Info -->
+    <div class="flex items-center gap-3 bg-(--color-background) p-4">
+      <div class="h-14 w-14 shrink-0 overflow-hidden rounded bg-(--color-surface) border border-(--color-border-subtle)">
+        <img
+          :src="productImage || '/placeholder.jpg'"
+          alt="Product"
+          class="h-full w-full object-cover"
+        />
+      </div>
+      
+      <div class="min-w-0 flex-1">
+        <p class="truncate font-sans text-sm font-medium text-(--color-text-main)" x-text="productName"></p>
+        <p class="mt-0.5 font-sans text-sm text-(--color-text-muted)" x-text="formatPrice(productPrice)"></p>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="flex gap-2 border-t border-(--color-border-subtle) bg-(--color-surface) p-3">
+      <button
+        @click="visible = false"
+        class="flex-1 rounded border border-(--color-border-subtle) bg-transparent px-3 py-2 font-sans text-sm font-medium text-(--color-text-main) transition-colors hover:bg-(--color-ghost-hover)"
+      >
+        Continue
+      </button>
+      <button
+        @click="visible = false; Snipcart.api.theme.cart.open()"
+        class="flex-1 rounded bg-(--color-primary) px-3 py-2 font-sans text-sm font-medium text-white transition-colors hover:bg-[#1e293b]"
+      >
+        View Cart
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+</style>

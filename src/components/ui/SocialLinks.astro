@@ -6,6 +6,7 @@
 
 import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
+import { siteConfig } from "../../lib/site.config";
 
 interface Props {
   orientation?: "horizontal" | "vertical";
@@ -15,18 +16,21 @@ interface Props {
 const { orientation = "horizontal", class: className, ...rest } = Astro.props;
 
 // Social platform configuration (using Phosphor icon names)
+// Uses siteConfig.social for URLs - add more in site.config.ts
 const socialPlatforms = [
   {
     name: "PhInstagramLogo",
-    href: "https://instagram.com/zaviona",
+    href: siteConfig.social.instagram,
     label: "Follow us on Instagram",
   },
   {
     name: "PhPinterestLogo",
-    href: "https://pinterest.com/zaviona",
+    href: siteConfig.social.pinterest,
     label: "Follow us on Pinterest",
   },
-  { name: "PhWhatsappLogo", href: "https://wa.me/919999999999", label: "Chat on WhatsApp" },
+  // Uncomment and add to site.config.ts social object to enable:
+  // { name: "PhWhatsappLogo", href: siteConfig.social.whatsapp, label: "Chat on WhatsApp" },
+  // { name: "PhFacebookLogo", href: siteConfig.social.facebook, label: "Follow us on Facebook" },
 ] as const;
 
 const layoutClasses = orientation === "horizontal" ? "flex-row gap-4" : "flex-col gap-3";
@@ -40,7 +44,7 @@ const layoutClasses = orientation === "horizontal" ? "flex-row gap-4" : "flex-co
         target="_blank"
         rel="noopener noreferrer"
         aria-label={platform.label}
-        class="text-[var(--color-text-muted)] transition-colors duration-200 hover:text-[var(--color-text-main)]"
+        class="text-(--color-text-muted) transition-colors duration-200 hover:text-(--color-text-main)"
       >
         <Icon name={platform.name} class="h-5 w-5" />
       </a>

@@ -32,7 +32,7 @@ const { min = 1, max = 99, initial = 1, class: className, ...rest } = Astro.prop
     type="text"
     readonly
     x-bind:value="count"
-    class="h-8 w-12 rounded-md border border-[var(--color-border-strong)] bg-[var(--color-background)] text-center font-sans text-sm focus:outline-none"
+    class="h-8 w-12 rounded-md border border-(--color-border-strong) bg-(--color-background) text-center font-sans text-sm focus:outline-none"
   />
 
   <Button

@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/features/Navbar.astro";
+import Footer from "../components/features/Footer.astro";
+import Heading from "../components/primitives/Heading.astro";
+import Text from "../components/primitives/Text.astro";
+
+export const prerender = true;
+---
+
+<BaseLayout title="Journal | Zaviona">
+  <Navbar />
+  <main class="mx-auto max-w-3xl px-4 py-24 text-center">
+    <Heading as="h1" class="mb-6 text-4xl font-bold">Zaviona Journal</Heading>
+    <Text class="mb-8 text-lg text-(--color-text-muted)">
+      Insights into the world of luxury jewelry, ethical sourcing, and timeless style.
+    </Text>
+    <Text class="text-(--color-text-muted)">
+      Journal entries are being drafted. Coming soon.
+    </Text>
+  </main>
+  <Footer />
+</BaseLayout>
