@@ -11,7 +11,11 @@ content:
     label: Products
     type: collection
     path: src/content/products
-    format: md
+    format: yaml-frontmatter
+    view:
+      fields: [title, sku, price, category]
+      primary: title
+      sort: [title]
     fields:
       - name: title
         label: Product Name
@@ -37,15 +41,12 @@ content:
         label: Category
         type: select
         options:
-          - label: Rings
-            value: rings
-          - label: Necklaces
-            value: necklaces
-          - label: Earrings
-            value: earrings
-          - label: Bracelets
-            value: bracelets
-        creatable: true
+          values:
+            - rings
+            - necklaces
+            - earrings
+            - bracelets
+          creatable: true
       - name: description
         label: Short Summary
         type: text
@@ -76,10 +77,10 @@ content:
         type: list
         fields:
           - name: name
-            label: Name (e.g. Ring Size)
+            label: Option Name
             type: string
           - name: values
-            label: Values (pipe separated for Snipcart, e.g. 6|7|8)
+            label: Values
             type: list
             field:
               type: string
@@ -111,7 +112,10 @@ content:
     label: Blog Posts
     type: collection
     path: src/content/blog
-    format: md
+    format: yaml-frontmatter
+    view:
+      fields: [title, author, publishDate]
+      primary: title
     fields:
       - name: title
         label: Post Title
@@ -146,7 +150,10 @@ content:
     label: Static Pages
     type: collection
     path: src/content/pages
-    format: md
+    format: yaml-frontmatter
+    view:
+      fields: [title, lastUpdated]
+      primary: title
     fields:
       - name: title
         label: Page Title
@@ -163,9 +170,9 @@ content:
 
   - name: settings
     label: Global Settings
-    type: collection
-    path: src/content/settings
-    format: yml
+    type: file
+    path: src/content/settings/site.yml
+    format: yaml
     fields:
       - name: name
         label: Site Name
