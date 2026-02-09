@@ -35,10 +35,16 @@ const {
 // For Draft deploys: Add "*.netlify.app" to Snipcart Dashboard > Domains & URLs
 const productUrl = new URL(Astro.url.pathname, siteConfig.url).toString();
 
-// Format options for Snipcart (e.g., "6|7|8|9")
-const formatOptions = (options: { name: string; values: string[] }[]) => {
-  if (!options || options.length === 0) return null;
-  return options[0].values.join("|");
+// Format sizes for Snipcart (e.g., "6|7|8|9")
+const formatSizes = (options?: { sizes?: string[]; materials?: string[] }) => {
+  if (!options?.sizes || options.sizes.length === 0) return null;
+  return options.sizes.join("|");
+};
+
+// Format materials for Snipcart
+const formatMaterials = (options?: { sizes?: string[]; materials?: string[] }) => {
+  if (!options?.materials || options.materials.length === 0) return null;
+  return options.materials.join("|");
 };
 
 // Build data attributes object
@@ -51,15 +57,16 @@ const snipcartAttributes = {
   "data-item-image": product.data.image,
   ...(product.data.weight && { "data-item-weight": product.data.weight }),
   ...(product.data.sku && { "data-item-sku": product.data.sku }),
-  // Note: data-item-quantity is NOT set here - Snipcart defaults to 1
-  // To support quantity picker, we'd need JavaScript to update this dynamically
-  ...(product.data.taxable !== undefined && { "data-item-taxable": product.data.taxable }),
-  // Custom fields (product options)
-  ...(product.data.product_options &&
-    product.data.product_options[0] && {
-      "data-item-custom1-name": product.data.product_options[0].name,
-      "data-item-custom1-options": formatOptions(product.data.product_options),
-    }),
+  // Custom fields (product options - sizes)
+  ...(product.data.product_options?.sizes && {
+    "data-item-custom1-name": "Size",
+    "data-item-custom1-options": formatSizes(product.data.product_options),
+  }),
+  // Custom fields (product options - materials)
+  ...(product.data.product_options?.materials && {
+    "data-item-custom2-name": "Material",
+    "data-item-custom2-options": formatMaterials(product.data.product_options),
+  }),
 };
 ---
 

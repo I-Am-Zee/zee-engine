@@ -18,8 +18,7 @@ tags:
   - "luxury"
   - "formal"
 product_options:
-  - name: "Length"
-    values: ["16 inches", "18 inches"]
+  sizes: ["16 inches", "18 inches"]
 publishDate: 2025-06-20
 ---
 
@@ -32,4 +31,3 @@ The Diamond Tennis Necklace is the pinnacle of luxury jewelry. Each diamond is c
 - Secure box clasp with safety
 - Conflict-free certified diamonds
 - Lifetime warranty
-

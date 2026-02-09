@@ -110,19 +110,24 @@ const galleryImages =
         </div>
 
         {/* Options Zone */}
-        {
-          product.data.product_options && product.data.product_options.length > 0 && (
-            <div class="space-y-6">
-              {product.data.product_options.map((option) => (
-                <OptionSelector
-                  legend={option.name}
-                  options={option.values}
-                  name={option.name.toLowerCase().replace(/\s+/g, "-")}
-                />
-              ))}
-            </div>
-          )
-        }
+        {product.data.product_options && (
+          <div class="space-y-6">
+            {product.data.product_options.sizes && product.data.product_options.sizes.length > 0 && (
+              <OptionSelector
+                legend="Size"
+                options={product.data.product_options.sizes}
+                name="size"
+              />
+            )}
+            {product.data.product_options.materials && product.data.product_options.materials.length > 0 && (
+              <OptionSelector
+                legend="Material"
+                options={product.data.product_options.materials}
+                name="material"
+              />
+            )}
+          </div>
+        )}
 
         {/* Action Zone: Quantity + Add to Cart */}
         <div class="mt-10 space-y-6">

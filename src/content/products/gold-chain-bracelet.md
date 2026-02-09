@@ -17,8 +17,7 @@ tags:
   - "waterproof"
   - "pvd-coated"
 product_options:
-  - name: "Size"
-    values: ["6.5 inches", "7 inches", "7.5 inches"]
+  sizes: ["6.5 inches", "7 inches", "7.5 inches"]
 publishDate: 2025-01-05
 ---
 
@@ -31,4 +30,3 @@ The Gold Chain Bracelet combines classic elegance with contemporary style. Its c
 - Adjustable length
 - Hypoallergenic
 - Perfect for layering
-

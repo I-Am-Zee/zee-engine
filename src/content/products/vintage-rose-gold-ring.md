@@ -16,8 +16,7 @@ tags:
   - "vintage"
   - "everyday"
 product_options:
-  - name: "Ring Size"
-    values: ["5", "6", "7", "8", "9"]
+  sizes: ["5", "6", "7", "8", "9"]
 publishDate: 2025-09-01
 ---
 
@@ -30,4 +29,3 @@ The Vintage Rose Gold Ring embodies timeless romance with its warm, blush-toned 
 - Comfortable fit band
 - Hypoallergenic
 - Includes authentication certificate
-

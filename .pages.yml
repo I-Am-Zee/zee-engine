@@ -1,4 +1,5 @@
 # PagesCMS Configuration (https://pagescms.org)
+# Refined for Zaviona Luxury E-commerce
 
 # Media settings
 media:
@@ -6,7 +7,9 @@ media:
   output: /images
 
 content:
-  # Collections
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PRODUCTS COLLECTION
+  # ═══════════════════════════════════════════════════════════════════════════
   - name: products
     label: Products
     type: collection
@@ -17,6 +20,7 @@ content:
       primary: title
       sort: [title]
     fields:
+      # ─── Core Product Info ─────────────────────────────────────────────────
       - name: title
         label: Product Name
         type: string
@@ -29,14 +33,24 @@ content:
       - name: salePrice
         label: Sale Price (INR)
         type: number
+
+      # ─── Images ────────────────────────────────────────────────────────────
       - name: image
         label: Main Image
         type: image
+        options:
+          path: products
+          extensions: [jpg, jpeg, png, webp]
       - name: gallery
         label: Product Gallery
-        type: list
-        field:
-          type: image
+        type: image
+        options:
+          multiple:
+            max: 10
+          path: products
+          extensions: [jpg, jpeg, png, webp]
+
+      # ─── Classification ────────────────────────────────────────────────────
       - name: category
         label: Category
         type: select
@@ -46,68 +60,105 @@ content:
             - necklaces
             - earrings
             - bracelets
+            - gifts
           creatable: true
+      - name: tags
+        label: Tags
+        type: select
+        options:
+          multiple: true
+          creatable: true
+          values:
+            - diamond
+            - gold
+            - silver
+            - platinum
+            - engagement
+            - wedding
+            - luxury
+            - gift
+            - white-gold
+            - rose-gold
+      - name: badges
+        label: Badges
+        type: select
+        options:
+          multiple: true
+          creatable: true
+          values:
+            - New
+            - Sale
+            - Bestseller
+            - Limited Edition
+            - Exclusive
+
+      # ─── Product Details ───────────────────────────────────────────────────
+      - name: rating
+        label: Customer Rating (0-5)
+        type: number
+        min: 0
+        max: 5
       - name: description
         label: Short Summary
         type: text
       - name: body
-        label: Detailed Description (Markdown)
+        label: Detailed Description
         type: rich-text
+        options:
+          path: products
+          extensions: [jpg, jpeg, png, webp]
 
-      # Organization
-      - name: tags
-        label: Tags
-        type: list
-        field:
-          type: string
-      - name: badges
-        label: Badges (e.g. New, Sale)
-        type: list
-        field:
-          type: string
-      - name: rating
-        label: Customer Rating
-        type: number
-        min: 0
-        max: 5
-
-      # Snipcart & E-commerce Logic
+      # ─── Variant Options ───────────────────────────────────────────────────
       - name: product_options
-        label: Product Options (Sizes, Materials)
-        type: list
+        label: Variant Options
+        type: object
         fields:
-          - name: name
-            label: Option Name
-            type: string
-          - name: values
-            label: Values
-            type: list
-            field:
-              type: string
-      - name: stock
-        label: Inventory Count
-        type: number
+          - name: sizes
+            label: Available Sizes
+            type: select
+            options:
+              multiple: true
+              creatable: true
+              values: ["5", "6", "7", "8", "9", "10"]
+          - name: materials
+            label: Available Materials
+            type: select
+            options:
+              multiple: true
+              creatable: true
+              values:
+                - White Gold
+                - Yellow Gold
+                - Rose Gold
+                - Platinum
+                - Silver
+
+      # ─── Shipping Info (Optional) ──────────────────────────────────────────
       - name: weight
-        label: Shipping Weight (grams)
+        label: Weight (grams)
         type: number
       - name: dimensions
-        label: Shipping Dimensions (cm)
+        label: Dimensions (cm)
         type: object
         fields:
           - name: length
+            label: Length
             type: number
           - name: width
+            label: Width
             type: number
           - name: height
+            label: Height
             type: number
-      - name: taxable
-        label: Collect Tax?
-        type: boolean
-        default: true
+
+      # ─── Publishing ────────────────────────────────────────────────────────
       - name: publishDate
         label: Publish Date
         type: date
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # BLOG POSTS
+  # ═══════════════════════════════════════════════════════════════════════════
   - name: blog
     label: Blog Posts
     type: collection
@@ -126,6 +177,9 @@ content:
       - name: image
         label: Cover Image
         type: image
+        options:
+          path: blog
+          extensions: [jpg, jpeg, png, webp]
       - name: author
         label: Author Name
         type: string
@@ -135,9 +189,16 @@ content:
         type: date
       - name: tags
         label: Categories / Tags
-        type: list
-        field:
-          type: string
+        type: select
+        options:
+          multiple: true
+          creatable: true
+          values:
+            - Branding
+            - Luxury
+            - Jewelry Care
+            - Style Guide
+            - Announcements
       - name: isDraft
         label: Keep as Draft?
         type: boolean
@@ -145,7 +206,13 @@ content:
       - name: body
         label: Content
         type: rich-text
+        options:
+          path: blog
+          extensions: [jpg, jpeg, png, webp, gif]
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # STATIC PAGES
+  # ═══════════════════════════════════════════════════════════════════════════
   - name: pages
     label: Static Pages
     type: collection
@@ -168,6 +235,9 @@ content:
         label: Page Content
         type: rich-text
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # GLOBAL SETTINGS
+  # ═══════════════════════════════════════════════════════════════════════════
   - name: settings
     label: Global Settings
     type: file
@@ -191,18 +261,24 @@ content:
         type: object
         fields:
           - name: support
+            label: Support Email
             type: string
           - name: orders
+            label: Orders Email
             type: string
       - name: social
         label: Social Media
         type: object
         fields:
           - name: instagram
+            label: Instagram URL
             type: string
           - name: pinterest
+            label: Pinterest URL
             type: string
           - name: facebook
+            label: Facebook URL
             type: string
           - name: twitter
+            label: Twitter/X URL
             type: string

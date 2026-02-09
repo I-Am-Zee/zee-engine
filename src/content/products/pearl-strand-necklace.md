@@ -15,8 +15,7 @@ tags:
   - "classic"
   - "formal"
 product_options:
-  - name: "Length"
-    values: ["16 inches", "18 inches", "24 inches"]
+  sizes: ["16 inches", "18 inches", "24 inches"]
 publishDate: 2024-12-15
 ---
 
@@ -29,4 +28,3 @@ The Pearl Strand Necklace features hand-selected Akoya pearls, each chosen for t
 - 14k gold clasp
 - AAA quality grading
 - Velvet presentation box
-

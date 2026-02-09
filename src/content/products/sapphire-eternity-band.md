@@ -14,8 +14,7 @@ tags:
   - "luxury"
   - "anniversary"
 product_options:
-  - name: "Ring Size"
-    values: ["5", "6", "7", "8"]
+  sizes: ["5", "6", "7", "8"]
 publishDate: 2025-08-10
 ---
 
@@ -28,4 +27,3 @@ The Sapphire Eternity Band represents eternal love with its unbroken circle of h
 - Channel setting for secure stones
 - Comes in luxury presentation case
 - GIA certified gemstones
-

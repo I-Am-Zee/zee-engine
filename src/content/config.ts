@@ -4,33 +4,27 @@ const products = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
+    sku: z.string().optional(),
     price: z.number(),
     salePrice: z.number().optional(),
     image: z.string(),
     gallery: z.array(z.string()).optional(),
     category: z.string(),
+    tags: z.array(z.string()).optional(),
     badges: z.array(z.string()).optional(),
     rating: z.number().min(0).max(5).optional(),
     description: z.string(),
-    tags: z.array(z.string()).optional(),
     publishDate: z.date().optional(),
-    product_options: z
-      .array(
-        z.object({
-          name: z.string(),
-          values: z.array(z.string()),
-        })
-      )
-      .optional(),
-    sku: z.string().optional(),
-    stock: z.number().optional(),
+    product_options: z.object({
+      sizes: z.array(z.string()).optional(),
+      materials: z.array(z.string()).optional(),
+    }).optional(),
     weight: z.number().optional(),
     dimensions: z.object({
       length: z.number(),
       width: z.number(),
       height: z.number(),
     }).optional(),
-    taxable: z.boolean().default(true),
   }),
 });
 

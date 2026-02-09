@@ -19,13 +19,11 @@ tags:
   - "waterproof"
   - "pvd-coated"
 product_options:
-  - name: "Chain Length"
-    values: ["16 inches", "18 inches", "20 inches"]
+  sizes: ["16 inches", "18 inches", "20 inches"]
 publishDate: 2025-03-15
 sku: "EGN-003"
-stock: 25
+
 weight: 5.2
-taxable: true
 ---
 
 The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.
@@ -41,4 +39,3 @@ The pendant features a unique celestial-inspired design that catches light beaut
 - Comes in luxury gift packaging
 
 Layer it with other necklaces for a contemporary look, or wear it alone as a statement of refined simplicity. Each piece is individually crafted, making yours truly one-of-a-kind.
-
