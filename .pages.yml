@@ -1,11 +1,12 @@
 # PagesCMS Configuration (https://pagescms.org)
 
-# Media settings: where images are stored and how they are referenced
+# Media settings
 media:
   input: public/images
   output: /images
 
 content:
+  # Collections
   - name: products
     label: Products
     type: collection
@@ -13,22 +14,22 @@ content:
     format: md
     fields:
       - name: title
-        label: Title
+        label: Product Name
         type: string
       - name: sku
         label: SKU
         type: string
       - name: price
-        label: Price
+        label: Base Price (INR)
         type: number
       - name: salePrice
-        label: Sale Price
+        label: Sale Price (INR)
         type: number
       - name: image
         label: Main Image
         type: image
       - name: gallery
-        label: Gallery
+        label: Product Gallery
         type: list
         field:
           type: image
@@ -44,49 +45,157 @@ content:
             value: earrings
           - label: Bracelets
             value: bracelets
-      - name: rating
-        label: Rating
-        type: number
-        min: 0
-        max: 5
+        creatable: true
       - name: description
-        label: Description
+        label: Short Summary
         type: text
+      - name: body
+        label: Detailed Description (Markdown)
+        type: rich-text
+
+      # Organization
       - name: tags
         label: Tags
         type: list
         field:
           type: string
       - name: badges
-        label: Badges
+        label: Badges (e.g. New, Sale)
         type: list
         field:
           type: string
+      - name: rating
+        label: Customer Rating
+        type: number
+        min: 0
+        max: 5
+
+      # Snipcart & E-commerce Logic
       - name: product_options
-        label: Product Options
+        label: Product Options (Sizes, Materials)
         type: list
         fields:
           - name: name
-            label: Option Name (e.g. Size)
+            label: Name (e.g. Ring Size)
             type: string
           - name: values
-            label: Values
+            label: Values (pipe separated for Snipcart, e.g. 6|7|8)
             type: list
             field:
               type: string
+      - name: stock
+        label: Inventory Count
+        type: number
+      - name: weight
+        label: Shipping Weight (grams)
+        type: number
+      - name: dimensions
+        label: Shipping Dimensions (cm)
+        type: object
+        fields:
+          - name: length
+            type: number
+          - name: width
+            type: number
+          - name: height
+            type: number
+      - name: taxable
+        label: Collect Tax?
+        type: boolean
+        default: true
       - name: publishDate
         label: Publish Date
         type: date
-      - name: stock
-        label: Stock
-        type: number
-      - name: weight
-        label: Weight (grams)
-        type: number
-      - name: taxable
-        label: Taxable
+
+  - name: blog
+    label: Blog Posts
+    type: collection
+    path: src/content/blog
+    format: md
+    fields:
+      - name: title
+        label: Post Title
+        type: string
+      - name: excerpt
+        label: Summary Excerpt
+        type: text
+      - name: image
+        label: Cover Image
+        type: image
+      - name: author
+        label: Author Name
+        type: string
+        default: "Zaviona Team"
+      - name: publishDate
+        label: Date Published
+        type: date
+      - name: tags
+        label: Categories / Tags
+        type: list
+        field:
+          type: string
+      - name: isDraft
+        label: Keep as Draft?
         type: boolean
-        default: true
+        default: false
       - name: body
-        label: Body Content
+        label: Content
         type: rich-text
+
+  - name: pages
+    label: Static Pages
+    type: collection
+    path: src/content/pages
+    format: md
+    fields:
+      - name: title
+        label: Page Title
+        type: string
+      - name: description
+        label: Meta Description
+        type: text
+      - name: lastUpdated
+        label: Last Updated
+        type: date
+      - name: body
+        label: Page Content
+        type: rich-text
+
+  - name: settings
+    label: Global Settings
+    type: collection
+    path: src/content/settings
+    format: yml
+    fields:
+      - name: name
+        label: Site Name
+        type: string
+      - name: tagline
+        label: Site Tagline
+        type: string
+      - name: description
+        label: SEO Site Description
+        type: text
+      - name: url
+        label: Production URL
+        type: string
+      - name: email
+        label: Contact Emails
+        type: object
+        fields:
+          - name: support
+            type: string
+          - name: orders
+            type: string
+      - name: social
+        label: Social Media
+        type: object
+        fields:
+          - name: instagram
+            type: string
+          - name: pinterest
+            type: string
+          - name: facebook
+            type: string
+          - name: twitter
+            type: string
