@@ -15,7 +15,7 @@ tags:
   - "rose-gold"
   - "vintage"
   - "everyday"
-options:
+product_options:
   - name: "Ring Size"
     values: ["5", "6", "7", "8", "9"]
 publishDate: 2025-09-01

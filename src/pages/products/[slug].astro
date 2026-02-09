@@ -104,16 +104,16 @@ const galleryImages =
 
         {/* Description Zone */}
         <div class="my-8">
-          <Text class="leading-relaxed text-[var(--color-text-main)]">
+          <Text class="leading-relaxed text-(--color-text-main)">
             {product.data.description}
           </Text>
         </div>
 
         {/* Options Zone */}
         {
-          product.data.options && product.data.options.length > 0 && (
+          product.data.product_options && product.data.product_options.length > 0 && (
             <div class="space-y-6">
-              {product.data.options.map((option) => (
+              {product.data.product_options.map((option) => (
                 <OptionSelector
                   legend={option.name}
                   options={option.values}
@@ -144,7 +144,7 @@ const galleryImages =
         </div>
 
         {/* Divider */}
-        <hr class="my-12 border-[var(--color-border-subtle)]" />
+        <hr class="my-12 border-(--color-border-subtle)" />
 
         {/* Details Zone: The Story (Markdown Content) */}
         <div class="product-story prose prose-slate max-w-none">

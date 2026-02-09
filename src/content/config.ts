@@ -16,7 +16,7 @@ const products = defineCollection({
     tags: z.array(z.string()).optional(),
     // New: Published date for "Newest Arrivals" sorting
     publishDate: z.date().optional(),
-    options: z
+    product_options: z
       .array(
         z.object({
           name: z.string(),

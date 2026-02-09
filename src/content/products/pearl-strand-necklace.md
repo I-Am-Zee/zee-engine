@@ -14,7 +14,7 @@ tags:
   - "pearls"
   - "classic"
   - "formal"
-options:
+product_options:
   - name: "Length"
     values: ["16 inches", "18 inches", "24 inches"]
 publishDate: 2024-12-15

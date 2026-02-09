@@ -1,5 +1,9 @@
 # PagesCMS Configuration (https://pagescms.org)
-# This file defines how PagesCMS will display and edit your content.
+
+# Media settings: where images are stored and how they are referenced
+media:
+  input: public/images
+  output: /images
 
 content:
   - name: products
@@ -11,6 +15,9 @@ content:
       - name: title
         label: Title
         type: string
+      - name: sku
+        label: SKU
+        type: string
       - name: price
         label: Price
         type: number
@@ -19,21 +26,24 @@ content:
         type: number
       - name: image
         label: Main Image
-        type: string
-        help: Path to image in /public/images/
+        type: image
       - name: gallery
         label: Gallery
         type: list
         field:
-          type: string
+          type: image
       - name: category
         label: Category
-        type: string
-      - name: badges
-        label: Badges
-        type: list
-        field:
-          type: string
+        type: select
+        options:
+          - label: Rings
+            value: rings
+          - label: Necklaces
+            value: necklaces
+          - label: Earrings
+            value: earrings
+          - label: Bracelets
+            value: bracelets
       - name: rating
         label: Rating
         type: number
@@ -47,12 +57,26 @@ content:
         type: list
         field:
           type: string
+      - name: badges
+        label: Badges
+        type: list
+        field:
+          type: string
+      - name: product_options
+        label: Product Options
+        type: list
+        fields:
+          - name: name
+            label: Option Name (e.g. Size)
+            type: string
+          - name: values
+            label: Values
+            type: list
+            field:
+              type: string
       - name: publishDate
         label: Publish Date
         type: date
-      - name: sku
-        label: SKU
-        type: string
       - name: stock
         label: Stock
         type: number

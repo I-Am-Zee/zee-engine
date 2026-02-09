@@ -18,7 +18,7 @@ tags:
   - "everyday"
   - "waterproof"
   - "pvd-coated"
-options:
+product_options:
   - name: "Chain Length"
     values: ["16 inches", "18 inches", "20 inches"]
 publishDate: 2025-03-15

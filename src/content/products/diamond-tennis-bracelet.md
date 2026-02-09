@@ -15,7 +15,7 @@ tags:
   - "white-gold"
   - "luxury"
   - "formal"
-options:
+product_options:
   - name: "Size"
     values: ["6.5 inches", "7 inches"]
 publishDate: 2025-02-14

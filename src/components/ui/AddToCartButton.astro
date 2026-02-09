@@ -55,10 +55,10 @@ const snipcartAttributes = {
   // To support quantity picker, we'd need JavaScript to update this dynamically
   ...(product.data.taxable !== undefined && { "data-item-taxable": product.data.taxable }),
   // Custom fields (product options)
-  ...(product.data.options &&
-    product.data.options[0] && {
-      "data-item-custom1-name": product.data.options[0].name,
-      "data-item-custom1-options": formatOptions(product.data.options),
+  ...(product.data.product_options &&
+    product.data.product_options[0] && {
+      "data-item-custom1-name": product.data.product_options[0].name,
+      "data-item-custom1-options": formatOptions(product.data.product_options),
     }),
 };
 ---

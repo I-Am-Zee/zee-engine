@@ -16,7 +16,7 @@ tags:
   - "chain"
   - "waterproof"
   - "pvd-coated"
-options:
+product_options:
   - name: "Size"
     values: ["6.5 inches", "7 inches", "7.5 inches"]
 publishDate: 2025-01-05

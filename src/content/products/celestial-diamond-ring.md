@@ -19,7 +19,7 @@ tags:
   - "diamond"
   - "engagement"
   - "white-gold"
-options:
+product_options:
   - name: "Ring Size"
     values: ["6", "7", "8", "9", "10"]
   - name: "Material"

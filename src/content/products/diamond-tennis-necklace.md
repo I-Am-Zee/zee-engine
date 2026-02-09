@@ -17,7 +17,7 @@ tags:
   - "white-gold"
   - "luxury"
   - "formal"
-options:
+product_options:
   - name: "Length"
     values: ["16 inches", "18 inches"]
 publishDate: 2025-06-20

@@ -13,7 +13,7 @@ tags:
   - "platinum"
   - "luxury"
   - "anniversary"
-options:
+product_options:
   - name: "Ring Size"
     values: ["5", "6", "7", "8"]
 publishDate: 2025-08-10
