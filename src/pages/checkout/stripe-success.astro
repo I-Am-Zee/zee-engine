@@ -12,7 +12,7 @@ const publicToken = Astro.url.searchParams.get('publicToken');
 const paymentIntentId = Astro.url.searchParams.get('payment_intent');
 const paymentIntentClientSecret = Astro.url.searchParams.get('payment_intent_client_secret');
 
-const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
+const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
 ---
 
 <!doctype html>

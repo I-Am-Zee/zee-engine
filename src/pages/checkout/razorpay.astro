@@ -22,7 +22,7 @@ if (!publicToken) {
 
 // Get Razorpay key for client-side
 const razorpayKeyId = import.meta.env.PUBLIC_RAZORPAY_KEY_ID;
-const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
+const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
 ---
 
 <!doctype html>

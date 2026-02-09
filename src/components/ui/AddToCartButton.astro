@@ -29,8 +29,8 @@ const {
   class: className,
 } = Astro.props;
 
-// Get site URL from environment or config
-const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.site?.href || "http://localhost:4321";
+// Get site URL from environment (DEPLOY_PRIME_URL for free Deploy Previews)
+const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.site?.href || "http://localhost:4321";
 
 // Build product URL for Snipcart validation (Astro.url.pathname provides the path, siteUrl adds the domain)
 const productUrl = new URL(Astro.url.pathname, siteUrl).toString();

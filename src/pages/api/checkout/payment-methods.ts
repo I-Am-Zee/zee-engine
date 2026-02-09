@@ -65,7 +65,11 @@ export const POST: APIRoute = async ({ request }) => {
     console.log('[payment-methods] Selected country:', customerCountry);
 
     // Get the base URL for the checkout page
-    const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'http://localhost:4321';
+    // DEPLOY_PRIME_URL is provided by Netlify for both preview and production
+    // This enables free, unlimited Deploy Previews
+    const siteUrl = import.meta.env.DEPLOY_PRIME_URL || 
+                    import.meta.env.PUBLIC_SITE_URL || 
+                    'http://localhost:4321';
     
     // Get available gateways for customer's country
     const availableGateways = getGatewaysForCountry(customerCountry);
