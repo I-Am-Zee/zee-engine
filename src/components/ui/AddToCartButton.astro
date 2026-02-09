@@ -3,7 +3,7 @@
  * AddToCartButton - UI Molecule
  *
  * Snipcart-powered add to cart button built on Button primitive.
- * Supports flexible variants system with dynamic custom fields.
+ * Supports object-based variant slots with dynamic custom fields.
  *
  * @component Molecule (ui/)
  * @uses Button (primitive)
@@ -14,11 +14,11 @@ import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import { siteConfig } from "../../lib/site.config";
 
-interface Variant {
+interface VariantSlot {
   name: string;
-  type: "dropdown" | "checkbox";
-  values: string[];
+  values: string; // Comma-separated
   price_modifiers?: string;
+  is_checkbox?: boolean;
 }
 
 interface Props {
@@ -42,24 +42,34 @@ const {
 // Snipcart product URL validation: Use PRODUCTION URL from site config
 const productUrl = new URL(Astro.url.pathname, siteConfig.url).toString();
 
-// Build Snipcart custom fields from flexible variants array
-const buildVariantAttributes = (variants?: Variant[]) => {
-  if (!variants || variants.length === 0) return {};
-
+// Build Snipcart custom fields from object-based variant slots
+const buildVariantAttributes = () => {
   const attrs: Record<string, string> = {};
+  let customIndex = 1;
 
-  variants.forEach((v, index) => {
-    const customIndex = index + 1; // Snipcart uses 1-indexed custom fields
-    attrs[`data-item-custom${customIndex}-name`] = v.name;
-
-    // Format values as "Option1|Option2|Option3" for Snipcart
-    attrs[`data-item-custom${customIndex}-options`] = v.values.join("|");
-
+  // Helper to process a variant slot
+  const processVariant = (slot: VariantSlot | undefined) => {
+    if (!slot?.name || !slot?.values) return;
+    
+    const optionName = slot.name;
+    // Convert comma-separated values to pipe-separated for Snipcart
+    const optionValues = slot.values.split(",").map(v => v.trim()).join("|");
+    
+    attrs[`data-item-custom${customIndex}-name`] = optionName;
+    attrs[`data-item-custom${customIndex}-options`] = optionValues;
+    
     // If checkbox type, mark as optional (not required)
-    if (v.type === "checkbox") {
+    if (slot.is_checkbox) {
       attrs[`data-item-custom${customIndex}-required`] = "false";
     }
-  });
+    
+    customIndex++;
+  };
+
+  // Process each variant slot
+  processVariant(product.data.variant_1);
+  processVariant(product.data.variant_2);
+  processVariant(product.data.variant_3);
 
   return attrs;
 };
@@ -74,8 +84,8 @@ const snipcartAttributes = {
   "data-item-image": product.data.image,
   ...(product.data.weight && { "data-item-weight": product.data.weight }),
   ...(product.data.sku && { "data-item-sku": product.data.sku }),
-  // Dynamic variant fields
-  ...buildVariantAttributes(product.data.variants),
+  // Dynamic variant fields from slots
+  ...buildVariantAttributes(),
 };
 ---
 

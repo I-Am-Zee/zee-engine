@@ -23,15 +23,14 @@ sku: "CDR-001"
 weight: 4.5
 publishDate: 2026-01-15
 
-# Flexible Variants (Snipcart)
-variants:
-  - name: "Ring Size"
-    type: "dropdown"
-    values: ["6", "7", "8", "9", "10"]
-  - name: "Metal"
-    type: "dropdown"
-    values: ["White Gold", "Yellow Gold", "Rose Gold"]
-    price_modifiers: "0|0|+200"
+# Object-based Variant Slots (PagesCMS compatible)
+variant_1:
+  name: "Ring Size"
+  values: "6, 7, 8, 9, 10"
+variant_2:
+  name: "Metal"
+  values: "White Gold, Yellow Gold, Rose Gold"
+  price_modifiers: "0, 0, +200"
 
 # Urgency & Scarcity
 urgency_tag: "Selling Fast"

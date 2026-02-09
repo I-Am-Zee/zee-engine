@@ -19,17 +19,22 @@ const products = defineCollection({
     description: z.string(),
     publishDate: z.date().optional(),
 
-    // Flexible Variants (Snipcart)
-    variants: z
-      .array(
-        z.object({
-          name: z.string(),
-          type: z.enum(["dropdown", "checkbox"]).default("dropdown"),
-          values: z.array(z.string()),
-          price_modifiers: z.string().optional(),
-        })
-      )
-      .optional(),
+    // Flexible Variants (Snipcart) - Object-based slots
+    variant_1: z.object({
+      name: z.string(),
+      values: z.string(), // Comma-separated
+      price_modifiers: z.string().optional(),
+    }).optional(),
+    variant_2: z.object({
+      name: z.string(),
+      values: z.string(),
+      price_modifiers: z.string().optional(),
+    }).optional(),
+    variant_3: z.object({
+      name: z.string(),
+      values: z.string(),
+      is_checkbox: z.boolean().optional(),
+    }).optional(),
 
     // Urgency & Scarcity
     release_date: z.date().optional(),

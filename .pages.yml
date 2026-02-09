@@ -114,28 +114,50 @@ content:
           extensions: [jpg, jpeg, png, webp]
 
       # ─── Flexible Variants (Snipcart) ──────────────────────────────────────
-      - name: variants
-        label: Product Options (Snipcart)
-        type: list
+      # Note: Due to PagesCMS limitations with nested list objects,
+      # we use a simplified structure with predefined option slots.
+      - name: variant_1
+        label: "Option 1 (e.g., Size, Color)"
+        type: object
         fields:
           - name: name
-            label: Option Name (e.g., "Size", "Plating", "Gift Wrap")
+            label: Option Name
             type: string
-          - name: type
-            label: Input Type
-            type: select
-            options:
-              values:
-                - dropdown
-                - checkbox
+          - name: values
+            label: Choices (comma-separated)
+            type: string
+            description: "e.g., S, M, L, XL or Gold, Silver, Rose Gold"
+          - name: price_modifiers
+            label: Price Add-ons (match order)
+            type: string
+            description: "e.g., 0, 0, +200, +500"
+      - name: variant_2
+        label: "Option 2 (Optional)"
+        type: object
+        fields:
+          - name: name
+            label: Option Name
+            type: string
+          - name: values
+            label: Choices (comma-separated)
+            type: string
+          - name: price_modifiers
+            label: Price Add-ons
+            type: string
+      - name: variant_3
+        label: "Option 3 (Optional - e.g., Gift Wrap)"
+        type: object
+        fields:
+          - name: name
+            label: Option Name
+            type: string
           - name: values
             label: Choices
-            type: list
-            field:
-              type: string
-          - name: price_modifiers
-            label: Price Add-ons (match order, e.g., "0|0|+500")
             type: string
+          - name: is_checkbox
+            label: Is this a checkbox option?
+            type: boolean
+            default: false
 
       # ─── Urgency & Scarcity ────────────────────────────────────────────────
       - name: release_date

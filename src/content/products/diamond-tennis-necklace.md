@@ -20,11 +20,10 @@ tags:
 sku: "DTN-005"
 publishDate: 2025-06-20
 
-# Flexible Variants
-variants:
-  - name: "Necklace Length"
-    type: "dropdown"
-    values: ["16 inches", "18 inches"]
+# Object-based Variant Slots
+variant_1:
+  name: "Necklace Length"
+  values: "16 inches, 18 inches"
 
 # Complete the Look
 related_products:

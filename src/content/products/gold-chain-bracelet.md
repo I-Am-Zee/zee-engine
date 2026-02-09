@@ -19,15 +19,14 @@ tags:
 sku: "GCB-009"
 publishDate: 2025-01-05
 
-# Flexible Variants
-variants:
-  - name: "Bracelet Size"
-    type: "dropdown"
-    values: ["6.5 inches", "7 inches", "7.5 inches"]
-  - name: "Gift Wrap"
-    type: "checkbox"
-    values: ["Add Gift Wrap (+₹99)"]
-    price_modifiers: "+99"
+# Object-based Variant Slots
+variant_1:
+  name: "Bracelet Size"
+  values: "6.5 inches, 7 inches, 7.5 inches"
+variant_3:
+  name: "Gift Wrap"
+  values: "Add Gift Wrap (+₹99)"
+  is_checkbox: true
 
 # Urgency
 urgency_tag: "Restocked Today"

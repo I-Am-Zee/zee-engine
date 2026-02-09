@@ -18,11 +18,10 @@ tags:
 sku: "VRG-006"
 publishDate: 2025-09-01
 
-# Flexible Variants
-variants:
-  - name: "Ring Size"
-    type: "dropdown"
-    values: ["5", "6", "7", "8", "9"]
+# Object-based Variant Slots
+variant_1:
+  name: "Ring Size"
+  values: "5, 6, 7, 8, 9"
 
 # Complete the Look
 related_products:

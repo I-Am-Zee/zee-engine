@@ -21,11 +21,10 @@ sku: "EGN-003"
 weight: 5.2
 publishDate: 2025-03-15
 
-# Flexible Variants
-variants:
-  - name: "Chain Length"
-    type: "dropdown"
-    values: ["16 inches", "18 inches", "20 inches"]
+# Object-based Variant Slots
+variant_1:
+  name: "Chain Length"
+  values: "16 inches, 18 inches, 20 inches"
 
 # Complete the Look
 related_products:

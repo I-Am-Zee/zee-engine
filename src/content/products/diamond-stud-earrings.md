@@ -17,8 +17,6 @@ tags:
 publishDate: 2024-12-01
 sku: "DSE-004"
 
-# No variants needed for earrings (one size fits all)
-
 # Complete the Look
 related_products:
   - celestial-diamond-ring

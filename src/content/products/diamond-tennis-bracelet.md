@@ -19,11 +19,10 @@ sku: "DTB-002"
 weight: 12.3
 publishDate: 2025-02-14
 
-# Flexible Variants
-variants:
-  - name: "Bracelet Size"
-    type: "dropdown"
-    values: ["6.5 inches", "7 inches"]
+# Object-based Variant Slots
+variant_1:
+  name: "Bracelet Size"
+  values: "6.5 inches, 7 inches"
 
 # Urgency
 urgency_tag: "Only 2 Left!"

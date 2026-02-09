@@ -87,7 +87,7 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
             <div class="mb-4 flex flex-wrap gap-2">
               {badges.map((badge) => (
                 <Badge 
-                  intent={badge === "Coming Soon" ? "neutral" : badge === "Sale" ? "danger" : "primary"} 
+                  intent={badge === "Coming Soon" ? "surface" : badge === "Sale" ? "accent" : "primary"} 
                   size="sm"
                 >
                   {badge}
@@ -125,16 +125,30 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
           </Text>
         </div>
 
-        {/* Options Zone - Flexible Variants */}
-        {product.data.variants && product.data.variants.length > 0 && (
+        {/* Options Zone - Object-based Variant Slots */}
+        {(product.data.variant_1 || product.data.variant_2 || product.data.variant_3) && (
           <div class="space-y-6">
-            {product.data.variants.map((variant) => (
+            {product.data.variant_1?.name && product.data.variant_1?.values && (
               <OptionSelector
-                legend={variant.name}
-                options={variant.values}
-                name={variant.name.toLowerCase().replace(/\s+/g, "-")}
+                legend={product.data.variant_1.name}
+                options={product.data.variant_1.values.split(",").map(v => v.trim())}
+                name={product.data.variant_1.name.toLowerCase().replace(/\s+/g, "-")}
               />
-            ))}
+            )}
+            {product.data.variant_2?.name && product.data.variant_2?.values && (
+              <OptionSelector
+                legend={product.data.variant_2.name}
+                options={product.data.variant_2.values.split(",").map(v => v.trim())}
+                name={product.data.variant_2.name.toLowerCase().replace(/\s+/g, "-")}
+              />
+            )}
+            {product.data.variant_3?.name && product.data.variant_3?.values && (
+              <OptionSelector
+                legend={product.data.variant_3.name}
+                options={product.data.variant_3.values.split(",").map(v => v.trim())}
+                name={product.data.variant_3.name.toLowerCase().replace(/\s+/g, "-")}
+              />
+            )}
           </div>
         )}
 
@@ -170,7 +184,7 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
               product={product} 
               size="lg" 
               class="w-full md:flex-1"
-              disabled={isComingSoon}
+              disabled={isComingSoon ?? false}
             >
               {isComingSoon ? "Coming Soon" : "Add to Cart"}
             </AddToCartButton>
@@ -201,13 +215,13 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
     <div class="flex items-center gap-3 max-w-lg mx-auto">
       <div class="flex-1">
         <Text variant="caption" class="font-semibold truncate">{product.data.title}</Text>
-        <PriceTag price={product.data.price} salePrice={product.data.salePrice} size="sm" />
+        <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
       </div>
       <AddToCartButton 
         product={product} 
         size="md" 
-        disabled={isComingSoon}
-        class="flex-shrink-0"
+        disabled={isComingSoon ?? false}
+        class="shrink-0"
       >
         {isComingSoon ? "Soon" : "Add"}
       </AddToCartButton>

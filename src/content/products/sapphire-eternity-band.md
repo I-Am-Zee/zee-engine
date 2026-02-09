@@ -16,11 +16,10 @@ tags:
 sku: "SEB-007"
 publishDate: 2025-08-10
 
-# Flexible Variants
-variants:
-  - name: "Ring Size"
-    type: "dropdown"
-    values: ["5", "6", "7", "8"]
+# Object-based Variant Slots
+variant_1:
+  name: "Ring Size"
+  values: "5, 6, 7, 8"
 
 # Complete the Look
 related_products:

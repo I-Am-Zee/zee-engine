@@ -19,12 +19,11 @@ tags:
 sku: "LGS-012"
 publishDate: 2025-11-25
 
-# Flexible Variants
-variants:
-  - name: "Personalization"
-    type: "checkbox"
-    values: ["Add Custom Engraving (+₹299)"]
-    price_modifiers: "+299"
+# Object-based Variant Slots
+variant_3:
+  name: "Personalization"
+  values: "Add Custom Engraving (+₹299)"
+  is_checkbox: true
 
 # Urgency
 urgency_tag: "Last Chance"
