@@ -1,0 +1,42 @@
+---
+/**
+ * CompleteTheLook - UI Molecule
+ *
+ * Displays related products as upsells ("Complete the Look" section).
+ * Shows product cards with quick add functionality.
+ *
+ * @component Molecule (ui/)
+ */
+
+import { getCollection } from "astro:content";
+import ProductCard from "../features/ProductCard.astro";
+
+interface Props {
+  productSlugs: string[];
+  class?: string;
+}
+
+const { productSlugs, class: className } = Astro.props;
+
+// Get all products and filter by slugs
+const allProducts = await getCollection("products");
+const relatedProducts = productSlugs
+  .map((slug) => allProducts.find((p) => p.slug === slug))
+  .filter(Boolean)
+  .slice(0, 4); // Max 4 products
+---
+
+{
+  relatedProducts.length > 0 && (
+    <section class:list={["py-12", className]}>
+      <h3 class="text-xl font-semibold text-(--color-text-main) mb-6">
+        Complete the Look
+      </h3>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+        {relatedProducts.map((product) => (
+          <ProductCard product={product} variant="compact" />
+        ))}
+      </div>
+    </section>
+  )
+}

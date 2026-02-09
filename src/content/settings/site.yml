@@ -1,12 +1,27 @@
 name: "Zaviona"
 tagline: "Luxury Jewelry & Timeless Elegance"
-description: "Zaviona is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship."
-url: "https://zaviona-dev.netlify.app"
+description: "Discover exquisite handcrafted jewelry pieces that blend traditional artistry with modern design. Each piece tells a story of elegance and timeless beauty."
+url: "https://zaviona.com"
 email:
-  support: "concierge@zaviona.com"
+  support: "support@zaviona.com"
   orders: "orders@zaviona.com"
 social:
   instagram: "https://instagram.com/zaviona"
   pinterest: "https://pinterest.com/zaviona"
-  facebook: ""
-  twitter: ""
+  facebook: "https://facebook.com/zaviona"
+  twitter: "https://twitter.com/zaviona"
+
+# Marketing Command Center
+announcement_bar:
+  enabled: true
+  text: "✨ Free Shipping on Orders Above ₹2000 | Use Code: FIRST10 for 10% Off"
+  link: "/products"
+  bg_color: "bg-black"
+  text_color: "text-white"
+
+popup_modal:
+  active: false
+  title: "Get 10% Off Your First Order"
+  description: "Join our exclusive list and receive a welcome discount plus early access to new arrivals and sales."
+  coupon_code: "FIRST10"
+  cta_text: "Claim My Discount"

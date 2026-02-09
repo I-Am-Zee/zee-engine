@@ -5,7 +5,6 @@ image: "/images/products/1599643478518-a784e5dc4c8f.jpg"
 gallery:
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
   - "/images/products/1515562141207-7a88fb7ce338.jpg"
-  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
   - "/images/products/1535632066927-ab7c9ab60908.jpg"
 category: "necklaces"
 badges:
@@ -18,12 +17,21 @@ tags:
   - "everyday"
   - "waterproof"
   - "pvd-coated"
-product_options:
-  sizes: ["16 inches", "18 inches", "20 inches"]
-publishDate: 2025-03-15
 sku: "EGN-003"
-
 weight: 5.2
+publishDate: 2025-03-15
+
+# Flexible Variants
+variants:
+  - name: "Chain Length"
+    type: "dropdown"
+    values: ["16 inches", "18 inches", "20 inches"]
+
+# Complete the Look
+related_products:
+  - celestial-diamond-ring
+  - diamond-stud-earrings
+  - gold-chain-bracelet
 ---
 
 The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.

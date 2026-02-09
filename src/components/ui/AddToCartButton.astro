@@ -3,7 +3,7 @@
  * AddToCartButton - UI Molecule
  *
  * Snipcart-powered add to cart button built on Button primitive.
- * Automatically generates data attributes for Snipcart from product data.
+ * Supports flexible variants system with dynamic custom fields.
  *
  * @component Molecule (ui/)
  * @uses Button (primitive)
@@ -14,12 +14,20 @@ import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import { siteConfig } from "../../lib/site.config";
 
+interface Variant {
+  name: string;
+  type: "dropdown" | "checkbox";
+  values: string[];
+  price_modifiers?: string;
+}
+
 interface Props {
   product: any; // Product collection entry from getCollection('products')
   variant?: "primary" | "secondary" | "neutral";
   size?: "sm" | "md" | "lg";
   showIcon?: boolean;
   class?: string;
+  disabled?: boolean;
 }
 
 const {
@@ -28,23 +36,32 @@ const {
   size = "md",
   showIcon = true,
   class: className,
+  disabled = false,
 } = Astro.props;
 
 // Snipcart product URL validation: Use PRODUCTION URL from site config
-// Snipcart crawls the production site to verify prices, so we MUST use the production URL.
-// For Draft deploys: Add "*.netlify.app" to Snipcart Dashboard > Domains & URLs
 const productUrl = new URL(Astro.url.pathname, siteConfig.url).toString();
 
-// Format sizes for Snipcart (e.g., "6|7|8|9")
-const formatSizes = (options?: { sizes?: string[]; materials?: string[] }) => {
-  if (!options?.sizes || options.sizes.length === 0) return null;
-  return options.sizes.join("|");
-};
+// Build Snipcart custom fields from flexible variants array
+const buildVariantAttributes = (variants?: Variant[]) => {
+  if (!variants || variants.length === 0) return {};
 
-// Format materials for Snipcart
-const formatMaterials = (options?: { sizes?: string[]; materials?: string[] }) => {
-  if (!options?.materials || options.materials.length === 0) return null;
-  return options.materials.join("|");
+  const attrs: Record<string, string> = {};
+
+  variants.forEach((v, index) => {
+    const customIndex = index + 1; // Snipcart uses 1-indexed custom fields
+    attrs[`data-item-custom${customIndex}-name`] = v.name;
+
+    // Format values as "Option1|Option2|Option3" for Snipcart
+    attrs[`data-item-custom${customIndex}-options`] = v.values.join("|");
+
+    // If checkbox type, mark as optional (not required)
+    if (v.type === "checkbox") {
+      attrs[`data-item-custom${customIndex}-required`] = "false";
+    }
+  });
+
+  return attrs;
 };
 
 // Build data attributes object
@@ -57,16 +74,8 @@ const snipcartAttributes = {
   "data-item-image": product.data.image,
   ...(product.data.weight && { "data-item-weight": product.data.weight }),
   ...(product.data.sku && { "data-item-sku": product.data.sku }),
-  // Custom fields (product options - sizes)
-  ...(product.data.product_options?.sizes && {
-    "data-item-custom1-name": "Size",
-    "data-item-custom1-options": formatSizes(product.data.product_options),
-  }),
-  // Custom fields (product options - materials)
-  ...(product.data.product_options?.materials && {
-    "data-item-custom2-name": "Material",
-    "data-item-custom2-options": formatMaterials(product.data.product_options),
-  }),
+  // Dynamic variant fields
+  ...buildVariantAttributes(product.data.variants),
 };
 ---
 
@@ -75,6 +84,7 @@ const snipcartAttributes = {
   size={size}
   variant={showIcon ? "icon-left" : "default"}
   class:list={["snipcart-add-item", className]}
+  disabled={disabled}
   {...snipcartAttributes}
 >
   {showIcon && <Icon name="PhShoppingCart" size={size === "sm" ? 16 : size === "lg" ? 20 : 18} />}

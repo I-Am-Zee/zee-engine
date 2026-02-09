@@ -1,0 +1,40 @@
+---
+/**
+ * UrgencyBadge - UI Molecule
+ *
+ * Displays scarcity/urgency labels with pulsing animation.
+ * Used for FOMO-inducing labels like "Only 2 Left!", "Selling Fast", etc.
+ *
+ * @component Molecule (ui/)
+ */
+
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold",
+    "bg-red-500/10 text-red-600 border border-red-500/20",
+    "animate-pulse",
+    className,
+  ]}
+>
+  <span class="h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
+  <span>{label}</span>
+</div>
+
+<style>
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+  }
+</style>

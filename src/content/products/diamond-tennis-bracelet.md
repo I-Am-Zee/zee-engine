@@ -15,12 +15,23 @@ tags:
   - "white-gold"
   - "luxury"
   - "formal"
-product_options:
-  sizes: ["6.5 inches", "7 inches"]
-publishDate: 2025-02-14
 sku: "DTB-002"
-
 weight: 12.3
+publishDate: 2025-02-14
+
+# Flexible Variants
+variants:
+  - name: "Bracelet Size"
+    type: "dropdown"
+    values: ["6.5 inches", "7 inches"]
+
+# Urgency
+urgency_tag: "Only 2 Left!"
+
+# Complete the Look
+related_products:
+  - diamond-tennis-necklace
+  - diamond-stud-earrings
 ---
 
 The Diamond Tennis Bracelet is the ultimate statement of elegance. Each diamond is carefully selected and set to create a continuous line of brilliant sparkle around your wrist.

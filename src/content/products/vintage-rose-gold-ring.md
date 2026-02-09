@@ -15,9 +15,19 @@ tags:
   - "rose-gold"
   - "vintage"
   - "everyday"
-product_options:
-  sizes: ["5", "6", "7", "8", "9"]
+sku: "VRG-006"
 publishDate: 2025-09-01
+
+# Flexible Variants
+variants:
+  - name: "Ring Size"
+    type: "dropdown"
+    values: ["5", "6", "7", "8", "9"]
+
+# Complete the Look
+related_products:
+  - moonstone-pearl-earrings
+  - gold-chain-bracelet
 ---
 
 The Vintage Rose Gold Ring embodies timeless romance with its warm, blush-toned metal and delicate filigree details. Each ring is crafted using traditional techniques passed down through generations of master jewelers.

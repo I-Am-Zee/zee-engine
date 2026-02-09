@@ -1,0 +1,44 @@
+---
+/**
+ * AnnouncementBar - UI Molecule
+ *
+ * Top-of-page marketing banner controlled from CMS.
+ * Reads from site.yml settings.
+ *
+ * @component Molecule (ui/)
+ */
+
+import { getEntry } from "astro:content";
+import Icon from "../primitives/Icon.astro";
+
+// Get settings from CMS
+const settings = await getEntry("settings", "site");
+const announcement = settings?.data?.announcement_bar;
+
+// Don't render if not enabled or no text
+const show = announcement?.enabled && announcement?.text;
+---
+
+{
+  show && (
+    <div
+      class:list={[
+        "relative flex items-center justify-center gap-2 px-4 py-2 text-center text-sm font-medium",
+        announcement.bg_color || "bg-black",
+        announcement.text_color || "text-white",
+      ]}
+    >
+      {announcement.link ? (
+        <a
+          href={announcement.link}
+          class="flex items-center gap-2 hover:underline underline-offset-2"
+        >
+          <span>{announcement.text}</span>
+          <Icon name="PhArrowRight" size={14} />
+        </a>
+      ) : (
+        <span>{announcement.text}</span>
+      )}
+    </div>
+  )
+}

@@ -11,11 +11,12 @@ import RatingStars from "../../components/ui/RatingStars.astro";
 import OptionSelector from "../../components/ui/OptionSelector.astro";
 import QuantitySelector from "../../components/ui/QuantitySelector.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import UrgencyBadge from "../../components/ui/UrgencyBadge.astro";
+import CompleteTheLook from "../../components/ui/CompleteTheLook.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
 import Navbar from "../../components/features/Navbar.astro";
 import Footer from "../../components/features/Footer.astro";
 import WishlistButton from "../../components/features/WishlistButton.astro";
-import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
 
 // Pre-render at build time (required in server mode)
@@ -42,6 +43,17 @@ const galleryImages =
   product.data.gallery && product.data.gallery.length > 0
     ? product.data.gallery
     : [product.data.image];
+
+// Check if product is "Coming Soon" (release_date in future)
+const now = new Date();
+const releaseDate = product.data.release_date ? new Date(product.data.release_date) : null;
+const isComingSoon = releaseDate && releaseDate > now;
+
+// Auto-add "Coming Soon" badge if release date is in future
+const badges = [...(product.data.badges || [])];
+if (isComingSoon && !badges.includes("Coming Soon")) {
+  badges.unshift("Coming Soon");
+}
 ---
 
 <BaseLayout title={`${product.data.title} | Zaviona`}>
@@ -68,38 +80,42 @@ const galleryImages =
 
       {/* Right Column - Product Info */}
       <div class="lg:col-span-5 lg:pl-12">
-        {/* Header Zone: Badges, Title, Price */}
+        {/* Header Zone: Badges, Title, Price, Urgency */}
         <div class="mb-8">
           {/* Badges */}
-          {
-            product.data.badges && product.data.badges.length > 0 && (
-              <div class="mb-4 flex gap-2">
-                {product.data.badges.map((badge) => (
-                  <Badge intent="primary" size="sm">
-                    {badge}
-                  </Badge>
-                ))}
-              </div>
-            )
-          }
+          {badges.length > 0 && (
+            <div class="mb-4 flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <Badge 
+                  intent={badge === "Coming Soon" ? "neutral" : badge === "Sale" ? "danger" : "primary"} 
+                  size="sm"
+                >
+                  {badge}
+                </Badge>
+              ))}
+            </div>
+          )}
 
           {/* Title */}
           <Heading as="h1" class="mb-4">
             {product.data.title}
           </Heading>
 
-          {/* Price */}
-          <PriceTag price={product.data.price} salePrice={product.data.salePrice} class="mb-4" />
+          {/* Price + Urgency Row */}
+          <div class="flex items-center gap-4 mb-4">
+            <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
+            {product.data.urgency_tag && !isComingSoon && (
+              <UrgencyBadge label={product.data.urgency_tag} />
+            )}
+          </div>
 
           {/* Rating */}
-          {
-            product.data.rating && product.data.rating > 0 && (
-              <div class="flex items-center gap-2">
-                <RatingStars rating={product.data.rating} />
-                <Text variant="caption">({product.data.rating.toFixed(1)} out of 5)</Text>
-              </div>
-            )
-          }
+          {product.data.rating && product.data.rating > 0 && (
+            <div class="flex items-center gap-2">
+              <RatingStars rating={product.data.rating} />
+              <Text variant="caption">({product.data.rating.toFixed(1)} out of 5)</Text>
+            </div>
+          )}
         </div>
 
         {/* Description Zone */}
@@ -109,38 +125,54 @@ const galleryImages =
           </Text>
         </div>
 
-        {/* Options Zone */}
-        {product.data.product_options && (
+        {/* Options Zone - Flexible Variants */}
+        {product.data.variants && product.data.variants.length > 0 && (
           <div class="space-y-6">
-            {product.data.product_options.sizes && product.data.product_options.sizes.length > 0 && (
+            {product.data.variants.map((variant) => (
               <OptionSelector
-                legend="Size"
-                options={product.data.product_options.sizes}
-                name="size"
+                legend={variant.name}
+                options={variant.values}
+                name={variant.name.toLowerCase().replace(/\s+/g, "-")}
               />
-            )}
-            {product.data.product_options.materials && product.data.product_options.materials.length > 0 && (
-              <OptionSelector
-                legend="Material"
-                options={product.data.product_options.materials}
-                name="material"
-              />
-            )}
+            ))}
           </div>
         )}
 
         {/* Action Zone: Quantity + Add to Cart */}
         <div class="mt-10 space-y-6">
+          {/* Coming Soon Countdown */}
+          {isComingSoon && releaseDate && (
+            <div class="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 text-center">
+              <Text variant="caption" class="text-amber-600 font-medium mb-1">
+                Dropping Soon
+              </Text>
+              <div class="text-lg font-semibold text-amber-700" id="countdown" data-release={releaseDate.toISOString()}>
+                {releaseDate.toLocaleDateString("en-IN", { 
+                  weekday: "long", 
+                  month: "long", 
+                  day: "numeric" 
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Quantity Selector */}
-          <div class="flex items-center gap-3">
-            <Text variant="caption" class="font-medium"> Quantity: </Text>
-            <QuantitySelector initial={1} min={1} max={10} />
-          </div>
+          {!isComingSoon && (
+            <div class="flex items-center gap-3">
+              <Text variant="caption" class="font-medium"> Quantity: </Text>
+              <QuantitySelector initial={1} min={1} max={10} />
+            </div>
+          )}
 
           <div class="flex flex-col gap-4 md:flex-row md:items-center">
             {/* Add to Cart Button - Snipcart */}
-            <AddToCartButton product={product} size="lg" class="w-full md:flex-1">
-              Add to Cart
+            <AddToCartButton 
+              product={product} 
+              size="lg" 
+              class="w-full md:flex-1"
+              disabled={isComingSoon}
+            >
+              {isComingSoon ? "Coming Soon" : "Add to Cart"}
             </AddToCartButton>
 
             {/* Wishlist Button - Uses global store */}
@@ -158,8 +190,28 @@ const galleryImages =
       </div>
     </div>
 
-    {/* Related Products Section */}
-    <RelatedProducts currentProduct={product} />
+    {/* Complete the Look (Upsells) */}
+    {product.data.related_products && product.data.related_products.length > 0 && (
+      <CompleteTheLook productSlugs={product.data.related_products} />
+    )}
+  </div>
+
+  {/* Sticky Mobile Add to Cart Bar */}
+  <div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-sm border-t border-(--color-border-subtle) lg:hidden">
+    <div class="flex items-center gap-3 max-w-lg mx-auto">
+      <div class="flex-1">
+        <Text variant="caption" class="font-semibold truncate">{product.data.title}</Text>
+        <PriceTag price={product.data.price} salePrice={product.data.salePrice} size="sm" />
+      </div>
+      <AddToCartButton 
+        product={product} 
+        size="md" 
+        disabled={isComingSoon}
+        class="flex-shrink-0"
+      >
+        {isComingSoon ? "Soon" : "Add"}
+      </AddToCartButton>
+    </div>
   </div>
 
   <Footer />
@@ -235,5 +287,12 @@ const galleryImages =
     margin-bottom: 0.75rem;
     line-height: 1.7;
     padding-left: 0.5rem;
+  }
+
+  /* Add padding to account for sticky mobile bar */
+  @media (max-width: 1023px) {
+    :global(body) {
+      padding-bottom: 80px;
+    }
   }
 </style>

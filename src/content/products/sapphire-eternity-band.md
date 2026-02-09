@@ -13,9 +13,19 @@ tags:
   - "platinum"
   - "luxury"
   - "anniversary"
-product_options:
-  sizes: ["5", "6", "7", "8"]
+sku: "SEB-007"
 publishDate: 2025-08-10
+
+# Flexible Variants
+variants:
+  - name: "Ring Size"
+    type: "dropdown"
+    values: ["5", "6", "7", "8"]
+
+# Complete the Look
+related_products:
+  - celestial-diamond-ring
+  - diamond-stud-earrings
 ---
 
 The Sapphire Eternity Band represents eternal love with its unbroken circle of hand-selected Ceylon sapphires. Each gemstone displays the coveted cornflower blue hue that has captivated royalty for centuries.

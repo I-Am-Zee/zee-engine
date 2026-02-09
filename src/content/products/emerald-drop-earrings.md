@@ -17,7 +17,16 @@ tags:
   - "diamond"
   - "luxury"
   - "formal"
+sku: "EDE-010"
 publishDate: 2026-01-10
+
+# Urgency
+urgency_tag: "Selling Fast"
+
+# Complete the Look
+related_products:
+  - sapphire-eternity-band
+  - diamond-tennis-necklace
 ---
 
 The Emerald Drop Earrings showcase the mesmerizing beauty of Colombian emeralds, each stone displaying the rich, verdant green that has captivated jewelry lovers for millennia.
@@ -29,4 +38,3 @@ The Emerald Drop Earrings showcase the mesmerizing beauty of Colombian emeralds,
 - 18k white gold settings
 - Lever-back closures
 - Certificate of authenticity
-

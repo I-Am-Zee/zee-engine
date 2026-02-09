@@ -19,14 +19,27 @@ tags:
   - "diamond"
   - "engagement"
   - "white-gold"
-product_options:
-  sizes: ["6", "7", "8", "9", "10"]
-  materials: ["White Gold", "Yellow Gold", "Rose Gold"]
-publishDate: 2026-01-15
-# Snipcart fields for e-commerce
 sku: "CDR-001"
+weight: 4.5
+publishDate: 2026-01-15
 
-weight: 4.5 # grams
+# Flexible Variants (Snipcart)
+variants:
+  - name: "Ring Size"
+    type: "dropdown"
+    values: ["6", "7", "8", "9", "10"]
+  - name: "Metal"
+    type: "dropdown"
+    values: ["White Gold", "Yellow Gold", "Rose Gold"]
+    price_modifiers: "0|0|+200"
+
+# Urgency & Scarcity
+urgency_tag: "Selling Fast"
+
+# Complete the Look (Upsells)
+related_products:
+  - ethereal-gold-necklace
+  - diamond-stud-earrings
 ---
 
 This stunning celestial diamond ring captures the essence of timeless elegance. Hand-crafted by master jewelers, each piece features a carefully selected diamond that sparkles with exceptional brilliance.

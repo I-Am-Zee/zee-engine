@@ -1,5 +1,8 @@
 import { defineCollection, z } from "astro:content";
 
+// ═══════════════════════════════════════════════════════════════════════════
+// PRODUCTS COLLECTION
+// ═══════════════════════════════════════════════════════════════════════════
 const products = defineCollection({
   type: "content",
   schema: z.object({
@@ -15,19 +18,54 @@ const products = defineCollection({
     rating: z.number().min(0).max(5).optional(),
     description: z.string(),
     publishDate: z.date().optional(),
-    product_options: z.object({
-      sizes: z.array(z.string()).optional(),
-      materials: z.array(z.string()).optional(),
-    }).optional(),
+
+    // Flexible Variants (Snipcart)
+    variants: z
+      .array(
+        z.object({
+          name: z.string(),
+          type: z.enum(["dropdown", "checkbox"]).default("dropdown"),
+          values: z.array(z.string()),
+          price_modifiers: z.string().optional(),
+        })
+      )
+      .optional(),
+
+    // Urgency & Scarcity
+    release_date: z.date().optional(),
+    urgency_tag: z.string().optional(),
+
+    // Upsells
+    related_products: z.array(z.string()).optional(),
+
+    // Shipping
     weight: z.number().optional(),
-    dimensions: z.object({
-      length: z.number(),
-      width: z.number(),
-      height: z.number(),
-    }).optional(),
+    dimensions: z
+      .object({
+        length: z.number(),
+        width: z.number(),
+        height: z.number(),
+      })
+      .optional(),
   }),
 });
 
+// ═══════════════════════════════════════════════════════════════════════════
+// LOOKBOOKS COLLECTION - Shop the Look
+// ═══════════════════════════════════════════════════════════════════════════
+const lookbooks = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    hero_image: z.string(),
+    description: z.string().optional(),
+    products: z.array(z.string()),
+  }),
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BLOG POSTS
+// ═══════════════════════════════════════════════════════════════════════════
 const blog = defineCollection({
   type: "content",
   schema: z.object({
@@ -41,6 +79,9 @@ const blog = defineCollection({
   }),
 });
 
+// ═══════════════════════════════════════════════════════════════════════════
+// STATIC PAGES
+// ═══════════════════════════════════════════════════════════════════════════
 const pages = defineCollection({
   type: "content",
   schema: z.object({
@@ -50,6 +91,9 @@ const pages = defineCollection({
   }),
 });
 
+// ═══════════════════════════════════════════════════════════════════════════
+// GLOBAL SETTINGS - Marketing Command Center
+// ═══════════════════════════════════════════════════════════════════════════
 const settings = defineCollection({
   type: "data",
   schema: z.object({
@@ -67,11 +111,33 @@ const settings = defineCollection({
       facebook: z.string().optional(),
       twitter: z.string().optional(),
     }),
+    // Announcement Bar
+    announcement_bar: z
+      .object({
+        enabled: z.boolean().default(false),
+        text: z.string().optional(),
+        link: z.string().optional(),
+        bg_color: z.string().default("bg-black"),
+        text_color: z.string().default("text-white"),
+      })
+      .optional(),
+    // Popup Modal
+    popup_modal: z
+      .object({
+        active: z.boolean().default(false),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        coupon_code: z.string().optional(),
+        image: z.string().optional(),
+        cta_text: z.string().default("Claim Discount"),
+      })
+      .optional(),
   }),
 });
 
 export const collections = {
   products,
+  lookbooks,
   blog,
   pages,
   settings,

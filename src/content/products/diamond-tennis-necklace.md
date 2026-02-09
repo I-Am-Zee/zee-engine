@@ -17,9 +17,19 @@ tags:
   - "white-gold"
   - "luxury"
   - "formal"
-product_options:
-  sizes: ["16 inches", "18 inches"]
+sku: "DTN-005"
 publishDate: 2025-06-20
+
+# Flexible Variants
+variants:
+  - name: "Necklace Length"
+    type: "dropdown"
+    values: ["16 inches", "18 inches"]
+
+# Complete the Look
+related_products:
+  - diamond-tennis-bracelet
+  - diamond-stud-earrings
 ---
 
 The Diamond Tennis Necklace is the pinnacle of luxury jewelry. Each diamond is carefully matched for cut, clarity, and color to create a seamless flow of brilliance around your neck.

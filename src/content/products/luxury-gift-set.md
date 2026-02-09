@@ -16,7 +16,23 @@ tags:
   - "gift"
   - "set"
   - "pearls"
+sku: "LGS-012"
 publishDate: 2025-11-25
+
+# Flexible Variants
+variants:
+  - name: "Personalization"
+    type: "checkbox"
+    values: ["Add Custom Engraving (+₹299)"]
+    price_modifiers: "+299"
+
+# Urgency
+urgency_tag: "Last Chance"
+
+# Complete the Look
+related_products:
+  - pearl-strand-necklace
+  - moonstone-pearl-earrings
 ---
 
 The Luxury Gift Set is perfect for celebrating life's special moments. This thoughtfully curated collection includes a delicate pearl pendant necklace and matching stud earrings.
@@ -28,4 +44,3 @@ The Luxury Gift Set is perfect for celebrating life's special moments. This thou
 - Gift wrapping included
 - Personalized gift card option
 - Certificate of authenticity
-

@@ -14,9 +14,19 @@ tags:
   - "pearls"
   - "classic"
   - "formal"
-product_options:
-  sizes: ["16 inches", "18 inches", "24 inches"]
+sku: "PSN-008"
 publishDate: 2024-12-15
+
+# Flexible Variants
+variants:
+  - name: "Necklace Length"
+    type: "dropdown"
+    values: ["16 inches", "18 inches", "24 inches"]
+
+# Complete the Look
+related_products:
+  - moonstone-pearl-earrings
+  - ethereal-gold-necklace
 ---
 
 The Pearl Strand Necklace features hand-selected Akoya pearls, each chosen for their exceptional luster and perfectly round shape. This classic piece has adorned elegant women for generations.

@@ -6,7 +6,6 @@ gallery:
   - "/images/products/1617038220319-276d3cfab638.jpg"
   - "/images/products/1535632066927-ab7c9ab60908.jpg"
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
-  - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "earrings"
 badges:
   - "Limited Edition"
@@ -16,7 +15,13 @@ tags:
   - "pearls"
   - "moonstone"
   - "formal"
+sku: "MPE-011"
 publishDate: 2025-04-20
+
+# Complete the Look
+related_products:
+  - pearl-strand-necklace
+  - vintage-rose-gold-ring
 ---
 
 These exquisite Moonstone Pearl Earrings are a testament to nature's beauty and artisanal skill. Each freshwater pearl is carefully matched for size and luster, accented with genuine moonstone gems that display a captivating adularescence.
@@ -32,4 +37,3 @@ The combination of classic pearls with ethereal moonstones creates a unique piec
 - Arrives in velvet jewelry box
 
 These limited edition earrings are produced in small batches, ensuring exclusivity and meticulous quality control. Each pair is inspected for perfection before leaving our atelier.
-

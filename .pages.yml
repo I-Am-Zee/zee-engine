@@ -1,7 +1,6 @@
-# PagesCMS Configuration (https://pagescms.org)
-# Refined for Zaviona Luxury E-commerce
+# PagesCMS Configuration - Beast Mode
+# Zaviona Costume Jewelry E-commerce
 
-# Media settings
 media:
   input: public/images
   output: /images
@@ -61,6 +60,7 @@ content:
             - earrings
             - bracelets
             - gifts
+            - sets
           creatable: true
       - name: tags
         label: Tags
@@ -79,6 +79,10 @@ content:
             - gift
             - white-gold
             - rose-gold
+            - everyday
+            - formal
+            - waterproof
+            - pvd-coated
       - name: badges
         label: Badges
         type: select
@@ -91,6 +95,7 @@ content:
             - Bestseller
             - Limited Edition
             - Exclusive
+            - Coming Soon
 
       # ─── Product Details ───────────────────────────────────────────────────
       - name: rating
@@ -108,32 +113,68 @@ content:
           path: products
           extensions: [jpg, jpeg, png, webp]
 
-      # ─── Variant Options ───────────────────────────────────────────────────
-      - name: product_options
-        label: Variant Options
-        type: object
+      # ─── Flexible Variants (Snipcart) ──────────────────────────────────────
+      - name: variants
+        label: Product Options (Snipcart)
+        type: list
         fields:
-          - name: sizes
-            label: Available Sizes
+          - name: name
+            label: Option Name (e.g., "Size", "Plating", "Gift Wrap")
+            type: string
+          - name: type
+            label: Input Type
             type: select
             options:
-              multiple: true
-              creatable: true
-              values: ["5", "6", "7", "8", "9", "10"]
-          - name: materials
-            label: Available Materials
-            type: select
-            options:
-              multiple: true
-              creatable: true
               values:
-                - White Gold
-                - Yellow Gold
-                - Rose Gold
-                - Platinum
-                - Silver
+                - dropdown
+                - checkbox
+          - name: values
+            label: Choices
+            type: list
+            field:
+              type: string
+          - name: price_modifiers
+            label: Price Add-ons (match order, e.g., "0|0|+500")
+            type: string
 
-      # ─── Shipping Info (Optional) ──────────────────────────────────────────
+      # ─── Urgency & Scarcity ────────────────────────────────────────────────
+      - name: release_date
+        label: Drop Date
+        type: date
+        description: "If future, product shows 'Coming Soon' with countdown"
+      - name: urgency_tag
+        label: Scarcity Label
+        type: select
+        options:
+          values:
+            - Only 2 Left!
+            - Restocked Today
+            - Selling Fast
+            - Last Chance
+            - Almost Gone
+
+      # ─── Upsells & Cross-sells ─────────────────────────────────────────────
+      - name: related_products
+        label: "Complete the Look (Upsells)"
+        type: select
+        options:
+          multiple: true
+          creatable: false
+          values:
+            - celestial-diamond-ring
+            - diamond-stud-earrings
+            - diamond-tennis-bracelet
+            - diamond-tennis-necklace
+            - emerald-drop-earrings
+            - ethereal-gold-necklace
+            - gold-chain-bracelet
+            - luxury-gift-set
+            - moonstone-pearl-earrings
+            - pearl-strand-necklace
+            - sapphire-eternity-band
+            - vintage-rose-gold-ring
+
+      # ─── Shipping Info ─────────────────────────────────────────────────────
       - name: weight
         label: Weight (grams)
         type: number
@@ -155,6 +196,52 @@ content:
       - name: publishDate
         label: Publish Date
         type: date
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # LOOKBOOK - Shop the Look
+  # ═══════════════════════════════════════════════════════════════════════════
+  - name: lookbooks
+    label: Shop the Look
+    type: collection
+    path: src/content/lookbooks
+    format: yaml-frontmatter
+    view:
+      fields: [title]
+      primary: title
+    fields:
+      - name: title
+        label: Look Name (e.g., "Diwali Party Glam")
+        type: string
+      - name: hero_image
+        label: Lifestyle Shot
+        type: image
+        options:
+          path: lookbooks
+          extensions: [jpg, jpeg, png, webp]
+      - name: description
+        label: Description
+        type: text
+      - name: products
+        label: Products in this Look
+        type: select
+        options:
+          multiple: true
+          values:
+            - celestial-diamond-ring
+            - diamond-stud-earrings
+            - diamond-tennis-bracelet
+            - diamond-tennis-necklace
+            - emerald-drop-earrings
+            - ethereal-gold-necklace
+            - gold-chain-bracelet
+            - luxury-gift-set
+            - moonstone-pearl-earrings
+            - pearl-strand-necklace
+            - sapphire-eternity-band
+            - vintage-rose-gold-ring
+      - name: body
+        label: Story Content
+        type: rich-text
 
   # ═══════════════════════════════════════════════════════════════════════════
   # BLOG POSTS
@@ -199,6 +286,7 @@ content:
             - Jewelry Care
             - Style Guide
             - Announcements
+            - Trends
       - name: isDraft
         label: Keep as Draft?
         type: boolean
@@ -236,7 +324,7 @@ content:
         type: rich-text
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # GLOBAL SETTINGS
+  # GLOBAL SETTINGS - Marketing Command Center
   # ═══════════════════════════════════════════════════════════════════════════
   - name: settings
     label: Global Settings
@@ -244,6 +332,7 @@ content:
     path: src/content/settings/site.yml
     format: yaml
     fields:
+      # ─── Brand Identity ────────────────────────────────────────────────────
       - name: name
         label: Site Name
         type: string
@@ -256,6 +345,8 @@ content:
       - name: url
         label: Production URL
         type: string
+
+      # ─── Contact ───────────────────────────────────────────────────────────
       - name: email
         label: Contact Emails
         type: object
@@ -282,3 +373,53 @@ content:
           - name: twitter
             label: Twitter/X URL
             type: string
+
+      # ─── Announcement Bar ──────────────────────────────────────────────────
+      - name: announcement_bar
+        label: Top Announcement Bar
+        type: object
+        fields:
+          - name: enabled
+            label: Show Announcement?
+            type: boolean
+            default: false
+          - name: text
+            label: Message
+            type: string
+          - name: link
+            label: Link URL (Optional)
+            type: string
+          - name: bg_color
+            label: Background Color (Tailwind class)
+            type: string
+            default: "bg-black"
+          - name: text_color
+            label: Text Color (Tailwind class)
+            type: string
+            default: "text-white"
+
+      # ─── Popup Modal ───────────────────────────────────────────────────────
+      - name: popup_modal
+        label: Welcome/Exit Popup
+        type: object
+        fields:
+          - name: active
+            label: Enable Popup?
+            type: boolean
+            default: false
+          - name: title
+            label: Heading (e.g., "Get 10% Off")
+            type: string
+          - name: description
+            label: Body Text
+            type: text
+          - name: coupon_code
+            label: Snipcart Coupon Code
+            type: string
+          - name: image
+            label: Popup Image
+            type: image
+          - name: cta_text
+            label: Button Text
+            type: string
+            default: "Claim Discount"

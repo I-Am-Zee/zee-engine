@@ -15,6 +15,15 @@ tags:
   - "classic"
   - "everyday"
 publishDate: 2024-12-01
+sku: "DSE-004"
+
+# No variants needed for earrings (one size fits all)
+
+# Complete the Look
+related_products:
+  - celestial-diamond-ring
+  - ethereal-gold-necklace
+  - diamond-tennis-bracelet
 ---
 
 Diamond Stud Earrings are the essential piece every jewelry collection needs. These brilliant-cut diamonds are set in a classic four-prong setting that maximizes light entry and sparkle.
@@ -26,4 +35,3 @@ Diamond Stud Earrings are the essential piece every jewelry collection needs. Th
 - 14k white gold settings
 - Push-back closures
 - GIA certified
-
