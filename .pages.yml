@@ -83,19 +83,38 @@ content:
             - formal
             - waterproof
             - pvd-coated
-      - name: badges
+       - name: badges
         label: Badges
         type: select
         options:
           multiple: true
-          creatable: true
+          creatable: false  # ✅ Fixed options only - prevents typos/inconsistencies
           values:
-            - New
-            - Sale
-            - Bestseller
-            - Limited Edition
-            - Exclusive
-            - Coming Soon
+            # Tier 1: Urgency (Coral)
+            - sale
+            - last-chance
+            - flash-deal
+            # Tier 2: Prestige (Brass)
+            - new
+            - new-drop
+            - bestseller
+            - limited-edition
+            - restocked
+            - staff-pick
+            - exclusive
+            - luxury
+            # Tier 3: Attributes (Surface)
+            - essential
+            - classic
+            - waterproof
+            - pvd-gold
+            - gift-set
+            - gift-idea
+            - pre-order
+            - engravable
+            # Tier 4: State (Outline)
+            - coming-soon
+            - sold-out
 
       # ─── Product Details ───────────────────────────────────────────────────
       - name: rating
