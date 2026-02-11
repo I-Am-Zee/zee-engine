@@ -224,26 +224,101 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       </div>
     </section>
 
-    <!-- Badges Section -->
+    <!-- Badges Section - Royal Conservatory System -->
     <section class="mb-16">
-      <Heading as="h2" class="mb-6">Badges</Heading>
-      <div class="space-y-4">
+      <Heading as="h2" class="mb-6">Badge System - 4-Tier Hierarchy</Heading>
+      <Text variant="body" class="mb-6 text-(--color-text-muted)">
+        Badges are centralized in <code class="rounded bg-(--color-surface) px-2 py-1 text-sm">badges.ts</code>
+        and automatically sort by hierarchy: Urgency → Prestige → Attributes → State.
+      </Text>
+
+      <div class="space-y-8">
+        <!-- Tier 1: Urgency (Coral) -->
         <div>
-          <Text variant="caption" class="mb-3 uppercase">Small Badges (for cart counts)</Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-[var(--color-surface)] p-6">
-            <Badge size="sm" intent="surface">New</Badge>
-            <Badge size="sm" intent="primary">Sale</Badge>
-            <Badge size="sm" intent="accent">Hot</Badge>
-            <Badge size="sm" intent="outline">3</Badge>
+          <div class="mb-3 flex items-center gap-3">
+            <Text variant="caption" class="uppercase">Tier 1: Urgency</Text>
+            <Badge size="sm" intent="coral">Spiced Coral</Badge>
+          </div>
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
+            Conversion drivers - FOMO & price consciousness. 85% opacity background with white text ensures visibility on ANY product image.
+          </Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
+            <Badge size="sm" intent="coral">Sale</Badge>
+            <Badge size="sm" intent="coral">20% OFF</Badge>
+            <Badge size="sm" intent="coral">Last Chance</Badge>
+            <Badge size="sm" intent="coral">Flash Deal</Badge>
           </div>
         </div>
+
+        <!-- Tier 2: Prestige (Brass) -->
         <div>
-          <Text variant="caption" class="mb-3 uppercase">Medium Badges (for product labels)</Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-[var(--color-surface)] p-6">
-            <Badge size="md" intent="surface">In Stock</Badge>
-            <Badge size="md" intent="primary">Bestseller</Badge>
-            <Badge size="md" intent="accent">Limited</Badge>
-            <Badge size="md" intent="outline">Featured</Badge>
+          <div class="mb-3 flex items-center gap-3">
+            <Text variant="caption" class="uppercase">Tier 2: Prestige</Text>
+            <Badge size="sm" intent="brass">Polished Brass</Badge>
+          </div>
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
+            Premium positioning - luxury, novelty, social proof. 85% opacity + backdrop-blur for glassmorphism effect.
+          </Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
+            <Badge size="sm" intent="brass">New</Badge>
+            <Badge size="sm" intent="brass">Bestseller</Badge>
+            <Badge size="sm" intent="brass">Limited Edition</Badge>
+            <Badge size="sm" intent="brass">Restocked</Badge>
+            <Badge size="sm" intent="brass">Staff Pick</Badge>
+            <Badge size="sm" intent="brass">Exclusive</Badge>
+          </div>
+        </div>
+
+        <!-- Tier 3: Attributes (Surface) -->
+        <div>
+          <div class="mb-3 flex items-center gap-3">
+            <Text variant="caption" class="uppercase">Tier 3: Attributes</Text>
+            <Badge size="sm" intent="surface">Informational</Badge>
+          </div>
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
+            Product features - USPs & specifications
+          </Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
+            <Badge size="sm" intent="surface">Waterproof</Badge>
+            <Badge size="sm" intent="surface">PVD Gold</Badge>
+            <Badge size="sm" intent="surface">Gift Set</Badge>
+            <Badge size="sm" intent="surface">Pre-Order</Badge>
+            <Badge size="sm" intent="surface">Engravable</Badge>
+          </div>
+        </div>
+
+        <!-- Tier 4: State (Outline) -->
+        <div>
+          <div class="mb-3 flex items-center gap-3">
+            <Text variant="caption" class="uppercase">Tier 4: State</Text>
+            <Badge size="sm" intent="outline">Low Hierarchy</Badge>
+          </div>
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
+            Availability status - logistics
+          </Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
+            <Badge size="sm" intent="outline">Coming Soon</Badge>
+            <Badge size="sm" intent="outline">Sold Out</Badge>
+          </div>
+        </div>
+
+        <!-- Badge Size Variants -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Size Variants</Text>
+          <div class="flex flex-wrap items-center gap-4 rounded-lg bg-(--color-surface) p-6">
+            <Badge size="sm" intent="coral">Small Badge</Badge>
+            <Badge size="md" intent="brass">Medium Badge</Badge>
+          </div>
+        </div>
+
+        <!-- Dark Background Test -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">Visibility on Dark Background</Text>
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-primary) p-6">
+            <Badge size="sm" intent="coral">Sale</Badge>
+            <Badge size="sm" intent="brass">Bestseller</Badge>
+            <Badge size="sm" intent="surface">Waterproof</Badge>
+            <Badge size="sm" intent="outline">Coming Soon</Badge>
           </div>
         </div>
       </div>
