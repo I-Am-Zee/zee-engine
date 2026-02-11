@@ -62,70 +62,70 @@ content:
         label: Primary Category
         type: select
         required: true
+        values:
+          - rings
+          - necklaces
+          - earrings
+          - bracelets
+          - gifts
+          - sets
         options:
           creatable: false
-          values:
-            - rings
-            - necklaces
-            - earrings
-            - bracelets
-            - gifts
-            - sets
         description: "Main category for navigation. Only one allowed (single-select)."
       - name: tags
         label: Product Tags
         type: select
+        values:
+          - diamond
+          - gold
+          - silver
+          - platinum
+          - engagement
+          - wedding
+          - luxury
+          - gift
+          - white-gold
+          - rose-gold
+          - everyday
+          - formal
+          - waterproof
+          - pvd-coated
         options:
           multiple: true
           creatable: false
-          values:
-            - diamond
-            - gold
-            - silver
-            - platinum
-            - engagement
-            - wedding
-            - luxury
-            - gift
-            - white-gold
-            - rose-gold
-            - everyday
-            - formal
-            - waterproof
-            - pvd-coated
         description: "Filtering tags (multi-select). Used for faceted search, product discovery, and SEO keywords."
        - name: badges
         label: Badges
         type: select
+        values:
+          # Tier 1: Urgency (Coral)
+          - sale
+          - last-chance
+          - flash-deal
+          # Tier 2: Prestige (Brass)
+          - new
+          - new-drop
+          - bestseller
+          - limited-edition
+          - restocked
+          - staff-pick
+          - exclusive
+          - luxury
+          # Tier 3: Attributes (Surface)
+          - essential
+          - classic
+          - waterproof
+          - pvd-gold
+          - gift-set
+          - gift-idea
+          - pre-order
+          - engravable
+          # Tier 4: State (Outline)
+          - coming-soon
+          - sold-out
         options:
           multiple: true
-          creatable: false  # ✅ Fixed options only - prevents typos/inconsistencies
-          values:
-            # Tier 1: Urgency (Coral)
-            - sale
-            - last-chance
-            - flash-deal
-            # Tier 2: Prestige (Brass)
-            - new
-            - new-drop
-            - bestseller
-            - limited-edition
-            - restocked
-            - staff-pick
-            - exclusive
-            - luxury
-            # Tier 3: Attributes (Surface)
-            - essential
-            - classic
-            - waterproof
-            - pvd-gold
-            - gift-set
-            - gift-idea
-            - pre-order
-            - engravable
-            # Tier 4: State (Outline)
-            - coming-soon
-            - sold-out
+          creatable: false
         description: "Marketing badges for product cards. Auto-sorted by hierarchy (Urgency > Prestige > Attributes > State) in frontend."
 
       # ─── Product Details ───────────────────────────────────────────────────
