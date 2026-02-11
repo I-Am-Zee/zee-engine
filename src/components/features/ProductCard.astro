@@ -8,6 +8,7 @@ import Heading from "../primitives/Heading.astro";
 import Badge from "../primitives/Badge.astro";
 import PriceTag from "../ui/PriceTag.astro";
 import RatingStars from "../ui/RatingStars.astro";
+import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 import WishlistButton from "./WishlistButton.astro";
 
 interface Props {
@@ -34,6 +35,9 @@ const {
   class: className,
   ...rest
 } = Astro.props;
+
+// Sort badges by hierarchy (Urgency → Prestige → Attributes → State)
+const sortedBadges = sortBadgesByHierarchy(badges);
 ---
 
 <article class:list={["group relative flex flex-col", className]} {...rest}>
@@ -54,8 +58,8 @@ const {
       {
         badges.length > 0 && (
           <div class="pointer-events-none absolute top-3 left-3 flex flex-col gap-2">
-            {badges.map((badgeText) => (
-              <Badge intent="primary" size="sm">
+            {sortedBadges.map((badgeText) => (
+              <Badge intent={getBadgeIntent(badgeText)} size="sm">
                 {badgeText}
               </Badge>
             ))}

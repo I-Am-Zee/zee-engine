@@ -13,11 +13,13 @@ import QuantitySelector from "../../components/ui/QuantitySelector.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import UrgencyBadge from "../../components/ui/UrgencyBadge.astro";
 import CompleteTheLook from "../../components/ui/CompleteTheLook.astro";
+import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
 import Navbar from "../../components/features/Navbar.astro";
 import Footer from "../../components/features/Footer.astro";
 import WishlistButton from "../../components/features/WishlistButton.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
+import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 
 // Pre-render at build time (required in server mode)
 export const prerender = true;
@@ -54,6 +56,9 @@ const badges = [...(product.data.badges || [])];
 if (isComingSoon && !badges.includes("Coming Soon")) {
   badges.unshift("Coming Soon");
 }
+
+// Sort badges by hierarchy (Urgency → Prestige → Attributes → State)
+const sortedBadges = sortBadgesByHierarchy(badges);
 ---
 
 <BaseLayout title={`${product.data.title} | Zaviona`}>
@@ -85,11 +90,8 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
           {/* Badges */}
           {badges.length > 0 && (
             <div class="mb-4 flex flex-wrap gap-2">
-              {badges.map((badge) => (
-                <Badge 
-                  intent={badge === "Coming Soon" ? "surface" : badge === "Sale" ? "accent" : "primary"} 
-                  size="sm"
-                >
+              {sortedBadges.map((badge) => (
+                <Badge intent={getBadgeIntent(badge)} size="sm">
                   {badge}
                 </Badge>
               ))}
@@ -156,7 +158,7 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
         <div class="mt-10 space-y-6">
           {/* Coming Soon Countdown */}
           {isComingSoon && releaseDate && (
-            <div class="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 text-center">
+            <div class="p-4 rounded-lg bg-(--color-accent-amber)/10 border border-(--color-accent-amber)/20 text-center">
               <Text variant="caption" class="text-amber-600 font-medium mb-1">
                 Dropping Soon
               </Text>
@@ -204,10 +206,13 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
       </div>
     </div>
 
-    {/* Complete the Look (Upsells) */}
+    {/* Complete the Look (CMS-controlled Upsells) */}
     {product.data.related_products && product.data.related_products.length > 0 && (
       <CompleteTheLook productSlugs={product.data.related_products} />
     )}
+
+    {/* You May Also Like (Algorithmic Recommendations) */}
+    <RelatedProducts currentProduct={product} />
   </div>
 
   {/* Sticky Mobile Add to Cart Bar */}
