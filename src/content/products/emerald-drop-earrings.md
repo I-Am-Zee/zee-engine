@@ -8,14 +8,14 @@ gallery:
   - "/images/products/1617038220319-276d3cfab638.jpg"
 category: "earrings"
 badges:
-  - "Sale"
-  - "New"
+  - sale
+  - new
 rating: 4.7
 description: "Stunning emerald drop earrings featuring Colombian emeralds surrounded by a halo of diamonds."
 tags:
   - "emerald"
   - "diamond"
-  - "luxury"
+  - luxury
   - "formal"
 sku: "EDE-010"
 publishDate: 2026-01-10

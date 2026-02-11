@@ -7,12 +7,12 @@ gallery:
   - "/images/products/1617038220319-276d3cfab638.jpg"
 category: "earrings"
 badges:
-  - "Essential"
+  - essential
 rating: 4.8
 description: "Classic diamond stud earrings featuring brilliant-cut diamonds in a timeless four-prong setting."
 tags:
   - "diamond"
-  - "classic"
+  - classic
   - "everyday"
 publishDate: 2024-12-01
 sku: "DSE-004"

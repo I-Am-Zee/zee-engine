@@ -8,7 +8,7 @@ gallery:
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "earrings"
 badges:
-  - "Limited Edition"
+  - limited-edition
 rating: 4.6
 description: "Elegant pearl earrings with moonstone accents. Each pearl is hand-selected for its luster and perfect shape."
 tags:

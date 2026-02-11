@@ -8,7 +8,7 @@ gallery:
   - "/images/products/1573408301185-9146fe634ad0.jpg"
 category: "rings"
 badges:
-  - "Bestseller"
+  - bestseller
 rating: 4.7
 description: "A romantic rose gold ring with intricate vintage detailing. Perfect for those who appreciate classic elegance with a modern twist."
 tags:

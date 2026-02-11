@@ -7,13 +7,13 @@ gallery:
   - "/images/products/1573408301185-9146fe634ad0.jpg"
 category: "bracelets"
 badges:
-  - "Luxury"
+  - luxury
 rating: 4.9
 description: "A stunning diamond tennis bracelet featuring 2 carats of brilliant-cut diamonds in 18k white gold."
 tags:
   - "diamond"
   - "white-gold"
-  - "luxury"
+  - luxury
   - "formal"
 sku: "DTB-002"
 weight: 12.3

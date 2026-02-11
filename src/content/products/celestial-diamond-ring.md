@@ -11,8 +11,8 @@ gallery:
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "rings"
 badges:
-  - "New"
-  - "Sale"
+  - new
+  - sale
 rating: 4.8
 description: "An exquisite diamond ring crafted with precision and care. Features a brilliant-cut diamond set in 18k white gold, perfect for engagements or special occasions."
 tags:

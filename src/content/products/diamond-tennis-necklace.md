@@ -8,14 +8,14 @@ gallery:
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "necklaces"
 badges:
-  - "Sale"
-  - "Luxury"
+  - sale
+  - luxury
 rating: 5.0
 description: "A stunning diamond tennis necklace featuring 3 carats of brilliant-cut diamonds in 18k white gold."
 tags:
   - "diamond"
   - "white-gold"
-  - "luxury"
+  - luxury
   - "formal"
 sku: "DTN-005"
 publishDate: 2025-06-20

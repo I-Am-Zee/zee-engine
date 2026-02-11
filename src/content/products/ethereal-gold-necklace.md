@@ -8,7 +8,7 @@ gallery:
   - "/images/products/1535632066927-ab7c9ab60908.jpg"
 category: "necklaces"
 badges:
-  - "Bestseller"
+  - bestseller
 rating: 4.9
 description: "A delicate gold necklace featuring an intricate pendant design. Handcrafted from 14k gold with attention to every detail."
 tags:

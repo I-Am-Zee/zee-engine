@@ -7,12 +7,12 @@ gallery:
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "necklaces"
 badges:
-  - "Classic"
+  - classic
 rating: 4.5
 description: "A timeless strand of perfectly matched Akoya pearls. The epitome of classic elegance for any occasion."
 tags:
   - "pearls"
-  - "classic"
+  - classic
   - "formal"
 sku: "PSN-008"
 publishDate: 2024-12-15

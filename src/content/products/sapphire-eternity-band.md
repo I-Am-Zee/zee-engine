@@ -11,7 +11,7 @@ description: "An exquisite eternity band featuring a continuous circle of brilli
 tags:
   - "sapphire"
   - "platinum"
-  - "luxury"
+  - luxury
   - "anniversary"
 sku: "SEB-007"
 publishDate: 2025-08-10

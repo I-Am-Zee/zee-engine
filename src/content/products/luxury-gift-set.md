@@ -8,8 +8,8 @@ gallery:
   - "/images/products/1599643478518-a784e5dc4c8f.jpg"
 category: "gifts"
 badges:
-  - "Sale"
-  - "Gift Idea"
+  - sale
+  - gift-idea
 rating: 4.8
 description: "A beautifully curated gift set featuring matching necklace and earrings in a premium presentation box."
 tags:

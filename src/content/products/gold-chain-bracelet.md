@@ -7,7 +7,7 @@ gallery:
   - "/images/products/1611591437281-460bfbe1220a.jpg"
 category: "bracelets"
 badges:
-  - "Bestseller"
+  - bestseller
 rating: 4.6
 description: "A classic gold chain bracelet with a modern twist. Perfect for everyday wear or layering."
 tags:
