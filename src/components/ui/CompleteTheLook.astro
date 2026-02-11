@@ -2,14 +2,16 @@
 /**
  * CompleteTheLook - UI Molecule
  *
- * Displays related products as upsells ("Complete the Look" section).
- * Shows product cards with quick add functionality.
+ * Displays CMS-controlled related products as upsells.
+ * Uses atomic design components for consistency.
  *
  * @component Molecule (ui/)
  */
 
 import { getCollection } from "astro:content";
 import ProductCard from "../features/ProductCard.astro";
+import ProductGrid from "../features/ProductGrid.astro";
+import Heading from "../primitives/Heading.astro";
 
 interface Props {
   productSlugs: string[];
@@ -28,15 +30,30 @@ const relatedProducts = productSlugs
 
 {
   relatedProducts.length > 0 && (
-    <section class:list={["py-12", className]}>
-      <h3 class="text-xl font-semibold text-(--color-text-main) mb-6">
-        Complete the Look
-      </h3>
-      <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-        {relatedProducts.map((product) => (
-          <ProductCard product={product} variant="compact" />
-        ))}
+    <section class:list={["mt-24 border-t border-(--color-border-subtle) pt-16 pb-8", className]}>
+      <div class="mb-10 lg:mb-12">
+        <Heading as="h2" class="mb-2">
+          Complete the Look
+        </Heading>
+        <p class="text-(--color-text-muted)">
+          Curated pieces to elevate your ensemble
+        </p>
       </div>
+
+      <ProductGrid>
+        {relatedProducts.map((product) => (
+          <ProductCard
+            id={product.slug}
+            title={product.data.title}
+            price={product.data.price}
+            salePrice={product.data.salePrice}
+            image={product.data.image}
+            href={`/products/${product.slug}`}
+            badges={product.data.badges}
+            rating={product.data.rating}
+          />
+        ))}
+      </ProductGrid>
     </section>
   )
 }

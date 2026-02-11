@@ -24,8 +24,8 @@ const show = announcement?.enabled && announcement?.text;
     <div
       class:list={[
         "relative flex items-center justify-center gap-2 px-4 py-2 text-center text-sm font-medium",
-        announcement.bg_color || "bg-black",
-        announcement.text_color || "text-white",
+        announcement.bg_color || "bg-(--color-primary)",
+        announcement.text_color || "text-(--color-primary-foreground)",
       ]}
     >
       {announcement.link ? (
