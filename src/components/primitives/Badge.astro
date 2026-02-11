@@ -1,6 +1,6 @@
 ---
 interface Props {
-  intent?: "surface" | "primary" | "accent" | "outline";
+  intent?: "surface" | "primary" | "accent" | "outline" | "coral" | "brass";
   size?: "sm" | "md";
   class?: string;
 }
@@ -11,14 +11,18 @@ const { intent = "surface", size = "sm", class: className, ...rest } = Astro.pro
 const baseStyles =
   "inline-flex items-center justify-center rounded-full uppercase tracking-wide font-sans font-medium";
 
-// Intent determines color scheme
+// Intent determines color scheme (updated for WCAG AA contrast compliance)
 const intentStyles = {
   surface:
-    "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle)",
-  primary: "bg-(--color-primary) text-(--color-primary-foreground)",
-  accent: "bg-(--color-secondary) text-(--color-primary) border-2 border-(--color-primary)",
+    "bg-(--color-surface)/90 text-(--color-text-main) border border-(--color-border-subtle) shadow-sm backdrop-blur-sm",
+  primary: "bg-(--color-primary) text-(--color-primary-foreground) shadow-sm",
+  accent: "bg-(--color-secondary) text-(--color-primary) border-2 border-(--color-primary) shadow-sm",
   outline:
-    "bg-transparent text-(--color-text-main) border border-(--color-border-strong)",
+    "bg-(--color-background)/80 text-(--color-text-main) border border-(--color-border-strong) backdrop-blur-sm",
+  coral:
+    "bg-(--color-accent-coral)/85 text-white border border-(--color-accent-coral) font-semibold shadow-md backdrop-blur-sm",
+  brass:
+    "bg-(--color-accent-brass)/85 text-(--color-primary) border border-(--color-accent-brass) font-semibold shadow-md backdrop-blur-sm",
 };
 
 // Size variants - using leading-none for precise vertical centering
@@ -34,3 +38,4 @@ const combinedClasses =
 <span class={combinedClasses} {...rest}>
   <slot />
 </span>
+
