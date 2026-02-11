@@ -23,37 +23,55 @@ content:
       - name: title
         label: Product Name
         type: string
+        required: true
+        max: 100
+        description: "Display name (e.g., 'Celestial Diamond Ring'). Used in cart, receipts, and SEO."
       - name: sku
-        label: SKU
+        label: SKU (Stock Keeping Unit)
         type: string
+        pattern: "^[A-Z]{3}-[0-9]{3}$"
+        description: "Format: ABC-123 (e.g., 'CDR-010'). Optional but recommended for inventory tracking."
       - name: price
-        label: Base Price (INR)
+        label: Regular Price (INR)
         type: number
+        required: true
+        min: 0.01
+        step: 0.01
+        description: "Base price in Indian Rupees. Snipcart reads this at page load via data-item-price."
       - name: salePrice
         label: Sale Price (INR)
         type: number
+        min: 0.01
+        step: 0.01
+        description: "Discounted price (optional). MUST be less than regular price. Validated by Zod schema at build time."
 
       # ─── Images ────────────────────────────────────────────────────────────
       - name: image
-        label: Main Image
+        label: Featured Image
         type: image
+        required: true
         options:
           path: products
           extensions: [jpg, jpeg, png, webp]
+        description: "Main product image. Min 1200x1200px recommended. Used in cart, product cards, and social sharing."
       - name: gallery
         label: Product Gallery
         type: image
         options:
           multiple:
+            min: 0
             max: 10
           path: products
           extensions: [jpg, jpeg, png, webp]
+        description: "Additional product photos (3-5 recommended for best UX). Swipeable on product detail page."
 
       # ─── Classification ────────────────────────────────────────────────────
       - name: category
-        label: Category
+        label: Primary Category
         type: select
+        required: true
         options:
+          creatable: false
           values:
             - rings
             - necklaces
@@ -61,13 +79,13 @@ content:
             - bracelets
             - gifts
             - sets
-          creatable: true
+        description: "Main category for navigation. Only one allowed (single-select)."
       - name: tags
-        label: Tags
+        label: Product Tags
         type: select
         options:
           multiple: true
-          creatable: true
+          creatable: false
           values:
             - diamond
             - gold
@@ -83,6 +101,7 @@ content:
             - formal
             - waterproof
             - pvd-coated
+        description: "Filtering tags (multi-select). Used for faceted search, product discovery, and SEO keywords."
        - name: badges
         label: Badges
         type: select
@@ -115,6 +134,7 @@ content:
             # Tier 4: State (Outline)
             - coming-soon
             - sold-out
+        description: "Marketing badges for product cards. Auto-sorted by hierarchy (Urgency > Prestige > Attributes > State) in frontend."
 
       # ─── Product Details ───────────────────────────────────────────────────
       - name: rating
@@ -122,15 +142,22 @@ content:
         type: number
         min: 0
         max: 5
+        step: 0.1
+        default: 4.5
+        description: "Average review score for display. Not managed by Snipcart (display-only metadata)."
       - name: description
         label: Short Summary
         type: text
+        required: true
+        max: 200
+        description: "Concise product description for cards, cart, and meta. Max 2 sentences recommended."
       - name: body
         label: Detailed Description
         type: rich-text
         options:
           path: products
           extensions: [jpg, jpeg, png, webp]
+        description: "Full product story with images. Supports markdown formatting and inline media embeds."
 
       # ─── Flexible Variants (Snipcart) ──────────────────────────────────────
       # Note: Due to PagesCMS limitations with nested list objects,
