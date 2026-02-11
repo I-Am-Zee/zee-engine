@@ -24,25 +24,19 @@ content:
         label: Product Name
         type: string
         required: true
-        max: 100
-        description: "Display name (e.g., 'Celestial Diamond Ring'). Used in cart, receipts, and SEO."
+        description: "Display name (e.g., 'Celestial Diamond Ring'). Used in cart, receipts, and SEO. Max 100 characters."
       - name: sku
         label: SKU (Stock Keeping Unit)
         type: string
-        pattern: "^[A-Z]{3}-[0-9]{3}$"
         description: "Format: ABC-123 (e.g., 'CDR-010'). Optional but recommended for inventory tracking."
       - name: price
         label: Regular Price (INR)
         type: number
         required: true
-        min: 0.01
-        step: 0.01
-        description: "Base price in Indian Rupees. Snipcart reads this at page load via data-item-price."
+        description: "Base price in Indian Rupees. Snipcart reads this at page load via data-item-price. Must be greater than 0."
       - name: salePrice
         label: Sale Price (INR)
         type: number
-        min: 0.01
-        step: 0.01
         description: "Discounted price (optional). MUST be less than regular price. Validated by Zod schema at build time."
 
       # ─── Images ────────────────────────────────────────────────────────────
@@ -58,12 +52,10 @@ content:
         label: Product Gallery
         type: image
         options:
-          multiple:
-            min: 0
-            max: 10
+          multiple: true
           path: products
           extensions: [jpg, jpeg, png, webp]
-        description: "Additional product photos (3-5 recommended for best UX). Swipeable on product detail page."
+        description: "Additional product photos (3-5 recommended, max 10 for performance). Swipeable on product detail page."
 
       # ─── Classification ────────────────────────────────────────────────────
       - name: category
@@ -140,17 +132,12 @@ content:
       - name: rating
         label: Customer Rating (0-5)
         type: number
-        min: 0
-        max: 5
-        step: 0.1
-        default: 4.5
-        description: "Average review score for display. Not managed by Snipcart (display-only metadata)."
+        description: "Average review score for display (0.0-5.0). Not managed by Snipcart (display-only metadata)."
       - name: description
         label: Short Summary
         type: text
         required: true
-        max: 200
-        description: "Concise product description for cards, cart, and meta. Max 2 sentences recommended."
+        description: "Concise product description for cards, cart, and meta. Max 200 characters, 2 sentences recommended."
       - name: body
         label: Detailed Description
         type: rich-text
