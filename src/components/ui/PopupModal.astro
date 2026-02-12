@@ -33,8 +33,16 @@ if (!data?.active) return null;
     open: false,
     applied: false,
     error: false,
+    snipcartReady: false,
     hasSeen: localStorage.getItem('zaviona_popup_seen'),
     init() {
+      // Wait for Snipcart to be ready
+      if (typeof Snipcart !== 'undefined') {
+        Snipcart.events.on('snipcart.ready', () => {
+          this.snipcartReady = true;
+        });
+      }
+      
       // Logic: If user hasn't seen it recently, start triggers
       if (!this.hasSeen) {
         // 1. Mobile Timer (8 seconds)
@@ -55,13 +63,28 @@ if (!data?.active) return null;
     },
     async applyCoupon() {
       // User feedback: Actually apply the coupon to cart!
-      if (typeof Snipcart === 'undefined') {
+      if (!this.snipcartReady || typeof Snipcart === 'undefined') {
         this.error = true;
-        setTimeout(() => this.closePopup(), 2000);
+        setTimeout(() => {
+          this.error = false;
+        }, 3000);
         return;
       }
 
       try {
+        // CRITICAL USER REQUIREMENT: Check if user is logged in
+        // Strategy: SHOW discounts to everyone, APPLY only for logged in
+        // The "Haha! Gotcha" moment - they see the savings, want it, sign in!
+        const customer = Snipcart.store.getState().customer;
+        
+        if (!customer || !customer.email) {
+          // Friendly nudge, not a hard block
+          alert('🎉 Want to save with this offer?\\n\\nPlease sign in to apply this discount to your order!\\n\\n(We\\'ll open your cart where you can sign in or continue as guest)');
+          this.closePopup();
+          Snipcart.api.theme.cart.open();
+          return;
+        }
+
         // Apply discount code to cart
         await Snipcart.api.discounts.applyCoupon('${data.coupon_code}');
         
@@ -76,7 +99,9 @@ if (!data?.active) return null;
       } catch (error) {
         console.error('Failed to apply coupon:', error);
         this.error = true;
-        setTimeout(() => this.closePopup(), 2000);
+        setTimeout(() => {
+          this.error = false;
+        }, 3000);
       }
     },
     copyCode() {
@@ -156,13 +181,24 @@ if (!data?.active) return null;
         <!-- CTA Button (User feedback: Actually apply coupon!) -->
         <button
           @click="applyCoupon()"
-          :disabled="applied || error"
+          :disabled="!snipcartReady || applied || error"
           class="w-full bg-black text-white font-bold py-3 px-6 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors uppercase tracking-widest text-sm rounded flex items-center justify-center gap-2"
           :class="{
             'bg-green-600 hover:bg-green-600': applied,
             'bg-red-600 hover:bg-red-600': error
           }"
         >
+          <!-- Loading State (Snipcart not ready) -->
+          <template x-if="!snipcartReady && !applied && !error">
+            <span class="flex items-center gap-2">
+              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Loading...
+            </span>
+          </template>
+
           <!-- Success State -->
           <template x-if="applied">
             <span class="flex items-center gap-2">
@@ -174,12 +210,12 @@ if (!data?.active) return null;
           </template>
 
           <!-- Error State -->
-          <template x-if="error">
-            <span>Snipcart Not Ready - Try Again</span>
+          <template x-if="error && snipcartReady">
+            <span>Failed - Try Again</span>
           </template>
 
-          <!-- Default State -->
-          <template x-if="!applied && !error">
+          <!-- Default State (Snipcart ready) -->
+          <template x-if="snipcartReady && !applied && !error">
             <span>{data.cta_text || 'Claim Discount'}</span>
           </template>
         </button>
