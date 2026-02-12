@@ -173,9 +173,9 @@ content:
       # ─── Upsells (BEAST MODE UPGRADE) ──────────────────────────────────────
       - name: related_products
         label: "Complete the Look (Upsells)"
-        type: reference # UPGRADE: Uses dynamic reference instead of hardcoded select
-        collection: products
+        type: reference
         options:
+          collection: products
           multiple: true
           search: title
 
@@ -229,9 +229,9 @@ content:
         type: text
       - name: products
         label: Products in this Look
-        type: reference # UPGRADE: Dynamic reference
-        collection: products
+        type: reference
         options:
+          collection: products
           multiple: true
           search: title
       - name: body
