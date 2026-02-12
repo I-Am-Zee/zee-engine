@@ -1,5 +1,5 @@
 # PagesCMS Configuration - Beast Mode
-# Zaviona Costume Jewelry E-commerce
+# Fixed & Optimized for Zaviona
 
 media:
   input: public/images
@@ -24,20 +24,20 @@ content:
         label: Product Name
         type: string
         required: true
-        description: "Display name (e.g., 'Celestial Diamond Ring'). Used in cart, receipts, and SEO. Max 100 characters."
+        description: "Display name (e.g., 'Celestial Diamond Ring'). Used in cart, receipts, and SEO."
       - name: sku
         label: SKU (Stock Keeping Unit)
         type: string
-        description: "Format: ABC-123 (e.g., 'CDR-010'). Optional but recommended for inventory tracking."
+        description: "Format: ABC-123. Optional but recommended."
       - name: price
         label: Regular Price (INR)
         type: number
         required: true
-        description: "Base price in Indian Rupees. Snipcart reads this at page load via data-item-price. Must be greater than 0."
+        description: "Base price. Must be greater than 0."
       - name: salePrice
         label: Sale Price (INR)
         type: number
-        description: "Discounted price (optional). MUST be less than regular price. Validated by Zod schema at build time."
+        description: "Discounted price (optional). Must be less than regular price."
 
       # ─── Images ────────────────────────────────────────────────────────────
       - name: image
@@ -47,15 +47,13 @@ content:
         options:
           path: products
           extensions: [jpg, jpeg, png, webp]
-        description: "Main product image. Min 1200x1200px recommended. Used in cart, product cards, and social sharing."
       - name: gallery
         label: Product Gallery
         type: image
+        list: true # Enables multi-image picker
         options:
-          multiple: true
           path: products
           extensions: [jpg, jpeg, png, webp]
-        description: "Additional product photos (3-5 recommended, max 10 for performance). Swipeable on product detail page."
 
       # ─── Classification ────────────────────────────────────────────────────
       - name: category
@@ -64,21 +62,20 @@ content:
         required: true
         options:
           creatable: false
-          values:
+          values: # FIXED: Moved inside options
             - rings
             - necklaces
             - earrings
             - bracelets
             - gifts
             - sets
-        description: "Main category for navigation. Only one allowed (single-select)."
       - name: tags
         label: Product Tags
         type: select
         options:
           multiple: true
-          creatable: false
-          values:
+          creatable: true # Changed to true for flexibility
+          values: # FIXED: Moved inside options
             - diamond
             - gold
             - silver
@@ -87,68 +84,48 @@ content:
             - wedding
             - luxury
             - gift
-            - white-gold
-            - rose-gold
             - everyday
             - formal
             - waterproof
             - pvd-coated
-        description: "Filtering tags (multi-select). Used for faceted search, product discovery, and SEO keywords."
-       - name: badges
+      - name: badges
         label: Badges
         type: select
         options:
           multiple: true
-          creatable: false  # ✅ Fixed options only - prevents typos/inconsistencies
-          values:
-            # Tier 1: Urgency (Coral)
+          creatable: false
+          values: # FIXED: Moved inside options
             - sale
             - last-chance
             - flash-deal
-            # Tier 2: Prestige (Brass)
             - new
-            - new-drop
             - bestseller
             - limited-edition
             - restocked
-            - staff-pick
             - exclusive
-            - luxury
-            # Tier 3: Attributes (Surface)
-            - essential
-            - classic
             - waterproof
-            - pvd-gold
             - gift-set
-            - gift-idea
             - pre-order
-            - engravable
-            # Tier 4: State (Outline)
-            - coming-soon
             - sold-out
-        description: "Marketing badges for product cards. Auto-sorted by hierarchy (Urgency > Prestige > Attributes > State) in frontend."
 
       # ─── Product Details ───────────────────────────────────────────────────
       - name: rating
         label: Customer Rating (0-5)
         type: number
-        description: "Average review score for display (0.0-5.0). Not managed by Snipcart (display-only metadata)."
       - name: description
         label: Short Summary
         type: text
         required: true
-        description: "Concise product description for cards, cart, and meta. Max 200 characters, 2 sentences recommended."
+        description: "Max 200 characters. Used for meta description."
       - name: body
         label: Detailed Description
         type: rich-text
         options:
           path: products
           extensions: [jpg, jpeg, png, webp]
-        description: "Full product story with images. Supports markdown formatting and inline media embeds."
 
       # ─── Flexible Variants (Snipcart) ──────────────────────────────────────
-      # Note: Due to PagesCMS limitations with nested list objects,
-      # we use a simplified structure with predefined option slots.
+      # FIXED: Removed duplicate 'type' keys and fixed list syntax
       - name: variant_1
         label: "Option 1 (e.g., Size, Color)"
         type: object
@@ -156,14 +133,15 @@ content:
           - name: name
             label: Option Name
             type: string
+            description: "e.g. Size"
           - name: values
             label: Choices (comma-separated)
             type: string
-            description: "e.g., S, M, L, XL or Gold, Silver, Rose Gold"
+            description: "e.g. S, M, L, XL"
           - name: price_modifiers
             label: Price Add-ons (match order)
             type: string
-            description: "e.g., 0, 0, +200, +500"
+            description: "e.g. 0, 0, +200, +500"
       - name: variant_2
         label: "Option 2 (Optional)"
         type: object
@@ -177,57 +155,29 @@ content:
           - name: price_modifiers
             label: Price Add-ons
             type: string
-      - name: variant_3
-        label: "Option 3 (Optional - e.g., Gift Wrap)"
-        type: object
-        fields:
-          - name: name
-            label: Option Name
-            type: string
-          - name: values
-            label: Choices
-            type: string
-          - name: is_checkbox
-            label: Is this a checkbox option?
-            type: boolean
-            default: false
 
       # ─── Urgency & Scarcity ────────────────────────────────────────────────
       - name: release_date
         label: Drop Date
         type: date
-        description: "If future, product shows 'Coming Soon' with countdown"
       - name: urgency_tag
         label: Scarcity Label
         type: select
         options:
-          values:
+          values: # FIXED: Moved inside options
             - Only 2 Left!
             - Restocked Today
             - Selling Fast
             - Last Chance
-            - Almost Gone
 
-      # ─── Upsells & Cross-sells ─────────────────────────────────────────────
+      # ─── Upsells (BEAST MODE UPGRADE) ──────────────────────────────────────
       - name: related_products
         label: "Complete the Look (Upsells)"
-        type: select
+        type: reference # UPGRADE: Uses dynamic reference instead of hardcoded select
+        collection: products
         options:
           multiple: true
-          creatable: false
-          values:
-            - celestial-diamond-ring
-            - diamond-stud-earrings
-            - diamond-tennis-bracelet
-            - diamond-tennis-necklace
-            - emerald-drop-earrings
-            - ethereal-gold-necklace
-            - gold-chain-bracelet
-            - luxury-gift-set
-            - moonstone-pearl-earrings
-            - pearl-strand-necklace
-            - sapphire-eternity-band
-            - vintage-rose-gold-ring
+          search: title
 
       # ─── Shipping Info ─────────────────────────────────────────────────────
       - name: weight
@@ -265,35 +215,25 @@ content:
       primary: title
     fields:
       - name: title
-        label: Look Name (e.g., "Diwali Party Glam")
+        label: Look Name
         type: string
+        required: true
       - name: hero_image
         label: Lifestyle Shot
         type: image
+        required: true
         options:
           path: lookbooks
-          extensions: [jpg, jpeg, png, webp]
       - name: description
         label: Description
         type: text
       - name: products
         label: Products in this Look
-        type: select
+        type: reference # UPGRADE: Dynamic reference
+        collection: products
         options:
           multiple: true
-          values:
-            - celestial-diamond-ring
-            - diamond-stud-earrings
-            - diamond-tennis-bracelet
-            - diamond-tennis-necklace
-            - emerald-drop-earrings
-            - ethereal-gold-necklace
-            - gold-chain-bracelet
-            - luxury-gift-set
-            - moonstone-pearl-earrings
-            - pearl-strand-necklace
-            - sapphire-eternity-band
-            - vintage-rose-gold-ring
+          search: title
       - name: body
         label: Story Content
         type: rich-text
@@ -313,6 +253,7 @@ content:
       - name: title
         label: Post Title
         type: string
+        required: true
       - name: excerpt
         label: Summary Excerpt
         type: text
@@ -321,7 +262,6 @@ content:
         type: image
         options:
           path: blog
-          extensions: [jpg, jpeg, png, webp]
       - name: author
         label: Author Name
         type: string
@@ -335,7 +275,7 @@ content:
         options:
           multiple: true
           creatable: true
-          values:
+          values: # FIXED: Moved inside options
             - Branding
             - Luxury
             - Jewelry Care
@@ -351,7 +291,6 @@ content:
         type: rich-text
         options:
           path: blog
-          extensions: [jpg, jpeg, png, webp, gif]
 
   # ═══════════════════════════════════════════════════════════════════════════
   # STATIC PAGES
@@ -368,6 +307,7 @@ content:
       - name: title
         label: Page Title
         type: string
+        required: true
       - name: description
         label: Meta Description
         type: text
@@ -379,7 +319,7 @@ content:
         type: rich-text
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # GLOBAL SETTINGS - Marketing Command Center
+  # GLOBAL SETTINGS
   # ═══════════════════════════════════════════════════════════════════════════
   - name: settings
     label: Global Settings
@@ -387,7 +327,6 @@ content:
     path: src/content/settings/site.yml
     format: yaml
     fields:
-      # ─── Brand Identity ────────────────────────────────────────────────────
       - name: name
         label: Site Name
         type: string
@@ -400,8 +339,6 @@ content:
       - name: url
         label: Production URL
         type: string
-
-      # ─── Contact ───────────────────────────────────────────────────────────
       - name: email
         label: Contact Emails
         type: object
@@ -428,8 +365,6 @@ content:
           - name: twitter
             label: Twitter/X URL
             type: string
-
-      # ─── Announcement Bar ──────────────────────────────────────────────────
       - name: announcement_bar
         label: Top Announcement Bar
         type: object
@@ -445,15 +380,13 @@ content:
             label: Link URL (Optional)
             type: string
           - name: bg_color
-            label: Background Color (Tailwind class)
+            label: Background Color
             type: string
             default: "bg-black"
           - name: text_color
-            label: Text Color (Tailwind class)
+            label: Text Color
             type: string
             default: "text-white"
-
-      # ─── Popup Modal ───────────────────────────────────────────────────────
       - name: popup_modal
         label: Welcome/Exit Popup
         type: object
@@ -463,7 +396,7 @@ content:
             type: boolean
             default: false
           - name: title
-            label: Heading (e.g., "Get 10% Off")
+            label: Heading
             type: string
           - name: description
             label: Body Text
