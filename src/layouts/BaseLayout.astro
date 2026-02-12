@@ -2,6 +2,14 @@
 // Import global CSS so Astro bundles it for production
 import '../styles/global.css';
 import { siteConfig } from '../lib/site.config';
+import { getEntry } from 'astro:content';
+import AnnouncementBar from '../components/ui/AnnouncementBar.astro';
+import PopupModal from '../components/ui/PopupModal.astro';
+
+// Fetch Global Settings
+const siteSettings = await getEntry('settings', 'site');
+const announcement_bar = siteSettings?.data?.announcement_bar;
+const popup_modal = siteSettings?.data?.popup_modal;
 
 interface Props {
   title?: string;
@@ -48,6 +56,8 @@ const {
 
   </head>
   <body>
+    <AnnouncementBar data={announcement_bar} />
+    
     <slot />
 
     <!-- Cart Alert Notification (styled like Alert.astro success variant) -->
@@ -128,5 +138,7 @@ const {
 
     <!-- Alpine.js is now handled by @astrojs/alpinejs integration -->
     <!-- The entrypoint in astro.config.mjs registers the wishlist store before Alpine starts -->
+
+    <PopupModal data={popup_modal} />
   </body>
 </html>
