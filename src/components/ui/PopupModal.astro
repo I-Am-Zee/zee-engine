@@ -46,9 +46,9 @@ if (!data?.active) return null;
     },
     closePopup() {
       this.open = false;
-      // Save "Seen" state for 3 days (prevent spamming)
+      // Save "Seen" state for 1 day (balanced frequency - not too aggressive)
       const now = new Date();
-      const expiryTime = now.getTime() + (3 * 24 * 60 * 60 * 1000); // 3 days in ms
+      const expiryTime = now.getTime() + (1 * 24 * 60 * 60 * 1000); // 1 day in ms
       localStorage.setItem('zaviona_popup_seen', expiryTime.toString());
     },
     copyCode() {

@@ -20,8 +20,11 @@ announcement_bar:
   text_color: "text-white"
 
 popup_modal:
-  active: false
+  active: true # ENABLED for testing
   title: "Get 10% Off Your First Order"
   description: "Join our exclusive list and receive a welcome discount plus early access to new arrivals and sales."
   coupon_code: "FIRST10"
   cta_text: "Claim My Discount"
+
+free_shipping_threshold: 3000 # CMS-controlled (₹3,000)
+
