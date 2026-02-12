@@ -75,13 +75,13 @@ if (!data?.active) return null;
     x-transition:enter-start="opacity-0 scale-95 translate-y-4"
     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
   >
-    <!-- Close Button -->
+    <!-- Close Button (LARGE for mobile - Gemini Pro 3 UX) -->
     <button
       @click="closePopup()"
-      class="absolute top-4 right-4 text-gray-400 hover:text-black z-10 transition-colors"
+      class="absolute top-4 right-4 w-10 h-10 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-white/90 text-gray-600 hover:text-black hover:bg-white shadow-md transition-all z-10"
       aria-label="Close popup"
     >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>

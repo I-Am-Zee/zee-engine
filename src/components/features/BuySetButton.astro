@@ -16,6 +16,7 @@ interface Product {
   price: number;
   salePrice?: number;
   image: string;
+  stock?: number; // For OOS handling
 }
 
 interface Props {
@@ -41,8 +42,24 @@ const savings = regularTotal - totalPrice;
       this.isLoading = true;
       
       try {
+        // 0. Filter out Out-of-Stock items (Gemini Pro 3 OOS handling)
+        const availableProducts = ${JSON.stringify(products)}.filter(product => {
+          // If stock property exists and is 0 or less, skip it
+          if (product.stock !== undefined && product.stock <= 0) {
+            return false;
+          }
+          return true;
+        });
+
+        // Handle edge case: all items OOS
+        if (availableProducts.length === 0) {
+          alert('Sorry, these items are currently out of stock.');
+          this.isLoading = false;
+          return;
+        }
+
         // 1. Create array of Promises (Snipcart add requests)
-        const addRequests = ${JSON.stringify(products)}.map(product => {
+        const addRequests = availableProducts.map(product => {
           return Snipcart.api.cart.items.add({
             id: product.id,
             name: product.title,
@@ -105,8 +122,8 @@ const savings = regularTotal - totalPrice;
     </div>
   )}
 
-  <!-- Item Count -->
+  <!-- Item Count (User feedback: main product is obvious, show "more" items) -->
   <p class="text-center text-xs text-gray-500">
-    Includes {products.length} {products.length === 1 ? 'item' : 'items'}
+    {products.length > 1 ? `Includes ${products.length - 1} more ${products.length - 1 === 1 ? 'item' : 'items'}` : 'Complete set'}
   </p>
 </div>
