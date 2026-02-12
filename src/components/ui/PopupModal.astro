@@ -31,6 +31,8 @@ if (!data?.active) return null;
 <div
   x-data={`{
     open: false,
+    applied: false,
+    error: false,
     hasSeen: localStorage.getItem('zaviona_popup_seen'),
     init() {
       // Logic: If user hasn't seen it recently, start triggers
@@ -50,6 +52,32 @@ if (!data?.active) return null;
       const now = new Date();
       const expiryTime = now.getTime() + (1 * 24 * 60 * 60 * 1000); // 1 day in ms
       localStorage.setItem('zaviona_popup_seen', expiryTime.toString());
+    },
+    async applyCoupon() {
+      // User feedback: Actually apply the coupon to cart!
+      if (typeof Snipcart === 'undefined') {
+        this.error = true;
+        setTimeout(() => this.closePopup(), 2000);
+        return;
+      }
+
+      try {
+        // Apply discount code to cart
+        await Snipcart.api.discounts.applyCoupon('${data.coupon_code}');
+        
+        // Show success message
+        this.applied = true;
+        
+        // Wait 1.5s to show success, then close popup and open cart
+        setTimeout(() => {
+          this.closePopup();
+          Snipcart.api.theme.cart.open();
+        }, 1500);
+      } catch (error) {
+        console.error('Failed to apply coupon:', error);
+        this.error = true;
+        setTimeout(() => this.closePopup(), 2000);
+      }
     },
     copyCode() {
       navigator.clipboard.writeText('${data.coupon_code}');
@@ -125,12 +153,35 @@ if (!data?.active) return null;
           </div>
         )}
 
-        <!-- CTA Button -->
+        <!-- CTA Button (User feedback: Actually apply coupon!) -->
         <button
-          @click="closePopup()"
-          class="w-full bg-black text-white font-bold py-3 px-6 hover:bg-gray-800 transition-colors uppercase tracking-widest text-sm rounded"
+          @click="applyCoupon()"
+          :disabled="applied || error"
+          class="w-full bg-black text-white font-bold py-3 px-6 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors uppercase tracking-widest text-sm rounded flex items-center justify-center gap-2"
+          :class="{
+            'bg-green-600 hover:bg-green-600': applied,
+            'bg-red-600 hover:bg-red-600': error
+          }"
         >
-          {data.cta_text || 'Shop Now'}
+          <!-- Success State -->
+          <template x-if="applied">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Offer Applied to Cart!
+            </span>
+          </template>
+
+          <!-- Error State -->
+          <template x-if="error">
+            <span>Snipcart Not Ready - Try Again</span>
+          </template>
+
+          <!-- Default State -->
+          <template x-if="!applied && !error">
+            <span>{data.cta_text || 'Claim Discount'}</span>
+          </template>
         </button>
       </div>
     </div>
