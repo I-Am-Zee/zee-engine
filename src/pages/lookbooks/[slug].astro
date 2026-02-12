@@ -1,0 +1,137 @@
+---
+/**
+ * Lookbook Detail Page  
+ * 
+ * Individual lookbook with hero image, shoppable products, and editorial content.
+ * SEO-optimized for lifestyle searches.
+ */
+
+import { getCollection, getEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Heading from '../../components/primitives/Heading.astro';
+import ProductCard from '../../components/features/ProductCard.astro';
+import ProductGrid from '../../components/features/ProductGrid.astro';
+import BuySetButton from '../../components/features/BuySetButton.astro';
+
+export const getStaticPaths = (async () => {
+  const lookbooks = await getCollection('lookbooks');
+  return lookbooks.map((lookbook) => ({
+    params: { slug: lookbook.slug },
+    props: { lookbook },
+  }));
+}) satisfies GetStaticPaths;
+
+const { lookbook } = Astro.props;
+const { title, description, hero_image, products: productSlugs, body } = lookbook.data;
+
+// Fetch full product data
+const allProducts = await getCollection('products');
+const products = productSlugs
+  ? productSlugs
+      .map((slug) => allProducts.find((p) => p.slug === slug))
+      .filter(Boolean)
+  : [];
+
+// Transform for BuySetButton
+const productsForButton = products.map((p) => ({
+  id: p.slug,
+  title: p.data.title,
+  price: p.data.price,
+  salePrice: p.data.salePrice,
+  image: p.data.image,
+}));
+
+// SEO
+const pageTitle = `${title} | Shop the Look | Zaviona`;
+const pageDescription = description || 'Discover our curated jewelry collection';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Hero Image Section -->
+  <div class="relative w-full h-[60vh] md:h-[70vh] bg-gray-100">
+    <img
+      src={hero_image}
+      alt={title}
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+    
+    <!-- Title Overlay -->
+    <div class="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
+      <div class="container mx-auto">
+        <Heading as="h1" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 text-white">
+          {title}
+        </Heading>
+        {description && (
+          <p class="text-lg md:text-xl max-w-3xl opacity-95">
+            {description}
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Section -->
+  {products.length > 0 && (
+    <section class="container mx-auto px-4 py-16">
+      <div class="mb-12 text-center">
+        <Heading as="h2" class="mb-4">
+          Products in this Look
+        </Heading>
+        <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+          Individually selected pieces that work beautifully together. Shop each item separately or get the complete look.
+        </p>
+
+        <!-- Buy Complete Look Button -->
+        <div class="flex justify-center mb-12">
+          <BuySetButton 
+            products={productsForButton} 
+            label="Shop Complete Look"
+            class="max-w-md"
+          />
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <ProductGrid>
+        {products.map((product) => (
+          <ProductCard
+            id={product.slug}
+            title={product.data.title}
+            price={product.data.price}
+            salePrice={product.data.salePrice}
+            image={product.data.image}
+            href={`/products/${product.slug}`}
+            badges={product.data.badges}
+            rating={product.data.rating}
+          />
+        ))}
+      </ProductGrid>
+    </section>
+  )}
+
+  <!-- Story Content (Rich Text) -->
+  {body && (
+    <section class="bg-gray-50 py-16">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto prose prose-lg">
+          <Fragment set:html={body} />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Back to Lookbooks Link -->
+  <div class="container mx-auto px-4 py-8">
+    <a 
+      href="/lookbooks" 
+      class="inline-flex items-center gap-2 text-gray-600 hover:text-black transition-colors"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Back to All Collections</span>
+    </a>
+  </div>
+</BaseLayout>

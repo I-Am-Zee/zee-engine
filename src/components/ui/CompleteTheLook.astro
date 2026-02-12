@@ -12,6 +12,7 @@ import { getCollection } from "astro:content";
 import ProductCard from "../features/ProductCard.astro";
 import ProductGrid from "../features/ProductGrid.astro";
 import Heading from "../primitives/Heading.astro";
+import BuySetButton from "../features/BuySetButton.astro";
 
 interface Props {
   productSlugs: string[];
@@ -26,6 +27,15 @@ const relatedProducts = productSlugs
   .map((slug) => allProducts.find((p) => p.slug === slug))
   .filter(Boolean)
   .slice(0, 4); // Max 4 products
+
+// Transform for BuySetButton (needs id, title, price, salePrice, image)
+const productsForButton = relatedProducts.map((product) => ({
+  id: product.slug,
+  title: product.data.title,
+  price: product.data.price,
+  salePrice: product.data.salePrice,
+  image: product.data.image,
+}));
 ---
 
 {
@@ -35,9 +45,14 @@ const relatedProducts = productSlugs
         <Heading as="h2" class="mb-2">
           Complete the Look
         </Heading>
-        <p class="text-(--color-text-muted)">
+        <p class="text-(--color-text-muted) mb-6">
           Curated pieces to elevate your ensemble
         </p>
+
+        <!-- Buy Set Button (Revenue Multiplier) -->
+        <div class="flex justify-center">
+          <BuySetButton products={productsForButton} class="max-w-md" />
+        </div>
       </div>
 
       <ProductGrid>
