@@ -35,7 +35,6 @@ if (!data?.active) return null;
     error: false,
     snipcartReady: false,
     loginRequired: false,
-    hasSeen: localStorage.getItem('zaviona_popup_seen'),
     init() {
       // FIX: Check if Snipcart is ALREADY ready (not just listen for event)
       if (typeof Snipcart !== 'undefined') {
@@ -64,8 +63,23 @@ if (!data?.active) return null;
         setTimeout(() => clearInterval(checkSnipcart), 10000);
       }
       
-      // Logic: If user hasn't seen it recently, start triggers
-      if (!this.hasSeen) {
+      // CRITICAL FIX: Check if popup has been seen recently (1 day expiry)
+      const savedTimestamp = localStorage.getItem('zaviona_popup_seen');
+      const now = new Date().getTime();
+      let hasSeenRecently = false;
+      
+      if (savedTimestamp) {
+        const expiryTime = parseInt(savedTimestamp);
+        if (!isNaN(expiryTime) && now < expiryTime) {
+          hasSeenRecently = true; // Timestamp not expired yet
+        } else {
+          // Expired, clear it
+          localStorage.removeItem('zaviona_popup_seen');
+        }
+      }
+      
+      // Logic: If user HASN'T seen it recently, start triggers
+      if (!hasSeenRecently) {
         // 1. Mobile Timer (8 seconds)
         setTimeout(() => this.open = true, 8000);
 
@@ -99,28 +113,27 @@ if (!data?.active) return null;
         const customer = Snipcart.store.getState().customer;
         
         if (!customer || !customer.email) {
-          // NO MORE ALERT! Show inline message instead
+          // USER FEEDBACK: Don't open cart, show login requirement message
           this.loginRequired = true;
           
-          // Auto-close after 3 seconds and open cart
+          // Auto-close after 4 seconds (user reads the message)
           setTimeout(() => {
             this.closePopup();
-            Snipcart.api.theme.cart.open();
-          }, 3000);
+          }, 4000);
           return;
         }
 
+        // User IS logged in - apply coupon and show success
         // Apply discount code to cart
         await Snipcart.api.discounts.applyCoupon('${data.coupon_code}');
         
         // Show success message
         this.applied = true;
         
-        // Wait 1.5s to show success, then close popup and open cart
+        // Wait 3s to show success, then close popup
         setTimeout(() => {
           this.closePopup();
-          Snipcart.api.theme.cart.open();
-        }, 1500);
+        }, 3000);
       } catch (error) {
         console.error('Failed to apply coupon:', error);
         this.error = true;
@@ -227,20 +240,20 @@ if (!data?.active) return null;
             </span>
           </template>
 
-          <!-- Login Required State (NO ALERT!) -->
+          <!-- Login Required State (NO CART OPEN!) -->
           <template x-if="loginRequired">
             <span class="flex items-center gap-2">
-              🎉 Please Sign In to Save! Opening cart...
+              🔐 Please Login to Use Promo Code
             </span>
           </template>
 
-          <!-- Success State -->
+          <!-- Success State (Logged In) -->
           <template x-if="applied">
             <span class="flex items-center gap-2">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              Offer Applied to Cart!
+              Success! Coupon Applied - Start Shopping
             </span>
           </template>
 
