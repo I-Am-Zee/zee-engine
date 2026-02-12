@@ -411,3 +411,8 @@ content:
             label: Button Text
             type: string
             default: "Claim Discount"
+      - name: free_shipping_threshold
+        label: Free Shipping Threshold (₹)
+        type: number
+        default: 3000
+        description: "Minimum cart value to qualify for free shipping. Shown in cart nudge."

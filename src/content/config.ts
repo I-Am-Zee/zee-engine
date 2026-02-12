@@ -192,6 +192,8 @@ const settings = defineCollection({
         cta_text: z.string().default("Claim Discount"),
       })
       .optional(),
+    // Free Shipping Threshold
+    free_shipping_threshold: z.number().positive().default(3000),
   }),
 });
 
