@@ -34,13 +34,34 @@ if (!data?.active) return null;
     applied: false,
     error: false,
     snipcartReady: false,
+    loginRequired: false,
     hasSeen: localStorage.getItem('zaviona_popup_seen'),
     init() {
-      // Wait for Snipcart to be ready
+      // FIX: Check if Snipcart is ALREADY ready (not just listen for event)
       if (typeof Snipcart !== 'undefined') {
-        Snipcart.events.on('snipcart.ready', () => {
-          this.snipcartReady = true;
-        });
+        // Check current state first
+        try {
+          const state = Snipcart.store.getState();
+          if (state) {
+            this.snipcartReady = true;
+          }
+        } catch (e) {
+          // Not ready yet, listen for event
+          Snipcart.events.on('snipcart.ready', () => {
+            this.snipcartReady = true;
+          });
+        }
+      } else {
+        // Snipcart script not loaded, wait for it
+        const checkSnipcart = setInterval(() => {
+          if (typeof Snipcart !== 'undefined') {
+            clearInterval(checkSnipcart);
+            this.snipcartReady = true;
+          }
+        }, 500);
+        
+        // Give up after 10 seconds
+        setTimeout(() => clearInterval(checkSnipcart), 10000);
       }
       
       // Logic: If user hasn't seen it recently, start triggers
@@ -78,10 +99,14 @@ if (!data?.active) return null;
         const customer = Snipcart.store.getState().customer;
         
         if (!customer || !customer.email) {
-          // Friendly nudge, not a hard block
-          alert('🎉 Want to save with this offer?\\n\\nPlease sign in to apply this discount to your order!\\n\\n(We\\'ll open your cart where you can sign in or continue as guest)');
-          this.closePopup();
-          Snipcart.api.theme.cart.open();
+          // NO MORE ALERT! Show inline message instead
+          this.loginRequired = true;
+          
+          // Auto-close after 3 seconds and open cart
+          setTimeout(() => {
+            this.closePopup();
+            Snipcart.api.theme.cart.open();
+          }, 3000);
           return;
         }
 
@@ -105,9 +130,11 @@ if (!data?.active) return null;
       }
     },
     copyCode() {
-      navigator.clipboard.writeText('${data.coupon_code}');
-      // Simple alert - could be replaced with toast notification
-      alert('Code ${data.coupon_code} copied to clipboard!');
+      // NO MORE ALERT! Use clipboard API silently or show inline feedback
+      navigator.clipboard.writeText('${data.coupon_code}').then(() => {
+        // Could add a temporary checkmark or toast here
+        console.log('Code copied!');
+      });
     }
   }`}
   x-show="open"
@@ -181,21 +208,29 @@ if (!data?.active) return null;
         <!-- CTA Button (User feedback: Actually apply coupon!) -->
         <button
           @click="applyCoupon()"
-          :disabled="!snipcartReady || applied || error"
+          :disabled="!snipcartReady || applied || error || loginRequired"
           class="w-full bg-black text-white font-bold py-3 px-6 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors uppercase tracking-widest text-sm rounded flex items-center justify-center gap-2"
           :class="{
             'bg-green-600 hover:bg-green-600': applied,
-            'bg-red-600 hover:bg-red-600': error
+            'bg-red-600 hover:bg-red-600': error,
+            'bg-blue-600 hover:bg-blue-600': loginRequired
           }"
         >
           <!-- Loading State (Snipcart not ready) -->
-          <template x-if="!snipcartReady && !applied && !error">
+          <template x-if="!snipcartReady && !applied && !error && !loginRequired">
             <span class="flex items-center gap-2">
               <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
               Loading...
+            </span>
+          </template>
+
+          <!-- Login Required State (NO ALERT!) -->
+          <template x-if="loginRequired">
+            <span class="flex items-center gap-2">
+              🎉 Please Sign In to Save! Opening cart...
             </span>
           </template>
 
@@ -215,7 +250,7 @@ if (!data?.active) return null;
           </template>
 
           <!-- Default State (Snipcart ready) -->
-          <template x-if="snipcartReady && !applied && !error">
+          <template x-if="snipcartReady && !applied && !error && !loginRequired">
             <span>{data.cta_text || 'Claim Discount'}</span>
           </template>
         </button>
