@@ -16,10 +16,17 @@ import BuySetButton from "../features/BuySetButton.astro";
 
 interface Props {
   productSlugs: string[];
+  currentProduct?: {
+    id: string;
+    title: string;
+    price: number;
+    salePrice?: number;
+    image: string;
+  };
   class?: string;
 }
 
-const { productSlugs, class: className } = Astro.props;
+const { productSlugs, currentProduct, class: className } = Astro.props;
 
 // Get all products and filter by slugs
 const allProducts = await getCollection("products");
@@ -29,13 +36,18 @@ const relatedProducts = productSlugs
   .slice(0, 4); // Max 4 products
 
 // Transform for BuySetButton (needs id, title, price, salePrice, image)
-const productsForButton = relatedProducts.map((product) => ({
-  id: product.slug,
-  title: product.data.title,
-  price: product.data.price,
-  salePrice: product.data.salePrice,
-  image: product.data.image,
-}));
+const productsForButton = [
+  // CRITICAL: Include the MAIN product first (what user came to view)
+  ...(currentProduct ? [currentProduct] : []),
+  // Then add the related products (to complete the look)
+  ...relatedProducts.map((product) => ({
+    id: product.slug,
+    title: product.data.title,
+    price: product.data.price,
+    salePrice: product.data.salePrice,
+    image: product.data.image,
+  })),
+];
 ---
 
 {

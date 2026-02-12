@@ -206,9 +206,18 @@ const sortedBadges = sortBadgesByHierarchy(badges);
       </div>
     </div>
 
-    {/* Complete the Look (CMS-controlled Upsells) */}
+    {/* Complete the Look (Related Products) */}
     {product.data.related_products && product.data.related_products.length > 0 && (
-      <CompleteTheLook productSlugs={product.data.related_products} />
+      <CompleteTheLook 
+        productSlugs={product.data.related_products}
+        currentProduct={{
+          id: product.slug,
+          title: product.data.title,
+          price: product.data.price,
+          salePrice: product.data.salePrice,
+          image: product.data.image,
+        }}
+      />
     )}
 
     {/* You May Also Like (Algorithmic Recommendations) */}
