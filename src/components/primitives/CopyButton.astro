@@ -1,0 +1,28 @@
+---
+interface Props {
+  text: string;
+  label?: string;
+  successLabel?: string;
+  class?: string;
+}
+
+const { text, label = "Copy", successLabel = "Copied!", class: className } = Astro.props;
+---
+
+<button
+  x-data={`{
+    copied: false,
+    text: '${text}',
+    copy() {
+      navigator.clipboard.writeText(this.text).then(() => {
+        this.copied = true;
+        setTimeout(() => this.copied = false, 2000);
+      });
+    }
+  }`}
+  @click="copy()"
+  class:list={["transition-colors duration-200 text-xs font-bold uppercase tracking-wider", className]}
+  :class="copied ? 'text-green-600' : 'text-gray-500 hover:text-black'"
+>
+  <span x-text={`copied ? '${successLabel}' : '${label}'`}></span>
+</button>
