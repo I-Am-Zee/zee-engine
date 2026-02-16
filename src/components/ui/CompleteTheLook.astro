@@ -32,39 +32,64 @@ const { productSlugs, currentProduct, class: className } = Astro.props;
 const allProducts = await getCollection("products");
 const relatedProducts = productSlugs
   .map((slug) => allProducts.find((p) => p.slug === slug))
-  .filter(Boolean)
+  .filter((p): p is NonNullable<typeof p> => !!p)
   .slice(0, 4); // Max 4 products
 
 // Transform for BuySetButton (needs id, title, price, salePrice, image)
 const productsForButton = [
   // CRITICAL: Include the MAIN product first (what user came to view)
-  ...(currentProduct ? [currentProduct] : []),
+  ...(() => {
+    if (!currentProduct) return [];
+    const p = allProducts.find((item) => item.slug === currentProduct.id);
+    return [
+      {
+        ...currentProduct,
+        description: p?.data?.description,
+        variant_1: p?.data?.variant_1,
+        variant_2: p?.data?.variant_2,
+        variant_3: p?.data?.variant_3,
+      },
+    ];
+  })(),
   // Then add the related products (to complete the look)
-  ...relatedProducts.map((product) => ({
-    id: product.slug,
-    title: product.data.title,
-    price: product.data.price,
-    salePrice: product.data.salePrice,
-    image: product.data.image,
+  ...relatedProducts.map((p: any) => ({
+    id: p.slug,
+    title: p.data.title,
+    price: p.data.price,
+    salePrice: p.data.salePrice,
+    image: p.data.image,
+    description: p.data.description,
+    variant_1: p.data.variant_1,
+    variant_2: p.data.variant_2,
+    variant_3: p.data.variant_3,
   })),
 ];
 ---
 
 {
   relatedProducts.length > 0 && (
-    <section class:list={["mt-24 border-t border-(--color-border-subtle) pt-16 pb-8", className]}>
+    <section 
+      class:list={["mt-24 border-t border-(--color-border-subtle) pt-16 pb-8", className]}
+      id="perfect-pairings"
+    >
+      <script is:inline define:vars={{ 
+        relatedItems: productsForButton.slice(1)
+      }}>
+        // Expose related products for the Upsell Drawer with relative URLs
+        // This ensures Snipcart's crawler resolves them against the CURRENT origin (tunnel, dev, or production)
+        window.ZAVIONA_UPSELL_CONTEXT = relatedItems.map(item => ({
+          ...item,
+          url: `/products/${item.id}`
+        }));
+      </script>
+
       <div class="mb-10 lg:mb-12">
         <Heading as="h2" class="mb-2">
-          Complete the Look
+          Perfect Pairings
         </Heading>
         <p class="text-(--color-text-muted) mb-6">
           Curated pieces to elevate your ensemble
         </p>
-
-        <!-- Buy Set Button (Revenue Multiplier) -->
-        <div class="flex justify-center">
-          <BuySetButton products={productsForButton} class="max-w-md" />
-        </div>
       </div>
 
       <ProductGrid>

@@ -1,13 +1,14 @@
 ---
 // Import global CSS so Astro bundles it for production
-import '../styles/global.css';
-import { siteConfig } from '../lib/site.config';
-import { getEntry } from 'astro:content';
-import AnnouncementBar from '../components/ui/AnnouncementBar.astro';
-import PopupModal from '../components/ui/PopupModal.astro';
+import "../styles/global.css";
+import { siteConfig } from "../lib/site.config";
+import { getEntry } from "astro:content";
+import AnnouncementBar from "../components/ui/AnnouncementBar.astro";
+import PopupModal from "../components/ui/PopupModal.astro";
+import UpsellDrawer from "../components/ui/UpsellDrawer.astro";
 
 // Fetch Global Settings
-const siteSettings = await getEntry('settings', 'site');
+const siteSettings = await getEntry("settings", "site");
 const announcement_bar = siteSettings?.data?.announcement_bar;
 const popup_modal = siteSettings?.data?.popup_modal;
 
@@ -16,9 +17,9 @@ interface Props {
   description?: string;
 }
 
-const { 
+const {
   title = `${siteConfig.name} | ${siteConfig.tagline}`,
-  description = siteConfig.description 
+  description = siteConfig.description,
 } = Astro.props;
 ---
 
@@ -31,8 +32,6 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={siteConfig.assets.favicon} />
     <title>{title}</title>
-
-
 
     <!-- Snipcart v3 Preconnect for performance -->
     <link rel="preconnect" href="https://cdn.snipcart.com" />
@@ -47,82 +46,36 @@ const {
     <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }}>
       window.SnipcartSettings = {
         publicApiKey: apiKey,
-        loadStrategy: 'on-idle',
-        modalStyle: 'overlay',
-        addProductBehavior: 'none' // Don't auto-open cart
+        loadStrategy: "on-idle",
+        modalStyle: "overlay",
+        addProductBehavior: "none", // Don't auto-open cart
       };
+
+      // Inline Listener for immediate response to item.added
+      document.addEventListener('snipcart.ready', () => {
+        Snipcart.events.on('item.added', (item) => {
+          console.log('[Upsell Bridge] Item added:', item.name);
+          const event = new CustomEvent('zaviona:item-added', {
+            detail: {
+              id: item.id,
+              name: item.name,
+              image: item.image,
+              price: item.unitPrice,
+              options: item.customFields || []
+            }
+          });
+          document.dispatchEvent(event);
+        });
+      });
     </script>
-
-
   </head>
   <body>
     <AnnouncementBar data={announcement_bar} />
-    
+
     <slot />
 
-    <!-- Cart Alert Notification (styled like Alert.astro success variant) -->
-    <div
-      id="cart-alert"
-      role="alert"
-      style="display: none; position: fixed; top: 80px; right: 16px; z-index: 9997; max-width: 320px; animation: alertSlideIn 0.3s ease-out;"
-      class="flex items-start gap-3 rounded-lg border p-4 shadow-lg"
-      style="background-color: rgba(21, 128, 61, 0.08); border-color: rgba(21, 128, 61, 0.2);"
-    >
-      <!-- Success check icon (Phosphor Check) -->
-      <svg class="mt-0.5 shrink-0 w-5 h-5" style="color: #15803d;" viewBox="0 0 256 256" fill="currentColor">
-        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/>
-      </svg>
-      <div class="flex-1">
-        <span class="font-medium" style="color: #15803d;">Product added to cart</span>
-      </div>
-    </div>
-
-    <style>
-      @keyframes alertSlideIn {
-        from { opacity: 0; transform: translateX(20px); }
-        to { opacity: 1; transform: translateX(0); }
-      }
-    </style>
-
-    <script is:inline>
-      // Cart alert notification for every item addition
-      // Robust event registration that works regardless of Snipcart load timing
-      (function() {
-        var alert = document.getElementById('cart-alert');
-        var timeout = null;
-        var registered = false;
-
-        function showAlert() {
-          if (!alert) return;
-          
-          // Show alert
-          alert.style.display = 'flex';
-          alert.style.animation = 'none';
-          alert.offsetHeight; // Trigger reflow
-          alert.style.animation = 'alertSlideIn 0.3s ease-out';
-
-          // Clear existing timeout and set new one
-          if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(function() {
-            alert.style.display = 'none';
-          }, 3000);
-        }
-
-        function registerEventListener() {
-          if (registered) return;
-          if (window.Snipcart && window.Snipcart.events) {
-            Snipcart.events.on('item.added', showAlert);
-            registered = true;
-          }
-        }
-
-        // Try to register immediately if Snipcart is already loaded
-        registerEventListener();
-
-        // Also listen for snipcart.ready in case it loads later
-        document.addEventListener('snipcart.ready', registerEventListener);
-      })();
-    </script>
+    <!-- Upsell Drawer (Replaces legacy cart-alerts) -->
+    <UpsellDrawer />
 
     <!-- Snipcart Root Container -->
     <div
@@ -132,7 +85,6 @@ const {
       data-config-modal-style="overlay"
       data-currency="INR"
       data-config-add-product-behavior="none"
-
     >
     </div>
 
@@ -141,6 +93,7 @@ const {
 
     <!-- Global Snipcart Event Handler (Intent-Based Coupon System) -->
     <script src="../scripts/snipcart-events.ts"></script>
+    <script src="../scripts/behaviors/options-sync.ts"></script>
 
     <PopupModal data={popup_modal} />
   </body>

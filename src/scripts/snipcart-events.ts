@@ -70,8 +70,8 @@ async function tryApplyPendingCoupon() {
 }
 
 // Initialize when Snipcart is ready
-document.addEventListener('snipcart.ready', () => {
-  console.log('[Coupon] Snipcart ready, initializing event handlers...');
+function initSnipcartHandlers() {
+  console.log('[Coupon] Snipcart ready/detected, initializing event handlers...');
 
   // CRITICAL: Check immediately for already-logged-in users
   tryApplyPendingCoupon();
@@ -82,14 +82,15 @@ document.addEventListener('snipcart.ready', () => {
     tryApplyPendingCoupon();
   });
 
-  // Listen for items being added (empty cart edge case)
-  window.Snipcart.events.on('item.added', async (item: any) => {
-    console.log('[Coupon] Item added to cart:', item.name);
-    
-    const pendingCode = sessionStorage.getItem('pending_coupon');
-    if (pendingCode) {
-      console.log('[Coupon] Applying pending coupon after item add...');
-      await applyCouponCode(pendingCode);
-    }
+  // Note: item.added listener for UpsellDrawer moved to inline script in BaseLayout.astro
+  // to ensure reliability across page navigations and script loading orders.
+}
+
+// Handle both 'ready' event and late script loading
+if (typeof window.Snipcart !== 'undefined' && window.Snipcart.events) {
+  initSnipcartHandlers();
+} else {
+  document.addEventListener('snipcart.ready', () => {
+    initSnipcartHandlers();
   });
-});
+}
