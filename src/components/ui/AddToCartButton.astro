@@ -39,8 +39,8 @@ const {
   disabled = false,
 } = Astro.props;
 
-// Snipcart product URL validation: Use PRODUCTION URL from site config
-const productUrl = new URL(Astro.url.pathname, siteConfig.url).toString();
+// Snipcart product URL validation: Use relative URL to support multiple environments
+const productUrl = `/products/${product.slug}`;
 
 // Build Snipcart custom fields from object-based variant slots
 const buildVariantAttributes = () => {
@@ -50,19 +50,22 @@ const buildVariantAttributes = () => {
   // Helper to process a variant slot
   const processVariant = (slot: VariantSlot | undefined) => {
     if (!slot?.name || !slot?.values) return;
-    
+
     const optionName = slot.name;
     // Convert comma-separated values to pipe-separated for Snipcart
-    const optionValues = slot.values.split(",").map(v => v.trim()).join("|");
-    
+    const optionValues = slot.values
+      .split(",")
+      .map((v) => v.trim())
+      .join("|");
+
     attrs[`data-item-custom${customIndex}-name`] = optionName;
     attrs[`data-item-custom${customIndex}-options`] = optionValues;
-    
+
     // If checkbox type, mark as optional (not required)
     if (slot.is_checkbox) {
       attrs[`data-item-custom${customIndex}-required`] = "false";
     }
-    
+
     customIndex++;
   };
 

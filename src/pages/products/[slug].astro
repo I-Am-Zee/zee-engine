@@ -88,15 +88,17 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         {/* Header Zone: Badges, Title, Price, Urgency */}
         <div class="mb-8">
           {/* Badges */}
-          {badges.length > 0 && (
-            <div class="mb-4 flex flex-wrap gap-2">
-              {sortedBadges.map((badge) => (
-                <Badge intent={getBadgeIntent(badge)} size="sm">
-                  {badge}
-                </Badge>
-              ))}
-            </div>
-          )}
+          {
+            badges.length > 0 && (
+              <div class="mb-4 flex flex-wrap gap-2">
+                {sortedBadges.map((badge) => (
+                  <Badge intent={getBadgeIntent(badge)} size="sm">
+                    {badge}
+                  </Badge>
+                ))}
+              </div>
+            )
+          }
 
           {/* Title */}
           <Heading as="h1" class="mb-4">
@@ -104,20 +106,24 @@ const sortedBadges = sortBadgesByHierarchy(badges);
           </Heading>
 
           {/* Price + Urgency Row */}
-          <div class="flex items-center gap-4 mb-4">
+          <div class="mb-4 flex items-center gap-4">
             <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
-            {product.data.urgency_tag && !isComingSoon && (
-              <UrgencyBadge label={product.data.urgency_tag} />
-            )}
+            {
+              product.data.urgency_tag && !isComingSoon && (
+                <UrgencyBadge label={product.data.urgency_tag} />
+              )
+            }
           </div>
 
           {/* Rating */}
-          {product.data.rating && product.data.rating > 0 && (
-            <div class="flex items-center gap-2">
-              <RatingStars rating={product.data.rating} />
-              <Text variant="caption">({product.data.rating.toFixed(1)} out of 5)</Text>
-            </div>
-          )}
+          {
+            product.data.rating && product.data.rating > 0 && (
+              <div class="flex items-center gap-2">
+                <RatingStars rating={product.data.rating} />
+                <Text variant="caption">({product.data.rating.toFixed(1)} out of 5)</Text>
+              </div>
+            )
+          }
         </div>
 
         {/* Description Zone */}
@@ -128,63 +134,76 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         </div>
 
         {/* Options Zone - Object-based Variant Slots */}
-        {(product.data.variant_1 || product.data.variant_2 || product.data.variant_3) && (
-          <div class="space-y-6">
-            {product.data.variant_1?.name && product.data.variant_1?.values && (
-              <OptionSelector
-                legend={product.data.variant_1.name}
-                options={product.data.variant_1.values.split(",").map(v => v.trim())}
-                name={product.data.variant_1.name.toLowerCase().replace(/\s+/g, "-")}
-              />
-            )}
-            {product.data.variant_2?.name && product.data.variant_2?.values && (
-              <OptionSelector
-                legend={product.data.variant_2.name}
-                options={product.data.variant_2.values.split(",").map(v => v.trim())}
-                name={product.data.variant_2.name.toLowerCase().replace(/\s+/g, "-")}
-              />
-            )}
-            {product.data.variant_3?.name && product.data.variant_3?.values && (
-              <OptionSelector
-                legend={product.data.variant_3.name}
-                options={product.data.variant_3.values.split(",").map(v => v.trim())}
-                name={product.data.variant_3.name.toLowerCase().replace(/\s+/g, "-")}
-              />
-            )}
-          </div>
-        )}
+        {
+          (product.data.variant_1 || product.data.variant_2 || product.data.variant_3) && (
+            <div class="space-y-6">
+              {product.data.variant_1?.name && product.data.variant_1?.values && (
+                <OptionSelector
+                  legend={product.data.variant_1.name}
+                  options={product.data.variant_1.values.split(",").map((v) => v.trim())}
+                  name={product.data.variant_1.name}
+                />
+              )}
+              {product.data.variant_2?.name && product.data.variant_2?.values && (
+                <OptionSelector
+                  legend={product.data.variant_2.name}
+                  options={product.data.variant_2.values.split(",").map((v) => v.trim())}
+                  name={product.data.variant_2.name}
+                />
+              )}
+              {product.data.variant_3?.name && product.data.variant_3?.values && (
+                <OptionSelector
+                  legend={product.data.variant_3.name}
+                  options={product.data.variant_3.values.split(",").map((v) => v.trim())}
+                  name={product.data.variant_3.name}
+                />
+              )}
+            </div>
+          )
+        }
 
         {/* Action Zone: Quantity + Add to Cart */}
         <div class="mt-10 space-y-6">
           {/* Coming Soon Countdown */}
-          {isComingSoon && releaseDate && (
-            <div class="p-4 rounded-lg bg-(--color-accent-amber)/10 border border-(--color-accent-amber)/20 text-center">
-              <Text variant="caption" class="text-amber-600 font-medium mb-1">
-                Dropping Soon
-              </Text>
-              <div class="text-lg font-semibold text-amber-700" id="countdown" data-release={releaseDate.toISOString()}>
-                {releaseDate.toLocaleDateString("en-IN", { 
-                  weekday: "long", 
-                  month: "long", 
-                  day: "numeric" 
-                })}
+          {
+            isComingSoon && releaseDate && (
+              <div class="rounded-lg border border-(--color-accent-amber)/20 bg-(--color-accent-amber)/10 p-4 text-center">
+                <Text variant="caption" class="mb-1 font-medium text-amber-600">
+                  Dropping Soon
+                </Text>
+                <div
+                  class="text-lg font-semibold text-amber-700"
+                  id="countdown"
+                  data-release={releaseDate.toISOString()}
+                >
+                  {releaseDate.toLocaleDateString("en-IN", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
 
           {/* Quantity Selector */}
-          {!isComingSoon && (
-            <div class="flex items-center gap-3">
-              <Text variant="caption" class="font-medium"> Quantity: </Text>
-              <QuantitySelector initial={1} min={1} max={10} />
-            </div>
-          )}
+          {
+            !isComingSoon && (
+              <div class="flex items-center gap-3">
+                <Text variant="caption" class="font-medium">
+                  {" "}
+                  Quantity:{" "}
+                </Text>
+                <QuantitySelector initial={1} min={1} max={10} />
+              </div>
+            )
+          }
 
           <div class="flex flex-col gap-4 md:flex-row md:items-center">
             {/* Add to Cart Button - Snipcart */}
-            <AddToCartButton 
-              product={product} 
-              size="lg" 
+            <AddToCartButton
+              product={product}
+              size="lg"
               class="w-full md:flex-1"
               disabled={isComingSoon ?? false}
             >
@@ -207,33 +226,37 @@ const sortedBadges = sortBadgesByHierarchy(badges);
     </div>
 
     {/* Complete the Look (Related Products) */}
-    {product.data.related_products && product.data.related_products.length > 0 && (
-      <CompleteTheLook 
-        productSlugs={product.data.related_products}
-        currentProduct={{
-          id: product.slug,
-          title: product.data.title,
-          price: product.data.price,
-          salePrice: product.data.salePrice,
-          image: product.data.image,
-        }}
-      />
-    )}
+    {
+      product.data.related_products && product.data.related_products.length > 0 && (
+        <CompleteTheLook
+          productSlugs={product.data.related_products}
+          currentProduct={{
+            id: product.slug,
+            title: product.data.title,
+            price: product.data.price,
+            salePrice: product.data.salePrice,
+            image: product.data.image,
+          }}
+        />
+      )
+    }
 
     {/* You May Also Like (Algorithmic Recommendations) */}
     <RelatedProducts currentProduct={product} />
   </div>
 
   {/* Sticky Mobile Add to Cart Bar */}
-  <div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-sm border-t border-(--color-border-subtle) lg:hidden">
-    <div class="flex items-center gap-3 max-w-lg mx-auto">
+  <div
+    class="fixed right-0 bottom-0 left-0 z-50 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden"
+  >
+    <div class="mx-auto flex max-w-lg items-center gap-3">
       <div class="flex-1">
-        <Text variant="caption" class="font-semibold truncate">{product.data.title}</Text>
+        <Text variant="caption" class="truncate font-semibold">{product.data.title}</Text>
         <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
       </div>
-      <AddToCartButton 
-        product={product} 
-        size="md" 
+      <AddToCartButton
+        product={product}
+        size="md"
         disabled={isComingSoon ?? false}
         class="shrink-0"
       >
