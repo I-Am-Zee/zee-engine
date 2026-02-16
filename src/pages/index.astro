@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/features/Navbar.astro";
 import Footer from "../components/features/Footer.astro";
@@ -14,6 +14,9 @@ export const prerender = true;
 
 const allProducts = await getCollection("products");
 const featuredProducts = allProducts.slice(0, 4);
+
+// Fetch Lookbook for Spotlight
+const lookbook = await getEntry("lookbooks", "diwali-party-glam");
 
 const categories = [
   { name: "Rings", href: "/shop/rings", image: "/images/products/1605100804763-247f67b3557e.jpg" },
@@ -118,6 +121,33 @@ const categories = [
         </ProductGrid>
       </div>
     </section>
+
+    {/* Lookbook Spotlight */}
+    {lookbook && (
+      <section class="relative bg-black py-32 px-4 lg:px-8 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-50">
+          <img 
+            src={lookbook.data.hero_image} 
+            alt={lookbook.data.title} 
+            class="h-full w-full object-cover object-center transition-transform duration-1000 hover:scale-105" 
+          />
+        </div>
+        <div class="relative z-10 mx-auto max-w-4xl flex flex-col items-center text-center">
+          <Text variant="caption" class="text-white/70 uppercase tracking-[0.3em] mb-4">Editorial</Text>
+          <Heading as="h2" class="mb-6 text-4xl font-bold tracking-[0.1em] text-white md:text-6xl uppercase leading-tight">
+            {lookbook.data.title}
+          </Heading>
+          <Text class="mb-10 max-w-2xl text-xl text-gray-200 italic font-serif">
+            "{lookbook.data.description}"
+          </Text>
+          <a href={`/lookbooks/${lookbook.slug || lookbook.id}`}>
+            <Button size="lg" class="bg-white text-black hover:bg-gray-100 px-12 transition-all hover:tracking-widest capitalize">
+              Explore Lookbook
+            </Button>
+          </a>
+        </div>
+      </section>
+    )}
 
     {/* Trust Section */}
     <section class="border-y border-(--color-border-subtle) bg-(--color-background) py-16">

@@ -14,7 +14,7 @@ social:
 # Marketing Command Center
 announcement_bar:
   enabled: true
-  text: "✨ Free Shipping on Orders Above ₹2000 | Use Code: FIRST10 for 10% Off"
+  text: "✨ Free Shipping on Orders Above ₹{{threshold}} | Use Code: FIRST10 for 10% Off"
   link: "/products"
   bg_color: "bg-black"
   text_color: "text-white"

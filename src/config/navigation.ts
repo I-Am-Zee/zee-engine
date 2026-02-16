@@ -11,10 +11,6 @@ export interface NavItem {
 
 export const navigation: NavItem[] = [
   {
-    label: "Home",
-    href: "/",
-  },
-  {
     label: "Shop",
     href: "/shop",
     items: [
@@ -23,12 +19,15 @@ export const navigation: NavItem[] = [
       { label: "Necklaces", href: "/shop/necklaces" },
       { label: "Earrings", href: "/shop/earrings" },
       { label: "Bracelets", href: "/shop/bracelets" },
-      { label: "Explore Collections", href: "/collections" },
     ],
   },
   {
-    label: "About",
-    href: "/about",
+    label: "Collections",
+    href: "/collections",
+  },
+  {
+    label: "Lookbooks",
+    href: "/lookbooks",
   },
   {
     label: "Journal",
