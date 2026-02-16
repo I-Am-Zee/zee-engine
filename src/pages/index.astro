@@ -9,14 +9,14 @@ import Button from "../components/primitives/Button.astro";
 import ProductCard from "../components/features/ProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 
+import LookbookCarousel from "../components/features/LookbookCarousel.astro";
+import TrustSection from "../components/ui/TrustSection.astro";
+
 // Pre-render at build time
 export const prerender = true;
 
 const allProducts = await getCollection("products");
 const featuredProducts = allProducts.slice(0, 4);
-
-// Fetch Lookbook for Spotlight
-const lookbook = await getEntry("lookbooks", "diwali-party-glam");
 
 const categories = [
   { name: "Rings", href: "/shop/rings", image: "/images/products/1605100804763-247f67b3557e.jpg" },
@@ -53,7 +53,7 @@ const categories = [
             </Button>
           </a>
           <a href="/collections">
-            <Button size="lg" type="outline" class="border-white text-white hover:bg-white/10">
+            <Button size="lg" type="neutral" class="border-white text-white hover:bg-white/10">
               View Collections
             </Button>
           </a>
@@ -62,25 +62,25 @@ const categories = [
     </section>
 
     {/* Categories Section */}
-    <section class="bg-(--color-background) py-24 px-4 lg:px-8">
+    <section class="bg-background py-24 px-4 lg:px-8">
       <div class="mx-auto max-w-7xl">
         <div class="mb-12 text-center">
           <Heading as="h2" class="mb-4 text-3xl font-bold md:text-4xl">Shop by Category</Heading>
-          <Text class="mx-auto max-w-2xl text-(--color-text-muted)">
+          <Text class="mx-auto max-w-2xl text-text-muted">
             Explore our diverse ranges of jewelry, each piece designed with luxury and sophistication in mind.
           </Text>
         </div>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((category) => (
             <a href={category.href} class="group relative overflow-hidden rounded-2xl shadow-sm transition-transform hover:-translate-y-1">
-              <div class="aspect-[4/5] overflow-hidden">
+              <div class="aspect-4/5 overflow-hidden">
                 <img 
                   src={category.image} 
                   alt={category.name} 
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent"></div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 to-transparent"></div>
               <div class="absolute bottom-6 left-6">
                 <Heading as="h3" class="text-xl font-bold text-white">{category.name}</Heading>
                 <Text class="text-sm text-white/80">Explore Collection &rarr;</Text>
@@ -92,15 +92,15 @@ const categories = [
     </section>
 
     {/* Featured Products */}
-    <section class="bg-(--color-surface) py-24 px-4 lg:px-8">
+    <section class="bg-surface py-24 px-4 lg:px-8">
       <div class="mx-auto max-w-7xl">
         <div class="mb-12 flex flex-col items-center justify-between gap-4 md:flex-row">
           <div>
             <Heading as="h2" class="text-3xl font-bold md:text-4xl">Featured Pieces</Heading>
-            <Text class="mt-2 text-(--color-text-muted)">Hand-selected favorites from our latest season.</Text>
+            <Text class="mt-2 text-text-muted">Hand-selected favorites from our latest season.</Text>
           </div>
           <a href="/shop">
-            <Button type="ghost" class="text-(--color-primary) font-semibold uppercase tracking-widest text-xs">
+            <Button type="ghost" class="text-primary font-semibold uppercase tracking-widest text-xs">
               View All Products &rarr;
             </Button>
           </a>
@@ -122,67 +122,11 @@ const categories = [
       </div>
     </section>
 
-    {/* Lookbook Spotlight */}
-    {lookbook && (
-      <section class="relative bg-black py-32 px-4 lg:px-8 overflow-hidden">
-        <div class="absolute inset-0 z-0 opacity-50">
-          <img 
-            src={lookbook.data.hero_image} 
-            alt={lookbook.data.title} 
-            class="h-full w-full object-cover object-center transition-transform duration-1000 hover:scale-105" 
-          />
-        </div>
-        <div class="relative z-10 mx-auto max-w-4xl flex flex-col items-center text-center">
-          <Text variant="caption" class="text-white/70 uppercase tracking-[0.3em] mb-4">Editorial</Text>
-          <Heading as="h2" class="mb-6 text-4xl font-bold tracking-[0.1em] text-white md:text-6xl uppercase leading-tight">
-            {lookbook.data.title}
-          </Heading>
-          <Text class="mb-10 max-w-2xl text-xl text-gray-200 italic font-serif">
-            "{lookbook.data.description}"
-          </Text>
-          <a href={`/lookbooks/${lookbook.slug || lookbook.id}`}>
-            <Button size="lg" class="bg-white text-black hover:bg-gray-100 px-12 transition-all hover:tracking-widest capitalize">
-              Explore Lookbook
-            </Button>
-          </a>
-        </div>
-      </section>
-    )}
+    {/* Lookbook Carousel Feature */}
+    <LookbookCarousel />
 
     {/* Trust Section */}
-    <section class="border-y border-(--color-border-subtle) bg-(--color-background) py-16">
-      <div class="mx-auto max-w-7xl px-4 lg:px-8">
-        <div class="grid grid-cols-1 gap-12 text-center sm:grid-cols-3">
-          <div class="flex flex-col items-center">
-            <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-(--color-primary-subtle)/10 text-(--color-primary)">
-              <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
-            </div>
-            <Heading as="h4" class="mb-2 text-lg font-bold">Ethically Sourced</Heading>
-            <Text class="text-sm text-(--color-text-muted)">Every diamond is conflict-free and responsibly sourced.</Text>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-(--color-primary-subtle)/10 text-(--color-primary)">
-              <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-              </svg>
-            </div>
-            <Heading as="h4" class="mb-2 text-lg font-bold">Luxury Packaging</Heading>
-            <Text class="text-sm text-(--color-text-muted)">Our signature gift wrap is included with every order.</Text>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-(--color-primary-subtle)/10 text-(--color-primary)">
-              <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <Heading as="h4" class="mb-2 text-lg font-bold">Lifetime Warranty</Heading>
-            <Text class="text-sm text-(--color-text-muted)">We stand behind our craftsmanship for a lifetime.</Text>
-          </div>
-        </div>
-      </div>
-    </section>
+    <TrustSection />
   </main>
 
   <Footer />

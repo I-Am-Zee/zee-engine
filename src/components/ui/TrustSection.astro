@@ -1,0 +1,48 @@
+---
+/**
+ * TrustSection - Brand value propositions
+ * 
+ * Displays key trust markers like Ethical Sourcing, Luxury Packaging, etc.
+ * 
+ * @component UI (ui/)
+ */
+
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+
+const trustMarkers = [
+  {
+    title: "Ethically Sourced",
+    description: "Every diamond is conflict-free and responsibly sourced.",
+    icon: "PhGlobeHemisphereWest"
+  },
+  {
+    title: "Luxury Packaging",
+    description: "Our signature gift wrap is included with every order.",
+    icon: "PhGift"
+  },
+  {
+    title: "Lifetime Warranty",
+    description: "We stand behind our craftsmanship for a lifetime.",
+    icon: "PhSealCheck"
+  }
+];
+
+import Icon from "../primitives/Icon.astro";
+---
+
+<section class="border-y border-border-subtle bg-background py-16">
+  <div class="mx-auto max-w-7xl px-4 lg:px-8">
+    <div class="grid grid-cols-1 gap-12 text-center sm:grid-cols-3">
+      {trustMarkers.map((marker) => (
+        <div class="flex flex-col items-center">
+          <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Icon name={marker.icon as any} size={32} />
+          </div>
+          <Heading as="h4" class="mb-2 text-lg font-bold">{marker.title}</Heading>
+          <Text class="text-sm text-text-muted">{marker.description}</Text>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
