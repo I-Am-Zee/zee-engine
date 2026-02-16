@@ -18,7 +18,7 @@ export const siteConfig = {
   
   // Production URL (required for Snipcart product validation)
   // DO NOT CHANGE unless you change your Netlify site name
-  url: "https://zaviona-dev.netlify.app",
+  url: import.meta.env.PUBLIC_SITE_URL || "https://zaviona-dev.netlify.app",
   
   // Email Addresses
   // Add more as needed: orders, legal, press, etc.

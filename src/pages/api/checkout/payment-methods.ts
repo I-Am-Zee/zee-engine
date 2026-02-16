@@ -14,6 +14,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getGatewaysForCountry } from '../../../lib/payments/config';
+import { siteConfig } from '../../../lib/site.config';
 
 // Snipcart sends this payload when requesting payment methods
 interface SnipcartPaymentRequest {
@@ -72,6 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
     // This enables free, unlimited Deploy Previews
     const siteUrl = import.meta.env.DEPLOY_PRIME_URL || 
                     import.meta.env.PUBLIC_SITE_URL || 
+                    siteConfig.url ||
                     'http://localhost:4321';
     
     // Get available gateways for customer's country
