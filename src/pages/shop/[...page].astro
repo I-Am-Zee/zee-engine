@@ -4,6 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navbar from "../../components/features/Navbar.astro";
 import Footer from "../../components/features/Footer.astro";
 import Heading from "../../components/primitives/Heading.astro";
+import Text from "../../components/primitives/Text.astro";
 import ProductCard from "../../components/features/ProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
@@ -27,13 +28,12 @@ const products = page.data;
 ---
 
 <BaseLayout title="Shop All Jewelry | Zaviona">
-  <Navbar />
 
   <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data="productSorter">
     {/* Page Header */}
-    <div class="mb-8">
+    <div class="mb-8 max-[425px]:text-center">
       <Heading as="h1" class="mb-2">All Jewelry</Heading>
-      <p class="text-(--color-text-muted)">Discover our curated collection of handcrafted pieces</p>
+      <Text class="text-text-muted">Discover our curated collection of handcrafted pieces</Text>
     </div>
 
     {/* Filter/Sort Bar */}
@@ -70,6 +70,10 @@ const products = page.data;
                 href={`/products/${product.slug}`}
                 badges={product.data.badges}
                 rating={product.data.rating}
+                variant_1={product.data.variant_1}
+                variant_2={product.data.variant_2}
+                variant_3={product.data.variant_3}
+                variant="standard"
               />
             </div>
           ))
@@ -85,7 +89,7 @@ const products = page.data;
     }
   </div>
 
-  <Footer />
+  </div>
 </BaseLayout>
 
 <script>
