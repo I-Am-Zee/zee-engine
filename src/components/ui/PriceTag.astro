@@ -17,18 +17,22 @@ const displayPrice = hasSale ? salePrice : price;
 const discountPercent = hasSale ? calculateDiscount(price, salePrice!) : 0;
 ---
 
-<div class:list={["inline-flex items-center gap-2 flex-wrap", className]} {...rest}>
-  {hasSale && (
-    <Text as="span" variant="caption" class="line-through">
-      {formatCurrency(price, currency)}
+<div class:list={["flex gap-2 flex-wrap", className]} {...rest}>
+  <div class="flex items-baseline gap-2">
+    <Text as="span" variant="price">
+      {formatCurrency(displayPrice, currency)}
     </Text>
-  )}
-  <Text as="span" class="font-semibold text-lg">
-    {formatCurrency(displayPrice, currency)}
-  </Text>
+
+    {hasSale && (
+      <Text as="span" variant="price_sale">
+        {formatCurrency(price, currency)}
+      </Text>
+    )}
+  </div>
+
   {hasSale && discountPercent > 0 && (
-    <Badge intent="primary" size="sm">
+    <span class="inline-flex items-center rounded-full bg-accent-coral/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-accent-coral border border-accent-coral/20 shrink-0">
       {discountPercent}% OFF
-    </Badge>
+    </span>
   )}
 </div>

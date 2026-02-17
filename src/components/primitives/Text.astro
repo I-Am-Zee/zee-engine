@@ -1,23 +1,71 @@
 ---
 interface Props {
-  as?: "p" | "span" | "div" | "label" | "blockquote";
-  variant?: "default" | "caption" | "lead";
+  as?: "p" | "span" | "div" | "label" | "blockquote" | "cite";
+  variant?:
+    | "body"
+    | "lead"
+    | "caption"
+    | "eyebrow"
+    | "metadata"
+    | "price"
+    | "price_sale"
+    | "label"
+    | "callout"
+    | "highlight";
   class?: string;
+  weight?: "light" | "normal" | "medium" | "semibold" | "bold" | "black";
+  color?: "main" | "muted" | "inverse" | "accent" | "coral";
 }
 
-const { as: Tag = "p", variant = "default", class: className, ...rest } = Astro.props;
+const {
+  as: Tag = "p",
+  variant = "body",
+  weight,
+  color,
+  class: className,
+  ...rest
+} = Astro.props;
 
-// Base styles - uses Plus Jakarta Sans (sans-serif), no size forcing for class override
-const baseStyles = "font-sans text-(--color-text-main)";
+// Base styles - uses Plus Jakarta Sans (sans-serif)
+const baseStyles = "font-sans";
 
-// Variant-specific styles (default includes text-base, others don't or have own sizes)
+// Intent-specific styles (Atomic Design)
 const variantStyles = {
-  default: "text-base leading-relaxed",
-  caption: "text-sm text-(--color-text-muted) leading-normal",
+  body: "text-base leading-relaxed",
   lead: "text-lg md:text-xl leading-relaxed font-light",
+  caption: "text-sm leading-normal",
+  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold",
+  metadata: "text-[10px] md:text-xs font-medium leading-none",
+  price: "text-lg md:text-xl font-bold tracking-tight leading-none",
+  price_sale: "text-xs md:text-sm line-through opacity-50 font-normal leading-none",
+  label: "text-xs font-semibold uppercase tracking-wider",
+  callout: "text-base font-semibold leading-relaxed italic",
+  highlight: "text-base font-bold text-accent-brass",
 };
 
-const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${className || ""}`.trim();
+// Weight mappings (if explicit weight override needed)
+const weightStyles = weight
+  ? {
+      light: "font-light",
+      normal: "font-normal",
+      medium: "font-medium",
+      semibold: "font-semibold",
+      bold: "font-bold",
+      black: "font-black",
+    }[weight]
+  : "";
+
+// Color mappings
+const colorStyles =
+  {
+    main: "text-(--color-text-main)",
+    muted: "text-(--color-text-muted)",
+    inverse: "text-(--color-text-inverse)",
+    accent: "text-(--color-accent-brass)",
+    coral: "text-(--color-accent-coral)",
+  }[color || ""] || (variant === "price" ? "text-primary" : "");
+
+const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${weightStyles} ${colorStyles} ${className || ""}`.trim();
 ---
 
 <Tag class={combinedClasses} {...rest}>
