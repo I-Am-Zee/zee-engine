@@ -36,18 +36,19 @@
       "bg-transparent text-(--color-text-main) hover:bg-(--color-ghost-hover) active:bg-(--color-surface-muted)",
   };
 
-  // Size styles
+  // Size styles with specific gaps for visual balance
+  // icon-right gets a slightly larger gap to feel more "expansive"
   const sizeStyles = {
-    sm: variant === "icon-only" ? "h-8 w-8 text-sm" : "h-8 px-3 text-sm gap-2",
-    md: variant === "icon-only" ? "h-10 w-10 text-base" : "h-10 px-4 text-base gap-2",
-    lg: variant === "icon-only" ? "h-12 w-12 text-lg" : "h-12 px-6 text-lg gap-3",
+    sm: variant === "icon-only" ? "h-8 w-8 text-sm" : `h-8 px-3 text-sm ${variant === "icon-right" ? "gap-2.5" : "gap-2"}`,
+    md: variant === "icon-only" ? "h-10 w-10 text-base" : `h-10 px-4 text-base ${variant === "icon-right" ? "gap-3" : "gap-2.5"}`,
+    lg: variant === "icon-only" ? "h-12 w-12 text-lg" : `h-12 px-6 text-lg ${variant === "icon-right" ? "gap-3.5" : "gap-3"}`,
   };
 
   // Layout logic - variant determines icon position
   const variantStyles = {
     default: "",
     "icon-left": "flex-row",
-    "icon-right": "flex-row",
+    "icon-right": "flex-row group",
     "icon-only": "",
   };
 
@@ -60,3 +61,14 @@
   <Tag class={combinedClasses} {...componentProps}>
     <slot />
   </Tag>
+
+  <style>
+    /* Add subtle motion to icons inside "icon-right" buttons for luxury feel */
+    .group[class*="icon-right"]:hover :global(svg) {
+      transform: translateX(2px);
+      transition: transform 0.2s ease-out;
+    }
+    .group[class*="icon-right"] :global(svg) {
+      transition: transform 0.2s ease-out;
+    }
+  </style>
