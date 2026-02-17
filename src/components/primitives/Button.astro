@@ -53,7 +53,7 @@
   };
 
   const combinedClasses =
-    `${baseStyles} ${typeStyles[type]} ${sizeStyles[size]} ${variantStyles[variant]} ${className || ""}`.trim();
+    `${baseStyles} ${variant} ${typeStyles[type]} ${sizeStyles[size]} ${variantStyles[variant]} ${className || ""}`.trim();
 
   const componentProps = Tag === "a" ? { href, ...rest } : { type: "button", disabled, ...rest };
   ---
@@ -64,11 +64,11 @@
 
   <style>
     /* Add subtle motion to icons inside "icon-right" buttons for luxury feel */
-    .group[class*="icon-right"]:hover :global(svg) {
+    .group.icon-right:hover :global(svg) {
       transform: translateX(2px);
       transition: transform 0.2s ease-out;
     }
-    .group[class*="icon-right"] :global(svg) {
+    .group.icon-right :global(svg) {
       transition: transform 0.2s ease-out;
     }
   </style>

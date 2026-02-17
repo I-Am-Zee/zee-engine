@@ -8,6 +8,7 @@ import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Badge from "../primitives/Badge.astro";
 import Icon from "../primitives/Icon.astro";
+import Image from "../primitives/Image.astro";
 import PriceTag from "../ui/PriceTag.astro";
 import RatingStars from "../ui/RatingStars.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
@@ -78,17 +79,16 @@ const isEditorial = variant === 'editorial';
   <div class="relative mb-2 overflow-hidden rounded-xl bg-surface shadow-sm">
     <a href={href} class="block focus-glow rounded-xl aspect-4/5">
       {/* Image with hover zoom */}
-      <img
+      <Image
         src={image || "/images/placeholder.jpg"}
         alt={title}
-        loading="lazy"
-        width="800"
-        height="1000"
+        width={800}
+        height={1000}
+        ratio="portrait"
         class:list={[
-          "h-full w-full object-cover transition-transform duration-700 group-hover:scale-110",
+          "transition-transform duration-700 group-hover:scale-110",
           !image && "bg-surface p-12 opacity-50 contrast-50"
         ]}
-        onerror="this.onerror=null; this.src='/images/placeholder.jpg'; this.classList.add('broken-image');"
       />
 
       {/* Top-left badges overlay */}

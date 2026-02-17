@@ -1,14 +1,18 @@
 ---
+import { Image as AstroImage } from "astro:assets";
+
 interface Props {
-  src: string;
+  src: any; // Can be a local import or remote string
   alt: string;
-  ratio?: "portrait" | "square" | "landscape";
+  ratio?: "portrait" | "square" | "landscape" | "auto";
   class?: string;
+  width?: number;
+  height?: number;
 }
 
-const { src, alt, ratio = "square", class: className, ...rest } = Astro.props;
+const { src, alt, ratio = "square", class: className, width, height, ...rest } = Astro.props;
 
-// Base styles with object-fit cover
+// Base styles with object-fit cover - removed h-full to respect aspect-ratio
 const baseStyles = "w-full object-cover";
 
 // Aspect ratio enforcement
@@ -16,9 +20,34 @@ const ratioStyles = {
   portrait: "aspect-[4/5]",
   square: "aspect-square",
   landscape: "aspect-video",
+  auto: "",
 };
 
 const combinedClasses = `${baseStyles} ${ratioStyles[ratio]} ${className || ""}`.trim();
+
+// Note: If src is a remote string, it might need explicit dimensions in Astro
 ---
 
-<img src={src} alt={alt} class={combinedClasses} {...rest} loading="lazy" />
+{
+  typeof src === "string" ? (
+    <img 
+      src={src} 
+      alt={alt} 
+      class={combinedClasses} 
+      loading="lazy" 
+      decoding="async"
+      width={width}
+      height={height}
+      {...rest}
+    />
+  ) : (
+    <AstroImage 
+      src={src} 
+      alt={alt} 
+      class={combinedClasses} 
+      width={width}
+      height={height}
+      {...rest} 
+    />
+  )
+}

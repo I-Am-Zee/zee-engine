@@ -21,6 +21,7 @@ import MenuToggle from "../components/ui/MenuToggle.astro";
 import Pagination from "../components/ui/Pagination.astro";
 import OptionSelector from "../components/ui/OptionSelector.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
+import CopyButton from "../components/ui/CopyButton.astro";
 
 // Organisms (Features)
 import Footer from "../components/features/Footer.astro";
@@ -144,8 +145,8 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         </Text>
         <Text>
           This paragraph contains an{" "}
-          <Link href="#" variant="underline">underlined inline link</Link> with skip-ink decoration for
-          better readability.
+          <Link href="https://google.com" variant="underline">external link</Link> that
+          automatically adds security attributes (<code class="text-xs">target="_blank"</code>).
         </Text>
       </div>
     </section>
@@ -205,24 +206,30 @@ import ProductGrid from "../components/features/ProductGrid.astro";
             src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400"
             alt="Product demo - Portrait"
             ratio="portrait"
+            width={400}
+            height={500}
           />
-          <Text variant="caption" class="mt-2 text-center">Portrait (4:5)</Text>
+          <Text variant="caption" class="mt-2 text-center">Optimized Portrait (4:5)</Text>
         </div>
         <div>
           <Image
             src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400"
             alt="Product demo - Square"
             ratio="square"
+            width={400}
+            height={400}
           />
-          <Text variant="caption" class="mt-2 text-center">Square (1:1)</Text>
+          <Text variant="caption" class="mt-2 text-center">Optimized Square (1:1)</Text>
         </div>
         <div>
           <Image
             src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400"
             alt="Product demo - Landscape"
             ratio="landscape"
+            width={400}
+            height={225}
           />
-          <Text variant="caption" class="mt-2 text-center">Landscape (16:9)</Text>
+          <Text variant="caption" class="mt-2 text-center">Optimized Landscape (16:9)</Text>
         </div>
       </div>
     </section>
@@ -333,21 +340,36 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       <div class="space-y-4">
         <div>
           <Text variant="caption" class="mb-3 uppercase">Normal State</Text>
-          <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
-            <Input type="text" placeholder="Enter your name" />
-            <Input type="email" placeholder="Enter your email" />
-            <Input type="password" placeholder="Enter your password" />
+          <div class="space-y-3 rounded-lg bg-surface p-6">
+            <Input id="example-name" type="text" placeholder="Enter your name" />
+            <Input id="example-email" type="email" placeholder="Enter your email" />
+            <Input id="example-password" type="password" placeholder="Enter your password" />
           </div>
         </div>
         <div>
           <Text variant="caption" class="mb-3 uppercase">Error State</Text>
-          <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
-            <Input type="email" placeholder="invalid@email" error={true} />
+          <div class="space-y-3 rounded-lg bg-surface p-6">
+            <Input id="example-error" type="email" placeholder="invalid@email" error={true} />
             <Text variant="caption" class="text-red-500">Please enter a valid email address</Text>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- UI Moleclues Continued -->
+    <section class="mb-16">
+      <Heading as="h2" class="mb-6">UI Molecules (Refined)</Heading>
+      <div class="space-y-8">
+        <!-- CopyButton -->
+        <div>
+          <Text variant="caption" class="mb-3 uppercase">CopyButton (Composed with Button primitive)</Text>
+          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-surface p-6">
+            <CopyButton text="ZAVIONA20" label="ZAVIONA20" successLabel="Copied!" />
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- Color System Reference -->
     <section class="mb-16">

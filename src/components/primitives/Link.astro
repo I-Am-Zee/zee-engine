@@ -3,13 +3,17 @@ interface Props {
   href: string;
   variant?: "plain" | "underline";
   class?: string;
+  isExternal?: boolean;
 }
 
-const { href, variant = "plain", class: className, ...rest } = Astro.props;
+const { href, variant = "plain", class: className, isExternal: isExternalProp, ...rest } = Astro.props;
+
+// Smart detection for external links if not explicitly provided
+const isExternal = isExternalProp ?? (href.startsWith("http") || href.startsWith("//"));
 
 // Base styles - inherits font size from parent, using shadow glow for focus
 const baseStyles =
-  "inline font-sans text-(--color-text-main) transition-all duration-200 hover:text-(--color-text-muted) focus-visible:outline-none focus-visible:rounded-sm focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]";
+  "inline font-sans text-text-main transition-all duration-200 hover:text-text-muted focus-visible:outline-none focus-visible:rounded-sm focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]";
 
 // Variant styles
 const variantStyles = {
@@ -18,8 +22,10 @@ const variantStyles = {
 };
 
 const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${className || ""}`.trim();
+
+const externalProps = isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
 ---
 
-<a href={href} class={combinedClasses} {...rest}>
+<a href={href} class={combinedClasses} {...externalProps} {...rest}>
   <slot />
 </a>

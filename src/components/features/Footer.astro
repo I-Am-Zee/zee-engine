@@ -48,7 +48,7 @@ const shopCategories = shopNav?.items || [];
         <ul class="space-y-2">
           {shopCategories.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
+              <Link href={item.href} variant="plain" class="text-sm text-text-muted hover:text-text-main">
                 {item.label}
               </Link>
             </li>
@@ -62,7 +62,7 @@ const shopCategories = shopNav?.items || [];
         <ul class="space-y-2">
           {supportLinks.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
+              <Link href={item.href} variant="plain" class="text-sm text-text-muted hover:text-text-main">
                 {item.label}
               </Link>
             </li>
