@@ -9,6 +9,7 @@ import Logo from "../primitives/Logo.astro";
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
+import Text from "../primitives/Text.astro";
 import NavDropdown from "../ui/NavDropdown.astro";
 import { navigation } from "../../config/navigation";
 
@@ -21,7 +22,7 @@ const { class: className, ...rest } = Astro.props;
 
 <header
   class:list={[
-    "sticky top-0 z-50 w-full border-b border-(--color-border-subtle) bg-(--color-background)",
+    "sticky top-0 z-50 w-full border-b border-border-subtle bg-background",
     className,
   ]}
   {...rest}
@@ -39,9 +40,11 @@ const { class: className, ...rest } = Astro.props;
           ) : (
             <a
               href={item.href}
-              class="px-3 py-2 font-sans text-sm font-medium text-(--color-text-main) transition-colors duration-200 hover:text-(--color-text-muted)"
+              class="px-3 py-2 transition-colors duration-200 hover:text-text-muted"
             >
-              {item.label}
+              <Text as="span" variant="label" class="normal-case tracking-normal">
+                {item.label}
+              </Text>
             </a>
           )
         )
@@ -64,7 +67,7 @@ const { class: className, ...rest } = Astro.props;
           x-show="$store.wishlist.count > 0"
           x-text="$store.wishlist.count"
           x-cloak
-          class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
+          class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-coral text-[10px] font-bold text-white shadow-sm"
         ></span>
       </a>
       <Button
@@ -131,13 +134,13 @@ const { class: className, ...rest } = Astro.props;
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-x-0"
         x-transition:leave-end="translate-x-full"
-        class="fixed inset-y-0 right-0 z-999 w-full max-w-sm overflow-y-auto bg-(--color-background) shadow-xl"
+        class="fixed inset-y-0 right-0 z-999 w-full max-w-sm overflow-y-auto bg-background shadow-xl"
         x-cloak
       >
         <div class="flex h-full flex-col" x-data="{ activeAccordion: null }">
           {/* Drawer Header */}
           <div
-            class="flex items-center justify-between border-b border-(--color-border-subtle) px-4 py-4"
+            class="flex items-center justify-between border-b border-border-subtle px-4 py-4"
           >
             <Logo variant="full" />
             <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false">
@@ -155,10 +158,10 @@ const { class: className, ...rest } = Astro.props;
                       <div>
                         <button
                           type="button"
-                          class="flex w-full items-center justify-between rounded-md px-3 py-3 font-sans text-base font-medium text-(--color-text-main) transition-colors hover:bg-(--color-surface)"
+                          class="flex w-full items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-surface"
                           @click={`activeAccordion = activeAccordion === '${item.label}' ? null : '${item.label}'`}
                         >
-                          {item.label}
+                          <Text variant="body" weight="medium">{item.label}</Text>
                           <Icon
                             name="PhCaretDown"
                             class="h-4 w-4 transition-transform duration-200"
@@ -174,9 +177,9 @@ const { class: className, ...rest } = Astro.props;
                             <li>
                               <a
                                 href={subItem.href}
-                                class="block rounded-md px-3 py-2 text-sm text-(--color-text-muted) transition-colors hover:bg-(--color-surface) hover:text-(--color-text-main)"
+                                class="block rounded-md px-3 py-2 transition-colors hover:bg-surface hover:text-text-main"
                               >
-                                {subItem.label}
+                                <Text variant="caption" color="muted">{subItem.label}</Text>
                               </a>
                             </li>
                           ))}
@@ -185,9 +188,9 @@ const { class: className, ...rest } = Astro.props;
                     ) : (
                       <a
                         href={item.href}
-                        class="block rounded-md px-3 py-3 font-sans text-base font-medium text-(--color-text-main) transition-colors hover:bg-(--color-surface)"
+                        class="block rounded-md px-3 py-3 transition-colors hover:bg-surface"
                       >
-                        {item.label}
+                        <Text variant="body" weight="medium">{item.label}</Text>
                       </a>
                     )}
                   </li>
@@ -197,7 +200,7 @@ const { class: className, ...rest } = Astro.props;
           </nav>
 
           {/* Drawer Footer */}
-          <div class="border-t border-(--color-border-subtle) px-4 py-4">
+          <div class="border-t border-border-subtle px-4 py-4">
             <div class="flex items-center gap-4">
               <a href="/wishlist" class="relative">
                 <Button type="ghost" variant="icon-only" size="sm" as="span">

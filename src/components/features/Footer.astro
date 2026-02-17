@@ -26,7 +26,7 @@ const shopCategories = shopNav?.items || [];
 
 <footer
   class:list={[
-    "border-t border-[var(--color-border-subtle)] bg-[var(--color-surface)]",
+    "border-t border-border-subtle bg-surface",
     className,
   ]}
   {...rest}
@@ -81,17 +81,17 @@ const shopCategories = shopNav?.items || [];
     </div>
 
     {/* Bottom Bar */}
-    <div class="mt-12 border-t border-[var(--color-border-subtle)] pt-8">
+    <div class="mt-12 border-t border-border-subtle pt-8">
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <Text variant="caption">
           {siteConfig.copyright}
         </Text>
         <div class="flex gap-4">
-          <Link href="/privacy" variant="plain" class="text-xs text-[var(--color-text-muted)]">
-            Privacy Policy
+          <Link href="/privacy" variant="plain" class="text-text-muted">
+            <Text as="span" variant="tiny">Privacy Policy</Text>
           </Link>
-          <Link href="/terms" variant="plain" class="text-xs text-[var(--color-text-muted)]">
-            Terms of Service
+          <Link href="/terms" variant="plain" class="text-text-muted">
+            <Text as="span" variant="tiny">Terms of Service</Text>
           </Link>
         </div>
       </div>

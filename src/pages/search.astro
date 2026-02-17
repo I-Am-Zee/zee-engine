@@ -34,24 +34,24 @@ const searchableProducts = allProducts.map(p => ({
 
   <main class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data={`searchApp(${JSON.stringify(searchableProducts)})`}>
     <div class="mb-12 text-center">
-      <Heading as="h1" class="text-4xl font-bold mb-4 uppercase tracking-wider">Search Our Collection</Heading>
+      <Heading as="h1" class="mb-4 uppercase tracking-wider">Search Our Collection</Heading>
       <div class="relative mx-auto max-w-2xl">
         <input
           type="text"
           x-model="query"
           @input.debounce.300ms="performSearch()"
           placeholder="Search for diamonds, rings, gold..."
-          class="w-full rounded-full border border-(--color-border-subtle) bg-(--color-background) py-4 pl-12 pr-4 text-lg focus:border-(--color-primary) focus:ring-2 focus:ring-(--color-ring) focus:outline-none transition-all shadow-sm"
+          class="w-full rounded-full border border-border-subtle bg-background py-4 pl-12 pr-4 text-lg focus:border-primary focus:ring-2 focus:ring-ring focus:outline-none transition-all shadow-sm"
         />
         <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-          <svg class="h-6 w-6 text-(--color-text-muted)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-6 w-6 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
       </div>
       <template x-if="query.length > 0">
-        <Text class="mt-4 text-(--color-text-muted)">
-          Found <span x-text="matchingSlugs.length" class="font-bold text-(--color-text-main)"></span> results for "<span x-text="query" class="font-bold text-(--color-text-main)"></span>"
+        <Text class="mt-4 text-text-muted">
+          Found <span x-text="matchingSlugs.length" class="font-bold text-text-main"></span> results for "<span x-text="query" class="font-bold text-text-main"></span>"
         </Text>
       </template>
     </div>
@@ -94,11 +94,11 @@ const searchableProducts = allProducts.map(p => ({
     {/* Initial State (when query is empty) */}
     <div x-show="query.length < 2" class="text-center py-20">
       <div class="mb-6 opacity-30">
-        <svg class="mx-auto h-24 w-24 text-(--color-text-muted)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="mx-auto h-24 w-24 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
-      <Heading as="h3" class="text-xl text-(--color-text-muted)">Type above to start searching...</Heading>
+      <Heading as="h3" class="text-text-muted">Type above to start searching...</Heading>
     </div>
   </main>
 

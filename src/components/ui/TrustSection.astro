@@ -39,7 +39,7 @@ import Icon from "../primitives/Icon.astro";
           <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
             <Icon name={marker.icon as any} size={32} />
           </div>
-          <Heading as="h4" class="mb-2 text-lg font-bold">{marker.title}</Heading>
+          <Heading as="h4" class="mb-2">{marker.title}</Heading>
           <Text class="text-sm text-text-muted">{marker.description}</Text>
         </div>
       ))}

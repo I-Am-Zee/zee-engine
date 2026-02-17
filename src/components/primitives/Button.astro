@@ -27,11 +27,11 @@ const baseStyles =
 // Paint logic - type determines color scheme
 const typeStyles = {
   primary:
-    "bg-(--color-primary) text-(--color-primary-foreground) hover:opacity-90 active:opacity-80",
+    "bg-(--color-primary) text-(--color-primary-foreground) hover:bg-black active:scale-[0.98]",
   secondary:
-    "bg-(--color-secondary) text-(--color-secondary-foreground) hover:bg-(--color-border-strong) active:bg-(--color-border-subtle)",
+    "bg-(--color-accent-brass) text-(--color-primary) hover:bg-(--color-accent-brass)/90 active:scale-[0.98]",
   neutral:
-    "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle) hover:bg-(--color-surface-muted) active:bg-(--color-border-subtle)",
+    "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle) hover:bg-(--color-surface-muted) active:border-(--color-border-strong)",
   ghost:
     "bg-transparent text-(--color-text-main) hover:bg-(--color-ghost-hover) active:bg-(--color-surface-muted)",
 };

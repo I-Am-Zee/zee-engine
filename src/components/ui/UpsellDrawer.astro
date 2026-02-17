@@ -23,7 +23,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
   x-show="isOpen"
   x-cloak
   @keydown.escape.window="close()"
-  class="fixed inset-0 z-[9999] overflow-hidden"
+  class="fixed inset-0 z-9999 overflow-hidden"
   aria-labelledby="upsell-drawer-title"
   role="dialog"
   aria-modal="true"
@@ -60,7 +60,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
                 <Icon name="PhCheck" size={24} weight="bold" />
               </div>
-              <Heading as="h2" size="h4" id="upsell-drawer-title">Added to Cart!</Heading>
+              <Heading as="h2" id="upsell-drawer-title">Added to Cart!</Heading>
             </div>
             <button @click="close()" class="text-gray-400 hover:text-gray-500 transition-colors">
               <Icon name="PhX" size={24} />
@@ -110,7 +110,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
                 </div>
 
                 <!-- Product Image -->
-                <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-100">
+                <div class="h-24 w-24 shrink-0 overflow-hidden rounded-md border border-gray-100">
                    <a :href="'/products/' + item.id" @click="close()">
                      <img :src="item.image" :alt="item.title" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300" />
                    </a>
@@ -139,7 +139,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
                           <template x-for="val in (v.values || '').split(',').map(v => v.trim()).filter(v => v !== '')" :key="val">
                             <button
                               @click="selectOption(item.id, v.name, val)"
-                              class="inline-flex h-8 min-w-[32px] items-center justify-center rounded border px-2 text-xs font-medium transition-all"
+                              class="inline-flex h-8 min-w-8 items-center justify-center rounded border px-2 text-xs font-medium transition-all"
                               :class="selections[item.id]?.[v.name] === val ? 'border-black bg-black text-white' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'"
                               x-text="val"
                             ></button>

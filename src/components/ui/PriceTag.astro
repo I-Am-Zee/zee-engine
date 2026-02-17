@@ -17,7 +17,7 @@ const displayPrice = hasSale ? salePrice : price;
 const discountPercent = hasSale ? calculateDiscount(price, salePrice!) : 0;
 ---
 
-<div class:list={["flex gap-2 flex-wrap", className]} {...rest}>
+<div class:list={["flex gap-2 flex-wrap items-center", className]} {...rest}>
   <div class="flex items-baseline gap-2">
     <Text as="span" variant="price">
       {formatCurrency(displayPrice, currency)}
@@ -31,8 +31,8 @@ const discountPercent = hasSale ? calculateDiscount(price, salePrice!) : 0;
   </div>
 
   {hasSale && discountPercent > 0 && (
-    <span class="inline-flex items-center rounded-full bg-accent-coral/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-accent-coral border border-accent-coral/20 shrink-0">
+    <Badge intent="coral" size="xs">
       {discountPercent}% OFF
-    </span>
+    </Badge>
   )}
 </div>

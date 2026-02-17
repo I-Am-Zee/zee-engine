@@ -5,7 +5,9 @@ import { siteConfig } from "../lib/site.config";
 import { getEntry } from "astro:content";
 import AnnouncementBar from "../components/ui/AnnouncementBar.astro";
 import PopupModal from "../components/ui/PopupModal.astro";
-import UpsellDrawer from "../components/ui/UpsellDrawer.astro";
+import Navbar from "../components/features/Navbar.astro";
+import Footer from "../components/features/Footer.astro";
+import SideDrawer from "../components/ui/SideDrawer.astro";
 
 // Fetch Global Settings
 const siteSettings = await getEntry("settings", "site");
@@ -69,13 +71,18 @@ const {
       });
     </script>
   </head>
-  <body>
+  <body class="flex flex-col min-h-screen">
     <AnnouncementBar data={announcement_bar} />
+    <Navbar />
 
-    <slot />
+    <main class="grow">
+      <slot />
+    </main>
 
-    <!-- Upsell Drawer (Replaces legacy cart-alerts) -->
-    <UpsellDrawer />
+    <Footer />
+
+    {/* Multi-purpose Side Drawer (Upsell, Quick Shop, Master Set) */}
+    <SideDrawer />
 
     <!-- Snipcart Root Container -->
     <div

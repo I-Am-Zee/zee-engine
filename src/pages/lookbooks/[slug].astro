@@ -55,7 +55,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
         <li class="opacity-30">/</li>
         <li><a href="/lookbooks" class="hover:text-text-main transition-colors">Lookbooks</a></li>
         <li class="opacity-30">/</li>
-        <li class="text-text-main truncate max-w-[150px] md:max-w-none">{title}</li>
+        <li class="text-text-main truncate max-w-37.5 md:max-w-none">{title}</li>
       </ol>
     </div>
   </nav>
@@ -73,7 +73,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     <div class="absolute bottom-0 left-0 right-0 p-8 md:p-20 text-white">
       <div class="container mx-auto max-w-7xl">
         <Text variant="caption" class="text-accent-brass font-bold uppercase tracking-[0.3em] mb-4">Editorial Spotlight</Text>
-        <Heading as="h1" class="mb-6 text-white tracking-widest md:tracking-[0.1em] drop-shadow-2xl leading-none">
+        <Heading as="h1" class="mb-6 text-white">
           {title}
         </Heading>
         {description && (
@@ -89,7 +89,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   {products.length > 0 && (
     <section class="container mx-auto px-4 py-16 md:py-24 max-w-7xl" id="products">
       <div class="mb-12 md:mb-20 text-center px-4">
-        <Heading as="h2" class="mb-4 md:mb-6 font-bold tracking-tight">
+        <Heading as="h2" class="mb-4 md:mb-6">
           Shop the Ensemble
         </Heading>
         <div class="h-1 w-16 md:w-20 bg-accent-brass mx-auto mb-6 md:mb-8"></div>
@@ -122,7 +122,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
           <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         </div>
         
-        <Heading as="h3" class="mb-4 font-bold">The Master Set</Heading>
+        <Heading as="h3" class="mb-4">The Master Set</Heading>
         <Text class="mb-8 md:mb-10 block text-text-muted max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
           Acquire the complete curation with a single click. Every piece is guaranteed to complement each other perfectly.
         </Text>
@@ -165,10 +165,10 @@ const pageDescription = description || 'Discover our curated jewelry collection'
      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
         {(await getCollection('lookbooks')).filter(lb => lb.slug !== lookbook.slug).slice(0, 2).map(lb => (
           <a href={`/lookbooks/${lb.slug}`} class="group relative aspect-video overflow-hidden rounded-2xl bg-black">
-            <img src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-[2000ms] group-hover:scale-110 brightness-75" />
+            <img src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-2000 group-hover:scale-110 brightness-75" />
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-12 transition-colors group-hover:bg-black/20">
               <Text variant="caption" class="text-white/60 mb-2 uppercase tracking-widest group-hover:text-white transition-colors">Editorial</Text>
-              <Heading as="h3" class="text-white tracking-widest uppercase font-black">{lb.data.title}</Heading>
+              <Heading as="h3" class="text-white tracking-widest uppercase">{lb.data.title}</Heading>
               <div class="mt-6 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-24"></div>
             </div>
           </a>

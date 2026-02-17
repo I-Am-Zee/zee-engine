@@ -1,34 +1,35 @@
 ---
 interface Props {
   intent?: "surface" | "primary" | "accent" | "outline" | "coral" | "brass";
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
   class?: string;
 }
 
 const { intent = "surface", size = "sm", class: className, ...rest } = Astro.props;
 
-// Base pill-shaped styles with uppercase tracking
+// Base pill-shaped styles with "eyebrow" typography
 const baseStyles =
-  "inline-flex items-center justify-center rounded-full uppercase tracking-wide font-sans font-medium";
+  "inline-flex items-center justify-center rounded-full uppercase tracking-[0.15em] font-sans font-bold leading-none";
 
-// Intent determines color scheme (updated for WCAG AA contrast compliance)
+// Intent determines color scheme (updated for premium contrast)
 const intentStyles = {
   surface:
     "bg-(--color-surface)/90 text-(--color-text-main) border border-(--color-border-subtle) shadow-sm backdrop-blur-sm",
   primary: "bg-(--color-primary) text-(--color-primary-foreground) shadow-sm",
-  accent: "bg-(--color-secondary) text-(--color-primary) border-2 border-(--color-primary) shadow-sm",
+  accent: "bg-(--color-secondary) text-(--color-primary) border border-(--color-primary)/20 shadow-sm",
   outline:
     "bg-(--color-background)/80 text-(--color-text-main) border border-(--color-border-strong) backdrop-blur-sm",
   coral:
-    "bg-(--color-accent-coral)/85 text-white border border-(--color-accent-coral) font-semibold shadow-md backdrop-blur-sm",
+    "bg-(--color-accent-coral)/90 text-white border border-(--color-accent-coral) shadow-md backdrop-blur-sm",
   brass:
-    "bg-(--color-accent-brass)/85 text-(--color-primary) border border-(--color-accent-brass) font-semibold shadow-md backdrop-blur-sm",
+    "bg-(--color-accent-brass)/90 text-(--color-primary) border border-(--color-accent-brass) shadow-md backdrop-blur-sm",
 };
 
-// Size variants - using leading-none for precise vertical centering
+// Size variants
 const sizeStyles = {
-  sm: "text-xs px-2 py-0.5 min-w-[1.5rem] h-5 leading-none",
-  md: "text-sm px-3 py-1.5 min-w-[2rem] h-7 leading-none",
+  xs: "text-[9px] px-2 py-1 h-5",
+  sm: "text-[10px] px-2.5 py-1.5 h-6",
+  md: "text-xs px-3 py-2 h-7",
 };
 
 const combinedClasses =
