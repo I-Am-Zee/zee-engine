@@ -58,11 +58,14 @@ const lookbooks = await getCollection("lookbooks");
             <Text class="mb-10 max-w-2xl text-lg md:text-xl text-gray-200 italic font-serif">
               "{lookbook.data.description}"
             </Text>
-            <a href={`/lookbooks/${lookbook.slug || lookbook.id}`}>
-              <Button size="lg" class="bg-white text-black hover:bg-gray-100 px-12 transition-all hover:tracking-widest capitalize">
-                Explore Lookbook
-              </Button>
-            </a>
+            <Button 
+              as="a" 
+              href={`/lookbooks/${lookbook.slug || lookbook.id}`}
+              size="lg" 
+              class="bg-white text-black hover:bg-gray-100 px-12 transition-all hover:tracking-widest capitalize"
+            >
+              Explore Lookbook
+            </Button>
           </div>
         </div>
       ))}

@@ -43,16 +43,12 @@ const categories = [
           Discover our curated collection of ethically sourced diamond jewelry, crafted to celebrate your most precious moments.
         </Text>
         <div class="flex flex-wrap justify-center gap-4">
-          <a href="/shop">
-            <Button size="lg" type="secondary">
-              Shop Collection
-            </Button>
-          </a>
-          <a href="/collections">
-            <Button size="lg" type="ghost" class="border border-white text-white hover:bg-white/10">
-              View Collections
-            </Button>
-          </a>
+          <Button as="a" href="/shop" size="lg" type="secondary">
+            Shop Collection
+          </Button>
+          <Button as="a" href="/collections" size="lg" type="ghost" class="border border-white text-white hover:bg-white/10">
+            View Collections
+          </Button>
         </div>
       </div>
     </section>
@@ -95,11 +91,9 @@ const categories = [
             <Heading as="h2">Featured Pieces</Heading>
             <Text variant="body" color="muted" class="mt-2">Hand-selected favorites from our latest season.</Text>
           </div>
-          <a href="/shop">
-            <Button type="ghost" class="text-primary font-bold uppercase tracking-[0.2em] text-[10px]">
-              View All Products &rarr;
-            </Button>
-          </a>
+          <Button as="a" href="/shop" type="ghost" class="text-primary font-bold uppercase tracking-[0.2em] text-[10px]">
+            View All Products &rarr;
+          </Button>
         </div>
         <ProductGrid>
           {featuredProducts.map((product) => (

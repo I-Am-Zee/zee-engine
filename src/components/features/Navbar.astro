@@ -53,15 +53,11 @@ const { class: className, ...rest } = Astro.props;
 
     {/* Desktop Actions - Hidden on mobile */}
     <div class="hidden items-center gap-2 md:flex">
-      <a href="/search">
-        <Button type="ghost" variant="icon-only" size="sm" as="span">
-          <Icon name="PhMagnifyingGlass" />
-        </Button>
-      </a>
-      <a href="/wishlist" class="relative">
-        <Button type="ghost" variant="icon-only" size="sm" as="span">
-          <Icon name="PhHeart" />
-        </Button>
+      <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label="Search">
+        <Icon name="PhMagnifyingGlass" />
+      </Button>
+      <Button as="a" href="/wishlist" type="ghost" variant="icon-only" size="sm" class="relative" aria-label="Wishlist">
+        <Icon name="PhHeart" />
         <span
           x-data
           x-show="$store.wishlist.count > 0"
@@ -69,7 +65,7 @@ const { class: className, ...rest } = Astro.props;
           x-cloak
           class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-coral text-[10px] font-bold text-white shadow-sm"
         ></span>
-      </a>
+      </Button>
       <Button
         type="ghost"
         variant="icon-only"
@@ -79,11 +75,11 @@ const { class: className, ...rest } = Astro.props;
       >
         <Icon name="PhUser" />
       </Button>
-      <button class="snipcart-checkout relative">
+      <button class="snipcart-checkout relative" aria-label="Cart">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhShoppingCart" />
         </Button>
-        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--color-primary) text-xs font-bold text-white"></span>
+        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"></span>
       </button>
     </div>
 
@@ -93,16 +89,14 @@ const { class: className, ...rest } = Astro.props;
       x-data="{ mobileMenuOpen: false }"
       x-effect="mobileMenuOpen ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden')"
     >
-      <a href="/search">
-        <Button type="ghost" variant="icon-only" size="sm" as="span">
-          <Icon name="PhMagnifyingGlass" />
-        </Button>
-      </a>
-      <button class="snipcart-checkout relative">
+      <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label="Search">
+        <Icon name="PhMagnifyingGlass" />
+      </Button>
+      <button class="snipcart-checkout relative" aria-label="Cart">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhShoppingCart" />
         </Button>
-        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--color-primary) text-xs font-bold text-white"></span>
+        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"></span>
       </button>
 
       {/* Mobile Menu Toggle */}
@@ -202,17 +196,15 @@ const { class: className, ...rest } = Astro.props;
           {/* Drawer Footer */}
           <div class="border-t border-border-subtle px-4 py-4">
             <div class="flex items-center gap-4">
-              <a href="/wishlist" class="relative">
-                <Button type="ghost" variant="icon-only" size="sm" as="span">
-                  <Icon name="PhHeart" />
-                </Button>
+              <Button as="a" href="/wishlist" type="ghost" variant="icon-only" size="sm" class="relative" aria-label="Wishlist">
+                <Icon name="PhHeart" />
                 <span
                   x-show="$store.wishlist.count > 0"
                   x-text="$store.wishlist.count"
                   x-cloak
                   class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
                 ></span>
-              </a>
+              </Button>
               <Button
                 type="ghost"
                 variant="icon-only"
