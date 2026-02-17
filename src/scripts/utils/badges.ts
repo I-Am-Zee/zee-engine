@@ -13,7 +13,7 @@
 // TYPE DEFINITIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type BadgeIntent = "coral" | "brass" | "surface" | "outline";
+export type BadgeIntent = "coral" | "brass" | "surface" | "outline" | "primary" | "accent";
 
 export interface BadgeConfig {
   id: string;
