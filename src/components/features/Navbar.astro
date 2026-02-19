@@ -155,7 +155,7 @@ const { class: className, ...rest } = Astro.props;
                           class="flex w-full items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-surface"
                           @click={`activeAccordion = activeAccordion === '${item.label}' ? null : '${item.label}'`}
                         >
-                          <Text variant="body" weight="medium">{item.label}</Text>
+                          <Text variant="paragraph" weight="medium">{item.label}</Text>
                           <Icon
                             name="PhCaretDown"
                             class="h-4 w-4 transition-transform duration-200"
@@ -184,7 +184,7 @@ const { class: className, ...rest } = Astro.props;
                         href={item.href}
                         class="block rounded-md px-3 py-3 transition-colors hover:bg-surface"
                       >
-                        <Text variant="body" weight="medium">{item.label}</Text>
+                        <Text variant="paragraph" weight="medium">{item.label}</Text>
                       </a>
                     )}
                   </li>

@@ -145,7 +145,7 @@ const isEditorial = variant === 'editorial';
         (rating !== undefined && rating > 0) && (
           <div class="flex items-center gap-2 bg-surface-muted/30 px-3 py-1.5 rounded-full border border-border-subtle/20 w-fit">
             <RatingStars rating={rating} />
-            <Text variant="metadata" color="muted">({rating.toFixed(1)})</Text>
+            <Text variant="metadata">({rating.toFixed(1)})</Text>
           </div>
         )
       }
