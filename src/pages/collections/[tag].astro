@@ -1,8 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Navbar from "../../components/features/Navbar.astro";
-import Footer from "../../components/features/Footer.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import ProductCard from "../../components/features/ProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
@@ -50,7 +48,6 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
 ---
 
 <BaseLayout title={`${formattedTagName} Collection | Zaviona`}>
-  <Navbar />
 
   <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8" x-data="productSorter">
     <Breadcrumbs items={breadcrumbItems} />
@@ -122,8 +119,8 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
     }
   </div>
 
-  <Footer />
 </BaseLayout>
+
 
 <script>
   // @ts-ignore

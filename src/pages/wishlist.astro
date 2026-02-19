@@ -9,8 +9,6 @@ export const prerender = true;
 
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/features/Navbar.astro";
-import Footer from "../components/features/Footer.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
@@ -24,13 +22,12 @@ const allProducts = await getCollection("products");
 ---
 
 <BaseLayout title="My Wishlist | Zaviona">
-  <Navbar />
 
   <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data>
     {/* Page Header */}
     <div class="mb-8 border-b border-[var(--color-border-subtle)] pb-6">
       <Heading as="h1" class="mb-2">My Wishlist</Heading>
-      <Text class="text-[var(--color-text-muted)]">
+      <Text variant="paragraph" color="muted">
         <span x-text="$store.wishlist.count">0</span> saved items
       </Text>
     </div>
@@ -80,5 +77,4 @@ const allProducts = await getCollection("products");
     </div>
   </div>
 
-  <Footer />
 </BaseLayout>
