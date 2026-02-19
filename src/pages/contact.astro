@@ -14,20 +14,21 @@ export const prerender = true;
   <Navbar />
   <main class="mx-auto max-w-3xl px-4 py-24 text-center">
     <Heading as="h1" class="mb-6">Contact Us</Heading>
-    <Text class="mb-12 text-lg text-text-muted">
-      Have questions about our collections or an existing order? Our concierge team is here to assist you.
+    <Text variant="lead" color="muted" class="mb-8">
+      Zaviona is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship. 
+      Our mission is to bring brilliance and elegance to your most cherished moments.
     </Text>
     
     <div class="space-y-6">
       <div>
-        <Text class="font-bold uppercase tracking-widest text-xs mb-2">Email</Text>
-        <Text class="text-xl">
+        <Text variant="eyebrow" class="mb-2">Email</Text>
+        <Text variant="lead">
           <a href={`mailto:${siteConfig.email.support}`} class="hover:underline">{siteConfig.email.support}</a>
         </Text>
       </div>
       <div>
-        <Text class="font-bold uppercase tracking-widest text-xs mb-2">Phone</Text>
-        <Text class="text-xl">
+        <Text variant="eyebrow" class="mb-2">Phone</Text>
+        <Text variant="lead">
           <a href={`tel:${siteConfig.phone.main.replace(/\D/g, '')}`} class="hover:underline">{siteConfig.phone.main}</a>
         </Text>
       </div>
