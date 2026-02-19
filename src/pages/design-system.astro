@@ -46,7 +46,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
 
       <div class="space-y-6">
         <div>
-          <Text variant="caption" class="mb-3 uppercase">Headings (Fraunces Font)</Text>
+          <Text variant="label" class="mb-3">Headings (Fraunces Font)</Text>
           <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
             <Heading as="h1">Heading 1 - The Quick Brown Fox</Heading>
             <Heading as="h2">Heading 2 - The Quick Brown Fox</Heading>
@@ -58,27 +58,49 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         </div>
 
         <div>
-          <Text variant="caption" class="mb-3 uppercase">Text Variants (Plus Jakarta Sans)</Text>
-          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
-            <div>
-              <Text variant="caption" class="mb-1">Lead Paragraph:</Text>
-              <Text variant="lead">
-                This is a lead paragraph with larger text, perfect for introducing sections or
-                highlighting important content.
+          <Text variant="label" class="mb-3">Intent-Based Text Primitives (Plus Jakarta Sans)</Text>
+          <div class="grid gap-6 rounded-lg bg-surface p-6 md:grid-cols-2 lg:grid-cols-3">
+            <div class="space-y-4 rounded-lg border border-border-subtle p-6">
+              <Text variant="eyebrow" class="mb-1">Editorial Intent</Text>
+              <Text variant="lead">Lead Paragraph</Text>
+              <Text variant="paragraph">
+                Standard paragraph text with refined leading and spacing for optimal readability.
               </Text>
             </div>
-            <div>
-              <Text variant="caption" class="mb-1">Default Paragraph:</Text>
-              <Text>
-                This is default body text using Plus Jakarta Sans. It provides excellent readability
-                for e-commerce content, product descriptions, and general website copy.
-              </Text>
+            
+            <div class="space-y-4 rounded-lg border border-border-subtle p-6">
+              <Text variant="label" class="mb-1">UI Elements</Text>
+              <div class="flex flex-col gap-2">
+                <Text variant="metadata">Order #12345 • Shipped 2 days ago</Text>
+                <Text variant="muted">Secondary information in a muted tone.</Text>
+                <div class="flex gap-2">
+                  <Text variant="tag">New Arrival</Text>
+                  <Text variant="tag">Bestseller</Text>
+                </div>
+              </div>
             </div>
-            <div>
-              <Text variant="caption">
-                This is caption text, smaller and muted, ideal for timestamps, metadata, or
-                supplementary information.
-              </Text>
+
+            <div class="space-y-4 rounded-lg border border-border-subtle p-6">
+              <Text variant="label" class="mb-1">Technical & Commerce</Text>
+              <div class="flex flex-col gap-2">
+                <Text variant="code">const price = 2500;</Text>
+                <div class="flex items-center gap-2">
+                  <Text variant="price">₹2,500</Text>
+                  <Text variant="price_sale">₹3,000</Text>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-full space-y-4 rounded-lg border border-border-subtle p-6">
+              <Text variant="label" class="mb-1">Specialized Content</Text>
+              <div class="grid gap-6 md:grid-cols-2">
+                <Text variant="quote">
+                  "Luxury is in each detail, from the ethically sourced gems to the polished brass finishes."
+                </Text>
+                <Text variant="callout">
+                  Limited Time Offer: Get a complimentary jewelry cleaning kit with every order over ₹5,000.
+                </Text>
+              </div>
             </div>
           </div>
         </div>
@@ -229,7 +251,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
             width={400}
             height={225}
           />
-          <Text variant="caption" class="mt-2 text-center">Optimized Landscape (16:9)</Text>
+          <Text variant="caption" class="mt-2 text-center text-text-muted">Optimized Landscape (16:9)</Text>
         </div>
       </div>
     </section>
@@ -364,7 +386,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">CopyButton (Composed with Button primitive)</Text>
           <div class="flex flex-wrap items-center gap-8 rounded-lg bg-surface p-6">
-            <CopyButton text="ZAVIONA20" label="ZAVIONA20" successLabel="Copied!" />
+            <CopyButton text="ZAVIONA20" label="Copy" successLabel="Copied!" />
           </div>
         </div>
       </div>
