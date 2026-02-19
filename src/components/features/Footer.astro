@@ -34,12 +34,14 @@ const shopCategories = shopNav?.items || [];
   <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
       {/* Brand Column */}
-      <div class="space-y-4">
-        <Logo variant="full" />
-        <Text variant="caption" class="max-w-xs">
+      <div class="flex flex-col">
+        <Logo variant="full" class="mb-2" />
+        <Text as="p" variant="caption" color="muted" class="max-w-xs leading-relaxed">
           Handcrafted celestial jewelry for those who seek to adorn themselves with the beauty of the cosmos.
         </Text>
-        <SocialLinks orientation="horizontal" />
+        <div class="mt-6">
+          <SocialLinks orientation="horizontal" />
+        </div>
       </div>
 
       {/* Shop Column */}
@@ -48,8 +50,10 @@ const shopCategories = shopNav?.items || [];
         <ul class="space-y-2">
           {shopCategories.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="text-sm text-text-muted hover:text-text-main">
-                {item.label}
+              <Link href={item.href} variant="plain">
+                <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                  {item.label}
+                </Text>
               </Link>
             </li>
           ))}
@@ -62,8 +66,10 @@ const shopCategories = shopNav?.items || [];
         <ul class="space-y-2">
           {supportLinks.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="text-sm text-text-muted hover:text-text-main">
-                {item.label}
+              <Link href={item.href} variant="plain">
+                <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                  {item.label}
+                </Text>
               </Link>
             </li>
           ))}
@@ -73,7 +79,7 @@ const shopCategories = shopNav?.items || [];
       {/* Newsletter Column */}
       <div>
         <Heading as="h6" class="mb-4">Join the Celestial Club</Heading>
-        <Text variant="caption" class="mb-4">
+        <Text variant="caption" color="muted" class="mb-4">
           Subscribe to get exclusive offers, new arrivals, and celestial inspirations.
         </Text>
         <NewsletterForm />
@@ -83,15 +89,15 @@ const shopCategories = shopNav?.items || [];
     {/* Bottom Bar */}
     <div class="mt-12 border-t border-border-subtle pt-8">
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <Text variant="caption">
+        <Text variant="metadata">
           {siteConfig.copyright}
         </Text>
         <div class="flex gap-4">
           <Link href="/privacy" variant="plain" class="text-text-muted">
-            <Text as="span" variant="tiny">Privacy Policy</Text>
+            <Text variant="metadata">Privacy Policy</Text>
           </Link>
           <Link href="/terms" variant="plain" class="text-text-muted">
-            <Text as="span" variant="tiny">Terms of Service</Text>
+            <Text variant="metadata">Terms of Service</Text>
           </Link>
         </div>
       </div>

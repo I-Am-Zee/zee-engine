@@ -73,10 +73,10 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
               <img :src="mainItem.image" :alt="mainItem.name" class="h-16 w-16 rounded object-cover" />
             </template>
             <div class="flex-1 min-w-0">
-              <Text variant="caption" class="font-bold truncate" x-text="mainItem?.name"></Text>
-              <div class="flex gap-2 text-xs text-gray-500 mt-1">
+              <Text variant="paragraph" weight="bold" class="truncate" x-text="mainItem?.name"></Text>
+              <div class="mt-1">
                  <template x-for="option in mainItem?.options" :key="option.name">
-                    <span x-text="option.name + ': ' + option.value"></span>
+                    <Text variant="metadata" x-text="option.name + ': ' + option.value"></Text>
                  </template>
               </div>
             </div>
@@ -91,7 +91,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
           </div>
 
           <div class="mb-6">
-            <Text class="font-bold text-gray-900 mb-1">Make it a Set & Save</Text>
+            <Text variant="paragraph" weight="bold">Make it a Set & Save</Text>
             <div class="h-px w-full bg-gray-100 my-4"></div>
           </div>
 
@@ -119,14 +119,16 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
                 <!-- Product Info -->
                 <div class="flex flex-1 flex-col">
                   <div>
-                    <div class="flex justify-between text-base font-medium text-gray-900">
-                      <h3>
+                    <div class="flex justify-between">
+                      <Heading as="h3">
                         <a :href="'/products/' + item.id" @click="close()" class="hover:underline" x-text="item.title"></a>
-                      </h3>
+                      </Heading>
                     </div>
                     <div class="mt-1 flex items-center gap-2">
-                       <span x-show="item.salePrice && Number(item.salePrice) < Number(item.price)" class="text-xs text-gray-400 line-through" x-text="'₹' + Number(item.price).toLocaleString('en-IN')"></span>
-                       <span class="text-sm font-semibold text-gray-900" x-text="'₹' + (Number(item.salePrice) || Number(item.price)).toLocaleString('en-IN')"></span>
+                       <template x-if="item.salePrice && Number(item.salePrice) < Number(item.price)">
+                         <Text variant="metadata" color="muted" class="line-through" x-text="'₹' + Number(item.price).toLocaleString('en-IN')"></Text>
+                       </template>
+                       <Text variant="paragraph" weight="bold" color="main" x-text="'₹' + (Number(item.salePrice) || Number(item.price)).toLocaleString('en-IN')"></Text>
                     </div>
                   </div>
 
@@ -134,15 +136,16 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
                   <div class="mt-4 space-y-4">
                     <template x-for="v in [item.variant_1, item.variant_2, item.variant_3].filter(slot => slot && slot.values)" :key="v.name">
                       <div>
-                        <Text variant="caption" class="text-xs uppercase tracking-wider text-gray-400 mb-2" x-text="'Select ' + v.name"></Text>
+                        <Text variant="eyebrow" class="mb-2" x-text="'Select ' + v.name"></Text>
                         <div class="flex flex-wrap gap-2">
                           <template x-for="val in (v.values || '').split(',').map(v => v.trim()).filter(v => v !== '')" :key="val">
                             <button
                               @click="selectOption(item.id, v.name, val)"
-                              class="inline-flex h-8 min-w-8 items-center justify-center rounded border px-2 text-xs font-medium transition-all"
+                              class="inline-flex h-8 min-w-8 items-center justify-center rounded border px-2 transition-all focus-glow"
                               :class="selections[item.id]?.[v.name] === val ? 'border-black bg-black text-white' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'"
-                              x-text="val"
-                            ></button>
+                            >
+                              <Text variant="label" color="inherit" x-text="val"></Text>
+                            </button>
                           </template>
                         </div>
                       </div>
@@ -162,18 +165,22 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
           <button 
             @click="addSelected()"
             :disabled="selectedItems.length === 0 || isSubmitting"
-            class="flex w-full items-center justify-center rounded-md border border-transparent bg-black px-6 py-4 text-base font-medium text-white shadow-sm hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+            class="flex w-full items-center justify-center rounded-md border border-transparent bg-black px-6 py-4 text-white shadow-sm hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all focus-glow"
           >
-            <span x-show="!isSubmitting">Add Selected to Cart (₹<span x-text="totalPrice.toLocaleString('en-IN')"></span>)</span>
+            <span x-show="!isSubmitting">
+              <Text variant="label" color="inherit">Add Selected to Cart (₹<span x-text="totalPrice.toLocaleString('en-IN')"></span>)</Text>
+            </span>
             <span x-show="isSubmitting" class="flex items-center gap-2">
               <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-              Adding...
+              <Text variant="label" color="inherit">Adding...</Text>
             </span>
           </button>
           
-          <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-            <button @click="proceedToCheckout()" class="font-medium text-gray-600 hover:text-black hover:underline transition-all">
-              No thanks, proceed to checkout &rarr;
+          <div class="mt-6 flex justify-center text-center">
+            <button @click="proceedToCheckout()" class="focus-glow rounded px-2 hover:underline decoration-text-muted/30">
+              <Text variant="paragraph" color="muted">
+                No thanks, proceed to checkout &rarr;
+              </Text>
             </button>
           </div>
         </div>

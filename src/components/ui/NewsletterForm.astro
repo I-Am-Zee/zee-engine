@@ -6,6 +6,7 @@
 
 import Input from "../primitives/Input.astro";
 import Button from "../primitives/Button.astro";
+import Text from "../primitives/Text.astro";
 
 interface Props {
   placeholder?: string;
@@ -28,6 +29,6 @@ const { placeholder = "Your email...", buttonText = "Subscribe", class: classNam
     class="flex-1"
   />
   <Button type="primary">
-    {buttonText}
+    <Text variant="label" color="inverse">{buttonText}</Text>
   </Button>
 </form>
