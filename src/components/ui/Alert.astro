@@ -39,15 +39,15 @@ const intentTextColors = {
 >
   <Icon name={intentIcons[intent]} class:list={["mt-0.5 shrink-0", intentTextColors[intent]]} />
   <div class="flex-1">
-    {
       title && (
-        <Text as="span" class:list={["font-medium", intentTextColors[intent]]}>
+        <Text as="span" variant="paragraph" weight="medium" class={intentTextColors[intent]}>
           {title}
         </Text>
       )
-    }
     <div class:list={[intentTextColors[intent], title ? "mt-1" : ""]}>
-      <slot />
+      <Text variant="caption" color="inherit">
+        <slot />
+      </Text>
     </div>
   </div>
 </div>

@@ -10,6 +10,7 @@
 
 import { getEntry } from "astro:content";
 import Icon from "../primitives/Icon.astro";
+import Text from "../primitives/Text.astro";
 
 // Get settings from CMS
 const settings = await getEntry("settings", "site");
@@ -30,7 +31,7 @@ const show = announcement?.enabled && announcement?.text;
   show && (
     <div
       class:list={[
-        "relative flex items-center justify-center gap-2 px-4 py-2 text-center text-sm font-medium",
+        "relative flex items-center justify-center gap-2 px-4 py-2 text-center",
         announcement.bg_color || "bg-black",
         announcement.text_color || "text-white",
       ]}
@@ -40,11 +41,11 @@ const show = announcement?.enabled && announcement?.text;
           href={announcement.link}
           class="flex items-center gap-2 hover:underline underline-offset-2"
         >
-          <span>{displayText}</span>
+          <Text variant="caption" weight="medium" class="text-inherit">{displayText}</Text>
           <Icon name="PhArrowRight" size={14} />
         </a>
       ) : (
-        <span>{displayText}</span>
+        <Text variant="caption" weight="medium" class="text-inherit">{displayText}</Text>
       )}
     </div>
   )

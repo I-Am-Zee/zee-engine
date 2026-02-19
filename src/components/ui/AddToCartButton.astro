@@ -12,6 +12,7 @@
 
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
+import Text from "../primitives/Text.astro";
 import { siteConfig } from "../../lib/site.config";
 
 interface VariantSlot {
@@ -101,5 +102,7 @@ const snipcartAttributes = {
   {...snipcartAttributes}
 >
   {showIcon && <Icon name="PhShoppingCart" size={size === "sm" ? 16 : size === "lg" ? 20 : 18} />}
-  <slot>Add to Cart</slot>
+  <Text variant="label" color="inherit">
+    <slot>Add to Cart</slot>
+  </Text>
 </Button>

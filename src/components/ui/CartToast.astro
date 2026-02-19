@@ -10,6 +10,8 @@
  * @uses Alpine.js for reactivity
  */
 
+import Text from "../primitives/Text.astro";
+
 interface Props {
   autoDismissMs?: number;
 }
@@ -84,7 +86,7 @@ const { autoDismissMs = 4000 } = Astro.props;
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 256 256" fill="currentColor">
         <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
       </svg>
-      <span class="font-sans text-sm font-medium text-(--color-text-main)">Added to Cart</span>
+      <Text as="span" variant="paragraph" weight="medium">Added to Cart</Text>
       
       <!-- Dismiss Button -->
       <button
@@ -108,8 +110,8 @@ const { autoDismissMs = 4000 } = Astro.props;
       </div>
       
       <div class="min-w-0 flex-1">
-        <p class="truncate font-sans text-sm font-medium text-(--color-text-main)" x-text="productName"></p>
-        <p class="mt-0.5 font-sans text-sm text-(--color-text-muted)" x-text="formatPrice(productPrice)"></p>
+        <Text variant="paragraph" weight="medium" class="truncate" x-text="productName"></Text>
+        <Text variant="caption" color="muted" class="mt-0.5" x-text="formatPrice(productPrice)"></Text>
       </div>
     </div>
     
@@ -117,15 +119,15 @@ const { autoDismissMs = 4000 } = Astro.props;
     <div class="flex gap-2 border-t border-(--color-border-subtle) bg-(--color-surface) p-3">
       <button
         @click="visible = false"
-        class="flex-1 rounded border border-(--color-border-subtle) bg-transparent px-3 py-2 font-sans text-sm font-medium text-(--color-text-main) transition-colors hover:bg-(--color-ghost-hover)"
+        class="flex-1 rounded border border-(--color-border-subtle) bg-transparent px-3 py-2 transition-colors hover:bg-(--color-ghost-hover) focus-glow"
       >
-        Continue
+        <Text variant="label" color="inherit">Continue</Text>
       </button>
       <button
         @click="visible = false; Snipcart.api.theme.cart.open()"
-        class="flex-1 rounded bg-(--color-primary) px-3 py-2 font-sans text-sm font-medium text-white transition-colors hover:bg-[#1e293b]"
+        class="flex-1 rounded bg-(--color-primary) px-3 py-2 transition-colors hover:bg-[#1e293b] focus-glow"
       >
-        View Cart
+        <Text variant="label" color="inherit">View Cart</Text>
       </button>
     </div>
   </div>

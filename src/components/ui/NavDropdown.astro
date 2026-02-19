@@ -7,6 +7,7 @@
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
+import Text from "../primitives/Text.astro";
 import type { NavItem } from "../../config/navigation";
 
 interface Props {
@@ -28,11 +29,13 @@ const { trigger, items, class: className, ...rest } = Astro.props;
   {/* Trigger button */}
   <button
     type="button"
-    class="inline-flex items-center gap-1 rounded-md px-3 py-2 font-sans text-sm font-medium text-(--color-text-main) transition-all duration-200 hover:text-(--color-text-muted) focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus-visible:outline-none"
+    class="inline-flex items-center gap-1 rounded-md px-3 py-2 transition-all duration-200 hover:text-(--color-text-muted) focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus-visible:outline-none"
     @click="isOpen = !isOpen"
     :aria-expanded="isOpen"
   >
-    {trigger}
+    <Text variant="label" color="inherit">
+      {trigger}
+    </Text>
     <Icon
       name="PhCaretDown"
       class="h-4 w-4 transition-transform duration-200"
@@ -56,9 +59,11 @@ const { trigger, items, class: className, ...rest } = Astro.props;
       items.map((item) => (
         <a
           href={item.href}
-          class="block rounded-md px-3 py-2 text-sm text-(--color-text-main) transition-colors duration-150 hover:bg-(--color-surface)"
+          class="block rounded-md px-3 py-2 transition-colors duration-150 hover:bg-(--color-surface)"
         >
-          {item.label}
+          <Text variant="paragraph" color="inherit">
+            {item.label}
+          </Text>
         </a>
       ))
     }

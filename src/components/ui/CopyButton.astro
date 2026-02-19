@@ -1,5 +1,6 @@
 ---
 import Button from "../primitives/Button.astro";
+import Text from "../primitives/Text.astro";
 
 interface Props {
   text: string;
@@ -28,9 +29,10 @@ const { text, label = "Copy", successLabel = "Copied!", class: className } = Ast
   <Button
     type="ghost"
     size="sm"
-    class="font-bold uppercase tracking-wider transition-colors duration-200"
+    class="transition-colors duration-200"
     :class="copied ? 'text-green-600' : 'text-text-muted hover:text-text-main'"
   >
-    <span x-text={`copied ? '${successLabel}' : '${label}'`}></span>
+    <Text variant="label" color="inherit" x-text={`copied ? '${successLabel}' : '${label}'`}></Text>
   </Button>
 </div>
+```
