@@ -49,20 +49,19 @@ const lookbooks = await getCollection("lookbooks");
             />
           </div>
 
-          {/* Content Overlay */}
           <div class="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white md:p-12">
-            <Text variant="caption" class="text-white/70 uppercase tracking-widest mb-4">Editorial</Text>
-            <Heading as="h2" class="mb-6 uppercase">
+            <Text variant="caption" color="inverse" class="text-white/70 uppercase tracking-widest mb-4">Editorial</Text>
+            <Heading as="h2" color="inverse" class="mb-6 uppercase">
               {lookbook.data.title}
             </Heading>
-            <Text class="mb-10 max-w-2xl text-lg md:text-xl text-gray-200 italic font-serif">
+            <Text variant="paragraph" color="inverse" class="mb-10 max-w-2xl text-lg md:text-xl italic font-serif opacity-90">
               "{lookbook.data.description}"
             </Text>
             <Button 
               as="a" 
               href={`/lookbooks/${lookbook.slug || lookbook.id}`}
               size="lg" 
-              class="bg-white text-black hover:bg-gray-100 px-12 transition-all hover:tracking-widest capitalize"
+              class="bg-white text-black hover:bg-gray-100 px-12 transition-all capitalize"
             >
               Explore Lookbook
             </Button>
