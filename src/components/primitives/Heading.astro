@@ -1,14 +1,25 @@
 ---
 interface Props {
   as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  color?: "main" | "muted" | "inverse" | "accent";
   class?: string;
 }
 
-const { as: Tag, class: className, ...rest } = Astro.props;
+const { as: Tag, color = "main", class: className, ...rest } = Astro.props;
+
+// Color mappings
+const colorChoices: Record<string, string> = {
+  main: "text-(--color-text-main)",
+  muted: "text-(--color-text-muted)",
+  inverse: "text-(--color-text-inverse)",
+  accent: "text-accent-brass",
+};
+
+const colorStyles = colorChoices[color as string] || colorChoices.main;
 
 // Responsive heading styles using clamp() for fluid typography
 const baseStyles =
-  "font-serif font-medium tracking-normal leading-[1.15] text-(--color-text-main) antialiased";
+  `font-serif font-medium tracking-normal leading-[1.15] ${colorStyles} antialiased`;
 
 const sizeStyles = {
   h1: "text-[clamp(2rem,5vw,3.5rem)]",

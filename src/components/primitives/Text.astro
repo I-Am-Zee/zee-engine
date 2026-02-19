@@ -1,71 +1,101 @@
 ---
 interface Props {
-  as?: "p" | "span" | "div" | "label" | "blockquote" | "cite";
+  as?: "p" | "span" | "div" | "label" | "blockquote" | "cite" | "code" | "time" | "i" | "em" | "strong" | "small";
   variant?:
-    | "body"
-    | "lead"
-    | "caption"
-    | "eyebrow"
-    | "metadata"
-    | "price"
-    | "price_sale"
-    | "label"
-    | "callout"
-    | "highlight";
+    | "paragraph" // Standard body text
+    | "body" // Alias for paragraph
+    | "lead" // Introductory/Lead text
+    | "caption" // Secondary smaller text
+    | "muted" // Dimmed/Secondary intent
+    | "eyebrow" // Small header labels (accent color)
+    | "metadata" // Meta information/Context
+    | "price" // Active price
+    | "price_sale" // Comparison price
+    | "label" // UI labels
+    | "callout" // Highlighted sidebar/callout
+    | "quote" // Semantic blockquotes
+    | "code" // Technical/Monospace snippets
+    | "tag"; // Small rounded identifiers
   class?: string;
   weight?: "light" | "normal" | "medium" | "semibold" | "bold" | "black";
-  color?: "main" | "muted" | "inverse" | "accent" | "coral";
+  color?: "main" | "muted" | "inverse" | "accent" | "coral" | "emerald";
+  italic?: boolean;
 }
 
 const {
-  as: Tag = "p",
-  variant = "body",
+  as,
+  variant = "paragraph",
   weight,
   color,
+  italic = false,
   class: className,
   ...rest
 } = Astro.props;
 
-// Base styles - uses Plus Jakarta Sans (sans-serif)
-const baseStyles = "font-sans";
-
 // Intent-specific styles (Atomic Design)
-const variantStyles = {
+const variantStyles: Record<string, string> = {
+  paragraph: "text-base leading-relaxed",
   body: "text-base leading-relaxed",
   lead: "text-lg md:text-xl leading-relaxed font-light",
   caption: "text-sm leading-normal",
-  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold",
-  metadata: "text-[10px] md:text-xs font-medium leading-none",
-  price: "text-lg md:text-xl font-bold tracking-tight leading-none",
+  muted: "text-base leading-relaxed",
+  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-accent-brass",
+  metadata: "text-[10px] md:text-xs font-medium leading-none text-text-muted",
+  price: "text-lg md:text-xl font-bold tracking-tight leading-none text-primary",
   price_sale: "text-xs md:text-sm line-through opacity-50 font-normal leading-none",
   label: "text-xs font-semibold uppercase tracking-wider",
-  callout: "text-base font-semibold leading-relaxed italic",
-  highlight: "text-base font-bold text-accent-brass",
+  callout: "text-base font-semibold leading-relaxed italic border-l-2 border-accent-brass pl-4 py-1",
+  quote: "text-lg md:text-xl font-serif italic leading-relaxed text-text-muted",
+  code: "font-mono text-sm bg-surface-muted px-1.5 py-0.5 rounded border border-border-subtle text-primary",
+  tag: "inline-flex items-center text-[10px] font-bold uppercase tracking-wider bg-surface px-2 py-0.5 rounded-full border border-border-subtle",
 };
 
-// Weight mappings (if explicit weight override needed)
+// Smart Semantic Mapping based on Intent
+const defaultTagMap: Record<string, any> = {
+  paragraph: "p",
+  body: "p",
+  lead: "p",
+  quote: "blockquote",
+  label: "label",
+  code: "code",
+  metadata: "span",
+  eyebrow: "span",
+  tag: "span",
+  muted: "p"
+};
+
+const Tag = as || defaultTagMap[variant] || "span";
+
+// Base styles - uses Plus Jakarta Sans (sans-serif)
+const baseStyles = variant === "code" ? "font-mono" : (variant === "quote" ? "font-serif" : "font-sans");
+
+// Weight mappings
 const weightStyles = weight
-  ? {
+  ? ({
       light: "font-light",
       normal: "font-normal",
       medium: "font-medium",
       semibold: "font-semibold",
       bold: "font-bold",
       black: "font-black",
-    }[weight]
+    }[weight])
   : "";
 
-// Color mappings
-const colorStyles =
-  {
-    main: "text-(--color-text-main)",
-    muted: "text-(--color-text-muted)",
-    inverse: "text-(--color-text-inverse)",
-    accent: "text-(--color-accent-brass)",
-    coral: "text-(--color-accent-coral)",
-  }[color || ""] || (variant === "price" ? "text-primary" : "");
+// Color mappings - standardized to Tailwind v4 theme variables
+const colorChoices: Record<string, string> = {
+  main: "text-text-main",
+  muted: "text-text-muted",
+  inverse: "text-text-inverse",
+  accent: "text-accent-brass",
+  coral: "text-accent-coral",
+  emerald: "text-accent-emerald",
+};
 
-const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${weightStyles} ${colorStyles} ${className || ""}`.trim();
+const colorStyles = colorChoices[color || (variant === "muted" ? "muted" : "")] || "";
+
+const italicStyle = italic ? "italic" : "";
+
+const combinedClasses = `${baseStyles} ${variantStyles[variant] || ""} ${weightStyles} ${colorStyles} ${italicStyle} ${className || ""}`.trim();
 ---
 
 <Tag class={combinedClasses} {...rest}>
