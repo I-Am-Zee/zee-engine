@@ -1,6 +1,6 @@
 ---
 title: "Bridal Elegance"
-hero_image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=1200&q=80"
+hero_image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop"
 description: "Timeless diamonds for your most precious moment. Discover our curated bridal sets for the modern bride."
 products:
   - diamond-tennis-necklace
