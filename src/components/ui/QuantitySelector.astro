@@ -1,7 +1,6 @@
 ---
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
-import Input from "../primitives/Input.astro";
 
 interface Props {
   min?: number;
@@ -32,7 +31,7 @@ const { min = 1, max = 99, initial = 1, class: className, ...rest } = Astro.prop
     type="text"
     readonly
     x-bind:value="count"
-    class="h-8 w-12 rounded-md border border-(--color-border-strong) bg-(--color-background) text-center focus:outline-none"
+    class="h-8 w-12 bg-transparent text-sm font-medium text-text-main text-center focus:outline-none"
   />
 
   <Button

@@ -2,6 +2,8 @@
 import CopyButton from '../ui/CopyButton.astro';
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
 
 interface Props {
   data?: {
@@ -44,8 +46,9 @@ if (!data?.active) return null;
     <button
       @click="closePopup()"
       class="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white rounded-full text-gray-500 hover:text-black transition-colors z-20 shadow-sm"
+      aria-label="Close"
     >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      <Icon name="PhX" size={18} />
     </button>
 
     <div class="flex flex-col md:flex-row h-full">
@@ -66,15 +69,16 @@ if (!data?.active) return null;
           </div>
         )}
 
-        <!-- SIMPLIFIED: No more complex state management, just one button -->
-        <button
+        {/* Simplified CTA button */}
+        <Button
+          type="primary"
           @click="applyCoupon()"
-          class="w-full py-3 px-4 rounded transition-all duration-300 bg-black text-white hover:bg-gray-800 focus-glow"
+          class="w-full py-4 uppercase tracking-widest"
         >
-          <Text variant="label" color="inherit">
+          <Text variant="label" color="inverse">
             {data.cta_text || 'Claim My Discount'}
           </Text>
-        </button>
+        </Button>
       </div>
     </div>
   </div>

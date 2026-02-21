@@ -12,9 +12,9 @@ const { intent = "info", title, class: className, ...rest } = Astro.props;
 
 // Intent styles for background and border
 const intentStyles = {
-  info: "bg-(--color-surface) border-(--color-border-subtle)",
-  warning: "bg-amber-50 border-amber-200",
-  success: "bg-green-50 border-green-200",
+  info: "bg-surface border-border-subtle",
+  warning: "bg-accent-amber/10 border-accent-amber/20",
+  success: "bg-accent-emerald/10 border-accent-emerald/20",
 };
 
 // Intent icon mapping (Phosphor names with Ph prefix)
@@ -26,9 +26,9 @@ const intentIcons = {
 
 // Intent text colors
 const intentTextColors = {
-  info: "text-(--color-text-main)",
-  warning: "text-amber-800",
-  success: "text-green-800",
+  info: "text-text-main",
+  warning: "text-accent-amber",
+  success: "text-accent-emerald",
 };
 ---
 
@@ -39,11 +39,13 @@ const intentTextColors = {
 >
   <Icon name={intentIcons[intent]} class:list={["mt-0.5 shrink-0", intentTextColors[intent]]} />
   <div class="flex-1">
+    {
       title && (
         <Text as="span" variant="paragraph" weight="medium" class={intentTextColors[intent]}>
           {title}
         </Text>
       )
+    }
     <div class:list={[intentTextColors[intent], title ? "mt-1" : ""]}>
       <Text variant="caption" color="inherit">
         <slot />

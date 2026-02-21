@@ -41,11 +41,11 @@ const show = announcement?.enabled && announcement?.text;
           href={announcement.link}
           class="flex items-center gap-2 hover:underline underline-offset-2"
         >
-          <Text variant="caption" weight="medium" class="text-inherit">{displayText}</Text>
+          <Text variant="caption" weight="medium" color="inherit">{displayText}</Text>
           <Icon name="PhArrowRight" size={14} />
         </a>
       ) : (
-        <Text variant="caption" weight="medium" class="text-inherit">{displayText}</Text>
+        <Text variant="caption" weight="medium" color="inherit">{displayText}</Text>
       )}
     </div>
   )

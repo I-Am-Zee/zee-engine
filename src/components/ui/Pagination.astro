@@ -1,13 +1,10 @@
 ---
-/**
- * Pagination Component
- * Displays page numbers for navigating through paginated content
- */
+import Icon from "../primitives/Icon.astro";
 
 interface Props {
   currentPage: number;
   totalPages: number;
-  baseUrl?: string; // Optional with default fallback
+  baseUrl?: string;
 }
 
 const { currentPage, totalPages, baseUrl = "#" } = Astro.props;
@@ -17,48 +14,30 @@ const getPageNumbers = () => {
   const pages: (number | "...")[] = [];
   
   if (totalPages <= 7) {
-    // Show all pages if 7 or less
     for (let i = 1; i <= totalPages; i++) {
       pages.push(i);
     }
   } else {
-    // Show first, last, current and surrounding pages
     pages.push(1);
-    
-    if (currentPage > 3) {
-      pages.push("...");
-    }
+    if (currentPage > 3) pages.push("...");
     
     for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
       pages.push(i);
     }
     
-    if (currentPage < totalPages - 2) {
-      pages.push("...");
-    }
-    
+    if (currentPage < totalPages - 2) pages.push("...");
     pages.push(totalPages);
   }
-  
   return pages;
 };
-
-// Ensure baseUrl is always a valid string
-const safeBaseUrl = (baseUrl !== null && baseUrl !== undefined && typeof baseUrl === 'string' && baseUrl !== '') 
-  ? baseUrl 
-  : "#";
 
 const pageNumbers = getPageNumbers();
 const hasPrev = currentPage > 1;
 const hasNext = currentPage < totalPages;
 
 const getUrl = (pg: number): string => {
-  // Always use safeBaseUrl which is guaranteed to be a string
-  if (pg === 1) return safeBaseUrl;
-  // Type-safe endsWith check
-  const cleanBase = (typeof safeBaseUrl === 'string' && safeBaseUrl.endsWith("/")) 
-    ? safeBaseUrl.slice(0, -1) 
-    : safeBaseUrl;
+  if (pg === 1) return baseUrl;
+  const cleanBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
   return `${cleanBase}/${pg}`;
 };
 ---
@@ -68,32 +47,30 @@ const getUrl = (pg: number): string => {
   <a
     href={hasPrev ? getUrl(currentPage - 1) : "#"}
     class:list={[
-      "flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
+      "flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200",
       hasPrev 
-        ? "border-(--color-border-subtle) hover:border-(--color-primary) hover:text-(--color-primary)" 
-        : "pointer-events-none border-(--color-border-subtle) opacity-50"
+        ? "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none" 
+        : "pointer-events-none border-(--color-border-subtle) opacity-30"
     ]}
     aria-disabled={!hasPrev}
     aria-label="Previous page"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="15 18 9 12 15 6"></polyline>
-    </svg>
+    <Icon name="PhCaretLeft" size={18} />
   </a>
 
   {/* Page Numbers */}
   {
     pageNumbers.map((page) => (
       page === "..." ? (
-        <span class="flex h-10 w-10 items-center justify-center text-(--color-text-muted)">...</span>
+        <span class="flex h-10 w-10 items-center justify-center text-text-muted">...</span>
       ) : (
         <a
           href={page === currentPage ? "#" : getUrl(page)}
           class:list={[
-            "flex h-10 w-10 items-center justify-center rounded-md border text-sm font-medium transition-colors",
+            "flex h-10 w-10 items-center justify-center rounded-md border text-sm font-medium transition-all duration-200",
             page === currentPage
-              ? "border-(--color-primary) bg-(--color-primary) text-white"
-              : "border-(--color-border-subtle) hover:border-(--color-primary) hover:text-(--color-primary)"
+              ? "border-primary bg-primary text-text-inverse shadow-sm"
+              : "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none"
           ]}
           aria-current={page === currentPage ? "page" : undefined}
         >
@@ -107,16 +84,14 @@ const getUrl = (pg: number): string => {
   <a
     href={hasNext ? getUrl(currentPage + 1) : "#"}
     class:list={[
-      "flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
+      "flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200",
       hasNext 
-        ? "border-(--color-border-subtle) hover:border-(--color-primary) hover:text-(--color-primary)" 
-        : "pointer-events-none border-(--color-border-subtle) opacity-50"
+        ? "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none" 
+        : "pointer-events-none border-(--color-border-subtle) opacity-30"
     ]}
     aria-disabled={!hasNext}
     aria-label="Next page"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
+    <Icon name="PhCaretRight" size={18} />
   </a>
 </nav>

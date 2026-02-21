@@ -30,7 +30,7 @@ const { productCount, categoryName } = Astro.props;
       id="sort-select"
       x-model="sortBy"
       @change="sort(sortBy)"
-      class="appearance-none rounded-md border border-(--color-border-subtle) bg-(--color-background) py-2 pr-10 pl-4 text-sm text-(--color-text-main) transition-colors hover:border-(--color-primary) focus:border-(--color-primary) focus:outline-none focus:ring-2 focus:ring-(--color-ring) focus:ring-opacity-50"
+      class="appearance-none rounded-md border border-(--color-border-subtle) bg-background py-2 pr-10 pl-4 text-sm text-text-main transition-colors hover:border-primary focus:border-primary focus-glow outline-none"
     >
       <option value="default">Sort by: Featured</option>
       <option value="date-desc">Newest Arrivals</option>
@@ -42,7 +42,7 @@ const { productCount, categoryName } = Astro.props;
       <option value="rating-desc">Rating: High to Low</option>
     </select>
     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-      <Icon name="PhCaretDown" class="h-4 w-4 text-(--color-text-muted)" />
+      <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted" />
     </div>
   </div>
 </div>

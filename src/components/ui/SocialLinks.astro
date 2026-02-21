@@ -39,15 +39,15 @@ const layoutClasses = orientation === "horizontal" ? "flex-row gap-4" : "flex-co
 <div class:list={["flex items-center", layoutClasses, className]} {...rest}>
   {
     socialPlatforms.map((platform) => (
-      <a
+      <Link
         href={platform.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        variant="plain"
+        class="text-text-muted hover:text-text-main"
         aria-label={platform.label}
-        class="text-(--color-text-muted) transition-colors duration-200 hover:text-(--color-text-main)"
+        external
       >
         <Icon name={platform.name} class="h-5 w-5" />
-      </a>
+      </Link>
     ))
   }
 </div>
