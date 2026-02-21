@@ -1,0 +1,67 @@
+---
+/**
+ * Carousel - Structural Molecule
+ * 
+ * Provides the required HTML structure for Splide.js.
+ * Strictly structural: No logic or x-data.
+ * 
+ * @component UI (ui/)
+ */
+
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  id?: string;
+  class?: string;
+  showArrows?: boolean;
+}
+
+const { id, class: className, showArrows = true, ...rest } = Astro.props;
+---
+
+<div 
+  id={id} 
+  class:list={["splide", className]}
+  {...rest}
+>
+  <div class="splide__track h-full">
+    <ul class="splide__list flex m-0 p-0 w-full h-full list-none">
+      <slot />
+    </ul>
+  </div>
+
+  {showArrows && (
+    <div class="absolute inset-y-0 left-4 right-4 z-20 hidden lg:flex items-center justify-between pointer-events-none">
+      <Button 
+        type="ghost" 
+        variant="icon-only" 
+        size="lg"
+        @click="prev()"
+        class="pointer-events-auto bg-black/20 text-white hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-full"
+        title="Previous slide"
+      >
+        <Icon name="PhCaretLeft" size={24} weight="bold" />
+      </Button>
+      <Button 
+        type="ghost" 
+        variant="icon-only" 
+        size="lg"
+        @click="next()"
+        class="pointer-events-auto bg-black/20 text-white hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-full"
+        title="Next slide"
+      >
+        <Icon name="PhCaretRight" size={24} weight="bold" />
+      </Button>
+    </div>
+  )}
+
+  {/* Slot for custom pagination or indicators */}
+  <slot name="indicators" />
+</div>
+
+<script>
+  import "@splidejs/splide/css";
+</script>
+
+

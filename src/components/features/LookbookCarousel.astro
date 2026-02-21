@@ -13,39 +13,26 @@ import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
+import Carousel from "../ui/Carousel.astro";
 
 const lookbooks = await getCollection("lookbooks");
 ---
 
-<section 
-  class="relative bg-black py-24 px-4 lg:px-8 overflow-hidden"
-  x-data="lookbookCarousel"
->
+<section class="relative bg-black py-24 px-4 lg:px-8 overflow-hidden">
   <div class="relative mx-auto max-w-7xl h-150 md:h-175">
-    {/* Slides Container */}
-    <div 
-      class="relative h-full w-full overflow-hidden rounded-2xl"
-      x-ref="slides"
+    <Carousel 
+      x-data="carousel"
+      class="h-full rounded-2xl overflow-hidden"
     >
       {lookbooks.map((lookbook, index) => (
-        <div 
-          class="absolute inset-0 w-full h-full"
-          x-show={`currentIndex === ${index}`}
-          x-transition:enter="transition ease-out duration-700 transform"
-          x-transition:enter-start="opacity-0 translate-x-full"
-          x-transition:enter-end="opacity-100 translate-x-0"
-          x-transition:leave="transition ease-in duration-700 transform"
-          x-transition:leave-start="opacity-100 translate-x-0"
-          x-transition:leave-end="opacity-0 -translate-x-full"
-          style={index !== 0 ? "display: none;" : ""}
-        >
+        <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full">
           {/* Background Image */}
           <div class="absolute inset-0 z-0">
             <img 
               src={lookbook.data.hero_image} 
               alt={lookbook.data.title} 
-              class="h-full w-full object-cover object-center brightness-50 transition-transform duration-10000 ease-linear scale-110"
-              x-bind:class={`currentIndex === ${index} ? 'scale-100' : 'scale-110'`}
+              class="h-full w-full object-cover object-center brightness-50 transition-transform duration-1000 ease-out"
+              x-bind:class={`currentIndex === ${index} ? 'scale-100 opacity-100' : 'scale-105 opacity-0'`}
             />
           </div>
 
@@ -60,60 +47,34 @@ const lookbooks = await getCollection("lookbooks");
             <Button 
               as="a" 
               href={`/lookbooks/${lookbook.slug || lookbook.id}`}
+              type="primary"
+              variant="default"
               size="lg" 
               class="bg-white text-black hover:bg-gray-100 px-12 transition-all capitalize"
             >
               Explore Lookbook
             </Button>
           </div>
-        </div>
+        </li>
       ))}
-    </div>
 
-    {/* Navigation Arrows */}
-    <div class="absolute inset-y-0 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
-      <Button 
-        type="ghost" 
-        variant="icon-only" 
-        size="lg"
-        @click="prev()"
-        class="pointer-events-auto bg-black/20 text-white hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-full"
-      >
-        <Icon name="PhCaretLeft" size={24} weight="bold" />
-      </Button>
-      <Button 
-        type="ghost" 
-        variant="icon-only" 
-        size="lg"
-        @click="next()"
-        class="pointer-events-auto bg-black/20 text-white hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-full"
-      >
-        <Icon name="PhCaretRight" size={24} weight="bold" />
-      </Button>
-    </div>
-
-    {/* Slide Indicators */}
-    <div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-3">
-      {lookbooks.map((_, index) => (
-        <button 
-          @click={`goTo(${index})`}
-          class="h-1.5 transition-all duration-300 rounded-full"
-          class:list={[
-            "bg-white",
-          ]}
-          x-bind:class={`currentIndex === ${index} ? 'w-8 opacity-100' : 'w-2 opacity-40 hover:opacity-60'`}
-          title={`Go to slide ${index + 1}`}
-        ></button>
-      ))}
-    </div>
+      {/* Custom Slide Indicators */}
+      <div slot="indicators" class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-3">
+        {lookbooks.map((_, index) => (
+          <button 
+            @click={`goTo(${index})`}
+            class="h-1.5 transition-all duration-300 rounded-full bg-white"
+            x-bind:class={`currentIndex === ${index} ? 'w-8 opacity-100' : 'w-2 opacity-40 hover:opacity-60'`}
+            title={`Go to slide ${index + 1}`}
+          ></button>
+        ))}
+      </div>
+    </Carousel>
   </div>
 </section>
 
 <script>
-  // Import the behavior script to ensure it's bundled and registered
-  import "../../scripts/behaviors/lookbook-carousel";
+  import "../../scripts/behaviors/carousel";
 </script>
 
-<style>
-  [x-cloak] { display: none !important; }
-</style>
+
