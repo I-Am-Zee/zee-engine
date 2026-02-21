@@ -2,6 +2,8 @@ import type { Alpine } from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 import { wishlistStore } from './wishlist';
 import { popupBehavior } from './popup';
+import { sideDrawer } from './side-drawer';
+import { carousel } from './carousel';
 
 export default (Alpine: Alpine) => {
   // Register plugins
@@ -10,6 +12,8 @@ export default (Alpine: Alpine) => {
   // Register the wishlist store
   Alpine.store('wishlist', wishlistStore);
 
-  // Register the popup component
+  // Register components
   Alpine.data('popupBehavior', popupBehavior as any);
+  Alpine.data('sideDrawer', sideDrawer as any);
+  Alpine.data('carousel', carousel as any);
 };

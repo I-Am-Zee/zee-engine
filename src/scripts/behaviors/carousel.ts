@@ -49,8 +49,4 @@ export const carousel = (config: Options = {}) => ({
   }
 });
 
-// @ts-ignore
-document.addEventListener('alpine:init', () => {
-  // @ts-ignore
-  window.Alpine.data('carousel', carousel);
-});
+
