@@ -11,6 +11,8 @@
  */
 
 import Text from "../primitives/Text.astro";
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
 
 interface Props {
   autoDismissMs?: number;
@@ -83,19 +85,16 @@ const { autoDismissMs = 4000 } = Astro.props;
   <div class="overflow-hidden rounded-lg border border-(--color-border-subtle) bg-(--color-surface) shadow-xl">
     <!-- Success Header -->
     <div class="flex items-center gap-2 border-b border-(--color-border-subtle) bg-(--color-surface) px-4 py-2.5">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 256 256" fill="currentColor">
-        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-      </svg>
+      <Icon name="PhCheckCircle" class="text-emerald-600" size={16} weight="fill" />
       <Text as="span" variant="paragraph" weight="medium">Added to Cart</Text>
       
       <!-- Dismiss Button -->
       <button
         @click="visible = false"
         class="ml-auto rounded p-1 text-(--color-text-muted) transition-colors hover:bg-(--color-ghost-hover) hover:text-(--color-text-main)"
+        aria-label="Dismiss"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 256 256" fill="currentColor">
-          <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
-        </svg>
+        <Icon name="PhX" size={16} />
       </button>
     </div>
     
@@ -117,18 +116,22 @@ const { autoDismissMs = 4000 } = Astro.props;
     
     <!-- Actions -->
     <div class="flex gap-2 border-t border-(--color-border-subtle) bg-(--color-surface) p-3">
-      <button
+      <Button
+        type="ghost"
+        size="sm"
         @click="visible = false"
-        class="flex-1 rounded border border-(--color-border-subtle) bg-transparent px-3 py-2 transition-colors hover:bg-(--color-ghost-hover) focus-glow"
+        class="flex-1 border border-(--color-border-subtle)"
       >
         <Text variant="label" color="inherit">Continue</Text>
-      </button>
-      <button
+      </Button>
+      <Button
+        type="primary"
+        size="sm"
         @click="visible = false; Snipcart.api.theme.cart.open()"
-        class="flex-1 rounded bg-(--color-primary) px-3 py-2 transition-colors hover:bg-[#1e293b] focus-glow"
+        class="flex-1"
       >
         <Text variant="label" color="inherit">View Cart</Text>
-      </button>
+      </Button>
     </div>
   </div>
 </div>
