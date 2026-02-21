@@ -17,7 +17,7 @@ const hasError = Boolean(error);
 ---
 
 <div class:list={["flex flex-col gap-1.5", className]} {...rest}>
-  <Text as="label" variant="label">
+  <Text as="label" variant="label" for={name}>
     {label}
   </Text>
 
@@ -32,7 +32,7 @@ const hasError = Boolean(error);
   </slot>
 
   {hasError && (
-    <Text as="span" variant="caption" class="text-red-500">
+    <Text as="span" variant="caption" color="coral">
       {error}
     </Text>
   )}

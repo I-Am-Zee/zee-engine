@@ -13,7 +13,7 @@
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import Text from "../primitives/Text.astro";
-import { siteConfig } from "../../lib/site.config";
+import type { CollectionEntry } from "astro:content";
 
 interface VariantSlot {
   name: string;
@@ -23,7 +23,7 @@ interface VariantSlot {
 }
 
 interface Props {
-  product: any; // Product collection entry from getCollection('products')
+  product: CollectionEntry<"products">; // Product collection entry
   variant?: "primary" | "secondary" | "neutral";
   size?: "sm" | "md" | "lg";
   showIcon?: boolean;

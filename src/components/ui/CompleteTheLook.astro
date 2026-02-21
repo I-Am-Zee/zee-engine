@@ -107,6 +107,11 @@ const productsForButton = [
           />
         ))}
       </ProductGrid>
+
+      {/* Buy the Set Action */}
+      <div class="mt-12 flex justify-center">
+        <BuySetButton products={productsForButton} class="max-w-md w-full" />
+      </div>
     </section>
   )
 }
