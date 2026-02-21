@@ -18,53 +18,66 @@ import Carousel from "../ui/Carousel.astro";
 const lookbooks = await getCollection("lookbooks");
 ---
 
-<section class="relative bg-black py-24 px-4 lg:px-8 overflow-hidden">
-  <div class="relative mx-auto max-w-7xl h-150 md:h-175">
+<section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">
+  <div class="relative mx-auto max-w-7xl h-[600px] md:h-[700px]">
     <Carousel 
       x-data="carousel"
-      class="h-full rounded-2xl overflow-hidden"
+      class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-border-subtle/50"
     >
       {lookbooks.map((lookbook, index) => (
-        <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full">
+        <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full bg-surface-muted">
           {/* Background Image */}
           <div class="absolute inset-0 z-0">
             <img 
               src={lookbook.data.hero_image} 
               alt={lookbook.data.title} 
-              class="h-full w-full object-cover object-center brightness-50 transition-transform duration-1000 ease-out"
-              x-bind:class={`currentIndex === ${index} ? 'scale-100 opacity-100' : 'scale-105 opacity-0'`}
+              class="h-full w-full object-cover object-center brightness-95 transition-transform duration-[2000ms] ease-out-expo"
+              x-bind:class={`currentIndex === ${index} ? 'scale-100 opacity-100' : 'scale-110 opacity-0'`}
             />
+            {/* Subtle Gradient Overlay for depth */}
+            <div class="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/20 to-transparent"></div>
           </div>
 
-          <div class="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white md:p-12">
-            <Text variant="caption" color="inverse" class="text-white/70 uppercase tracking-widest mb-4">Editorial</Text>
-            <Heading as="h2" color="inverse" class="mb-6 uppercase">
-              {lookbook.data.title}
-            </Heading>
-            <Text variant="paragraph" color="inverse" class="mb-10 max-w-2xl text-lg md:text-xl italic font-serif opacity-90">
-              "{lookbook.data.description}"
-            </Text>
-            <Button 
-              as="a" 
-              href={`/lookbooks/${lookbook.slug || lookbook.id}`}
-              type="primary"
-              variant="default"
-              size="lg" 
-              class="bg-white text-black hover:bg-gray-100 px-12 transition-all capitalize"
+          {/* Luxury Glassmorphic Content Card */}
+          <div class="absolute inset-0 z-10 flex items-center justify-center p-6 md:p-12">
+            <div 
+              class="max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
+              x-show={`currentIndex === ${index}`}
+              x-transition:enter="transition-all cubic-bezier(0.23, 1, 0.32, 1) duration-1000 delay-200"
+              x-transition:enter-start="opacity-0 translate-y-12 blur-sm scale-95"
+              x-transition:enter-end="opacity-100 translate-y-0 blur-0 scale-100"
             >
-              Explore Lookbook
-            </Button>
+              <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Editorial Series</Text>
+              
+              <Heading as="h2" class="mb-8 font-serif italic text-4xl md:text-6xl tracking-tight leading-tight text-text-main">
+                {lookbook.data.title}
+              </Heading>
+              
+              <Text variant="paragraph" color="muted" class="mb-12 text-lg md:text-xl italic leading-relaxed font-serif max-w-lg">
+                "{lookbook.data.description}"
+              </Text>
+              
+              <Button 
+                as="a" 
+                href={`/lookbooks/${lookbook.slug || lookbook.id}`}
+                type="primary"
+                size="lg" 
+                class="px-14 py-4 uppercase tracking-[0.2em] text-xs font-bold shadow-xl shadow-primary/20"
+              >
+                Discover Collection
+              </Button>
+            </div>
           </div>
         </li>
       ))}
 
-      {/* Custom Slide Indicators */}
-      <div slot="indicators" class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-3">
+      {/* Custom Slide Indicators - Refined for Luxury */}
+      <div slot="indicators" class="absolute bottom-12 left-1/2 z-20 flex -translate-x-1/2 gap-4 items-center bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20">
         {lookbooks.map((_, index) => (
           <button 
             @click={`goTo(${index})`}
-            class="h-1.5 transition-all duration-300 rounded-full bg-white"
-            x-bind:class={`currentIndex === ${index} ? 'w-8 opacity-100' : 'w-2 opacity-40 hover:opacity-60'`}
+            class="h-1 transition-all duration-500 rounded-full"
+            x-bind:class={`currentIndex === index ? 'w-10 bg-accent-brass' : 'w-2 bg-white/40 hover:bg-white/60'`}
             title={`Go to slide ${index + 1}`}
           ></button>
         ))}

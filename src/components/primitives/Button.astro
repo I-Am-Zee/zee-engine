@@ -37,11 +37,11 @@
   };
 
   // Size styles with specific gaps for visual balance
-  // icon-right gets a slightly larger gap to feel more "expansive"
+  // Using min-h instead of fixed h to handle text wrapping gracefully
   const sizeStyles = {
-    sm: variant === "icon-only" ? "h-8 w-8 text-sm" : `h-8 px-3 text-sm ${variant === "icon-right" ? "gap-2.5" : "gap-2"}`,
-    md: variant === "icon-only" ? "h-10 w-10 text-base" : `h-10 px-4 text-base ${variant === "icon-right" ? "gap-3" : "gap-2.5"}`,
-    lg: variant === "icon-only" ? "h-12 w-12 text-lg" : `h-12 px-6 text-lg ${variant === "icon-right" ? "gap-3.5" : "gap-3"}`,
+    sm: variant === "icon-only" ? "min-h-8 w-8 text-sm" : `min-h-8 px-3 py-1.5 text-sm ${variant === "icon-right" ? "gap-2.5" : "gap-2"}`,
+    md: variant === "icon-only" ? "min-h-10 w-10 text-base" : `min-h-10 px-4 py-2 text-base ${variant === "icon-right" ? "gap-3" : "gap-2.5"}`,
+    lg: variant === "icon-only" ? "min-h-12 w-12 text-lg" : `min-h-12 px-6 py-3 text-lg ${variant === "icon-right" ? "gap-3.5" : "gap-3"}`,
   };
 
   // Layout logic - variant determines icon position
@@ -53,7 +53,7 @@
   };
 
   const combinedClasses =
-    `${baseStyles} ${variant} ${typeStyles[type]} ${sizeStyles[size]} ${variantStyles[variant]} ${className || ""}`.trim();
+    `${baseStyles} ${variant} ${typeStyles[type as keyof typeof typeStyles]} ${sizeStyles[size as keyof typeof sizeStyles]} ${variantStyles[variant as keyof typeof variantStyles]} ${className || ""}`.trim();
 
   const componentProps = Tag === "a" ? { href, ...rest } : { type: "button", disabled, ...rest };
   ---
