@@ -13,8 +13,6 @@ import Badge from "../primitives/Badge.astro";
 import Heading from "../primitives/Heading.astro";
 import Icon from "../primitives/Icon.astro";
 import PriceTag from "./PriceTag.astro";
-import RatingStars from "./RatingStars.astro";
-import Text from "../primitives/Text.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 
 interface Props {
@@ -23,8 +21,6 @@ interface Props {
   price: number;
   originalPrice?: number;
   badges?: string[];
-  showRating?: boolean;
-  ratingData?: { stars: number; count: number };
   productUrl: string;
   class?: string;
 }
@@ -35,8 +31,6 @@ const {
   price,
   originalPrice,
   badges = [],
-  showRating = false,
-  ratingData,
   productUrl,
   class: className,
   ...rest
@@ -52,7 +46,7 @@ const priceTagProps = hasSale
 
 <article
   class:list={[
-    "relative overflow-hidden rounded-2xl group aspect-2/3",
+    "relative flex flex-col overflow-hidden rounded-2xl group aspect-2/3",
     "cursor-pointer select-none bg-surface-muted border border-white/10",
     "transition-shadow duration-700 hover:shadow-[0_24px_60px_rgba(0,0,0,0.20)] hover:border-white/20",
     className,
@@ -74,27 +68,30 @@ const priceTagProps = hasSale
     />
   </div>
 
-  {/* LAYER 2: Crisp product image, fills top 80%. Gentle scale on hover. */}
+  {/* FULL CARD CLICKABLE SURFACE */}
   <a
     href={productUrl}
-    class="absolute inset-x-0 top-0 h-[80%] block overflow-hidden z-10 focus-glow"
+    class="absolute inset-0 z-10 focus-glow rounded-2xl"
     aria-label={"View " + title}
     tabindex="0"
-  >
+  ></a>
+
+  {/* LAYER 2: Crisp product image (Flex-1 fills all space above the glass panel) */}
+  <div class="relative flex-1 block overflow-hidden z-5 pointer-events-none">
     <img
       src={image}
       alt={title}
       loading="lazy"
       decoding="async"
-      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
     />
-    {/* Subtle bottom vignette for depth */}
-    <div class="absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-black/15 to-transparent pointer-events-none"></div>
-  </a>
+    {/* Deeper bottom vignette for guaranteed text contrast */}
+    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 via-black/10 to-transparent"></div>
+  </div>
 
   {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
   {sortedBadges.length > 0 && (
-    <div class="pointer-events-none absolute top-4 left-4 z-30 flex flex-col gap-2">
+    <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30 flex flex-col gap-1.5 sm:gap-2">
       {sortedBadges.map((badge) => (
         <Badge intent={getBadgeIntent(badge)} size="xs">
           {badge}
@@ -109,7 +106,7 @@ const priceTagProps = hasSale
     - transition-[transform,...]: prevents layout-jitter from transition-all
     - transform-gpu: hardware-accelerated scale, eliminates pixel jitter on hover
   */}
-  <div class="absolute top-4 right-4 z-30 flex flex-col gap-2 isolate">
+  <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2 isolate">
     <button
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
              bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
@@ -117,7 +114,7 @@ const priceTagProps = hasSale
              transition-[transform,background-color,color] duration-300 ease-out transform-gpu
              focus-glow"
       x-on:click.prevent="toggleWishlist()"
-      x-bind:class="wishlisted ? 'text-red-500 !bg-white' : 'text-white'"
+      x-bind:class="wishlisted ? 'text-red-500 bg-white!' : 'text-white'"
       aria-label="Toggle wishlist"
     >
       <Icon name="PhHeart" size={17} weight="regular" class="block shrink-0" x-show="!wishlisted" />
@@ -138,45 +135,32 @@ const priceTagProps = hasSale
   </div>
 
   {/*
-    GLASS INFO PANEL (bottom 22%)
+    GLASS INFO PANEL
     True glass: backdrop-blur-3xl is the primary visual driver.
     bg-linear-to-br gradient mimics real glass catching light at an angle.
-    Panel height is FIXED - no expansion on hover.
+    Flex layout seamlessly anchors this to the bottom without percentage overlap bugs.
   */}
   <div
-    class="absolute bottom-0 inset-x-0 z-20 h-[22%]
-           flex flex-col justify-center gap-3 px-5 py-[14px]
+    class="relative z-20 shrink-0 w-full pointer-events-none
+           flex flex-col justify-center gap-1 sm:gap-1.5 px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-5
            backdrop-blur-3xl bg-linear-to-br from-white/8 via-white/5 to-white/2
            border-t border-white/15 rounded-b-2xl"
   >
     <Heading
       as="h3"
       color="inverse"
-      class="line-clamp-1 tracking-tight leading-normal font-semibold drop-shadow-sm"
+      class="line-clamp-1 tracking-tight leading-normal font-semibold drop-shadow-md"
       style="font-size: clamp(1rem, 2.5vw, 1.15rem);"
     >
       {title}
     </Heading>
 
-    <div class="flex items-center justify-between gap-3">
+    <div class="flex items-center justify-between">
       <PriceTag
         {...priceTagProps}
         variant="compact"
-        class="text-white brightness-110"
+        class="text-white brightness-110 drop-shadow-sm"
       />
-
-      {showRating && ratingData && (
-        <div class="flex items-center gap-1 opacity-80 shrink-0">
-          <RatingStars rating={ratingData.stars} />
-          <Text
-            as="span"
-            variant="metadata"
-            class="text-[9px] font-bold uppercase tracking-widest text-white"
-          >
-            {ratingData.count}
-          </Text>
-        </div>
-      )}
     </div>
   </div>
 </article>

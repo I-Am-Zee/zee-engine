@@ -22,6 +22,7 @@ import Pagination from "../components/ui/Pagination.astro";
 import OptionSelector from "../components/ui/OptionSelector.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
 import CopyButton from "../components/ui/CopyButton.astro";
+import GlassProductCard from "../components/ui/GlassProductCard.astro";
 
 // Organisms (Features)
 import Footer from "../components/features/Footer.astro";
@@ -818,6 +819,77 @@ import ProductGrid from "../components/features/ProductGrid.astro";
             </Text>
           </Alert>
         </div>
+      </div>
+    </section>
+
+    <!-- Glass Product Card Section -->
+    <section class="mb-16">
+      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+        <Heading as="h2" class="mb-2">Glass Product Card</Heading>
+        <Text variant="caption">
+          Premium Glassmorphism card — a UI Molecule. Hover on desktop to see the Quick Shop
+          button animate up. On mobile a persistent cart icon sits in the price row.
+        </Text>
+      </div>
+
+      {/* Cards sit on a warm-toned image backdrop so the glass effect is visible */}
+      <div
+        class="relative overflow-hidden rounded-xl"
+        style="background-image: url('https://images.unsplash.com/photo-1617500603321-ece5f30d8f16?w=1400&auto=format&fit=crop&q=80'); background-size: cover; background-position: center;"
+      >
+        {/* Subtle dark veil over image for contrast */}
+        <div class="absolute inset-0 bg-primary/30 backdrop-blur-[2px] rounded-xl" />
+
+        <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-6 p-8">
+
+          {/* Variant 1: Standard — one badge, no rating, no sale */}
+          <div>
+            <Text variant="eyebrow" class="mb-3 text-white">Standard</Text>
+            <GlassProductCard
+              image="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&h=750&fit=crop"
+              title="Celestial Moon Necklace"
+              price={3500}
+              badges={["bestseller"]}
+              productUrl="/shop/celestial-moon-necklace"
+            />
+          </div>
+
+          {/* Variant 2: Sale — original price shown, rating visible */}
+          <div>
+            <Text variant="eyebrow" class="mb-3 text-white">Sale + Rating</Text>
+            <GlassProductCard
+              image="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=750&fit=crop"
+              title="Vintage Pearl Earrings"
+              price={2800}
+              originalPrice={4200}
+              badges={["sale", "new"]}
+              productUrl="/shop/vintage-pearl-earrings"
+            />
+          </div>
+
+          {/* Variant 3: Long Title — tests truncation, no badges */}
+          <div>
+            <Text variant="eyebrow" class="mb-3 text-white">Long Title (truncation)</Text>
+            <GlassProductCard
+              image="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&h=900&fit=crop"
+              title="Handcrafted Rose Gold & Diamond-Studded Mangalsutra Bangle Set"
+              price={5800}
+              badges={["limited-edition", "pvd-gold"]}
+              productUrl="/shop/rose-gold-mangalsutra-bangle-set"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      {/* Notes panel */}
+      <div class="mt-4 rounded-lg bg-surface p-5 space-y-1.5">
+        <Text variant="eyebrow" class="mb-2">Implementation Notes</Text>
+        <Text variant="caption" color="muted">• Component: <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">src/components/ui/GlassProductCard.astro</code> (UI Molecule — no scripts/behavior imports)</Text>
+        <Text variant="caption" color="muted">• Hover a card on desktop: glass panel expands upward, Quick Shop fades in with a 75ms delay</Text>
+        <Text variant="caption" color="muted">• On mobile (&lt;md): Quick Shop is hidden; a shopping bag icon links to the PDP</Text>
+        <Text variant="caption" color="muted">• Wishlist heart uses <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">$store.wishlist</code> — same Alpine.js store as ProductCard</Text>
+        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">zaviona:quick-shop</code> event for any Feature to catch</Text>
       </div>
     </section>
 
