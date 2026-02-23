@@ -1,0 +1,219 @@
+---
+/**
+ * GlassProductCard — UI Molecule (Glassmorphism variant v6 — Luxury Final)
+ *
+ * Architecture:
+ * - 2:3 portrait aspect ratio
+ * - Three-layer system: blurred base (static) → crisp image (80%) → glass info panel (22%)
+ * - True glass effect: backdrop-blur drives the panel, NOT background color
+ * - Industry-standard boutique typography (~13–15px title)
+ * - Zero transforms on hover — badges and panel are 100% static
+ */
+
+import Badge from "../primitives/Badge.astro";
+import Icon from "../primitives/Icon.astro";
+import PriceTag from "./PriceTag.astro";
+import RatingStars from "./RatingStars.astro";
+import Text from "../primitives/Text.astro";
+import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
+
+interface Props {
+  image: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  badges?: string[];
+  showRating?: boolean;
+  ratingData?: { stars: number; count: number };
+  productUrl: string;
+  class?: string;
+}
+
+const {
+  image,
+  title,
+  price,
+  originalPrice,
+  badges = [],
+  showRating = false,
+  ratingData,
+  productUrl,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const sortedBadges = sortBadgesByHierarchy(badges);
+
+const hasSale = originalPrice !== undefined && originalPrice > price;
+const priceTagProps = hasSale
+  ? { price: originalPrice!, salePrice: price }
+  : { price };
+---
+
+<article
+  class:list={[
+    "relative overflow-hidden rounded-2xl group aspect-2/3",
+    "cursor-pointer select-none bg-surface-muted border border-white/10",
+    "transition-shadow duration-700 hover:shadow-[0_24px_60px_rgba(0,0,0,0.18)] hover:border-white/20",
+    className,
+  ]}
+  x-data="glassCard()"
+  data-key={productUrl}
+  data-title={title}
+  data-price={String(price)}
+  data-image={image}
+  {...rest}
+>
+  {/*
+    ── LAYER 1: COLOR-MATCHED BASE ──
+    Static blurred image — NO scale on hover.
+    This provides the "continuous" color tone behind the glass panel.
+  */}
+  <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-2xl">
+    <img
+      src={image}
+      alt=""
+      aria-hidden="true"
+      class="w-full h-full object-cover blur-2xl scale-125 opacity-35"
+    />
+  </div>
+
+  {/*
+    ── LAYER 2: CRISP PRODUCT IMAGE ──
+    Fills top 80% of the card. Hover: gentle scale only on this layer.
+  */}
+  <a
+    href={productUrl}
+    class="absolute inset-x-0 top-0 h-[80%] block overflow-hidden z-10 focus-glow"
+    aria-label={`View ${title}`}
+    tabindex="0"
+  >
+    <img
+      src={image}
+      alt={title}
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+    />
+    {/* Bottom-edge vignette for depth */}
+    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/20 to-transparent pointer-events-none"></div>
+  </a>
+
+  {/*
+    ── TOP-LEFT: BADGE STACK ──
+    Fully static — no translate or transform on hover.
+  */}
+  {sortedBadges.length > 0 && (
+    <div class="pointer-events-none absolute top-4 left-4 z-30 flex flex-col gap-2">
+      {sortedBadges.map((badge) => (
+        <Badge intent={getBadgeIntent(badge)} size="xs">
+          {badge}
+        </Badge>
+      ))}
+    </div>
+  )}
+
+  {/*
+    ── TOP-RIGHT: ACTION STACK ──
+    Both buttons are static, circular, always visible.
+    Individual button scale on hover is retained for tactile feedback.
+  */}
+  <div class="absolute top-4 right-4 z-30 flex flex-col gap-2">
+    <button
+      class="flex items-center justify-center w-9 h-9 rounded-full
+             bg-white/10 backdrop-blur-xl shadow-sm border border-white/20 text-white
+             hover:bg-white hover:text-red-500 hover:scale-110
+             transition-[transform,background-color,color] duration-300 transform-gpu will-change-transform focus-glow"
+      x-on:click.prevent={"toggleWishlist()"}
+      x-bind:class={"wishlisted ? 'text-red-500 !bg-white' : 'text-white'"}
+      aria-label="Toggle wishlist"
+    >
+      <Icon name="PhHeart" size={17} weight="regular" class="block" x-show={"!wishlisted"} />
+      <Icon name="PhHeart" size={17} weight="fill"    class="block" x-show={"wishlisted"} x-cloak />
+    </button>
+
+    <button
+      class="flex items-center justify-center w-9 h-9 rounded-full
+             bg-white/10 backdrop-blur-xl shadow-sm border border-white/20 text-white
+             hover:bg-white hover:text-primary hover:scale-110
+             transition-[transform,background-color,color] duration-300 transform-gpu will-change-transform focus-glow"
+      x-on:click.stop={"quickShop()"}
+      aria-label={`Quick shop ${title}`}
+    >
+      <Icon name="PhShoppingBagOpen" size={17} weight="regular" />
+    </button>
+  </div>
+
+  {/*
+    ── GLASS INFO PANEL ──
+    TRUE GLASS: backdrop-blur-3xl is the visual driver.
+    Background is near-transparent (bg-white/3) so blur, NOT color, defines the look.
+    Height is FIXED — no expansion on hover.
+    rounded-b-2xl matches the article's radius to prevent corner bleed.
+  */}
+  <div
+    class="absolute bottom-0 inset-x-0 z-20 h-[22%]
+           flex flex-col justify-center gap-3 px-5 py-4
+           backdrop-blur-3xl bg-linear-to-br from-white/10 via-white/5 to-white/2 border-t border-white/15
+           rounded-b-2xl"
+  >
+    {/* Product title — Boutique scale: ~15–17px */}
+    <p
+      class="truncate font-serif font-semibold tracking-tight text-white antialiased
+             text-[clamp(0.9375rem,2.2vw,1.0625rem)] leading-snug drop-shadow-sm"
+    >
+      {title}
+    </p>
+
+    {/* Price + optional rating */}
+    <div class="flex items-center justify-between gap-3">
+      <PriceTag
+        {...priceTagProps}
+        variant="compact"
+        class="text-white brightness-110"
+      />
+
+      {showRating && ratingData && (
+        <div class="flex items-center gap-1 opacity-75 shrink-0">
+          <RatingStars rating={ratingData.stars} />
+          <Text
+            as="span"
+            variant="metadata"
+            class="text-[9px] font-bold uppercase tracking-widest text-white"
+          >
+            {ratingData.count}
+          </Text>
+        </div>
+      )}
+    </div>
+  </div>
+</article>
+
+<script>
+  document.addEventListener("alpine:init", () => {
+    (window as any).Alpine.data("glassCard", () => ({
+      get wishlisted(): boolean {
+        const key = (this as any).$el?.dataset?.key ?? "";
+        return (window as any).Alpine?.store("wishlist")?.has(key) ?? false;
+      },
+      toggleWishlist(): void {
+        const key = (this as any).$el?.dataset?.key ?? "";
+        (window as any).Alpine?.store("wishlist")?.toggle(key);
+      },
+      quickShop(): void {
+        const self = this as any;
+        const el: HTMLElement = self.$el;
+        self.$dispatch("zaviona:quick-shop", {
+          title: el.dataset.title,
+          price: Number(el.dataset.price),
+          image: el.dataset.image,
+          productUrl: el.dataset.key,
+        });
+      },
+    }));
+  });
+</script>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>
