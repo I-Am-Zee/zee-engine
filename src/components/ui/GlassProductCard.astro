@@ -16,32 +16,40 @@ import PriceTag from "./PriceTag.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 
 interface Props {
+  id?: string;
   image: string;
   title: string;
   price: number;
-  originalPrice?: number;
+  salePrice?: number;
+  href: string;
   badges?: string[];
-  productUrl: string;
+  variant_1?: any;
+  variant_2?: any;
+  variant_3?: any;
   class?: string;
 }
 
 const {
+  id = "",
   image,
   title,
   price,
-  originalPrice,
+  salePrice,
+  href,
   badges = [],
-  productUrl,
+  variant_1 = "",
+  variant_2 = "",
+  variant_3 = "",
   class: className,
   ...rest
 } = Astro.props;
 
 const sortedBadges = sortBadgesByHierarchy(badges);
 
-const hasSale = originalPrice !== undefined && originalPrice > price;
+const hasSale = salePrice !== undefined && salePrice < price;
 const priceTagProps = hasSale
-  ? { price: originalPrice!, salePrice: price }
-  : { price };
+  ? { price: price, salePrice: salePrice }
+  : { price: price };
 ---
 
 <article
@@ -52,10 +60,14 @@ const priceTagProps = hasSale
     className,
   ]}
   x-data="glassCard()"
-  data-key={productUrl}
+  data-key={href}
+  data-id={id}
   data-title={title}
-  data-price={String(price)}
+  data-price={salePrice ? String(salePrice) : String(price)}
   data-image={image}
+  data-v1={variant_1}
+  data-v2={variant_2}
+  data-v3={variant_3}
   {...rest}
 >
   {/* LAYER 1: Static color-matched blurred base. No hover animation. */}
@@ -70,7 +82,7 @@ const priceTagProps = hasSale
 
   {/* FULL CARD CLICKABLE SURFACE */}
   <a
-    href={productUrl}
+    href={href}
     class="absolute inset-0 z-10 focus-glow rounded-2xl"
     aria-label={"View " + title}
     tabindex="0"
@@ -180,10 +192,15 @@ const priceTagProps = hasSale
         const self = this as any;
         const el: HTMLElement = self.$el;
         self.$dispatch("zaviona:quick-shop", {
+          id: el.dataset.id,
           title: el.dataset.title,
           price: Number(el.dataset.price),
           image: el.dataset.image,
-          productUrl: el.dataset.key,
+          variants: {
+            variant_1: el.dataset.v1,
+            variant_2: el.dataset.v2,
+            variant_3: el.dataset.v3
+          }
         });
       },
     }));

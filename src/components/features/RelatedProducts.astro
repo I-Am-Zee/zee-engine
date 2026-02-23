@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import ProductGrid from "./ProductGrid.astro";
-import ProductCard from "./ProductCard.astro";
+import GlassProductCard from "../ui/GlassProductCard.astro";
 import Heading from "../primitives/Heading.astro";
 
 interface Props {
@@ -40,7 +40,7 @@ const displayProducts = allProducts
 
       <ProductGrid>
         {displayProducts.map((p) => (
-          <ProductCard
+          <GlassProductCard
             id={p.slug}
             title={p.data.title}
             price={p.data.price}
@@ -48,7 +48,6 @@ const displayProducts = allProducts
             image={p.data.image}
             href={`/products/${p.slug}`}
             badges={p.data.badges}
-            rating={p.data.rating}
           />
         ))}
       </ProductGrid>

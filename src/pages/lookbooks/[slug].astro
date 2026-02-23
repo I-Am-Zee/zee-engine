@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
 import Icon from '../../components/primitives/Icon.astro';
-import ProductCard from '../../components/features/ProductCard.astro';
+import GlassProductCard from '../../components/ui/GlassProductCard.astro';
 import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
 
@@ -102,15 +102,16 @@ const pageDescription = description || 'Discover our curated jewelry collection'
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 mb-24">
         {products.map((product) => (
           <div class="flex flex-col group">
-            <ProductCard
+            <GlassProductCard
               id={product.slug}
               title={product.data.title}
               price={product.data.price}
               salePrice={product.data.salePrice}
               image={product.data.image}
               href={`/products/${product.slug}`}
-              rating={product.data.rating}
-              variant="editorial"
+              variant_1={product.data.variant_1}
+              variant_2={product.data.variant_2}
+              variant_3={product.data.variant_3}
             />
           </div>
         ))}

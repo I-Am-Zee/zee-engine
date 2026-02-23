@@ -8,7 +8,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
-import ProductCard from "../../components/features/ProductCard.astro";
+import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
@@ -176,7 +176,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                       : 0
                   }
                 >
-                  <ProductCard
+                  <GlassProductCard
                     id={product.slug}
                     title={product.data.title}
                     price={product.data.price}
@@ -184,7 +184,6 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                     image={product.data.image}
                     href={`/products/${product.slug}`}
                     badges={product.data.badges}
-                    rating={product.data.rating}
                     variant_1={product.data.variant_1}
                     variant_2={product.data.variant_2}
                     variant_3={product.data.variant_3}

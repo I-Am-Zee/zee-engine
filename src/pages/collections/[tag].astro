@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
-import ProductCard from "../../components/features/ProductCard.astro";
+import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
@@ -85,7 +85,7 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
                       : 0
                   }
                 >
-                  <ProductCard
+                  <GlassProductCard
                     id={product.slug}
                     title={product.data.title}
                     price={product.data.price}
@@ -93,7 +93,6 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
                     image={product.data.image}
                     href={`/products/${product.slug}`}
                     badges={product.data.badges}
-                    rating={product.data.rating}
                   />
                 </div>
               ))}

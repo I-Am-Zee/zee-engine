@@ -9,7 +9,7 @@
  */
 
 import { getCollection } from "astro:content";
-import ProductCard from "../features/ProductCard.astro";
+import GlassProductCard from "./GlassProductCard.astro";
 import ProductGrid from "../features/ProductGrid.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
@@ -95,7 +95,7 @@ const productsForButton = [
 
       <ProductGrid>
         {relatedProducts.map((product) => (
-          <ProductCard
+          <GlassProductCard
             id={product.slug}
             title={product.data.title}
             price={product.data.price}
@@ -103,7 +103,6 @@ const productsForButton = [
             image={product.data.image}
             href={`/products/${product.slug}`}
             badges={product.data.badges}
-            rating={product.data.rating}
           />
         ))}
       </ProductGrid>

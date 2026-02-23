@@ -13,7 +13,7 @@ import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
 import Icon from "../components/primitives/Icon.astro";
-import ProductCard from "../components/features/ProductCard.astro";
+import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
 
@@ -48,7 +48,7 @@ const allProducts = await getCollection("products");
         {
           allProducts.map((product) => (
             <div x-show={`$store.wishlist.has('${product.slug}')`} x-cloak>
-              <ProductCard
+              <GlassProductCard
                 id={product.slug}
                 title={product.data.title}
                 price={product.data.price}
@@ -56,7 +56,6 @@ const allProducts = await getCollection("products");
                 image={product.data.image}
                 href={`/products/${product.slug}`}
                 badges={product.data.badges}
-                rating={product.data.rating}
               />
             </div>
           ))
