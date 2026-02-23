@@ -1,16 +1,16 @@
 ---
 /**
- * GlassProductCard — UI Molecule (Glassmorphism variant v6 — Luxury Final)
+ * GlassProductCard - UI Molecule (Glassmorphism - Luxury v8 Final)
  *
- * Architecture:
  * - 2:3 portrait aspect ratio
- * - Three-layer system: blurred base (static) → crisp image (80%) → glass info panel (22%)
- * - True glass effect: backdrop-blur drives the panel, NOT background color
- * - Industry-standard boutique typography (~13–15px title)
- * - Zero transforms on hover — badges and panel are 100% static
+ * - Layer 1: Static blurred base image (color match)
+ * - Layer 2: Crisp product image, top 80%
+ * - Layer 3: Glass info panel, bottom 22%
+ * - Zero transforms on badge stack or panel (fully static)
  */
 
 import Badge from "../primitives/Badge.astro";
+import Heading from "../primitives/Heading.astro";
 import Icon from "../primitives/Icon.astro";
 import PriceTag from "./PriceTag.astro";
 import RatingStars from "./RatingStars.astro";
@@ -54,7 +54,7 @@ const priceTagProps = hasSale
   class:list={[
     "relative overflow-hidden rounded-2xl group aspect-2/3",
     "cursor-pointer select-none bg-surface-muted border border-white/10",
-    "transition-shadow duration-700 hover:shadow-[0_24px_60px_rgba(0,0,0,0.18)] hover:border-white/20",
+    "transition-shadow duration-700 hover:shadow-[0_24px_60px_rgba(0,0,0,0.20)] hover:border-white/20",
     className,
   ]}
   x-data="glassCard()"
@@ -64,28 +64,21 @@ const priceTagProps = hasSale
   data-image={image}
   {...rest}
 >
-  {/*
-    ── LAYER 1: COLOR-MATCHED BASE ──
-    Static blurred image — NO scale on hover.
-    This provides the "continuous" color tone behind the glass panel.
-  */}
-  <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-2xl">
+  {/* LAYER 1: Static color-matched blurred base. No hover animation. */}
+  <div class="absolute inset-0 z-0 pointer-events-none">
     <img
       src={image}
       alt=""
       aria-hidden="true"
-      class="w-full h-full object-cover blur-2xl scale-125 opacity-35"
+      class="w-full h-full object-cover blur-2xl scale-[1.3] opacity-30"
     />
   </div>
 
-  {/*
-    ── LAYER 2: CRISP PRODUCT IMAGE ──
-    Fills top 80% of the card. Hover: gentle scale only on this layer.
-  */}
+  {/* LAYER 2: Crisp product image, fills top 80%. Gentle scale on hover. */}
   <a
     href={productUrl}
     class="absolute inset-x-0 top-0 h-[80%] block overflow-hidden z-10 focus-glow"
-    aria-label={`View ${title}`}
+    aria-label={"View " + title}
     tabindex="0"
   >
     <img
@@ -95,14 +88,11 @@ const priceTagProps = hasSale
       decoding="async"
       class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
     />
-    {/* Bottom-edge vignette for depth */}
-    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/20 to-transparent pointer-events-none"></div>
+    {/* Subtle bottom vignette for depth */}
+    <div class="absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-black/15 to-transparent pointer-events-none"></div>
   </a>
 
-  {/*
-    ── TOP-LEFT: BADGE STACK ──
-    Fully static — no translate or transform on hover.
-  */}
+  {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
   {sortedBadges.length > 0 && (
     <div class="pointer-events-none absolute top-4 left-4 z-30 flex flex-col gap-2">
       {sortedBadges.map((badge) => (
@@ -114,58 +104,60 @@ const priceTagProps = hasSale
   )}
 
   {/*
-    ── TOP-RIGHT: ACTION STACK ──
-    Both buttons are static, circular, always visible.
-    Individual button scale on hover is retained for tactile feedback.
+    TOP-RIGHT: Action buttons.
+    - isolate: prevents z-index compositing glitches
+    - transition-[transform,...]: prevents layout-jitter from transition-all
+    - transform-gpu: hardware-accelerated scale, eliminates pixel jitter on hover
   */}
-  <div class="absolute top-4 right-4 z-30 flex flex-col gap-2">
+  <div class="absolute top-4 right-4 z-30 flex flex-col gap-2 isolate">
     <button
-      class="flex items-center justify-center w-9 h-9 rounded-full
-             bg-white/10 backdrop-blur-xl shadow-sm border border-white/20 text-white
+      class="flex items-center justify-center w-9 h-9 rounded-full isolate
+             bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
              hover:bg-white hover:text-red-500 hover:scale-110
-             transition-[transform,background-color,color] duration-300 transform-gpu will-change-transform focus-glow"
-      x-on:click.prevent={"toggleWishlist()"}
-      x-bind:class={"wishlisted ? 'text-red-500 !bg-white' : 'text-white'"}
+             transition-[transform,background-color,color] duration-300 ease-out transform-gpu
+             focus-glow"
+      x-on:click.prevent="toggleWishlist()"
+      x-bind:class="wishlisted ? 'text-red-500 !bg-white' : 'text-white'"
       aria-label="Toggle wishlist"
     >
-      <Icon name="PhHeart" size={17} weight="regular" class="block" x-show={"!wishlisted"} />
-      <Icon name="PhHeart" size={17} weight="fill"    class="block" x-show={"wishlisted"} x-cloak />
+      <Icon name="PhHeart" size={17} weight="regular" class="block shrink-0" x-show="!wishlisted" />
+      <Icon name="PhHeart" size={17} weight="fill"    class="block shrink-0" x-show="wishlisted" x-cloak />
     </button>
 
     <button
-      class="flex items-center justify-center w-9 h-9 rounded-full
-             bg-white/10 backdrop-blur-xl shadow-sm border border-white/20 text-white
+      class="flex items-center justify-center w-9 h-9 rounded-full isolate
+             bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
              hover:bg-white hover:text-primary hover:scale-110
-             transition-[transform,background-color,color] duration-300 transform-gpu will-change-transform focus-glow"
-      x-on:click.stop={"quickShop()"}
-      aria-label={`Quick shop ${title}`}
+             transition-[transform,background-color,color] duration-300 ease-out transform-gpu
+             focus-glow"
+      x-on:click.stop="quickShop()"
+      aria-label={"Quick shop " + title}
     >
-      <Icon name="PhShoppingBagOpen" size={17} weight="regular" />
+      <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="block shrink-0" />
     </button>
   </div>
 
   {/*
-    ── GLASS INFO PANEL ──
-    TRUE GLASS: backdrop-blur-3xl is the visual driver.
-    Background is near-transparent (bg-white/3) so blur, NOT color, defines the look.
-    Height is FIXED — no expansion on hover.
-    rounded-b-2xl matches the article's radius to prevent corner bleed.
+    GLASS INFO PANEL (bottom 22%)
+    True glass: backdrop-blur-3xl is the primary visual driver.
+    bg-linear-to-br gradient mimics real glass catching light at an angle.
+    Panel height is FIXED - no expansion on hover.
   */}
   <div
     class="absolute bottom-0 inset-x-0 z-20 h-[22%]
-           flex flex-col justify-center gap-3 px-5 py-4
-           backdrop-blur-3xl bg-linear-to-br from-white/10 via-white/5 to-white/2 border-t border-white/15
-           rounded-b-2xl"
+           flex flex-col justify-center gap-3 px-5 py-[14px]
+           backdrop-blur-3xl bg-linear-to-br from-white/8 via-white/5 to-white/2
+           border-t border-white/15 rounded-b-2xl"
   >
-    {/* Product title — Boutique scale: ~15–17px */}
-    <p
-      class="truncate font-serif font-semibold tracking-tight text-white antialiased
-             text-[clamp(0.9375rem,2.2vw,1.0625rem)] leading-snug drop-shadow-sm"
+    <Heading
+      as="h3"
+      color="inverse"
+      class="line-clamp-1 tracking-tight leading-normal font-semibold drop-shadow-sm"
+      style="font-size: clamp(1rem, 2.5vw, 1.15rem);"
     >
       {title}
-    </p>
+    </Heading>
 
-    {/* Price + optional rating */}
     <div class="flex items-center justify-between gap-3">
       <PriceTag
         {...priceTagProps}
@@ -174,7 +166,7 @@ const priceTagProps = hasSale
       />
 
       {showRating && ratingData && (
-        <div class="flex items-center gap-1 opacity-75 shrink-0">
+        <div class="flex items-center gap-1 opacity-80 shrink-0">
           <RatingStars rating={ratingData.stars} />
           <Text
             as="span"
