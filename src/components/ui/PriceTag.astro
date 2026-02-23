@@ -7,10 +7,18 @@ interface Props {
   price: number;
   salePrice?: number;
   currency?: string;
+  variant?: "default" | "compact";
   class?: string;
 }
 
-const { price, salePrice, currency = "INR", class: className, ...rest } = Astro.props;
+const {
+  price,
+  salePrice,
+  currency = "INR",
+  variant = "default",
+  class: className,
+  ...rest
+} = Astro.props;
 
 const hasSale = salePrice !== undefined && salePrice < price;
 const displayPrice = hasSale ? salePrice : price;
@@ -19,12 +27,12 @@ const discountPercent = hasSale ? calculateDiscount(price, salePrice!) : 0;
 
 <div class:list={["flex gap-2 flex-wrap items-center", className]} {...rest}>
   <div class="flex items-baseline gap-2">
-    <Text as="span" variant="price">
+    <Text as="span" variant={variant === "compact" ? "caption" : "price"} weight={variant === "compact" ? "bold" : "bold"} class={variant === "compact" ? "text-sm tracking-tight" : ""}>
       {formatCurrency(displayPrice, currency)}
     </Text>
 
     {hasSale && (
-      <Text as="span" variant="price_sale">
+      <Text as="span" variant="price_sale" class={variant === "compact" ? "text-[10px] md:text-px" : ""}>
         {formatCurrency(price, currency)}
       </Text>
     )}

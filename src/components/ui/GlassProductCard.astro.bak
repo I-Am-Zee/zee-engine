@@ -1,0 +1,214 @@
+---
+/**
+ * GlassProductCard - UI Molecule (Glassmorphism - Luxury v8 Final)
+ *
+ * - 2:3 portrait aspect ratio
+ * - Layer 1: Static blurred base image (color match)
+ * - Layer 2: Crisp product image, top 80%
+ * - Layer 3: Glass info panel, bottom 22%
+ * - Zero transforms on badge stack or panel (fully static)
+ */
+
+import Badge from "../primitives/Badge.astro";
+import Heading from "../primitives/Heading.astro";
+import Icon from "../primitives/Icon.astro";
+import PriceTag from "./PriceTag.astro";
+import RatingStars from "./RatingStars.astro";
+import Text from "../primitives/Text.astro";
+import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
+
+interface Props {
+  image: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  badges?: string[];
+  showRating?: boolean;
+  ratingData?: { stars: number; count: number };
+  productUrl: string;
+  class?: string;
+}
+
+const {
+  image,
+  title,
+  price,
+  originalPrice,
+  badges = [],
+  showRating = false,
+  ratingData,
+  productUrl,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const sortedBadges = sortBadgesByHierarchy(badges);
+
+const hasSale = originalPrice !== undefined && originalPrice > price;
+const priceTagProps = hasSale
+  ? { price: originalPrice!, salePrice: price }
+  : { price };
+---
+
+<article
+  class:list={[
+    "relative overflow-hidden rounded-2xl group aspect-2/3",
+    "cursor-pointer select-none bg-surface-muted border border-white/10",
+    "transition-shadow duration-700 hover:shadow-[0_24px_60px_rgba(0,0,0,0.20)] hover:border-white/20",
+    className,
+  ]}
+  x-data="glassCard()"
+  data-key={productUrl}
+  data-title={title}
+  data-price={String(price)}
+  data-image={image}
+  {...rest}
+>
+  {/* LAYER 1: Static color-matched blurred base. No hover animation. */}
+  <div class="absolute inset-0 z-0 pointer-events-none">
+    <img
+      src={image}
+      alt=""
+      aria-hidden="true"
+      class="w-full h-full object-cover blur-2xl scale-[1.3] opacity-30"
+    />
+  </div>
+
+  {/* LAYER 2: Crisp product image, fills top 80%. Gentle scale on hover. */}
+  <a
+    href={productUrl}
+    class="absolute inset-x-0 top-0 h-[80%] block overflow-hidden z-10 focus-glow"
+    aria-label={`View ${title}`}
+    tabindex="0"
+  >
+    <img
+      src={image}
+      alt={title}
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+    />
+    {/* Subtle bottom vignette for depth */}
+    <div class="absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-black/15 to-transparent pointer-events-none"></div>
+  </a>
+
+  {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
+  {sortedBadges.length > 0 && (
+    <div class="pointer-events-none absolute top-4 left-4 z-30 flex flex-col gap-2">
+      {sortedBadges.map((badge) => (
+        <Badge intent={getBadgeIntent(badge)} size="xs">
+          {badge}
+        </Badge>
+      ))}
+    </div>
+  )}
+
+  {/*
+    TOP-RIGHT: Action buttons.
+    - isolate: prevents z-index compositing glitches
+    - transition-[transform,background-color,color]: no layout-jitter from transition-all
+    - transform-gpu: hardware-accelerated scale, eliminates pixel jitter on hover/unhover
+  */}
+  <div class="absolute top-4 right-4 z-30 flex flex-col gap-2 isolate">
+    <button
+      class="flex items-center justify-center w-9 h-9 rounded-full isolate
+             bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
+             hover:bg-white hover:text-red-500 hover:scale-110
+             transition duration-300 ease-out transform-gpu
+             focus-glow"
+      x-on:click.prevent="toggleWishlist()"
+      x-bind:class="wishlisted ? 'text-red-500 !bg-white' : 'text-white'"
+      aria-label="Toggle wishlist"
+    >
+      <Icon name="PhHeart" size={17} weight="regular" class="block shrink-0" x-show="!wishlisted" />
+      <Icon name="PhHeart" size={17} weight="fill"    class="block shrink-0" x-show="wishlisted" x-cloak />
+    </button>
+
+    <button
+      class="flex items-center justify-center w-9 h-9 rounded-full isolate
+             bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
+             hover:bg-white hover:text-primary hover:scale-110
+             transition duration-300 ease-out transform-gpu
+             focus-glow"
+      x-on:click.stop="quickShop()"
+      aria-label={`Quick shop ${title}`}
+    >
+      <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="block shrink-0" />
+    </button>
+  </div>
+
+  {/*
+    GLASS INFO PANEL (bottom 22%)
+    True glass: backdrop-blur-3xl is the primary visual driver.
+    bg-linear-to-br gradient mimics real glass catching light at an angle.
+    Panel height is FIXED - no expansion on hover.
+    rounded-b-2xl matches card corners for zero-bleed clipping.
+    Title: Heading h3 with clamp size override. line-clamp-1 (not truncate)
+    prevents descender clipping on letters like g, y, p.
+  */}
+  <div
+    class="absolute bottom-0 inset-x-0 z-20 h-[22%]
+           flex flex-col justify-center gap-3 px-5 py-[14px]
+           backdrop-blur-3xl bg-linear-to-br from-white/8 via-white/5 to-white/2
+           border-t border-white/15 rounded-b-2xl"
+  >
+    <Heading
+      as="h3"
+      color="inverse"
+      class="line-clamp-1 tracking-tight leading-normal
+             text-[clamp(1rem,2.5vw,1.15rem)] font-semibold drop-shadow-sm"
+    >
+      {title}
+    </Heading>
+
+    <div class="flex items-center justify-between gap-3">
+      <PriceTag
+        {...priceTagProps}
+        variant="compact"
+        class="text-white brightness-110"
+      />
+
+      {showRating && ratingData && (
+        <div class="flex items-center gap-1 opacity-80 shrink-0">
+          <RatingStars rating={ratingData.stars} />
+          <Text
+            as="span"
+            variant="metadata"
+            class="text-[9px] font-bold uppercase tracking-widest text-white"
+          >
+            {ratingData.count}
+          </Text>
+        </div>
+      )}
+    </div>
+  </div>
+</article>
+
+<script>
+  document.addEventListener("alpine:init", () => {
+    (window as any).Alpine.data("glassCard", () => ({
+      get wishlisted(): boolean {
+        const key = (this as any).$el?.dataset?.key ?? "";
+        return (window as any).Alpine?.store("wishlist")?.has(key) ?? false;
+      },
+      toggleWishlist(): void {
+        const key = (this as any).$el?.dataset?.key ?? "";
+        (window as any).Alpine?.store("wishlist")?.toggle(key);
+      },
+      quickShop(): void {
+        const self = this as any;
+        const el: HTMLElement = self.$el;
+        self.$dispatch("zaviona:quick-shop", {
+          title: el.dataset.title,
+          price: Number(el.dataset.price),
+          image: el.dataset.image,
+          productUrl: el.dataset.key,
+        });
+      },
+    }));
+  });
+</script>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>
