@@ -6,6 +6,7 @@ import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
 import Image from "../components/primitives/Image.astro";
 import GlassProductCard from "../components/ui/GlassProductCard.astro";
+import CollectionCard from "../components/ui/CollectionCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 
 import LookbookCarousel from "../components/features/LookbookCarousel.astro";
@@ -22,34 +23,39 @@ const categories = [
   { name: "Necklaces", href: "/shop/necklaces", image: "/images/products/1599643478518-a784e5dc4c8f.jpg" },
   { name: "Earrings", href: "/shop/earrings", image: "/images/products/1535632066927-ab7c9ab60908.jpg" },
   { name: "Bracelets", href: "/shop/bracelets", image: "/images/products/1602173574767-37ac01994b2a.jpg" },
-];
+].map(cat => ({
+  ...cat,
+  itemCount: allProducts.filter(p => p.data.category === cat.name.toLowerCase()).length
+}));
 ---
 
 <BaseLayout title="Zaviona | Luxury Jewelry & Timeless Elegance">
   <main>
     {/* Hero Section */}
-    <section class="relative h-[90vh] overflow-hidden">
-      <div class="absolute inset-0 z-0">
+    <section class="relative h-[90vh] overflow-hidden bg-white">
+      <div class="absolute inset-0 z-0 opacity-40">
         <Image 
           src="/images/products/1605100804763-247f67b3557e.jpg" 
           alt="Luxury Jewelry Hero" 
-          class="h-full w-full object-cover object-center brightness-50"
+          class="h-full w-full object-cover object-center grayscale mix-blend-multiply"
           loading="eager"
           fetchpriority="high"
         />
       </div>
+      <div class="absolute inset-0 z-0 bg-linear-to-b from-white/80 via-white/40 to-white/90"></div>
+      
       <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 text-center">
-        <Heading as="h1" color="inverse" class="mb-6">
+        <Heading as="h1" color="main" class="mb-6">
           Timeless Elegance, <br /> Forged in Brilliance
         </Heading>
-        <Text variant="lead" color="inverse" class="mb-10 max-w-2xl opacity-90">
+        <Text variant="lead" color="main" class="mb-10 max-w-2xl opacity-90">
           Discover our curated collection of ethically sourced diamond jewelry, crafted to celebrate your most precious moments.
         </Text>
         <div class="flex flex-wrap justify-center gap-4">
-          <Button as="a" href="/shop" size="lg" type="secondary">
+          <Button as="a" href="/shop" size="lg" type="primary">
             Shop Collection
           </Button>
-          <Button as="a" href="/collections" size="lg" type="ghost" class="border border-white text-white hover:bg-white/10">
+          <Button as="a" href="/collections" size="lg" type="ghost" class="border border-border-subtle text-text-main shadow-sm hover:bg-black/5 bg-white/50 backdrop-blur-sm">
             View Collections
           </Button>
         </div>
@@ -67,20 +73,12 @@ const categories = [
         </div>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((category) => (
-            <a href={category.href} class="group relative overflow-hidden rounded-2xl shadow-sm transition-transform hover:-translate-y-1">
-              <div class="aspect-4/5 overflow-hidden">
-                <Image 
-                  src={category.image} 
-                  alt={category.name} 
-                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-              <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/30 to-transparent"></div>
-              <div class="absolute bottom-6 left-6">
-                <Heading as="h3" color="inverse">{category.name}</Heading>
-                <Text variant="metadata" color="inverse" class="opacity-80">Explore Collection &rarr;</Text>
-              </div>
-            </a>
+            <CollectionCard 
+              title={category.name}
+              href={category.href}
+              image={category.image}
+              itemCount={category.itemCount}
+            />
           ))}
         </div>
       </div>
