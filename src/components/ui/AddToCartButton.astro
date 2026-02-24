@@ -62,9 +62,11 @@ const buildVariantAttributes = () => {
     attrs[`data-item-custom${customIndex}-name`] = optionName;
     attrs[`data-item-custom${customIndex}-options`] = optionValues;
 
-    // If checkbox type, mark as optional (not required)
+    // Natively require this field in Snipcart checkout unless explicitly optional
     if (slot.is_checkbox) {
       attrs[`data-item-custom${customIndex}-required`] = "false";
+    } else {
+      attrs[`data-item-custom${customIndex}-required`] = "true";
     }
 
     customIndex++;

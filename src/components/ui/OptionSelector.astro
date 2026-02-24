@@ -17,7 +17,7 @@ interface Props {
 
 const { legend, options, name, selected, class: className, ...rest } = Astro.props;
 
-const defaultSelected = selected || (options.length > 0 ? options[0] : "");
+const defaultSelected = selected || "";
 ---
 
 <fieldset

@@ -174,7 +174,7 @@ const stripeConfigured = !!stripePublishableKey;
         <>
           <form id="payment-form">
             <div id="payment-element"></div>
-            <button type="submit" id="pay-button" class="pay-button" disabled>
+            <button type="submit" id="pay-button" class="pay-button cursor-pointer disabled:cursor-not-allowed" disabled>
               <span class="loader"><span class="spinner"></span> Preparing...</span>
             </button>
           </form>

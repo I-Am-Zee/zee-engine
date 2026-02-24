@@ -91,7 +91,7 @@ const { autoDismissMs = 4000 } = Astro.props;
       <!-- Dismiss Button -->
       <button
         @click="visible = false"
-        class="ml-auto rounded p-1 text-(--color-text-muted) transition-colors hover:bg-(--color-ghost-hover) hover:text-(--color-text-main)"
+        class="ml-auto rounded p-1 text-(--color-text-muted) transition-colors hover:bg-(--color-ghost-hover) hover:text-(--color-text-main) cursor-pointer disabled:cursor-not-allowed"
         aria-label="Dismiss"
       >
         <Icon name="PhX" size={16} />

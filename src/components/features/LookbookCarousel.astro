@@ -76,7 +76,7 @@ const lookbooks = await getCollection("lookbooks");
         {lookbooks.map((_, index) => (
           <button 
             @click={`goTo(${index})`}
-            class="h-1 transition-all duration-500 rounded-full"
+            class="h-1 transition-all duration-500 rounded-full cursor-pointer disabled:cursor-not-allowed"
             x-bind:class={`currentIndex === index ? 'w-10 bg-accent-brass' : 'w-2 bg-white/40 hover:bg-white/60'`}
             title={`Go to slide ${index + 1}`}
           ></button>

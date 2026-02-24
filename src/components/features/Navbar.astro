@@ -40,7 +40,7 @@ const { class: className, ...rest } = Astro.props;
           ) : (
             <a
               href={item.href}
-              class="px-3 py-2 transition-colors duration-200 hover:text-text-muted"
+              class="inline-flex items-center justify-center px-3 py-2 transition-colors duration-200 hover:text-text-muted"
             >
               <Text as="span" variant="label" class="normal-case tracking-normal">
                 {item.label}
@@ -52,7 +52,7 @@ const { class: className, ...rest } = Astro.props;
     </nav>
 
     {/* Desktop Actions - Hidden on mobile */}
-    <div class="hidden items-center gap-2 md:flex">
+    <div class="hidden items-center gap-4 md:flex">
       <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label="Search">
         <Icon name="PhMagnifyingGlass" />
       </Button>
@@ -75,7 +75,7 @@ const { class: className, ...rest } = Astro.props;
       >
         <Icon name="PhUser" />
       </Button>
-      <button class="snipcart-checkout relative" aria-label="Cart">
+      <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label="Cart">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhShoppingCart" />
         </Button>
@@ -92,7 +92,7 @@ const { class: className, ...rest } = Astro.props;
       <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label="Search">
         <Icon name="PhMagnifyingGlass" />
       </Button>
-      <button class="snipcart-checkout relative" aria-label="Cart">
+      <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label="Cart">
         <Button type="ghost" variant="icon-only" size="sm" as="span">
           <Icon name="PhShoppingCart" />
         </Button>
@@ -152,7 +152,7 @@ const { class: className, ...rest } = Astro.props;
                       <div>
                         <button
                           type="button"
-                          class="flex w-full items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-surface"
+                          class="flex w-full items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-surface cursor-pointer disabled:cursor-not-allowed"
                           @click={`activeAccordion = activeAccordion === '${item.label}' ? null : '${item.label}'`}
                         >
                           <Text variant="paragraph" weight="medium">{item.label}</Text>

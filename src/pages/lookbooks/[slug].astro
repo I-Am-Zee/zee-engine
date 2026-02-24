@@ -194,7 +194,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     <div class="container mx-auto">
       <button
         @click="$dispatch('zaviona:master-set', { products: productsForButton })"
-        class="relative w-full rounded-xl bg-primary px-8 py-4 text-sm font-black tracking-[0.2em] text-white uppercase shadow-lg active:scale-[0.98] transition-all"
+        class="relative w-full rounded-xl bg-primary px-8 py-4 text-sm font-black tracking-[0.2em] text-white uppercase shadow-lg active:scale-[0.98] transition-all cursor-pointer disabled:cursor-not-allowed"
       >
         <div class="flex items-center justify-center gap-3">
           <Icon name="PhShoppingBagOpen" size={18} weight="bold" />

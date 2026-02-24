@@ -30,7 +30,7 @@ const { images, alt, class: className = "" } = Astro.props;
           type="button"
           @click={`activeImage = '${image}'`}
           :class={`activeImage === '${image}' ? 'ring-2 ring-(--color-ring) opacity-100' : 'opacity-60 hover:opacity-80'`}
-          class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring)"
+          class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
         >
           <img
             src={image}
@@ -51,7 +51,7 @@ const { images, alt, class: className = "" } = Astro.props;
           type="button"
           @click={`activeImage = '${image}'`}
           :class={`activeImage === '${image}' ? 'ring-2 ring-(--color-ring) opacity-100' : 'opacity-60 hover:opacity-80'`}
-          class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring)"
+          class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
         >
           <img
             src={image}

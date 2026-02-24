@@ -64,8 +64,32 @@ export function initOptionsSync() {
     }
   });
 
-  // Also listen for custom events if needed
+  // Listen for custom events if needed
   document.addEventListener('snipcart-attributes-sync', updateButtonAttributes);
+
+  // STRICT VALIDATION INTERCEPTOR
+  // Snipcart uses a bubbling listener. By using capture: true, we intercept the click BEFORE Snipcart!
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest('.snipcart-add-item');
+    
+    if (btn) {
+      // Loop through the 3 possible custom fields
+      for (let i = 1; i <= 3; i++) {
+        const required = btn.getAttribute(`data-item-custom${i}-required`);
+        const value = btn.getAttribute(`data-item-custom${i}-value`) || '';
+        const name = btn.getAttribute(`data-item-custom${i}-name`);
+        
+        // If it's explicitly required, but the value is empty, block Snipcart and alert user
+        if (required === 'true' && value.trim() === '') {
+          e.preventDefault();
+          e.stopImmediatePropagation(); // This strictly blocks Snipcart's own internal script
+          alert(`Please select a ${name} to proceed.`);
+          return;
+        }
+      }
+    }
+  }, { capture: true });
 }
 
 // Auto-init on DOMContentLoaded
