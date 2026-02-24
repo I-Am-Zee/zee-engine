@@ -55,19 +55,12 @@ const priceTagProps = hasSale
 <article
   class:list={[
     "relative flex flex-col overflow-hidden rounded-2xl group aspect-2/3",
-    "cursor-pointer select-none bg-surface-muted border border-white/10",
-    "transition-shadow duration-700 hover:shadow-[0_24px_60px_rgba(0,0,0,0.20)] hover:border-white/20",
+    "cursor-pointer select-none bg-surface-muted border border-border-subtle/40",
+    "shadow-sm transition-all duration-500 ease-out",
+    "hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-border-subtle/80 hover:-translate-y-1",
     className,
   ]}
-  x-data="glassCard()"
-  data-key={href}
-  data-id={id}
-  data-title={title}
-  data-price={salePrice ? String(salePrice) : String(price)}
-  data-image={image}
-  data-v1={variant_1}
-  data-v2={variant_2}
-  data-v3={variant_3}
+  x-data
   {...rest}
 >
   {/* LAYER 1: Static color-matched blurred base. No hover animation. */}
@@ -99,8 +92,6 @@ const priceTagProps = hasSale
       decoding="async"
       class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
     />
-    {/* Deeper bottom vignette for guaranteed text contrast (Light theme) */}
-    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-white/60 via-white/10 to-transparent"></div>
   </div>
 
   {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
@@ -123,25 +114,26 @@ const priceTagProps = hasSale
   <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2 isolate">
     <button
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
-             bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
-             hover:bg-white hover:text-red-500 hover:scale-110
-             transition-[transform,background-color,color] duration-300 ease-out transform-gpu
+             bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-sm
+             hover:bg-white hover:text-red-500 hover:shadow-md hover:scale-110
+             transition-all duration-300 ease-out transform-gpu
              focus-glow"
-      x-on:click.prevent="toggleWishlist()"
-      x-bind:class="wishlisted ? 'text-red-500 bg-white!' : 'text-white'"
+      x-data={`{ id: '${id}' }`}
+      x-on:click.prevent="$store.wishlist.toggle(id)"
+      x-bind:class="$store.wishlist.has(id) ? 'text-red-500 bg-white! border-transparent!' : ''"
       aria-label="Toggle wishlist"
     >
-      <Icon name="PhHeart" size={17} weight="regular" class="block shrink-0" x-show="!wishlisted" />
-      <Icon name="PhHeart" size={17} weight="fill"    class="block shrink-0" x-show="wishlisted" x-cloak />
+      <Icon name="PhHeart" size={17} weight="regular" class="block shrink-0" x-show="!$store.wishlist.has(id)" />
+      <Icon name="PhHeart" size={17} weight="fill"    class="block shrink-0" x-show="$store.wishlist.has(id)" x-cloak />
     </button>
 
     <button
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
-             bg-white/10 backdrop-blur-xl border border-white/25 text-white shadow-sm
-             hover:bg-white hover:text-primary hover:scale-110
-             transition-[transform,background-color,color] duration-300 ease-out transform-gpu
+             bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-sm
+             hover:bg-white hover:text-primary hover:shadow-md hover:scale-110
+             transition-all duration-300 ease-out transform-gpu
              focus-glow"
-      x-on:click.stop="quickShop()"
+      x-on:click.prevent.stop={`$dispatch('zaviona:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, variants: {variant_1, variant_2, variant_3}})})`}
       aria-label={"Quick shop " + title}
     >
       <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="block shrink-0" />
@@ -177,36 +169,6 @@ const priceTagProps = hasSale
     </div>
   </div>
 </article>
-
-<script>
-  document.addEventListener("alpine:init", () => {
-    (window as any).Alpine.data("glassCard", () => ({
-      get wishlisted(): boolean {
-        const key = (this as any).$el?.dataset?.key ?? "";
-        return (window as any).Alpine?.store("wishlist")?.has(key) ?? false;
-      },
-      toggleWishlist(): void {
-        const key = (this as any).$el?.dataset?.key ?? "";
-        (window as any).Alpine?.store("wishlist")?.toggle(key);
-      },
-      quickShop(): void {
-        const self = this as any;
-        const el: HTMLElement = self.$el;
-        self.$dispatch("zaviona:quick-shop", {
-          id: el.dataset.id,
-          title: el.dataset.title,
-          price: Number(el.dataset.price),
-          image: el.dataset.image,
-          variants: {
-            variant_1: el.dataset.v1,
-            variant_2: el.dataset.v2,
-            variant_3: el.dataset.v3
-          }
-        });
-      },
-    }));
-  });
-</script>
 
 <style>
   [x-cloak] { display: none !important; }
