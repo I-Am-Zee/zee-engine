@@ -84,7 +84,23 @@ export function initOptionsSync() {
         if (required === 'true' && value.trim() === '') {
           e.preventDefault();
           e.stopImmediatePropagation(); // This strictly blocks Snipcart's own internal script
-          alert(`Please select a ${name} to proceed.`);
+          
+          // Inline validation UX replacing native alert
+          let errorMsg = btn.parentElement?.querySelector('.inline-variant-error');
+          if (!errorMsg) {
+             errorMsg = document.createElement('p');
+             errorMsg.className = 'inline-variant-error mt-2 text-sm font-medium text-red-500 text-center w-full animate-fade-in';
+             btn.insertAdjacentElement('afterend', errorMsg);
+          }
+          errorMsg.textContent = `Please select a ${name} to proceed.`;
+          
+          // Clear error after 4 seconds
+          setTimeout(() => {
+            if (errorMsg && errorMsg.textContent === `Please select a ${name} to proceed.`) {
+              errorMsg.textContent = '';
+            }
+          }, 4000);
+          
           return;
         }
       }

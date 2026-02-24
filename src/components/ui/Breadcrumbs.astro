@@ -16,18 +16,18 @@ interface Props {
 const { items, class: className, ...rest } = Astro.props;
 ---
 
-<nav class:list={["flex items-center gap-2 text-sm", className]} aria-label="Breadcrumb" {...rest}>
-  <ol class="inline-flex items-center gap-1">
+<nav class:list={["flex items-center gap-2 text-xs uppercase tracking-widest text-text-muted", className]} aria-label="Breadcrumb" {...rest}>
+  <ol class="inline-flex items-center gap-2">
     {
       items.map((item, index) => (
-        <li class="inline-flex items-center gap-1">
-          {index > 0 && <Icon name="PhCaretRight" class="text-text-muted" aria-hidden="true" />}
+        <li class="inline-flex items-center gap-2">
+          {index > 0 && <span class="text-text-muted/50 select-none">/</span>}
           {item.href && index < items.length - 1 ? (
-            <Link href={item.href} variant="plain" class="text-text-muted hover:text-text-main">
+            <Link href={item.href} variant="plain" class="text-text-muted hover:text-text-main transition-colors duration-200">
               {item.label}
             </Link>
           ) : (
-            <Text as="span" variant="caption" color="main">
+            <Text as="span" variant="caption" color="main" class="font-medium text-xs uppercase tracking-widest">
               {item.label}
             </Text>
           )}

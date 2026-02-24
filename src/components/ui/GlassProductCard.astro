@@ -118,28 +118,28 @@ const priceTagProps = hasSale
     <button
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
              bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-md
-             hover:bg-white hover:text-red-500 hover:shadow-lg hover:scale-110
              transition-all duration-300 ease-out transform-gpu
-             focus-glow cursor-pointer disabled:cursor-not-allowed"
+             hover:bg-white hover:text-red-500 hover:shadow-lg hover:scale-110
+             focus-glow cursor-pointer disabled:cursor-not-allowed group relative"
       x-data={`{ id: '${id}' }`}
       x-on:click.prevent="$store.wishlist.toggle(id)"
-      x-bind:class="$store.wishlist.has(id) ? 'text-red-500 bg-white! border-transparent!' : ''"
+      x-bind:class="$store.wishlist.has(id) ? '!text-red-500 !bg-white !border-transparent' : ''"
       aria-label="Toggle wishlist"
     >
-      <Icon name="PhHeart" size={17} weight="regular" class="block shrink-0" x-show="!$store.wishlist.has(id)" />
-      <Icon name="PhHeart" size={17} weight="fill"    class="block shrink-0" x-show="$store.wishlist.has(id)" x-cloak />
+      <Icon name="PhHeart" size={17} weight="regular" class="absolute shrink-0 group-hover:text-red-500 transition-colors" x-show="!$store.wishlist.has(id)" />
+      <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 !text-red-500 transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
     </button>
 
     <button
-      class="flex items-center justify-center w-9 h-9 rounded-full isolate
+      class="flex items-center justify-center w-9 h-9 rounded-full isolate relative
              bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-md
-             hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              transition-all duration-300 ease-out transform-gpu
+             hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
       x-on:click.prevent.stop={`$dispatch('zaviona:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, variants: {variant_1, variant_2, variant_3}})})`}
       aria-label={"Quick shop " + title}
     >
-      <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="block shrink-0" />
+      <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />
     </button>
   </div>
 

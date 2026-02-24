@@ -12,12 +12,13 @@ const { rating, max = 5, class: className, ...rest } = Astro.props;
 // Clamp rating between 0 and max
 const clampedRating = Math.max(0, Math.min(max, rating));
 const fullStars = Math.floor(clampedRating);
-const hasHalfStar = clampedRating % 1 >= 0.5;
-const emptyStars = max - fullStars - (hasHalfStar ? 1 : 0);
+const decimalPart = clampedRating % 1;
+const fillPercentage = Math.round(decimalPart * 100);
+const emptyStars = max - fullStars - (fillPercentage > 0 ? 1 : 0);
 ---
 
 <div
-  class:list={["inline-flex items-center gap-0.5", className]}
+  class:list={["inline-flex items-center gap-0.5 leading-none", className]}
   role="img"
   aria-label={`Rating: ${rating} out of ${max} stars`}
   {...rest}
@@ -25,17 +26,29 @@ const emptyStars = max - fullStars - (hasHalfStar ? 1 : 0);
   {/* Full stars */}
   {
     Array.from({ length: fullStars }).map(() => (
-      <Icon name="PhStar" weight="fill" class="text-primary" />
+      <Icon name="PhStar" weight="fill" class="text-primary shrink-0" />
     ))
   }
 
-  {/* Half star */}
-  {hasHalfStar && <Icon name="PhStar" weight="fill" class="text-text-muted/40" />}
+  {/* Fractional star */}
+  {fillPercentage > 0 && (
+    <div class="relative inline-flex leading-none shrink-0">
+      {/* Background empty star */}
+      <Icon name="PhStar" class="text-text-muted/30" />
+      {/* Foreground filled star cropped to percentage */}
+      <div 
+        class="absolute inset-0 overflow-hidden" 
+        style={`width: ${fillPercentage}%;`}
+      >
+        <Icon name="PhStar" weight="fill" class="text-primary w-fit min-w-max" />
+      </div>
+    </div>
+  )}
 
   {/* Empty stars */}
   {
     Array.from({ length: emptyStars }).map(() => (
-      <Icon name="PhStar" class="text-text-muted/20" />
+      <Icon name="PhStar" class="text-text-muted/30 shrink-0" />
     ))
   }
 </div>

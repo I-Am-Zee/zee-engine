@@ -1,6 +1,6 @@
 ---
 title: "Diwali Party Glam"
-hero_image: "https://images.unsplash.com/photo-1603969072881-b0fc7f3d77d7?q=80&w=2070&auto=format&fit=crop"
+hero_image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=2000&auto=format&fit=crop"
 description: "Sparkle this festive season with our curated collection of statement pieces perfect for Diwali celebrations."
 products:
   - celestial-diamond-ring

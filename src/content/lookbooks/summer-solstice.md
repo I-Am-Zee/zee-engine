@@ -1,6 +1,6 @@
 ---
 title: "Summer Solstice"
-hero_image: "https://images.unsplash.com/photo-1515562041144-8cb23e839e3b?q=80&w=2070&auto=format&fit=crop"
+hero_image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2000&auto=format&fit=crop"
 description: "Embrace the warmth of the sun with our radiant gold collection, designed for endless summer days."
 products:
   - ethereal-gold-necklace

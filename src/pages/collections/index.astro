@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
+import CollectionCard from "../../components/ui/CollectionCard.astro";
 import { getCollection } from "astro:content";
 
 const allProducts = await getCollection("products");
@@ -98,24 +99,15 @@ const collections = [
       </Text>
     </div>
 
-    <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
       {collections.map((collection) => (
-        <a href={collection.href} class="group relative flex flex-col overflow-hidden rounded-2xl border border-border-subtle transition-all hover:shadow-xl hover:-translate-y-1">
-          <div class="aspect-h-12 aspect-w-16 bg-gray-200 sm:aspect-none sm:h-96">
-            <img
-              src={collection.image}
-              alt={collection.title}
-              class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-            />
-          </div>
-          <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-6">
-            <Text class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">{collection.count}</Text>
-            <Heading as="h3" class="font-bold text-white mb-2">{collection.title}</Heading>
-            <Text class="text-sm text-white/90 line-clamp-2 md:opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              {collection.description}
-            </Text>
-          </div>
-        </a>
+        <CollectionCard 
+          title={collection.title}
+          href={collection.href}
+          image={collection.image}
+          description={collection.description}
+          itemCount={collection.count}
+        />
       ))}
     </div>
   </main>

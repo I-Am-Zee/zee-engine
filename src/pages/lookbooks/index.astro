@@ -9,6 +9,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
+import CollectionCard from '../../components/ui/CollectionCard.astro';
 
 // Get all lookbooks
 const lookbooks = await getCollection('lookbooks');
@@ -18,7 +19,7 @@ const description = 'Explore our curated jewelry collections. From Diwali party 
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="container mx-auto px-4 py-16">
+  <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8">
     <!-- Header -->
     <div class="text-center mb-12">
       <Heading as="h1" class="mb-4">
@@ -31,47 +32,15 @@ const description = 'Explore our curated jewelry collections. From Diwali party 
 
     <!-- Lookbooks Grid -->
     {lookbooks.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
         {lookbooks.map((lookbook) => (
-          <a
+          <CollectionCard
+            title={lookbook.data.title}
             href={`/lookbooks/${lookbook.slug}`}
-            class="group block overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-          >
-            <!-- Hero Image -->
-            <div class="relative aspect-[4/5] overflow-hidden bg-gray-100">
-              <img
-                src={lookbook.data.hero_image}
-                alt={lookbook.data.title}
-                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              
-              <!-- Overlay on Hover -->
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 class="font-heading text-2xl font-bold mb-2">
-                    {lookbook.data.title}
-                  </h3>
-                  {lookbook.data.description && (
-                    <p class="text-sm opacity-90 line-clamp-2">
-                      {lookbook.data.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <!-- Info Below Image -->
-            <div class="p-4 bg-white">
-              <h3 class="font-heading text-xl font-bold mb-1 group-hover:text-primary transition-colors">
-                {lookbook.data.title}
-              </h3>
-              {lookbook.data.products && (
-                <p class="text-sm text-gray-500">
-                  {lookbook.data.products.length} {lookbook.data.products.length === 1 ? 'item' : 'items'} in this look
-                </p>
-              )}
-            </div>
-          </a>
+            image={lookbook.data.hero_image}
+            description={lookbook.data.description}
+            itemCount={lookbook.data.products?.length}
+          />
         ))}
       </div>
     ) : (

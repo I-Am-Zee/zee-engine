@@ -1,0 +1,68 @@
+---
+/**
+ * CollectionCard - UI Molecule
+ * 
+ * Reusable card for Lookbooks and Collections.
+ * Standardized 4:5 aspect ratio, sleek hover effects, and luxury typography.
+ */
+
+import Heading from "../primitives/Heading.astro";
+import Badge from "../primitives/Badge.astro";
+
+interface Props {
+  title: string;
+  href: string;
+  image: string;
+  description?: string;
+  itemCount?: string | number;
+  class?: string;
+}
+
+const { title, href, image, description, itemCount, class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    "group relative block overflow-hidden rounded-2xl bg-surface transition-all duration-500 hover:shadow-xl focus-glow cursor-pointer",
+    className,
+  ]}
+>
+  {/* Image Container */}
+  <div class="relative aspect-[4/5] w-full overflow-hidden bg-surface-muted">
+    <img
+      src={image}
+      alt={title}
+      loading="lazy"
+      class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+    />
+    
+    {/* Dark Gradient Scrim overlay for text legibility */}
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90"></div>
+
+    {itemCount && (
+      <div class="absolute top-4 left-4 z-20">
+        <Badge intent="surface" size="sm" class="border border-white/20 bg-black/40 text-white backdrop-blur-md">
+          {typeof itemCount === 'number' ? `${itemCount} ${itemCount === 1 ? 'Item' : 'Items'}` : itemCount}
+        </Badge>
+      </div>
+    )}
+
+    {/* Text Content overlaying image at bottom */}
+    <div class="absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end p-6 sm:p-8">
+      <Heading 
+        as="h3" 
+        color="inverse" 
+        class="mb-2 translate-y-0 font-serif text-2xl tracking-tight transition-transform duration-500 group-hover:-translate-y-1 sm:text-3xl"
+      >
+        {title}
+      </Heading>
+      
+      {description && (
+        <p class="max-h-0 translate-y-4 line-clamp-2 text-sm leading-relaxed text-white/80 opacity-0 transition-all duration-500 group-hover:max-h-24 group-hover:translate-y-0 group-hover:opacity-100 sm:text-base">
+          {description}
+        </p>
+      )}
+    </div>
+  </div>
+</a>
