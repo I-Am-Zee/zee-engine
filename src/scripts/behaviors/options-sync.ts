@@ -86,11 +86,16 @@ export function initOptionsSync() {
           e.stopImmediatePropagation(); // This strictly blocks Snipcart's own internal script
           
           // Inline validation UX replacing native alert
-          let errorMsg = btn.parentElement?.querySelector('.inline-variant-error');
+          const container = btn.closest('.product-actions-row') || btn.parentElement;
+          let errorMsg = container?.parentElement?.querySelector('.inline-variant-error') as HTMLElement;
           if (!errorMsg) {
              errorMsg = document.createElement('p');
-             errorMsg.className = 'inline-variant-error mt-2 text-sm font-medium text-red-500 text-center w-full animate-fade-in';
-             btn.insertAdjacentElement('afterend', errorMsg);
+             errorMsg.className = 'inline-variant-error mt-4 text-sm font-medium text-red-500 w-full animate-fade-in bg-red-50 p-3 rounded-lg border border-red-100';
+             if (container) {
+                 container.insertAdjacentElement('afterend', errorMsg);
+             } else {
+                 btn.insertAdjacentElement('afterend', errorMsg);
+             }
           }
           errorMsg.textContent = `Please select a ${name} to proceed.`;
           

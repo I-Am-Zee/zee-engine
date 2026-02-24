@@ -192,7 +192,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             )
           }
 
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-center mt-6">
+          <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6 relative">
             {/* Add to Cart Button - Snipcart */}
             <AddToCartButton
               product={product}
@@ -204,7 +204,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             </AddToCartButton>
 
             {/* Wishlist Button - Uses global store */}
-            <WishlistButton productId={product.slug} variant="icon-only" size="lg" class="h-[52px] w-full sm:w-[52px] shrink-0" />
+            <WishlistButton productId={product.slug} variant="with-label" size="lg" class="h-[52px]" />
           </div>
         </div>
 
