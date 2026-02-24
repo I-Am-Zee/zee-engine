@@ -43,7 +43,7 @@ const { title, href, image, description, itemCount, class: className } = Astro.p
 
     {itemCount && (
       <div class="absolute top-4 left-4 z-20">
-        <Badge intent="surface" size="sm" class="border border-white/20 bg-black/80 text-white backdrop-blur-md">
+        <Badge intent="surface" size="sm" class="border border-white/50 bg-white/95 text-text-main shadow-md backdrop-blur-md font-bold tracking-wide">
           {typeof itemCount === 'number' ? `${itemCount} ${itemCount === 1 ? 'Item' : 'Items'}` : itemCount}
         </Badge>
       </div>

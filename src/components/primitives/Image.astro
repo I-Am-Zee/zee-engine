@@ -10,9 +10,21 @@ interface Props {
   height?: number;
   loading?: "lazy" | "eager";
   decoding?: "async" | "auto" | "sync";
+  fetchpriority?: "high" | "low" | "auto";
 }
 
-const { src, alt, ratio = "square", class: className, width, height, ...rest } = Astro.props;
+const { 
+  src, 
+  alt, 
+  ratio = "square", 
+  class: className, 
+  width, 
+  height, 
+  loading = "lazy", 
+  decoding = "async", 
+  fetchpriority, 
+  ...rest 
+} = Astro.props;
 
 // Base styles with object-fit cover - removed h-full to respect aspect-ratio
 const baseStyles = "w-full object-cover";
@@ -41,6 +53,9 @@ const bypassAstroImage = isPublicFile || (import.meta.env.DEV && isRemote);
       class={combinedClasses} 
       width={width}
       height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
       {...rest}
     />
   ) : isString ? (
@@ -50,6 +65,9 @@ const bypassAstroImage = isPublicFile || (import.meta.env.DEV && isRemote);
       class={combinedClasses} 
       width={width || 800}
       height={height || 800}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
       {...rest}
     />
   ) : (
@@ -59,6 +77,9 @@ const bypassAstroImage = isPublicFile || (import.meta.env.DEV && isRemote);
       class={combinedClasses} 
       width={width}
       height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
       {...rest} 
     />
   )
