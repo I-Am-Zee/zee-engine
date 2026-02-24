@@ -11,6 +11,8 @@
  * - Toast notifications (no popup fatigue)
  */
 
+export {};
+
 declare global {
   interface Window {
     Snipcart: any;

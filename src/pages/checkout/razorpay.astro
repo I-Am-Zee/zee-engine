@@ -225,7 +225,7 @@ const siteUrl =
       </div>
     </div>
 
-    <script define:vars={{ publicToken, razorpayKeyId, siteUrl }}>
+    <script define:vars={{ publicToken, razorpayKeyId, siteUrl }} is:inline>
       // State
       let paymentSession = null;
       let razorpayOrder = null;

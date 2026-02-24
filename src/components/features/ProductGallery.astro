@@ -5,6 +5,8 @@ interface Props {
   class?: string;
 }
 
+import Image from "../primitives/Image.astro";
+
 const { images, alt, class: className = "" } = Astro.props;
 ---
 
@@ -32,7 +34,7 @@ const { images, alt, class: className = "" } = Astro.props;
           :class={`activeImage === '${image}' ? 'ring-2 ring-(--color-ring) opacity-100' : 'opacity-60 hover:opacity-80'`}
           class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
         >
-          <img
+          <Image
             src={image}
             alt={`${alt} thumbnail`}
             class="h-full w-full object-cover"
@@ -53,7 +55,7 @@ const { images, alt, class: className = "" } = Astro.props;
           :class={`activeImage === '${image}' ? 'ring-2 ring-(--color-ring) opacity-100' : 'opacity-60 hover:opacity-80'`}
           class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
         >
-          <img
+          <Image
             src={image}
             alt={`${alt} thumbnail`}
             class="h-full w-full object-cover"

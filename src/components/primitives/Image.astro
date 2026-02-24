@@ -8,6 +8,8 @@ interface Props {
   class?: string;
   width?: number;
   height?: number;
+  loading?: "lazy" | "eager";
+  decoding?: "async" | "auto" | "sync";
 }
 
 const { src, alt, ratio = "square", class: className, width, height, ...rest } = Astro.props;
@@ -25,19 +27,29 @@ const ratioStyles = {
 
 const combinedClasses = `${baseStyles} ${ratioStyles[ratio]} ${className || ""}`.trim();
 
-// Note: If src is a remote string, it might need explicit dimensions in Astro
+const isString = typeof src === "string";
+const isPublicFile = isString && src.startsWith("/");
+const isRemote = isString && src.startsWith("http");
+const bypassAstroImage = isPublicFile || (import.meta.env.DEV && isRemote);
 ---
 
 {
-  typeof src === "string" ? (
+  bypassAstroImage ? (
     <img 
       src={src} 
       alt={alt} 
       class={combinedClasses} 
-      loading="lazy" 
-      decoding="async"
       width={width}
       height={height}
+      {...rest}
+    />
+  ) : isString ? (
+    <AstroImage 
+      src={src} 
+      alt={alt} 
+      class={combinedClasses} 
+      width={width || 800}
+      height={height || 800}
       {...rest}
     />
   ) : (

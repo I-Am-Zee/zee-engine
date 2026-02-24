@@ -1,5 +1,5 @@
 ---
-interface Props {
+export interface Props {
   as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   color?: "main" | "muted" | "inverse" | "accent";
   class?: string;
@@ -21,7 +21,7 @@ const colorStyles = colorChoices[color as string] || colorChoices.main;
 const baseStyles =
   `font-serif font-medium tracking-normal leading-[1.15] ${colorStyles} antialiased`;
 
-const sizeStyles = {
+const sizeStyles: Record<string, string> = {
   h1: "text-[clamp(2rem,5vw,3.5rem)]",
   h2: "text-[clamp(1.75rem,4vw,2.5rem)]",
   h3: "text-[clamp(1.5rem,3.5vw,2rem)] font-semibold",

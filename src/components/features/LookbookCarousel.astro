@@ -14,6 +14,7 @@ import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import Carousel from "../ui/Carousel.astro";
+import Image from "../primitives/Image.astro";
 
 const lookbooks = await getCollection("lookbooks");
 ---
@@ -28,7 +29,7 @@ const lookbooks = await getCollection("lookbooks");
         <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full bg-surface-muted">
           {/* Background Image */}
           <div class="absolute inset-0 z-0">
-            <img 
+            <Image 
               src={lookbook.data.hero_image} 
               alt={lookbook.data.title} 
               class="h-full w-full object-cover object-center brightness-95 transition-transform duration-[2000ms] ease-out-expo"

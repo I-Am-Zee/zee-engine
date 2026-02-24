@@ -12,6 +12,7 @@
 import Badge from "../primitives/Badge.astro";
 import Heading from "../primitives/Heading.astro";
 import Icon from "../primitives/Icon.astro";
+import Image from "../primitives/Image.astro";
 import PriceTag from "./PriceTag.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 
@@ -65,7 +66,7 @@ const priceTagProps = hasSale
 >
   {/* LAYER 1: Static color-matched blurred base. No hover animation. */}
   <div class="absolute inset-0 z-0 pointer-events-none">
-    <img
+    <Image
       src={image}
       alt=""
       aria-hidden="true"
@@ -85,7 +86,7 @@ const priceTagProps = hasSale
 
   {/* LAYER 2: Crisp product image (Flex-1 fills all space above the glass panel) */}
   <div class="relative flex-1 block overflow-hidden z-5 pointer-events-none">
-    <img
+    <Image
       src={image}
       alt={title}
       loading="lazy"
@@ -119,14 +120,14 @@ const priceTagProps = hasSale
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
              bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-md
              transition-all duration-300 ease-out transform-gpu
-             hover:bg-white hover:text-red-500 hover:shadow-lg hover:scale-110
+             hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed group relative"
       x-data={`{ id: '${id}' }`}
       x-on:click.prevent="$store.wishlist.toggle(id)"
       x-bind:class="$store.wishlist.has(id) ? '!text-red-500 !bg-white !border-transparent' : ''"
       aria-label="Toggle wishlist"
     >
-      <Icon name="PhHeart" size={17} weight="regular" class="absolute shrink-0 group-hover:text-red-500 transition-colors" x-show="!$store.wishlist.has(id)" />
+      <Icon name="PhHeart" size={17} weight="regular" class="absolute shrink-0 transition-colors" x-show="!$store.wishlist.has(id)" />
       <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 !text-red-500 transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
     </button>
 

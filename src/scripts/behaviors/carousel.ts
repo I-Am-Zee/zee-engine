@@ -22,7 +22,7 @@ export const carousel = (config: Options = {}) => ({
       ...config
     };
 
-    this.splide = new Splide(this.$el as HTMLElement, defaultOptions);
+    this.splide = new Splide((this as any).$el as HTMLElement, defaultOptions);
 
     // Sync Splide index with Alpine state
     this.splide.on('moved', (newIndex: number) => {

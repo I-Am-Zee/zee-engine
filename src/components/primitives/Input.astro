@@ -1,7 +1,7 @@
 ---
-interface Props {
+export interface Props {
   id: string;
-  type?: string;
+  type?: "text" | "password" | "email" | "number" | "tel" | "search" | "url";
   placeholder?: string;
   error?: boolean;
   class?: string;

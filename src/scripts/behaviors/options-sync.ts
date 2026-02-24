@@ -101,8 +101,8 @@ export function initOptionsSync() {
           
           // Clear error after 4 seconds
           setTimeout(() => {
-            if (errorMsg && errorMsg.textContent === `Please select a ${name} to proceed.`) {
-              errorMsg.textContent = '';
+            if (errorMsg?.parentElement) {
+              errorMsg.remove();
             }
           }, 4000);
           

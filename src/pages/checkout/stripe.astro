@@ -184,7 +184,7 @@ const stripeConfigured = !!stripePublishableKey;
   </div>
 
   {stripeConfigured && (
-    <script define:vars={{ publicToken, stripePublishableKey, siteUrl }}>
+    <script define:vars={{ publicToken, stripePublishableKey, siteUrl }} is:inline>
     // Initialize Stripe
     const stripe = Stripe(stripePublishableKey);
     

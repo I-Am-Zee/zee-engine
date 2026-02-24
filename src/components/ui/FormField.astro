@@ -6,7 +6,7 @@ interface Props {
   label: string;
   name: string;
   error?: string;
-  type?: string;
+  type?: "text" | "password" | "email" | "number" | "tel" | "search" | "url";
   placeholder?: string;
   class?: string;
 }

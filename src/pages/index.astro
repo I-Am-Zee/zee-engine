@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
+import Image from "../components/primitives/Image.astro";
 import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 
@@ -29,7 +30,7 @@ const categories = [
     {/* Hero Section */}
     <section class="relative h-[90vh] overflow-hidden">
       <div class="absolute inset-0 z-0">
-        <img 
+        <Image 
           src="/images/products/1605100804763-247f67b3557e.jpg" 
           alt="Luxury Jewelry Hero" 
           class="h-full w-full object-cover object-center brightness-50"
@@ -66,7 +67,7 @@ const categories = [
           {categories.map((category) => (
             <a href={category.href} class="group relative overflow-hidden rounded-2xl shadow-sm transition-transform hover:-translate-y-1">
               <div class="aspect-4/5 overflow-hidden">
-                <img 
+                <Image 
                   src={category.image} 
                   alt={category.name} 
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"

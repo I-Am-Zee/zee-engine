@@ -96,8 +96,8 @@ const savings = regularTotal - totalPrice;
           this.isLoading = false;
           
           setTimeout(() => {
-            if (errorMsg && errorMsg.textContent.includes('proceed')) {
-              errorMsg.textContent = '';
+            if (errorMsg?.parentElement) {
+              errorMsg.remove();
             }
           }, 4000);
           
@@ -164,24 +164,6 @@ const savings = regularTotal - totalPrice;
   }`}
   class:list={["flex flex-col gap-3", className]}
 >
-  {/* Supplementary Info (Count & Savings) */}
-  {(savings > 0 || products.length > 1) && (
-    <div class="flex items-center justify-between w-full text-sm pb-1">
-      {products.length > 1 ? (
-        <span class="text-text-muted">
-          {products.length} Items Total
-        </span>
-      ) : (
-        <span />
-      )}
-      {savings > 0 && (
-        <span class="font-medium text-emerald-600">
-          Save ₹{savings.toLocaleString("en-IN")} vs buying separately
-        </span>
-      )}
-    </div>
-  )}
-
   <!-- Primary CTA Button -->
   <button
     @click="addSetToCart()"
@@ -218,4 +200,22 @@ const savings = regularTotal - totalPrice;
       <span>{label} (₹{totalPrice.toLocaleString("en-IN")})</span>
     </span>
   </button>
+
+  {/* Supplementary Info (Count & Savings) */}
+  {(savings > 0 || products.length > 1) && (
+    <div class="flex items-center justify-between w-full text-sm pt-1">
+      {products.length > 1 ? (
+        <span class="text-text-muted">
+          {products.length} Items Total
+        </span>
+      ) : (
+        <span />
+      )}
+      {savings > 0 && (
+        <span class="font-medium text-emerald-600">
+          Save ₹{savings.toLocaleString("en-IN")} vs buying separately
+        </span>
+      )}
+    </div>
+  )}
 </div>

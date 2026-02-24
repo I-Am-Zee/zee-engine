@@ -8,6 +8,7 @@ import Icon from '../../components/primitives/Icon.astro';
 import GlassProductCard from '../../components/ui/GlassProductCard.astro';
 import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
+import Image from '../../components/primitives/Image.astro';
 
 export const getStaticPaths = (async () => {
   const lookbooks = await getCollection('lookbooks');
@@ -62,7 +63,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
 
   <!-- Hero Image Section -->
   <div class="relative w-full h-[60vh] md:h-[80vh] bg-black overflow-hidden">
-    <img
+    <Image
       src={hero_image}
       alt={title}
       class="absolute inset-0 w-full h-full object-cover brightness-50"
@@ -166,7 +167,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
         {(await getCollection('lookbooks')).filter(lb => lb.slug !== lookbook.slug).slice(0, 2).map(lb => (
           <a href={`/lookbooks/${lb.slug}`} class="group relative aspect-video overflow-hidden rounded-2xl bg-black">
-            <img src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-2000 group-hover:scale-110 brightness-75" />
+            <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-2000 group-hover:scale-110 brightness-75" />
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-12 transition-colors group-hover:bg-black/20">
               <Text variant="caption" class="text-white/60 mb-2 uppercase tracking-widest group-hover:text-white transition-colors">Editorial</Text>
               <Heading as="h3" class="text-white tracking-widest uppercase">{lb.data.title}</Heading>

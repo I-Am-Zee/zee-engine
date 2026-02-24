@@ -43,9 +43,9 @@ const {
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.css" />
 
     <!-- Snipcart JS (using v3.4.0, async loading) -->
-    <script async src="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.js"></script>
+    <script async src="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.js" is:inline></script>
 
-    <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }}>
+    <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }} is:inline>
       window.SnipcartSettings = {
         publicApiKey: apiKey,
         loadStrategy: "on-idle",

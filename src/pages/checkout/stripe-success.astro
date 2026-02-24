@@ -113,7 +113,7 @@ const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_
     </div>
   </div>
 
-  <script define:vars={{ publicToken, paymentIntentId, siteUrl }}>
+  <script define:vars={{ publicToken, paymentIntentId, siteUrl }} is:inline>
     async function verifyAndConfirm() {
       try {
         // Notify Snipcart of successful payment
