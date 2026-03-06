@@ -47,13 +47,13 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
   <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
     <div 
       x-show="isOpen"
-      x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+      x-transition:enter="transform-gpu transition-transform ease-out duration-500"
       x-transition:enter-start="translate-x-full"
       x-transition:enter-end="translate-x-0"
-      x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+      x-transition:leave="transform-gpu transition-transform ease-in duration-400"
       x-transition:leave-start="translate-x-0"
       x-transition:leave-end="translate-x-full"
-      class="w-screen max-w-md"
+      class="w-screen max-w-md will-change-transform"
     >
       <div class="flex h-full flex-col overflow-y-scroll bg-background shadow-2xl">
         <!-- Header -->

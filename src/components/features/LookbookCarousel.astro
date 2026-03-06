@@ -32,8 +32,8 @@ const lookbooks = await getCollection("lookbooks");
             <Image 
               src={lookbook.data.hero_image} 
               alt={lookbook.data.title} 
-              class="h-full w-full object-cover object-center brightness-95 transition-transform duration-[2000ms] ease-out-expo"
-              x-bind:class={`currentIndex === ${index} ? 'scale-100 opacity-100' : 'scale-110 opacity-0'`}
+              class="h-full w-full object-cover object-center brightness-95 absolute inset-0 transition-all duration-[2000ms] ease-out-expo"
+              x-bind:class={`currentIndex === ${index} ? 'scale-100 opacity-100 z-10' : 'scale-110 opacity-0 z-0 delay-500'`}
             />
             {/* Subtle Gradient Overlay for depth */}
             <div class="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/20 to-transparent"></div>
@@ -47,6 +47,9 @@ const lookbooks = await getCollection("lookbooks");
               x-transition:enter="transition-all cubic-bezier(0.23, 1, 0.32, 1) duration-1000 delay-200"
               x-transition:enter-start="opacity-0 translate-y-12 blur-sm scale-95"
               x-transition:enter-end="opacity-100 translate-y-0 blur-0 scale-100"
+              x-transition:leave="transition-all duration-700 ease-in-out absolute"
+              x-transition:leave-start="opacity-100 translate-y-0 blur-0"
+              x-transition:leave-end="opacity-0 -translate-y-8 blur-sm"
             >
               <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Editorial Series</Text>
               
@@ -78,7 +81,7 @@ const lookbooks = await getCollection("lookbooks");
           <button 
             @click={`goTo(${index})`}
             class="h-1 transition-all duration-500 rounded-full cursor-pointer disabled:cursor-not-allowed"
-            x-bind:class={`currentIndex === index ? 'w-10 bg-accent-brass' : 'w-2 bg-white/40 hover:bg-white/60'`}
+            x-bind:class={`currentIndex === ${index} ? 'w-10 bg-accent-brass' : 'w-2 bg-white/40 hover:bg-white/60'`}
             title={`Go to slide ${index + 1}`}
           ></button>
         ))}

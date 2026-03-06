@@ -132,14 +132,13 @@ export const sideDrawer = () => ({
         const customFields: any[] = [];
         [item.variant_1, item.variant_2, item.variant_3].forEach((v) => {
           if (v?.name && this.selections[item.id][v.name]) {
+            const displayOptions = v.values.split(",").map((vs: any) => vs.trim()).join("|");
             customFields.push({
               name: v.name,
               value: this.selections[item.id][v.name],
               type: "dropdown",
-              options: v.values
-                .split(",")
-                .map((vs: any) => vs.trim())
-                .join("|"),
+              options: displayOptions,
+              required: true
             });
           }
         });

@@ -89,12 +89,18 @@ const productsForButton = [
           <Heading as="h2" class="mb-2">
             Perfect Pairings
           </Heading>
-          <Text variant="paragraph" color="muted" class="mb-0">
-            Curated pieces to elevate your ensemble
-          </Text>
+          <div class="flex items-center gap-3">
+            <Text variant="paragraph" color="muted" class="mb-0">
+              Curated pieces to elevate your ensemble
+            </Text>
+            <span class="text-text-muted opacity-50">|</span>
+            <Text variant="caption" weight="bold" class="text-text-muted uppercase tracking-widest mt-0.5">
+              {productsForButton.length} Items Total
+            </Text>
+          </div>
         </div>
         <div class="w-full md:w-auto md:min-w-[300px]">
-          <BuySetButton products={productsForButton} class="w-full" />
+          <BuySetButton products={productsForButton} class="w-full" hideSavingsText={true} />
         </div>
       </div>
 

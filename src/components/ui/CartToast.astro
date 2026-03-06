@@ -62,6 +62,11 @@ const { autoDismissMs = 4000 } = Astro.props;
         if (window.Snipcart && window.Snipcart.events) {
           registerEvents();
         }
+        
+        // Listen for internal dispatch from custom flows (like SideDrawer Quick Shop)
+        document.addEventListener('zaviona:show-toast', (e) => {
+          if (e.detail) showToast(e.detail);
+        });
       }
     },
     formatPrice(price) {

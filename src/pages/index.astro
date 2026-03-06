@@ -39,14 +39,14 @@ const categories = [
     <section class="relative h-[90vh] overflow-hidden bg-white">
       <div class="absolute inset-0 z-0 opacity-40">
         <Image 
-          src="/images/products/1605100804763-247f67b3557e.jpg" 
+          src="/images/products/1617038220319-276d3cfab638.jpg" 
           alt="Luxury Jewelry Hero" 
-          class="h-full w-full object-cover object-center grayscale mix-blend-multiply"
+          class="h-full w-full object-cover object-center brightness-110 opacity-90"
           loading="eager"
           fetchpriority="high"
         />
       </div>
-      <div class="absolute inset-0 z-0 bg-linear-to-b from-white/80 via-white/40 to-white/90"></div>
+      <div class="absolute inset-0 z-0 bg-linear-to-b from-white/70 via-white/30 to-white/90"></div>
       
       <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 text-center">
         <Heading as="h1" color="main" class="mb-6">
@@ -59,7 +59,7 @@ const categories = [
           <Button as="a" href="/shop" size="lg" type="primary">
             Shop Collection
           </Button>
-          <Button as="a" href="/collections" size="lg" type="ghost" class="border border-border-subtle text-text-main shadow-sm hover:bg-black/5 bg-white/50 backdrop-blur-sm">
+          <Button as="a" href="/collections" size="lg" type="ghost" class="text-text-main shadow-sm hover:bg-black/5 bg-white/50 backdrop-blur-sm">
             View Collections
           </Button>
         </div>
@@ -82,7 +82,7 @@ const categories = [
         </div>
         
         <Carousel 
-          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: false, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
+          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
           class="w-full"
         >
           {categories.map((category) => (
@@ -113,9 +113,9 @@ const categories = [
         </div>
         
         <Carousel 
-          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: false, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
+          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
           class="w-full -mx-4 px-4 pb-12"
-          showArrows={false}
+          showArrows={true}
         >
           {featuredProducts.map((product) => (
             <li class="splide__slide h-auto pt-4 relative group">

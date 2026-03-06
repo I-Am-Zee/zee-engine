@@ -2,7 +2,9 @@
 // Import global CSS so Astro bundles it for production
 import "../styles/global.css";
 import { siteConfig } from "../lib/site.config";
+import { ClientRouter } from "astro:transitions";
 import { getEntry } from "astro:content";
+import CartToast from "../components/ui/CartToast.astro";
 import AnnouncementBar from "../components/ui/AnnouncementBar.astro";
 import PopupModal from "../components/ui/PopupModal.astro";
 import Navbar from "../components/features/Navbar.astro";
@@ -34,6 +36,9 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={siteConfig.assets.favicon} />
     <title>{title}</title>
+
+    <!-- Astro View Transitions -->
+    <ClientRouter />
 
     <!-- Snipcart v3 Preconnect for performance -->
     <link rel="preconnect" href="https://cdn.snipcart.com" />
@@ -83,6 +88,9 @@ const {
 
     {/* Multi-purpose Side Drawer (Upsell, Quick Shop, Master Set) */}
     <SideDrawer />
+
+    {/* Global Product Addition Notification */}
+    <CartToast />
 
     <!-- Snipcart Root Container -->
     <div
