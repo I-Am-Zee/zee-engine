@@ -83,14 +83,14 @@ export const sideDrawer = () => ({
 
   get submitButtonText() {
     if (this.mode === "upsell")
-      return "Add Pairings (₹" + this.totalPrice.toLocaleString("en-IN") + ")";
+      return "Add Selected to Cart (₹" + this.totalPrice.toLocaleString("en-IN") + ")";
     if (this.mode === "quick-shop") return "Add to Cart";
     return "Acquire Complete Look (₹" + this.totalPrice.toLocaleString("en-IN") + ")";
   },
 
   get totalPrice() {
     const activeProducts =
-      this.mode === "master-set"
+      this.mode !== "quick-shop"
         ? this.products.filter((p) => this.selectedItems.includes(p.id))
         : this.products;
 
@@ -105,7 +105,7 @@ export const sideDrawer = () => ({
 
   async submit() {
     const itemsToAdd = this.products.filter(
-      (p) => this.mode !== "master-set" || this.selectedItems.includes(p.id)
+      (p) => this.mode === "quick-shop" || this.selectedItems.includes(p.id)
     );
 
     if (itemsToAdd.length === 0) return;
@@ -149,6 +149,7 @@ export const sideDrawer = () => ({
           price: Number(item.salePrice) || Number(item.price),
           url: `/products/${item.id}`,
           image: item.image,
+          description: item.description || item.title,
           quantity: 1,
           customFields,
         };

@@ -36,7 +36,7 @@ const productsForButton = (products || []).map((p) => ({
   title: p.data?.title || 'Unknown Product',
   price: p.data?.price || 0,
   salePrice: p.data?.salePrice,
-  image: p.data?.image || '/images/placeholder.jpg',
+  image: p.data?.image || '',
   variant_1: p.data?.variant_1,
   variant_2: p.data?.variant_2,
   variant_3: p.data?.variant_3,
@@ -111,6 +111,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
               price={product.data.price}
               salePrice={product.data.salePrice}
               image={product.data.image}
+              description={product.data.description}
               href={`/products/${product.slug}`}
               variant_1={product.data.variant_1}
               variant_2={product.data.variant_2}

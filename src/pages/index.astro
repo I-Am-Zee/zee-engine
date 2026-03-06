@@ -84,6 +84,7 @@ const categories = [
         <Carousel 
           x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
           class="w-full"
+          trackClass="!py-8 !-my-8"
         >
           {categories.map((category) => (
             <li class="splide__slide h-auto pb-4">
@@ -115,6 +116,7 @@ const categories = [
         <Carousel 
           x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
           class="w-full -mx-4 px-4 pb-12"
+          trackClass="!py-8 !-my-8"
           showArrows={true}
         >
           {featuredProducts.map((product) => (
@@ -125,6 +127,7 @@ const categories = [
                 price={product.data.price}
                 salePrice={product.data.salePrice}
                 image={product.data.image}
+                description={product.data.description}
                 href={`/products/${product.slug}`}
                 badges={product.data.badges}
                 variant_1={product.data.variant_1}

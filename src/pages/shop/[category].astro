@@ -118,18 +118,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
   <div
     class="mx-auto max-w-7xl px-4 py-12 lg:px-8"
-    x-data={`productSorter(${JSON.stringify(
-      products.map((p) => ({
-        slug: p.slug,
-        price: p.data.salePrice || p.data.price,
-        originalPrice: p.data.price,
-        salePrice: p.data.salePrice,
-        name: p.data.title,
-        rating: p.data.rating || 0,
-        publishDate: p.data.publishDate ? new Date(p.data.publishDate).getTime() : 0,
-        discount: p.data.salePrice ? Math.round((1 - p.data.salePrice / p.data.price) * 100) : 0,
-      }))
-    )})`}
+    x-data="productSorter"
   >
     {/* Breadcrumbs */}
     <div class="mb-6">
@@ -182,6 +171,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                     price={product.data.price}
                     salePrice={product.data.salePrice}
                     image={product.data.image}
+                    description={product.data.description}
                     href={`/products/${product.slug}`}
                     badges={product.data.badges}
                     variant_1={product.data.variant_1}
@@ -214,58 +204,61 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
 <script>
   // @ts-ignore
-  document.addEventListener("alpine:init", () => {
-    // @ts-ignore
-    const Alpine = window.Alpine;
-
-    Alpine.data("productSorter", () => ({
+  function initSorter() {
+    if (!window.Alpine) return;
+    window.Alpine.data("productSorter", () => ({
       sortBy: "default",
-
-      sort(criteria: string) {
+      sort(criteria) {
         this.sortBy = criteria;
-        const grid = document.querySelector("[data-product-grid]");
+        const grid = document.querySelector("#product-grid");
         if (!grid) return;
 
-        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
+        const items = Array.from(grid.querySelectorAll(".product-item"));
 
         items.sort((a, b) => {
+          // @ts-ignore
           const aPrice = parseFloat(a.dataset.price || "0");
+          // @ts-ignore
           const bPrice = parseFloat(b.dataset.price || "0");
+          // @ts-ignore
           const aName = a.dataset.name || "";
+          // @ts-ignore
           const bName = b.dataset.name || "";
+          // @ts-ignore
           const aRating = parseFloat(a.dataset.rating || "0");
+          // @ts-ignore
           const bRating = parseFloat(b.dataset.rating || "0");
+          // @ts-ignore
           const aDate = parseInt(a.dataset.publishDate || "0");
+          // @ts-ignore
           const bDate = parseInt(b.dataset.publishDate || "0");
+          // @ts-ignore
           const aDiscount = parseFloat(a.dataset.discount || "0");
+          // @ts-ignore
           const bDiscount = parseFloat(b.dataset.discount || "0");
+          // @ts-ignore
           const aIndex = parseInt(a.dataset.index || "0");
+          // @ts-ignore
           const bIndex = parseInt(b.dataset.index || "0");
 
           switch (criteria) {
-            case "price-asc":
-              return aPrice - bPrice;
-            case "price-desc":
-              return bPrice - aPrice;
-            case "name-asc":
-              return aName.localeCompare(bName);
-            case "name-desc":
-              return bName.localeCompare(aName);
-            case "rating-desc":
-              return bRating - aRating;
-            case "date-desc":
-              return bDate - aDate;
-            case "discount-desc":
-              return bDiscount - aDiscount;
-            case "default":
-              return aIndex - bIndex;
-            default:
-              return 0;
+            case "price-asc": return aPrice - bPrice;
+            case "price-desc": return bPrice - aPrice;
+            case "name-asc": return aName.localeCompare(bName);
+            case "name-desc": return bName.localeCompare(aName);
+            case "rating-desc": return bRating - aRating;
+            case "date-desc": return bDate - aDate;
+            case "discount-desc": return bDiscount - aDiscount;
+            case "default": return aIndex - bIndex;
+            default: return 0;
           }
         });
 
         items.forEach((item) => grid.appendChild(item));
       },
     }));
-  });
+  }
+
+  document.addEventListener("alpine:init", initSorter);
+  document.addEventListener("astro:page-load", initSorter);
 </script>

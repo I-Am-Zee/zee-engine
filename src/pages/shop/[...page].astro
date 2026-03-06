@@ -67,6 +67,7 @@ const products = page.data;
                 price={product.data.price}
                 salePrice={product.data.salePrice}
                 image={product.data.image}
+                description={product.data.description}
                 href={`/products/${product.slug}`}
                 badges={product.data.badges}
                 variant_1={product.data.variant_1}
@@ -92,7 +93,9 @@ const products = page.data;
 
 <script>
   // @ts-ignore
-  document.addEventListener("alpine:init", () => {
+  function initSorter() {
+    if (!window.Alpine) return;
+    
     // @ts-ignore
     const Alpine = window.Alpine;
 
@@ -145,5 +148,8 @@ const products = page.data;
         items.forEach((item) => grid.appendChild(item));
       },
     }));
-  });
+  }
+
+  document.addEventListener("alpine:init", initSorter);
+  document.addEventListener("astro:page-load", initSorter);
 </script>

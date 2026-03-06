@@ -91,6 +91,7 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
                     price={product.data.price}
                     salePrice={product.data.salePrice}
                     image={product.data.image}
+                    description={product.data.description}
                     href={`/products/${product.slug}`}
                     badges={product.data.badges}
                   />
@@ -123,19 +124,38 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
 
 <script>
   // @ts-ignore
-  document.addEventListener("alpine:init", () => {
-    // @ts-ignore
-    const Alpine = window.Alpine;
+  function initSorter() {
+    if (!window.Alpine) return;
+    window.Alpine.data("productSorter", () => ({
+      sortOrder: "featured",
+      get sortedProducts() {
+        const products = Array.from(document.querySelectorAll('.product-item')); // Changed from .product-card to .product-item
+        const sortContainer = document.getElementById('product-grid'); // Changed from product-grid-container to product-grid
+        
+        if (!sortContainer) return;
 
-    Alpine.data("productSorter", () => ({
+        products.sort((a, b) => {
+          const aIndex = parseInt(a.getAttribute('data-index') || "0");
+          const bIndex = parseInt(b.getAttribute('data-index') || "0");
+          return aIndex - bIndex;
+        });
+
+        // Clear existing children and append sorted ones
+        while (sortContainer.firstChild) {
+          sortContainer.removeChild(sortContainer.firstChild);
+        }
+        products.forEach(p => sortContainer.appendChild(p));
+        return products; // Return sorted products for reactivity if needed
+      },
+
+      // Retaining the original sort method logic for compatibility with FilterSortBar
       sortBy: "default",
-
-      sort(criteria: string) {
+      sort(criteria) {
         this.sortBy = criteria;
-        const grid = document.querySelector("[data-product-grid]");
+        const grid = document.querySelector("#product-grid"); // Use ID selector
         if (!grid) return;
 
-        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
+        const items = Array.from(grid.querySelectorAll(".product-item"));
 
         items.sort((a, b) => {
           const aPrice = parseFloat(a.dataset.price || "0");
@@ -176,5 +196,8 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
         items.forEach((item) => grid.appendChild(item));
       },
     }));
-  });
+  }
+
+  document.addEventListener("alpine:init", initSorter);
+  document.addEventListener("astro:page-load", initSorter);
 </script>

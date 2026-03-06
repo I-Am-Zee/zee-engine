@@ -27,6 +27,7 @@ interface Props {
   variant_2?: any;
   variant_3?: any;
   variant?: 'standard' | 'editorial';
+  description?: string;
   class?: string;
 }
 
@@ -42,6 +43,7 @@ const {
   variant_1,
   variant_2,
   variant_3,
+  description = title,
   variant = 'standard',
   class: className,
   ...rest
@@ -60,6 +62,7 @@ const productData = {
   variant_1,
   variant_2,
   variant_3,
+  description,
   variant
 };
 
@@ -80,7 +83,7 @@ const isEditorial = variant === 'editorial';
     <a href={href} class="block focus-glow rounded-xl aspect-4/5">
       {/* Image with hover zoom */}
       <Image
-        src={image || "/images/placeholder.jpg"}
+        src={image || ""}
         alt={title}
         width={800}
         height={1000}

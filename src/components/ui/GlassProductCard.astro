@@ -27,6 +27,7 @@ interface Props {
   variant_1?: any;
   variant_2?: any;
   variant_3?: any;
+  description?: string;
   class?: string;
 }
 
@@ -41,6 +42,7 @@ const {
   variant_1 = "",
   variant_2 = "",
   variant_3 = "",
+  description = title,
   class: className,
   ...rest
 } = Astro.props;
@@ -137,7 +139,7 @@ const priceTagProps = hasSale
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
-      x-on:click.prevent.stop={`$dispatch('zaviona:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, variant_1, variant_2, variant_3})})`}
+      x-on:click.prevent.stop={`$dispatch('zaviona:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, description, variant_1, variant_2, variant_3})})`}
       aria-label={"Quick shop " + title}
     >
       <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />

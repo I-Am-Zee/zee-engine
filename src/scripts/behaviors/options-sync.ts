@@ -53,22 +53,12 @@ export function initOptionsSync() {
 
   // Initial Sync
   updateButtonAttributes();
+}
 
-  // Listen for changes (Alpine.js updates the hidden input, so we use a MutationObserver or event)
-  // Since OptionSelector uses Alpine.js x-model, the simplest is to listen for 'input' or 'change' bubbles
-  document.addEventListener('change', (e) => {
-    const target = e.target as HTMLElement;
-    if (target.closest('fieldset')) {
-      // Small delay to let Alpine.js sync state to hidden input
-      setTimeout(updateButtonAttributes, 10);
-    }
-  });
-
-  // Listen for custom events if needed
-  document.addEventListener('snipcart-attributes-sync', updateButtonAttributes);
-
-  // STRICT VALIDATION INTERCEPTOR
-  // Snipcart uses a bubbling listener. By using capture: true, we intercept the click BEFORE Snipcart!
+// STRICT VALIDATION INTERCEPTOR
+// We define this OUTSIDE initOptionsSync so it binds exactly once, preventing memory leaks on astro:page-load
+if (typeof document !== 'undefined' && !(window as any)._zavionaValidatorBound) {
+  (window as any)._zavionaValidatorBound = true;
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const btn = target.closest('.snipcart-add-item');
@@ -113,7 +103,19 @@ export function initOptionsSync() {
   }, { capture: true });
 }
 
-// Auto-init on DOMContentLoaded
+// Event Listeners (ensure single binding if possible or they're safe to over-bind if handlers are idempotent)
+if (typeof document !== 'undefined' && !(window as any)._zavionaSyncListenersBound) {
+  (window as any)._zavionaSyncListenersBound = true;
+  document.addEventListener('change', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('fieldset')) {
+      setTimeout(initOptionsSync, 10);
+    }
+  });
+  document.addEventListener('snipcart-attributes-sync', initOptionsSync);
+}
+
+// Auto-init on page load (compatible with Astro View Transitions)
 if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', initOptionsSync);
+  document.addEventListener('astro:page-load', initOptionsSync);
 }

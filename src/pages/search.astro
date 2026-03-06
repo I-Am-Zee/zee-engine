@@ -69,6 +69,7 @@ const searchableProducts = allProducts.map(p => ({
               price={product.data.price}
               salePrice={product.data.salePrice}
               image={product.data.image}
+              description={product.data.description}
               href={`/products/${product.slug}`}
               badges={product.data.badges}
             />
@@ -103,8 +104,9 @@ const searchableProducts = allProducts.map(p => ({
 <script>
   import Fuse from "fuse.js";
 
-  // @ts-ignore
-  document.addEventListener("alpine:init", () => {
+  function initSearchApp() {
+    if (!window.Alpine) return;
+    
     // @ts-ignore
     const Alpine = window.Alpine;
     
@@ -141,7 +143,10 @@ const searchableProducts = allProducts.map(p => ({
         this.matchingSlugs = searchResults.map((r: any) => r.item.slug);
       }
     }));
-  });
+  }
+  
+  document.addEventListener("alpine:init", initSearchApp);
+  document.addEventListener("astro:page-load", initSearchApp);
 </script>
 
 <style>

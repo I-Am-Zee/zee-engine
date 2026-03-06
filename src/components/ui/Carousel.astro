@@ -14,10 +14,11 @@ import Icon from "../primitives/Icon.astro";
 interface Props {
   id?: string;
   class?: string;
+  trackClass?: string;
   showArrows?: boolean;
 }
 
-const { id, class: className, showArrows = true, ...rest } = Astro.props;
+const { id, class: className, trackClass = "", showArrows = true, ...rest } = Astro.props;
 ---
 
 <div 
@@ -25,7 +26,7 @@ const { id, class: className, showArrows = true, ...rest } = Astro.props;
   class:list={["splide", className]}
   {...rest}
 >
-  <div class="splide__track h-full !py-8 !-my-8">
+  <div class:list={["splide__track h-full", trackClass]}>
     <ul class="splide__list flex m-0 p-0 w-full h-full list-none">
       <slot />
     </ul>
@@ -63,5 +64,18 @@ const { id, class: className, showArrows = true, ...rest } = Astro.props;
 <script>
   import "@splidejs/splide/css";
 </script>
+
+<style is:global>
+  /* Enhance visibility of default pagination dots */
+  .splide__pagination__page {
+    background: rgba(0, 0, 0, 0.4) !important;
+    transform: scale(1.2);
+    transition: all 0.2s ease;
+  }
+  .splide__pagination__page.is-active {
+    background: rgba(0, 0, 0, 0.8) !important;
+    transform: scale(1.5);
+  }
+</style>
 
 

@@ -85,7 +85,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
               <img :src="mainItem.image" :alt="mainItem.name" class="h-16 w-16 rounded-lg object-cover" />
               <div class="flex-1 min-w-0">
                 <Text variant="paragraph" weight="bold" class="truncate" x-text="mainItem.name"></Text>
-                <div class="mt-1">
+                <div class="mt-1 flex flex-wrap gap-2">
                    <template x-for="option in mainItem.options" :key="option.name">
                       <Text variant="metadata" weight="bold" x-text="option.name + ': ' + option.value"></Text>
                    </template>
@@ -191,7 +191,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
           <Button 
             type="primary"
             @click="submit()"
-            :disabled="(mode === 'master-set' && selectedItems.length === 0) || isSubmitting"
+            :disabled="((mode === 'master-set' || mode === 'upsell') && selectedItems.length === 0) || isSubmitting"
             class="w-full py-5 text-base uppercase tracking-widest shadow-xl"
           >
             <span x-show="!isSubmitting">

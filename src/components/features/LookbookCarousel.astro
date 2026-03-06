@@ -28,12 +28,11 @@ const lookbooks = await getCollection("lookbooks");
       {lookbooks.map((lookbook, index) => (
         <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full bg-surface-muted">
           {/* Background Image */}
-          <div class="absolute inset-0 z-0">
+          <div class="absolute inset-0 z-0 overflow-hidden">
             <Image 
               src={lookbook.data.hero_image} 
               alt={lookbook.data.title} 
-              class="h-full w-full object-cover object-center brightness-95 absolute inset-0 transition-all duration-[2000ms] ease-out-expo"
-              x-bind:class={`currentIndex === ${index} ? 'scale-100 opacity-100 z-10' : 'scale-110 opacity-0 z-0 delay-500'`}
+              class="lookbook-bg h-full w-full object-cover object-center brightness-95 absolute inset-0"
             />
             {/* Subtle Gradient Overlay for depth */}
             <div class="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/20 to-transparent"></div>
@@ -42,14 +41,7 @@ const lookbooks = await getCollection("lookbooks");
           {/* Luxury Glassmorphic Content Card */}
           <div class="absolute inset-0 z-10 flex items-center justify-center p-6 md:p-12">
             <div 
-              class="max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
-              x-show={`currentIndex === ${index}`}
-              x-transition:enter="transition-all cubic-bezier(0.23, 1, 0.32, 1) duration-1000 delay-200"
-              x-transition:enter-start="opacity-0 translate-y-12 blur-sm scale-95"
-              x-transition:enter-end="opacity-100 translate-y-0 blur-0 scale-100"
-              x-transition:leave="transition-all duration-700 ease-in-out absolute"
-              x-transition:leave-start="opacity-100 translate-y-0 blur-0"
-              x-transition:leave-end="opacity-0 -translate-y-8 blur-sm"
+              class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
             >
               <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Editorial Series</Text>
               
@@ -89,6 +81,32 @@ const lookbooks = await getCollection("lookbooks");
     </Carousel>
   </div>
 </section>
+
+<style>
+  /* Splide native CSS Transition Overrides - Handles clones perfectly */
+  .lookbook-bg {
+    transform: scale(1.1);
+    transition: transform 2000ms cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  :global(.splide__slide.is-active) .lookbook-bg {
+    transform: scale(1);
+  }
+  
+  .lookbook-card {
+    opacity: 0;
+    transform: translateY(3rem) scale(0.95);
+    filter: blur(4px);
+    transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+  }
+  :global(.splide__slide.is-active) .lookbook-card {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+    transition-delay: 300ms;
+    pointer-events: auto;
+  }
+</style>
 
 
 

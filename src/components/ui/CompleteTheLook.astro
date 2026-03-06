@@ -94,7 +94,7 @@ const productsForButton = [
               Curated pieces to elevate your ensemble
             </Text>
             <span class="text-text-muted opacity-50">|</span>
-            <Text variant="caption" weight="bold" class="text-text-muted uppercase tracking-widest mt-0.5">
+            <Text variant="caption" weight="bold" class="text-text-muted capitalize tracking-widest mt-0.5">
               {productsForButton.length} Items Total
             </Text>
           </div>
@@ -112,6 +112,7 @@ const productsForButton = [
             price={product.data.price}
             salePrice={product.data.salePrice}
             image={product.data.image}
+            description={product.data.description}
             href={`/products/${product.slug}`}
             badges={product.data.badges}
           />
