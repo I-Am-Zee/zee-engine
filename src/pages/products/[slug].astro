@@ -56,9 +56,21 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
 
 // Sort badges by hierarchy (Urgency → Prestige → Attributes → State)
 const sortedBadges = sortBadgesByHierarchy(badges);
-    </div>
+---
 
-    {/* Main Grid - Sticky Split Layout */}
+<BaseLayout title={`${product.data.title} | Zaviona`}>
+  <div x-data="{ showStickyCart: false }" @scroll.window="showStickyCart = window.scrollY > 500">
+    <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+      {/* Breadcrumbs */}
+      <div class="mt-4 mb-8">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Shop", href: "/shop" },
+            { label: product.data.title, href: "#" },
+          ]}
+        />
+      </div>
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
       {/* Left Column - Gallery (Sticky on Desktop) */}
       <div class="lg:sticky lg:top-24 lg:col-span-7 lg:self-start">

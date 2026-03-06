@@ -82,8 +82,8 @@ const categories = [
         </div>
         
         <Carousel 
-          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
-          class="w-full"
+          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1, padding: '12vw', gap: '1rem' } } })" 
+          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0"
           trackClass="!py-8 !-my-8"
         >
           {categories.map((category) => (
@@ -114,8 +114,8 @@ const categories = [
         </div>
         
         <Carousel 
-          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1 } } })" 
-          class="w-full -mx-4 px-4 pb-12"
+          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1, padding: '12vw', gap: '1rem' } } })" 
+          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-12"
           trackClass="!py-8 !-my-8"
           showArrows={true}
         >
