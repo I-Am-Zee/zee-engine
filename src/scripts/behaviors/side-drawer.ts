@@ -121,7 +121,11 @@ export const sideDrawer = () => ({
     }
 
     if (missingSelection) {
-      this.validationError = `Please select a ${missingSelection.variant.name} for "${missingSelection.item.title}", or uncheck it to proceed.`;
+      if (this.mode === "master-set") {
+        this.validationError = `Please select a ${missingSelection.variant.name} for "${missingSelection.item.title}" to acquire the complete set.`;
+      } else {
+        this.validationError = `Please select a ${missingSelection.variant.name} for "${missingSelection.item.title}", or uncheck it to proceed.`;
+      }
       return;
     }
 

@@ -47,120 +47,9 @@ const savings = regularTotal - totalPrice;
 
 <div
   x-data={`{
-    isLoading: false,
-    async addSetToCart() {
-      this.isLoading = true;
-      
-      try {
-        const products = ${JSON.stringify(products)};
-        const availableProducts = products.filter(product => {
-          if (product.stock !== undefined && product.stock <= 0) return false;
-          return true;
-        });
-
-        if (availableProducts.length === 0) {
-          alert('Sorry, these items are currently out of stock.');
-          this.isLoading = false;
-          return;
-        }
-
-        // 1. UNIVERSAL SELECTION LOOP: Capture current selections from the DOM
-        const selectors = document.querySelectorAll('.product-variant-selector');
-        const activeSelections = Array.from(selectors).reduce((acc, el) => {
-          const name = el.getAttribute('data-variant-name');
-          const value = el.value;
-          if (name && value) acc[name] = value;
-          return acc;
-        }, {});
-
-        console.log('[BuySet] Captured Universal Selections:', activeSelections);
-
-        // 1.5 VALIDATION
-        const mainProduct = availableProducts[0];
-        let missingValidation = null;
-        [mainProduct.variant_1, mainProduct.variant_2, mainProduct.variant_3].forEach(slot => {
-          if (slot?.name && slot?.values) {
-            if (!activeSelections[slot.name]) missingValidation = slot.name;
-          }
-        });
-
-        if (missingValidation) {
-          // Inline validation UX replacing native alert
-          let errorMsg = this.$el.parentElement?.querySelector('.inline-variant-error');
-          if (!errorMsg) {
-             errorMsg = document.createElement('p');
-             errorMsg.className = 'inline-variant-error mt-2 text-sm font-medium text-red-500 text-center w-full animate-fade-in';
-             this.$el.insertAdjacentElement('afterend', errorMsg);
-          }
-          errorMsg.textContent = 'Please select a ' + missingValidation + ' for the main product to proceed.';
-          
-          this.isLoading = false;
-          
-          setTimeout(() => {
-            if (errorMsg?.parentElement) {
-              errorMsg.remove();
-            }
-          }, 4000);
-          
-          return;
-        }
-
-        // 2. BUILD BULK PAYLOAD
-        const itemsToAdd = availableProducts.map((product, index) => {
-          const customFields = [];
-          
-          const processVariant = (slot) => {
-            if (!slot?.name || !slot?.values) return;
-            
-            const optionValues = slot.values.split(",").map(v => v.trim());
-            const displayOptions = optionValues.join("|");
-            
-            // Validate: Main product needs explicit selection, bundle items get first option default
-            let selectionValue = ""; 
-            if (index === 0) {
-               selectionValue = activeSelections[slot.name] || "";
-            } else {
-               selectionValue = optionValues[0];
-            }
-            
-            customFields.push({
-              name: slot.name,
-              value: selectionValue,
-              type: 'dropdown',
-              options: displayOptions,
-              required: true
-            });
-          };
-
-          processVariant(product.variant_1);
-          processVariant(product.variant_2);
-          processVariant(product.variant_3);
-
-          return {
-            id: product.id,
-            name: product.title,
-            price: product.salePrice || product.price,
-            url: '/products/' + product.id,
-            image: product.image,
-            description: product.description || "",
-            quantity: 1,
-            customFields
-          };
-        });
-
-        console.log('[BuySet] Bulk Add Payload:', itemsToAdd);
-
-        // 3. ATOMIC BULK ADD
-        await Snipcart.api.cart.items.add(itemsToAdd);
-
-        Snipcart.api.theme.cart.open();
-        
-      } catch (error) {
-        console.error('Failed to add set to cart:', error);
-        alert('Something went wrong. Please try adding items individually.');
-      } finally {
-        this.isLoading = false;
-      }
+    addSetToCart() {
+      const payload = { products: ${JSON.stringify(products)} };
+      $dispatch('zaviona:master-set', payload);
     }
   }`}
   class:list={["flex flex-col gap-3", className]}
@@ -168,38 +57,16 @@ const savings = regularTotal - totalPrice;
   <!-- Primary CTA Button -->
   <button
     @click="addSetToCart()"
-    :disabled="isLoading"
-    class="relative w-full rounded-lg bg-black px-6 py-[18px] text-sm font-bold tracking-widest text-white uppercase shadow-lg transition-colors duration-200 hover:bg-gray-800 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-400 cursor-pointer"
+    class="relative w-full rounded-lg bg-black px-6 py-[18px] text-sm font-bold tracking-widest text-white uppercase shadow-lg transition-colors duration-200 hover:bg-gray-800 hover:shadow-xl cursor-pointer flex items-center justify-center gap-2"
   >
-    <!-- Loading Spinner (hidden by default) -->
-    <span x-show="isLoading" class="absolute inset-0 flex items-center justify-center">
-      <svg
-        class="h-5 w-5 animate-spin text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-    </span>
-
-    <!-- Button Text (hides when loading) -->
-    <span x-show="!isLoading" class="flex items-center justify-center gap-2">
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-      </svg>
-      <span>{label} (₹{totalPrice.toLocaleString("en-IN")})</span>
-    </span>
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+    </svg>
+    <span>{label} (₹{totalPrice.toLocaleString("en-IN")})</span>
   </button>
 
   {/* Supplementary Info (Count & Savings) */}

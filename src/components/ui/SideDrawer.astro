@@ -110,8 +110,8 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
           <div class="space-y-10">
             <template x-for="(item, index) in products" :key="item.id">
               <div class="group relative flex gap-6 pb-2 border-b border-border-subtle/30 last:border-0">
-                <!-- Checkbox (for Master Set and Upsell mode) -->
-                <template x-if="mode === 'master-set' || mode === 'upsell'">
+                <!-- Checkbox (Only for Upsell mode where items are optional) -->
+                <template x-if="mode === 'upsell'">
                   <div class="absolute right-0 top-0">
                     <input 
                       type="checkbox" 
