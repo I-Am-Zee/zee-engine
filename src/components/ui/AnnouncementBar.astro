@@ -31,7 +31,7 @@ const show = announcement?.enabled && announcement?.text;
   show && (
     <div
       class:list={[
-        "relative flex items-center justify-center gap-2 px-4 py-2 text-center",
+        "relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 text-center",
         announcement.bg_color || "bg-surface border-b border-border-subtle",
         announcement.text_color || "text-text-main",
       ]}

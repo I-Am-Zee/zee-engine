@@ -56,20 +56,6 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
 
 // Sort badges by hierarchy (Urgency → Prestige → Attributes → State)
 const sortedBadges = sortBadgesByHierarchy(badges);
----
-
-<BaseLayout title={`${product.data.title} | Zaviona`}>
-
-  <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-    {/* Breadcrumbs */}
-    <div class="mt-4 mb-8">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Shop", href: "/shop" },
-          { label: product.data.title, href: "#" },
-        ]}
-      />
     </div>
 
     {/* Main Grid - Sticky Split Layout */}
@@ -236,26 +222,34 @@ const sortedBadges = sortBadgesByHierarchy(badges);
     <RelatedProducts currentProduct={product} />
   </div>
 
-  {/* Sticky Mobile Add to Cart Bar */}
-  <div
-    class="fixed right-0 bottom-0 left-0 z-50 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden"
-  >
-    <div class="mx-auto flex max-w-lg items-center gap-3">
-      <div class="flex-1">
-        <Text variant="paragraph" weight="semibold" class="truncate">{product.data.title}</Text>
-        <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
+    {/* Sticky Mobile Add to Cart Bar */}
+    <div
+      x-show="showStickyCart"
+      x-transition:enter="transition ease-out duration-300 transform"
+      x-transition:enter-start="translate-y-full opacity-0"
+      x-transition:enter-end="translate-y-0 opacity-100"
+      x-transition:leave="transition ease-in duration-200 transform"
+      x-transition:leave-start="translate-y-0 opacity-100"
+      x-transition:leave-end="translate-y-full opacity-0"
+      class="fixed right-0 bottom-0 left-0 z-50 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+      x-cloak
+    >
+      <div class="mx-auto flex max-w-lg items-center gap-3">
+        <div class="flex-1 min-w-0">
+          <Text variant="paragraph" weight="semibold" class="truncate block">{product.data.title}</Text>
+          <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
+        </div>
+        <AddToCartButton
+          product={product}
+          size="md"
+          disabled={isComingSoon ?? false}
+          class="shrink-0"
+        >
+          {isComingSoon ? "Soon" : "Add"}
+        </AddToCartButton>
       </div>
-      <AddToCartButton
-        product={product}
-        size="md"
-        disabled={isComingSoon ?? false}
-        class="shrink-0"
-      >
-        {isComingSoon ? "Soon" : "Add"}
-      </AddToCartButton>
     </div>
   </div>
-
 </BaseLayout>
 
 <style>
