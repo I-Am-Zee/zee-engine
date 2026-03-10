@@ -17,7 +17,7 @@ const { Content } = page ? await page.render() : { Content: null };
       <Heading as="h1" class="mb-4">{page?.data.title || "About Zelia Vance"}</Heading>
     </header>
 
-    <div class="prose prose-slate mx-auto max-w-none prose-headings:font-serif prose-headings:font-semibold prose-a:text-[var(--color-primary)] hover:prose-a:text-[var(--color-primary)]">
+    <div class="prose prose-zelia mx-auto max-w-none">
       {Content ? <Content /> : <p class="text-center text-text-muted">Content coming soon.</p>}
     </div>
   </main>

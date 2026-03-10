@@ -14,6 +14,7 @@ import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
+import SectionHeader from "../../components/ui/SectionHeader.astro";
 
 // Category display info - add new categories here as needed
 const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
@@ -132,10 +133,12 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
     </div>
 
     {/* Page Header */}
-    <div class="mb-8 max-[425px]:text-center">
-      <Heading as="h1" class="mb-2">{categoryName}</Heading>
-      <Text class="text-text-muted">{categoryDescription}</Text>
-    </div>
+    <SectionHeader 
+      title={categoryName} 
+      subtitle={categoryDescription} 
+      align="left"
+      class="mb-8"
+    />
 
     {
       products.length > 0 ? (
