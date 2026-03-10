@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700;1,9..144,800;1,9..144,900&display=swap");
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   /* Font Family Variables */
@@ -14,31 +15,31 @@
   /* Premium palette for waterproof PVD costume jewelry - Indian market focus */
 
   /* Authority - Midnight Jungle Primary */
-  --color-primary: #052B22; /* Midnight Jungle — deep blackened emerald for CTAs */
-  --color-primary-foreground: #FEFCFA; /* Lighter Silk — text on dark */
-  --color-secondary: #E8DDD3; /* Warm Sand — alternative actions */
-  --color-secondary-foreground: #052B22; /* Midnight Jungle — text on sand */
-  --color-ghost-hover: #F3EDE6; /* Muted Silk — ghost button hover */
+  --color-primary: #052b22; /* Midnight Jungle — deep blackened emerald for CTAs */
+  --color-primary-foreground: #fefcfa; /* Lighter Silk — text on dark */
+  --color-secondary: #e8ddd3; /* Warm Sand — alternative actions */
+  --color-secondary-foreground: #052b22; /* Midnight Jungle — text on sand */
+  --color-ghost-hover: #f3ede6; /* Muted Silk — ghost button hover */
 
   /* Foundation - Quiet Luxury Base */
-  --color-background: #F9F5F0; /* Luminous Silk — warm premium cardstock feel */
-  --color-surface: #FEFCFA; /* Lighter Silk — elevated cards/containers */
-  --color-surface-muted: #F3EDE6; /* Muted Silk — disabled/subtle areas */
+  --color-background: #f9f5f0; /* Luminous Silk — warm premium cardstock feel */
+  --color-surface: #fefcfa; /* Lighter Silk — elevated cards/containers */
+  --color-surface-muted: #f3ede6; /* Muted Silk — disabled/subtle areas */
 
   /* Typography - Rich Depth */
-  --color-text-main: #052B22; /* Midnight Jungle — headings/body */
-  --color-text-muted: #6B5E54; /* Warm Gray — captions/metadata */
-  --color-text-inverse: #FEFCFA; /* Lighter Silk — on dark backgrounds */
+  --color-text-main: #052b22; /* Midnight Jungle — headings/body */
+  --color-text-muted: #6b5e54; /* Warm Gray — captions/metadata */
+  --color-text-inverse: #fefcfa; /* Lighter Silk — on dark backgrounds */
 
   /* Borders & Focus - Polished Brass Details */
-  --color-border-subtle: #E8DDD3; /* Warm Sand — dividers */
-  --color-border-strong: #BFA05F; /* Polished Brass — input outlines, card frames */
-  --color-ring: #BFA05F; /* Polished Brass — focus rings */
+  --color-border-subtle: #e8ddd3; /* Warm Sand — dividers */
+  --color-border-strong: #bfa05f; /* Polished Brass — input outlines, card frames */
+  --color-ring: #bfa05f; /* Polished Brass — focus rings */
   --color-ring-glow: rgba(191, 160, 95, 0.4); /* Polished Brass glow */
 
   /* Confidence Accent - High Energy Conversion Drivers */
-  --color-accent-coral: #E65142; /* Spiced Coral — SALE/NEW/urgency/discounts */
-  --color-accent-brass: #BFA05F; /* Polished Brass — premium details/hovers */
+  --color-accent-coral: #e65142; /* Spiced Coral — SALE/NEW/urgency/discounts */
+  --color-accent-brass: #bfa05f; /* Polished Brass — premium details/hovers */
   --color-accent-emerald: #15803d; /* Emerald — success states (cart notifications) */
 }
 
