@@ -1,20 +1,24 @@
 ---
+import { getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
-import Text from "../components/primitives/Text.astro";
 
+// Pre-render at build time
 export const prerender = true;
+
+// Fetch the "about" page content
+const page = await getEntry("pages", "about");
+const { Content } = page ? await page.render() : { Content: null };
 ---
 
-<BaseLayout title="About Us | Zaviona">
-  <main class="mx-auto max-w-3xl px-4 py-24 text-center">
-    <Heading as="h1" class="mb-6">About Zaviona</Heading>
-    <Text variant="lead" color="muted" class="mb-8">
-      Zaviona is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship. 
-      Our mission is to bring brilliance and elegance to your most cherished moments.
-    </Text>
-    <Text variant="paragraph" color="muted">
-      We are currently refining our story. Full page coming soon.
-    </Text>
+<BaseLayout title={page?.data.title || "About Us"} description={page?.data.description}>
+  <main class="mx-auto max-w-4xl px-4 py-16 md:py-24">
+    <header class="mb-12 text-center">
+      <Heading as="h1" class="mb-4">{page?.data.title || "About Zelia Vance"}</Heading>
+    </header>
+
+    <div class="prose prose-slate mx-auto max-w-none prose-headings:font-serif prose-headings:font-semibold prose-a:text-[var(--color-primary)] hover:prose-a:text-[var(--color-primary)]">
+      {Content ? <Content /> : <p class="text-center text-text-muted">Content coming soon.</p>}
+    </div>
   </main>
 </BaseLayout>

@@ -4,7 +4,7 @@ description: "How we get our luxury pieces to your doorstep."
 lastUpdated: 2026-02-09
 ---
 
-Zaviona offers secure, insured shipping on all orders.
+Zelia Vance offers secure, insured shipping on all orders.
 
 ### Domestic (USA)
 
@@ -17,4 +17,4 @@ We ship to over 50 countries via DHL Express. Shipping rates and duties vary by 
 
 ### Packaging
 
-Every order arrives in a signature Zaviona luxury presentation box, perfect for gifting.
+Every order arrives in a signature Zelia Vance luxury presentation box, perfect for gifting.

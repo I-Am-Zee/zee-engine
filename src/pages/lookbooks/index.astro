@@ -14,12 +14,12 @@ import CollectionCard from '../../components/ui/CollectionCard.astro';
 // Get all lookbooks
 const lookbooks = await getCollection('lookbooks');
 
-const title = 'Shop the Look | Curated Jewelry Collections | Zaviona';
+const title = 'Shop the Look | Curated Jewelry Collections | Zelia Vance';
 const description = 'Explore our curated jewelry collections. From Diwali party glam to wedding elegance, find the perfect set to complete your look.';
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
     <!-- Header -->
     <div class="text-center mb-12">
       <Heading as="h1" class="mb-4">

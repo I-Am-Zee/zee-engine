@@ -118,6 +118,7 @@ const lookbooks = defineCollection({
   schema: z.object({
     title: z.string(),
     hero_image: z.string(),
+    gallery: z.array(z.string()).optional(),
     description: z.string().optional(),
     products: z.array(z.string()),
   }),
@@ -132,7 +133,7 @@ const blog = defineCollection({
     title: z.string(),
     excerpt: z.string(),
     publishDate: z.date(),
-    author: z.string().default("Zaviona Team"),
+    author: z.string().default("Zelia Vance Team"),
     image: z.string(),
     tags: z.array(z.string()).optional(),
     isDraft: z.boolean().default(false),

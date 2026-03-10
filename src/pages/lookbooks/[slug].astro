@@ -9,6 +9,9 @@ import GlassProductCard from '../../components/ui/GlassProductCard.astro';
 import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
 import Image from '../../components/primitives/Image.astro';
+import CompleteTheLook from '../../components/ui/CompleteTheLook.astro';
+import Carousel from '../../components/ui/Carousel.astro';
+import CollectionCard from '../../components/ui/CollectionCard.astro';
 
 export const getStaticPaths = (async () => {
   const lookbooks = await getCollection('lookbooks');
@@ -24,6 +27,8 @@ const { Content } = await lookbook.render();
 
 // Fetch full product data
 const allProducts = await getCollection('products');
+const allLookbooks = await getCollection('lookbooks');
+const relatedLookbooks = allLookbooks.filter((lb) => lb.slug !== lookbook.slug);
 
 // Filter only valid products that exist in the collection
 const products = (productSlugs || [])
@@ -44,7 +49,7 @@ const productsForButton = (products || []).map((p) => ({
 }));
 
 // SEO
-const pageTitle = `${title} | Shop the Look | Zaviona`;
+const pageTitle = `${title} | Shop the Look | Zelia Vance`;
 const pageDescription = description || 'Discover our curated jewelry collection';
 ---
 
@@ -89,9 +94,37 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     </div>
   </div>
 
+  <!-- Editorial Gallery -->
+  {lookbook.data.gallery && lookbook.data.gallery.length > 0 && (
+    <section class="bg-surface py-12 md:py-16 px-4">
+      <div class="container mx-auto max-w-7xl">
+        <Heading as="h2" class="mb-8 md:mb-12 text-center text-3xl md:text-4xl">Editorial Gallery</Heading>
+        <Carousel 
+          x-data={`carousel({ perPage: 3, gap: '1.5rem', type: '${lookbook.data.gallery.length > 3 ? 'loop' : 'slide'}', pagination: true, autoplay: ${lookbook.data.gallery.length > 3}, interval: 4000, pauseOnHover: true, breakpoints: { 1024: { perPage: 2 }, 640: { perPage: 1, padding: '10vw', gap: '1rem' } } })`} 
+          class="w-full pb-8"
+          trackClass="!py-4"
+          showArrows={lookbook.data.gallery.length > 3}
+        >
+          {lookbook.data.gallery.map((img) => (
+            <li class="splide__slide flex justify-center items-center h-auto">
+              <div class="aspect-4/5 w-full max-w-sm md:max-w-md lg:max-w-lg rounded-2xl overflow-hidden cursor-zoom-in active:scale-[0.98] transition-all">
+                <Image 
+                  src={img} 
+                  alt={`${title} Editorial Detail`} 
+                  class="w-full h-full object-cover transition-transform duration-1000 hover:scale-[1.03]"
+                  @click={`$dispatch('open-lightbox', { src: '${img}', alt: '${title} Editorial Detail' })`}
+                />
+              </div>
+            </li>
+          ))}
+        </Carousel>
+      </div>
+    </section>
+  )}
+
   <!-- Products Section -->
   {products.length > 0 && (
-    <section class="container mx-auto px-4 py-16 md:py-24 max-w-7xl" id="products">
+    <section class="container mx-auto px-4 py-12 md:py-16 max-w-7xl" id="products">
       <div class="mb-12 md:mb-20 text-center px-4">
         <Heading as="h2" class="mb-4 md:mb-6">
           Shop the Ensemble
@@ -102,10 +135,14 @@ const pageDescription = description || 'Discover our curated jewelry collection'
         </Text>
       </div>
 
-      <!-- Product Grid with Selection -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 mb-24">
+      <Carousel
+        x-data={`carousel({ perPage: 3, gap: '3rem', type: '${products.length > 3 ? 'loop' : 'slide'}', pagination: true, autoplay: ${products.length > 3}, interval: 4000, pauseOnHover: true, breakpoints: { 1024: { perPage: 2, gap: '2rem' }, 640: { perPage: 1, padding: '10vw', gap: '1rem' } } })`}
+        class="w-full mb-16"
+        trackClass="!py-4 !pb-16"
+        showArrows={products.length > 3}
+      >
         {products.map((product) => (
-          <div class="flex flex-col group">
+          <li class="splide__slide flex flex-col group h-auto">
             <GlassProductCard
               id={product.slug}
               title={product.data.title}
@@ -118,9 +155,9 @@ const pageDescription = description || 'Discover our curated jewelry collection'
               variant_2={product.data.variant_2}
               variant_3={product.data.variant_3}
             />
-          </div>
+          </li>
         ))}
-      </div>
+      </Carousel>
 
       <!-- Buy Complete Look Button -->
       <div class="bg-white/50 backdrop-blur-sm relative overflow-hidden rounded-3xl p-6 md:p-20 border border-border-subtle/50 max-w-5xl mx-auto text-center shadow-sm">
@@ -145,7 +182,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   )}
 
   <!-- Story Content -->
-  <section class="bg-background py-32 border-y border-border-subtle relative">
+  <section class="bg-background py-12 md:py-16 border-y border-border-subtle relative">
     <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/silk-weave.png');"></div>
     <div class="container mx-auto px-4 relative z-10">
       <div class="max-w-4xl mx-auto">
@@ -158,8 +195,8 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   </section>
 
   <!-- Related Lookbooks (Recommendation) -->
-  <section class="container mx-auto px-4 py-32 max-w-7xl">
-     <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-16 border-b border-border-subtle pb-8 max-[425px]:items-center max-[425px]:text-center">
+  <section class="container mx-auto px-4 py-12 md:py-16 max-w-7xl">
+     <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-8 md:mb-12 max-[425px]:items-center max-[425px]:text-center">
        <div>
          <Heading as="h2">Continue Exploring</Heading>
          <Text variant="caption" class="mt-2 block uppercase tracking-widest text-accent-brass font-bold">More Editorial Stories</Text>
@@ -168,24 +205,33 @@ const pageDescription = description || 'Discover our curated jewelry collection'
          All Stories <span class="group-hover:translate-x-2 transition-transform">&rarr;</span>
        </a>
      </div>
-     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {(await getCollection('lookbooks')).filter(lb => lb.slug !== lookbook.slug).slice(0, 2).map(lb => (
-          <a href={`/lookbooks/${lb.slug}`} class="group relative aspect-video overflow-hidden rounded-2xl bg-black">
-            <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-2000 group-hover:scale-110 brightness-75" />
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-12 transition-colors group-hover:bg-black/20">
-              <Text variant="caption" class="text-white/60 mb-2 uppercase tracking-widest group-hover:text-white transition-colors">Editorial</Text>
-              <Heading as="h3" class="text-white tracking-widest uppercase">{lb.data.title}</Heading>
-              <div class="mt-6 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-24"></div>
-            </div>
-          </a>
+     
+     <Carousel 
+        x-data={`carousel({ perPage: 3, gap: '2rem', type: '${relatedLookbooks.length > 3 ? 'loop' : 'slide'}', pagination: true, breakpoints: { 1024: { perPage: 2 }, 640: { perPage: 1, padding: '12vw', gap: '1rem' } } })`} 
+        class="w-full pb-16 related-carousel"
+        trackClass="!py-4"
+        showArrows={relatedLookbooks.length > 3}
+      >
+        {relatedLookbooks.map(lb => (
+          <li class="splide__slide flex justify-center h-auto">
+            <a href={`/lookbooks/${lb.slug}`} class="group block relative w-full max-w-sm md:max-w-md lg:max-w-lg aspect-4/5 overflow-hidden rounded-3xl bg-black focus-glow">
+              <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-[1.05]" />
+              <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/10"></div>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                <Text variant="caption" class="text-accent-brass mb-3 uppercase tracking-widest block font-bold drop-shadow-md">Editorial Story</Text>
+                <Heading as="h3" class="text-white font-serif tracking-tight text-3xl md:text-4xl mb-6 drop-shadow-lg">{lb.data.title}</Heading>
+                <div class="h-0.5 w-12 bg-white/50 mx-auto group-hover:w-24 group-hover:bg-accent-brass transition-all duration-500"></div>
+              </div>
+            </a>
+          </li>
         ))}
-     </div>
+     </Carousel>
   </section>
 
   <!-- Sticky Mobile CTA -->
   <div 
     x-data="{ show: false }"
-    @scroll.window="show = window.scrollY > 800"
+    @scroll.window="show = window.scrollY > 800 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 300"
     x-show="show"
     x-transition:enter="transition ease-out duration-300 transform"
     x-transition:enter-start="translate-y-full"
@@ -198,7 +244,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   >
     <div class="container mx-auto">
       <button
-        @click="$dispatch('zaviona:master-set', { products: productsForButton })"
+        @click={`$dispatch('zeliavance:master-set', { products: ${JSON.stringify(productsForButton)} })`}
         class="relative w-full rounded-xl bg-primary px-8 py-4 text-sm font-black tracking-[0.2em] text-white uppercase shadow-lg active:scale-[0.98] transition-all cursor-pointer disabled:cursor-not-allowed"
       >
         <div class="flex items-center justify-center gap-3">

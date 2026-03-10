@@ -4,7 +4,7 @@ description: "Our commitment to your satisfaction."
 lastUpdated: 2026-02-09
 ---
 
-We want you to love your Zaviona purchase. If for any reason you are not completely satisfied, you may return your item within **30 days** of delivery.
+We want you to love your Zelia Vance purchase. If for any reason you are not completely satisfied, you may return your item within **30 days** of delivery.
 
 ### Conditions for Return
 
@@ -14,4 +14,4 @@ We want you to love your Zaviona purchase. If for any reason you are not complet
 
 ### Process
 
-To initiate a return, please contact our concierge team at concierge@zaviona.com.
+To initiate a return, please contact our concierge team at concierge@zeliavance.com.

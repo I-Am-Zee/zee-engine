@@ -30,7 +30,7 @@ const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Complete Payment - Zaviona</title>
+    <title>Complete Payment - Zelia Vance</title>
 
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -39,7 +39,7 @@ const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
       @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:wght@300;400;500;600;700&display=swap");
 
       :root {
-        /* Use Zaviona's color system */
+        /* Use Zelia Vance's color system */
         --color-background: #ffffff;
         --color-surface: #f8fafc;
         --color-text: #0f172a;
@@ -202,7 +202,7 @@ const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
   <body>
     <div class="container">
       <div class="card">
-        <div class="logo">Zaviona</div>
+        <div class="logo">Zelia Vance</div>
 
         <h1 class="title">Complete Your Payment</h1>
         <p class="subtitle" id="email-display">Loading order details...</p>
@@ -309,7 +309,7 @@ const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
           key: razorpayKeyId,
           amount: amountInPaise,
           currency: "INR", // Force INR - Razorpay only supports INR for Indian merchants
-          name: "Zaviona",
+          name: "Zelia Vance",
           description: `Order #${paymentSession.id.substring(0, 8)}`,
           // order_id: razorpayOrder.orderId, // No longer needed
           prefill: {
