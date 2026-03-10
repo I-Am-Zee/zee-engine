@@ -1,0 +1,42 @@
+---
+import Icon from "../primitives/Icon.astro";
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  title: string;
+  id: string; // Unique string identifier
+  class?: string;
+}
+const { title, id, class: className } = Astro.props;
+---
+
+<div class:list={["border-b border-border-subtle py-4 md:py-6", className]}>
+  <button
+    type="button"
+    class="flex w-full items-center justify-between text-left transition-colors hover:text-text-muted rounded-sm focus-glow"
+    @click={`activeAccordion = activeAccordion === '${id}' ? null : '${id}'`}
+  >
+    <Text as="span" variant="lead" class="font-serif">{title}</Text>
+    <Icon
+      name="PhPlus"
+      class="h-5 w-5 shrink-0 transition-transform duration-300"
+      x-show={`activeAccordion !== '${id}'`}
+    />
+     <Icon
+      name="PhMinus"
+      class="h-5 w-5 shrink-0 transition-transform duration-300"
+      x-show={`activeAccordion === '${id}'`}
+      x-cloak
+    />
+  </button>
+  <div
+    x-show={`activeAccordion === '${id}'`}
+    x-collapse
+    class="pt-4 md:pt-6"
+    x-cloak
+  >
+    <div class="prose prose-stone prose-p:text-text-muted max-w-none">
+       <slot />
+    </div>
+  </div>
+</div>

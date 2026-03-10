@@ -12,29 +12,29 @@
 
 export const siteConfig = {
   // Brand Identity
-  name: "Zaviona",
+  name: "Zelia Vance",
   tagline: "Luxury Jewelry & Timeless Elegance",
-  description: "Zaviona is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship.",
+  description: "Zelia Vance is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship.",
   
   // Production URL (required for Snipcart product validation)
   // DO NOT CHANGE unless you change your Netlify site name
-  url: import.meta.env.PUBLIC_SITE_URL || "https://zaviona-dev.netlify.app",
+  url: import.meta.env.PUBLIC_SITE_URL || "https://zeliavance-dev.netlify.app",
   
   // Email Addresses
   // Add more as needed: orders, legal, press, etc.
   email: {
-    support: "concierge@zaviona.com",
-    orders: "orders@zaviona.com",
-    legal: "legal@zaviona.com",
-    // info: "info@zaviona.com",
-    // press: "press@zaviona.com",
+    support: "concierge@zeliavance.com",
+    orders: "orders@zeliavance.com",
+    legal: "legal@zeliavance.com",
+    // info: "info@zeliavance.com",
+    // press: "press@zeliavance.com",
   },
   
   // Phone Numbers
   // Add more as needed: sales, support, international, etc.
   phone: {
-    main: "+1 (800) ZAVIONA",
-    support: "+1 (800) ZAVIONA",
+    main: "+1 (800) ZELIA-V",
+    support: "+1 (800) ZELIA-V",
     // sales: "+1 (800) 123-4567",
     // international: "+91 12345 67890",
   },
@@ -42,12 +42,12 @@ export const siteConfig = {
   // Social Media Links
   // Add more as needed
   social: {
-    instagram: "https://instagram.com/zaviona",
-    pinterest: "https://pinterest.com/zaviona",
-    // facebook: "https://facebook.com/zaviona",
-    // twitter: "https://twitter.com/zaviona",
-    // youtube: "https://youtube.com/@zaviona",
-    // linkedin: "https://linkedin.com/company/zaviona",
+    instagram: "https://instagram.com/zeliavance",
+    pinterest: "https://pinterest.com/zeliavance",
+    // facebook: "https://facebook.com/zeliavance",
+    // twitter: "https://twitter.com/zeliavance",
+    // youtube: "https://youtube.com/@zeliavance",
+    // linkedin: "https://linkedin.com/company/zeliavance",
   },
   
   // Address (for contact page, footer, etc.)
@@ -66,7 +66,7 @@ export const siteConfig = {
   },
   
   // Legal
-  copyright: `© ${new Date().getFullYear()} Zaviona. All rights reserved.`,
+  copyright: `© ${new Date().getFullYear()} Zelia Vance. All rights reserved.`,
   
   // Assets
   // Place your logo/favicon files in /public folder

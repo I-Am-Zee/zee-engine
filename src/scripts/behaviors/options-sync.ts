@@ -57,8 +57,8 @@ export function initOptionsSync() {
 
 // STRICT VALIDATION INTERCEPTOR
 // We define this OUTSIDE initOptionsSync so it binds exactly once, preventing memory leaks on astro:page-load
-if (typeof document !== 'undefined' && !(window as any)._zavionaValidatorBound) {
-  (window as any)._zavionaValidatorBound = true;
+if (typeof document !== 'undefined' && !(window as any)._zeliavanceValidatorBound) {
+  (window as any)._zeliavanceValidatorBound = true;
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const btn = target.closest('.snipcart-add-item');
@@ -104,8 +104,8 @@ if (typeof document !== 'undefined' && !(window as any)._zavionaValidatorBound) 
 }
 
 // Event Listeners (ensure single binding if possible or they're safe to over-bind if handlers are idempotent)
-if (typeof document !== 'undefined' && !(window as any)._zavionaSyncListenersBound) {
-  (window as any)._zavionaSyncListenersBound = true;
+if (typeof document !== 'undefined' && !(window as any)._zeliavanceSyncListenersBound) {
+  (window as any)._zeliavanceSyncListenersBound = true;
   document.addEventListener('change', (e) => {
     const target = e.target as HTMLElement;
     if (target.closest('fieldset')) {

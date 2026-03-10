@@ -24,6 +24,10 @@ export default defineConfig({
     port: 4321
   },
   
+  image: {
+    remotePatterns: [{ protocol: 'https' }],
+  },
+  
   vite: {
     plugins: [tailwindcss()],
     server: {

@@ -20,7 +20,7 @@ const lookbooks = await getCollection("lookbooks");
 ---
 
 <section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">
-  <div class="relative mx-auto max-w-7xl h-[650px] sm:h-[600px] md:h-[700px]">
+  <div class="relative mx-auto max-w-7xl h-125 sm:h-150 md:h-175">
     <Carousel 
       x-data="carousel"
       class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-border-subtle/50"
@@ -39,9 +39,9 @@ const lookbooks = await getCollection("lookbooks");
           </div>
 
           {/* Luxury Glassmorphic Content Card */}
-          <div class="absolute inset-0 z-10 flex items-center justify-center p-4 pb-20 md:p-12">
+          <div class="absolute inset-0 z-10 flex items-center justify-center p-4 pb-14 md:p-12">
             <div 
-              class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
+              class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
             >
               <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Editorial Series</Text>
               

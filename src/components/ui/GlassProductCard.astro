@@ -139,7 +139,7 @@ const priceTagProps = hasSale
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
-      x-on:click.prevent.stop={`$dispatch('zaviona:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, description, variant_1, variant_2, variant_3})})`}
+      x-on:click.prevent.stop={`$dispatch('zeliavance:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, description, variant_1, variant_2, variant_3})})`}
       aria-label={"Quick shop " + title}
     >
       <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />

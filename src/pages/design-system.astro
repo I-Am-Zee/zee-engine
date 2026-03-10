@@ -26,17 +26,16 @@ import GlassProductCard from "../components/ui/GlassProductCard.astro";
 
 // Organisms (Features)
 import Footer from "../components/features/Footer.astro";
-import ProductCard from "../components/features/ProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 ---
 
-<BaseLayout title="Design System Kitchen Sink | Zaviona">
+<BaseLayout title="Design System Kitchen Sink | Zelia Vance">
   <div class="mx-auto max-w-6xl px-4 py-12">
     <!-- Page Header -->
-    <div class="mb-12 border-b border-[var(--color-border-subtle)] pb-8">
+    <div class="mb-12 border-b border-(--color-border-subtle) pb-8">
       <Heading as="h1" class="mb-4">Design System Kitchen Sink</Heading>
       <Text variant="lead">
-        A comprehensive showcase of all primitive components in the Zaviona e-commerce design
+        A comprehensive showcase of all primitive components in the Zelia Vance e-commerce design
         system, built with Astro, TailwindCSS, and atomic design principles.
       </Text>
     </div>
@@ -48,7 +47,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       <div class="space-y-6">
         <div>
           <Text variant="label" class="mb-3">Headings (Fraunces Font)</Text>
-          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="space-y-4 rounded-lg bg-(--color-surface) p-6">
             <Heading as="h1">Heading 1 - The Quick Brown Fox</Heading>
             <Heading as="h2">Heading 2 - The Quick Brown Fox</Heading>
             <Heading as="h3">Heading 3 - The Quick Brown Fox</Heading>
@@ -150,7 +149,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- Disabled State -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">Disabled State</Text>
-          <div class="flex flex-wrap gap-4 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="flex flex-wrap gap-4 rounded-lg bg-(--color-surface) p-6">
             <Button disabled>Disabled Primary</Button>
             <Button type="secondary" disabled>Disabled Secondary</Button>
           </div>
@@ -161,7 +160,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
     <!-- Links Section -->
     <section class="mb-16">
       <Heading as="h2" class="mb-6">Links</Heading>
-      <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+      <div class="space-y-4 rounded-lg bg-(--color-surface) p-6">
         <Text>
           This paragraph contains a <Link href="#" variant="plain">plain inline link</Link> that inherits
           the font size of its parent and transitions smoothly on hover.
@@ -180,7 +179,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       <div class="space-y-4">
         <div>
           <Text variant="caption" class="mb-3 uppercase">Icon Examples</Text>
-          <div class="flex flex-wrap items-center gap-6 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="flex flex-wrap items-center gap-6 rounded-lg bg-(--color-surface) p-6">
             <div class="flex items-center gap-2">
               <Icon name="PhMagnifyingGlass" />
               <Text>Search</Text>
@@ -201,17 +200,17 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         </div>
         <div>
           <Text variant="caption" class="mb-3 uppercase">Icon Sizes (inherits from text size)</Text>
-          <div class="space-y-3 rounded-lg bg-[var(--color-surface)] p-6">
-            <p class="flex items-center gap-2 font-sans text-sm text-[var(--color-text-main)]">
+          <div class="space-y-3 rounded-lg bg-(--color-surface) p-6">
+            <p class="flex items-center gap-2 font-sans text-sm text-(--color-text-main)">
               <Icon name="PhShoppingCart" /> Small text with icon
             </p>
-            <p class="flex items-center gap-2 font-sans text-base text-[var(--color-text-main)]">
+            <p class="flex items-center gap-2 font-sans text-base text-(--color-text-main)">
               <Icon name="PhShoppingCart" /> Base text with icon
             </p>
-            <p class="flex items-center gap-2 font-sans text-lg text-[var(--color-text-main)]">
+            <p class="flex items-center gap-2 font-sans text-lg text-(--color-text-main)">
               <Icon name="PhShoppingCart" /> Large text with icon
             </p>
-            <p class="flex items-center gap-2 font-sans text-2xl text-[var(--color-text-main)]">
+            <p class="flex items-center gap-2 font-sans text-2xl text-(--color-text-main)">
               <Icon name="PhShoppingCart" /> 2XL text with icon
             </p>
           </div>
@@ -387,7 +386,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">CopyButton (Composed with Button primitive)</Text>
           <div class="flex flex-wrap items-center gap-8 rounded-lg bg-surface p-6">
-            <CopyButton text="ZAVIONA20" label="Copy" successLabel="Copied!" />
+            <CopyButton text="ZELIA20" label="Copy" successLabel="Copied!" />
           </div>
         </div>
       </div>
@@ -401,16 +400,16 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">Brand Actions</Text>
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
-              <div class="mb-2 h-16 rounded bg-[var(--color-primary)]"></div>
+            <div class="rounded-lg border border-(--color-border-subtle) p-4">
+              <div class="mb-2 h-16 rounded bg-(--color-primary)"></div>
               <Text variant="caption">Primary (#0f172a)</Text>
             </div>
-            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
-              <div class="mb-2 h-16 rounded bg-[var(--color-secondary)]"></div>
+            <div class="rounded-lg border border-(--color-border-subtle) p-4">
+              <div class="mb-2 h-16 rounded bg-(--color-secondary)"></div>
               <Text variant="caption">Secondary (#e2e8f0)</Text>
             </div>
-            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
-              <div class="mb-2 h-16 rounded bg-[var(--color-ghost-hover)]"></div>
+            <div class="rounded-lg border border-(--color-border-subtle) p-4">
+              <div class="mb-2 h-16 rounded bg-(--color-ghost-hover)"></div>
               <Text variant="caption">Ghost Hover (#f1f5f9)</Text>
             </div>
           </div>
@@ -418,16 +417,16 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">Surfaces</Text>
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
-              <div class="mb-2 h-16 rounded border bg-[var(--color-background)]"></div>
+            <div class="rounded-lg border border-(--color-border-subtle) p-4">
+              <div class="mb-2 h-16 rounded border bg-background"></div>
               <Text variant="caption">Background (#ffffff)</Text>
             </div>
-            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
-              <div class="mb-2 h-16 rounded bg-[var(--color-surface)]"></div>
+            <div class="rounded-lg border border-(--color-border-subtle) p-4">
+              <div class="mb-2 h-16 rounded bg-(--color-surface)"></div>
               <Text variant="caption">Surface (#f8fafc)</Text>
             </div>
-            <div class="rounded-lg border border-[var(--color-border-subtle)] p-4">
-              <div class="mb-2 h-16 rounded bg-[var(--color-surface-muted)]"></div>
+            <div class="rounded-lg border border-(--color-border-subtle) p-4">
+              <div class="mb-2 h-16 rounded bg-(--color-surface-muted)"></div>
               <Text variant="caption">Surface Muted (#f1f5f9)</Text>
             </div>
           </div>
@@ -437,7 +436,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
 
     <!-- Molecules (UI) Section -->
     <section class="mb-16">
-      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+      <div class="mb-6 border-b border-(--color-border-subtle) pb-4">
         <Heading as="h2" class="mb-2">Molecules (UI)</Heading>
         <Text variant="caption">
           Composed components built using Primitives. These follow the headless pattern where logic
@@ -449,7 +448,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- PriceTag -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">PriceTag</Text>
-          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-(--color-surface) p-6">
             <div>
               <Text variant="caption" class="mb-2">Regular Price:</Text>
               <PriceTag price={2500} />
@@ -468,7 +467,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- QuantitySelector -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">QuantitySelector (Headless)</Text>
-          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-(--color-surface) p-6">
             <div>
               <Text variant="caption" class="mb-2">Default (1-99):</Text>
               <QuantitySelector />
@@ -483,7 +482,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- SearchInput -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">SearchInput</Text>
-          <div class="max-w-md rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="max-w-md rounded-lg bg-(--color-surface) p-6">
             <SearchInput placeholder="Search products..." />
           </div>
         </div>
@@ -491,7 +490,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- RatingStars -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">RatingStars</Text>
-          <div class="flex flex-wrap items-center gap-6 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="flex flex-wrap items-center gap-6 rounded-lg bg-(--color-surface) p-6">
             <div class="flex items-center gap-2">
               <RatingStars rating={5} />
               <Text variant="caption">5.0</Text>
@@ -518,7 +517,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- Breadcrumbs -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">Breadcrumbs</Text>
-          <div class="rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="rounded-lg bg-(--color-surface) p-6">
             <Breadcrumbs
               items={[
                 { label: "Home", href: "/" },
@@ -533,7 +532,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- FormField -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">FormField</Text>
-          <div class="grid gap-6 rounded-lg bg-[var(--color-surface)] p-6 sm:grid-cols-2">
+          <div class="grid gap-6 rounded-lg bg-(--color-surface) p-6 sm:grid-cols-2">
             <FormField label="Email Address" name="email" placeholder="you@example.com" />
             <FormField
               label="Password"
@@ -548,7 +547,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- Alert -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">Alert</Text>
-          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="space-y-4 rounded-lg bg-(--color-surface) p-6">
             <Alert intent="info" title="Information">
               <Text as="span" variant="caption"
                 >Your order has been received and is being processed.</Text
@@ -568,29 +567,29 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- MenuToggle -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">MenuToggle (Headless)</Text>
-          <div class="rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="rounded-lg bg-(--color-surface) p-6">
             <MenuToggle label="Navigation menu">
               <div
-                class="w-48 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)] p-2 shadow-lg"
+                class="w-48 rounded-lg border border-(--color-border-subtle) bg-background p-2 shadow-lg"
               >
                 <a
                   href="#"
-                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  class="block rounded px-3 py-2 text-sm hover:bg-(--color-ghost-hover)"
                   >Dashboard</a
                 >
                 <a
                   href="#"
-                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  class="block rounded px-3 py-2 text-sm hover:bg-(--color-ghost-hover)"
                   >Products</a
                 >
                 <a
                   href="#"
-                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  class="block rounded px-3 py-2 text-sm hover:bg-(--color-ghost-hover)"
                   >Orders</a
                 >
                 <a
                   href="#"
-                  class="block rounded px-3 py-2 text-sm hover:bg-[var(--color-ghost-hover)]"
+                  class="block rounded px-3 py-2 text-sm hover:bg-(--color-ghost-hover)"
                   >Settings</a
                 >
               </div>
@@ -604,7 +603,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- Pagination -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">Pagination</Text>
-          <div class="space-y-4 rounded-lg bg-[var(--color-surface)] p-6">
+          <div class="space-y-4 rounded-lg bg-(--color-surface) p-6">
             <div>
               <Text variant="caption" class="mb-2">Few Pages:</Text>
               <Pagination currentPage={2} totalPages={5} baseUrl="#" />
@@ -620,7 +619,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
 
     <!-- User Choices & States Section -->
     <section class="mb-16">
-      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+      <div class="mb-6 border-b border-(--color-border-subtle) pb-4">
         <Heading as="h2" class="mb-2">User Choices & States</Heading>
         <Text variant="caption">
           Components for handling user selections and empty/error states.
@@ -631,7 +630,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <!-- OptionSelector -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">OptionSelector (Variant Picker)</Text>
-          <div class="grid gap-8 rounded-lg bg-[var(--color-surface)] p-6 sm:grid-cols-2">
+          <div class="grid gap-8 rounded-lg bg-(--color-surface) p-6 sm:grid-cols-2">
             <OptionSelector
               legend="Ring Size"
               options={["6", "7", "8", "9"]}
@@ -654,7 +653,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
           <Text variant="caption" class="mb-3 uppercase">EmptyState (Sad Paths)</Text>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div
-              class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]"
+              class="rounded-lg border border-(--color-border-subtle) bg-background"
             >
               <EmptyState
                 icon="PhBag"
@@ -664,7 +663,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
               />
             </div>
             <div
-              class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]"
+              class="rounded-lg border border-(--color-border-subtle) bg-background"
             >
               <EmptyState
                 icon="PhMagnifyingGlass"
@@ -673,7 +672,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
               />
             </div>
             <div
-              class="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-background)]"
+              class="rounded-lg border border-(--color-border-subtle) bg-background"
             >
               <EmptyState
                 icon="PhHeart"
@@ -689,7 +688,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
 
     <!-- Organisms Section -->
     <section class="mb-16">
-      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+      <div class="mb-6 border-b border-(--color-border-subtle) pb-4">
         <Heading as="h2" class="mb-2">Organisms (Features)</Heading>
         <Text variant="caption">
           Complex, reusable features composed of multiple molecules. These are major site sections.
@@ -704,13 +703,13 @@ import ProductGrid from "../components/features/ProductGrid.astro";
             4-column responsive footer with brand info, navigation, support links, and newsletter
             signup.
           </Text>
-          <div class="-mx-4 overflow-hidden rounded-lg border border-[var(--color-border-subtle)]">
+          <div class="-mx-4 overflow-hidden rounded-lg border border-(--color-border-subtle)">
             <Footer />
           </div>
         </div>
 
         <!-- Navbar Note -->
-        <div class="rounded-lg bg-[var(--color-surface)] p-6">
+        <div class="rounded-lg bg-(--color-surface) p-6">
           <Text variant="caption" class="mb-2 uppercase">Navbar</Text>
           <Alert intent="info" title="Navbar Component Ready">
             <Text as="span" variant="caption">
@@ -725,7 +724,7 @@ import ProductGrid from "../components/features/ProductGrid.astro";
 
     <!-- Shop Components Section -->
     <section class="mb-16">
-      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+      <div class="mb-6 border-b border-(--color-border-subtle) pb-4">
         <Heading as="h2" class="mb-2">Shop Components</Heading>
         <Text variant="caption">
           Product display components for the shopping experience. Test cases include products with
@@ -734,97 +733,13 @@ import ProductGrid from "../components/features/ProductGrid.astro";
       </div>
 
       <div class="space-y-8">
-        <!-- ProductCard Examples -->
-        <div>
-          <Text variant="caption" class="mb-3 uppercase">ProductCard States</Text>
-          <Text variant="caption" class="mb-6">
-            Cards feature image zoom on hover, wishlist toggle (click heart), conditional rating
-            display, and responsive badges.
-          </Text>
 
-          <ProductGrid>
-            <!-- Test Case A: Sale + Badge + Rating -->
-            <ProductCard
-              id="ds-celestial-moon-necklace"
-              title="Celestial Moon Necklace"
-              price={3500}
-              salePrice={2800}
-              image="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=500&fit=crop"
-              href="/shop/celestial-moon-necklace"
-              badges={["New", "Sale"]}
-              rating={4.8}
-            />
-
-            <!-- Test Case B: Standard (no rating, no badges) -->
-            <ProductCard
-              id="ds-minimalist-gold-ring"
-              title="Minimalist Gold Ring"
-              price={2200}
-              image="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=500&fit=crop"
-              href="/shop/minimalist-gold-ring"
-            />
-
-            <!-- With Sale Price only -->
-            <ProductCard
-              id="ds-vintage-pearl-earrings"
-              title="Vintage Pearl Earrings"
-              price={4200}
-              salePrice={3500}
-              image="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=500&fit=crop"
-              href="/shop/vintage-pearl-earrings"
-              rating={4.5}
-            />
-
-            <!-- With Badge only -->
-            <ProductCard
-              id="ds-diamond-stud-earrings"
-              title="Diamond Stud Earrings"
-              price={5800}
-              image="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=400&h=500&fit=crop"
-              href="/shop/diamond-stud-earrings"
-              badges={["Bestseller"]}
-              rating={4.9}
-            />
-
-            <!-- New product (no rating yet) -->
-            <ProductCard
-              id="ds-delicate-chain-bracelet"
-              title="Delicate Chain Bracelet"
-              price={1800}
-              image="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=500&fit=crop"
-              href="/shop/delicate-chain-bracelet"
-              badges={["New"]}
-            />
-
-            <!-- Regular product with rating -->
-            <ProductCard
-              id="ds-rose-gold-bangle-set"
-              title="Rose Gold Bangle Set"
-              price={3200}
-              image="https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=400&h=500&fit=crop"
-              href="/shop/rose-gold-bangle-set"
-              rating={4.6}
-            />
-          </ProductGrid>
-        </div>
-
-        <!-- Grid Responsiveness Note -->
-        <div class="rounded-lg bg-[var(--color-surface)] p-6">
-          <Text variant="caption" class="mb-2 uppercase">Responsive Grid</Text>
-          <Alert intent="info" title="ProductGrid Layout">
-            <Text as="span" variant="caption">
-              The grid automatically adapts: <strong>2 columns</strong> on mobile for detail visibility,
-              <strong>3 columns</strong> on tablet, and <strong>4 columns</strong> on desktop for a premium,
-              airy feel. Try resizing your browser to see the responsive behavior.
-            </Text>
-          </Alert>
-        </div>
       </div>
     </section>
 
     <!-- Glass Product Card Section -->
     <section class="mb-16">
-      <div class="mb-6 border-b border-[var(--color-border-subtle)] pb-4">
+      <div class="mb-6 border-b border-(--color-border-subtle) pb-4">
         <Heading as="h2" class="mb-2">Glass Product Card</Heading>
         <Text variant="caption">
           Premium Glassmorphism card — a UI Molecule. Hover on desktop to see the Quick Shop
@@ -889,14 +804,14 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <Text variant="caption" color="muted">• Hover a card on desktop: glass panel expands upward, Quick Shop fades in with a 75ms delay</Text>
         <Text variant="caption" color="muted">• On mobile (&lt;md): Quick Shop is hidden; a shopping bag icon links to the PDP</Text>
         <Text variant="caption" color="muted">• Wishlist heart uses <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">$store.wishlist</code> — same Alpine.js store as ProductCard</Text>
-        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">zaviona:quick-shop</code> event for any Feature to catch</Text>
+        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">zeliavance:quick-shop</code> event for any Feature to catch</Text>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="mt-16 border-t border-[var(--color-border-subtle)] pt-8 text-center">
+    <footer class="mt-16 border-t border-(--color-border-subtle) pt-8 text-center">
       <Text variant="caption">
-        Design System for Zaviona E-commerce | Built with Astro, TailwindCSS & Atomic Design
+        Design System for Zelia Vance E-commerce | Built with Astro, TailwindCSS & Atomic Design
       </Text>
     </footer>
   </div>

@@ -4,7 +4,7 @@
  * 
  * Toast notification that appears when a product is added to cart.
  * Uses Alpine.js for state management and auto-dismissal.
- * Follows Zaviona design system aesthetics.
+ * Follows Zelia Vance design system aesthetics.
  * 
  * @component Molecule (ui/)
  * @uses Alpine.js for reactivity
@@ -64,7 +64,7 @@ const { autoDismissMs = 4000 } = Astro.props;
         }
         
         // Listen for internal dispatch from custom flows (like SideDrawer Quick Shop)
-        document.addEventListener('zaviona:show-toast', (e) => {
+        document.addEventListener('zeliavance:show-toast', (e) => {
           if (e.detail) showToast(e.detail);
         });
       }

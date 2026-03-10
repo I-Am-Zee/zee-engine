@@ -73,7 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
     // This enables free, unlimited Deploy Previews
     // Get the base URL dynamically from the incoming request's actual origin.
     // This ensures we return the exact domain Snipcart is interacting with
-    // (e.g., zeliavance.com instead of zaviona-dev.netlify.app)
+    // (e.g., zeliavance.com instead of zeliavance-dev.netlify.app)
     const siteOrigin = new URL(request.url).origin;
     
     const siteUrl = siteOrigin || 

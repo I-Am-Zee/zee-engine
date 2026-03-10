@@ -1,7 +1,7 @@
 ---
 /**
  * SideDrawer Component
- * 
+ *
  * A multi-purpose slide-out side drawer that handles:
  * 1. Post-purchase Upsells (upsell mode)
  * 2. Single-item Quick Shop (quick-shop mode)
@@ -21,9 +21,10 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
 ---
 
 <div
-  id="zaviona-side-drawer"
+  id="zeliavance-side-drawer"
   x-data="sideDrawer"
   x-show="isOpen"
+  x-effect="document.body.style.overflow = isOpen ? 'hidden' : ''"
   x-cloak
   @keydown.escape.window="close()"
   class="fixed inset-0 z-9999 overflow-hidden"
@@ -32,7 +33,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
   aria-modal="true"
 >
   <!-- Background backdrop -->
-  <div 
+  <div
     x-show="isOpen"
     x-transition:enter="ease-in-out duration-500"
     x-transition:enter-start="opacity-0"
@@ -42,10 +43,11 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
     x-transition:leave-end="opacity-0"
     @click="close()"
     class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-  ></div>
+  >
+  </div>
 
   <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
-    <div 
+    <div
       x-show="isOpen"
       x-transition:enter="transform-gpu transition-transform ease-out duration-500"
       x-transition:enter-start="translate-x-full"
@@ -55,17 +57,19 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
       x-transition:leave-end="translate-x-full"
       class="w-screen max-w-md will-change-transform"
     >
-      <div class="flex h-full flex-col overflow-y-scroll bg-background shadow-2xl">
+      <div class="bg-background flex h-full flex-col overflow-y-scroll shadow-2xl">
         <!-- Header -->
-        <div class="px-6 py-6 sm:px-8 border-b border-border-subtle bg-surface/50">
-          <div class="flex items-center justify-between mb-4">
+        <div class="border-border-subtle bg-surface/50 border-b px-6 py-6 sm:px-8">
+          <div class="mb-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
               <template x-if="mode === 'upsell'">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-accent-emerald/10 text-accent-emerald">
+                <div
+                  class="bg-accent-emerald/10 text-accent-emerald flex h-10 w-10 items-center justify-center rounded-full"
+                >
                   <Icon name="PhCheck" size={24} weight="bold" />
                 </div>
               </template>
-              <Heading as="h2" id="side-drawer-title" x-text="headerTitle"></Heading>
+              <Heading as="h2" id="side-drawer-title" x-text="headerTitle" />
             </div>
             <Button
               type="ghost"
@@ -81,14 +85,24 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
 
           <!-- Main Item Summary (Only for upsell) -->
           <template x-if="mode === 'upsell' && mainItem">
-            <div class="mt-6 flex items-center gap-4 bg-background p-3 rounded-xl border border-border-subtle shadow-sm">
-              <img :src="mainItem.image" :alt="mainItem.name" class="h-16 w-16 rounded-lg object-cover" />
-              <div class="flex-1 min-w-0">
-                <Text variant="paragraph" weight="bold" class="truncate" x-text="mainItem.name"></Text>
+            <div
+              class="bg-background border-border-subtle mt-6 flex items-center gap-4 rounded-xl border p-3 shadow-sm"
+            >
+              <img
+                :src="mainItem.image"
+                :alt="mainItem.name"
+                class="h-16 w-16 rounded-lg object-cover"
+              />
+              <div class="min-w-0 flex-1">
+                <Text variant="paragraph" weight="bold" class="truncate" x-text="mainItem.name" />
                 <div class="mt-1 flex flex-wrap gap-2">
-                   <template x-for="option in mainItem.options" :key="option.name">
-                      <Text variant="metadata" weight="bold" x-text="option.name + ': ' + option.value"></Text>
-                   </template>
+                  <template x-for="option in mainItem.options" :key="option.name">
+                    <Text
+                      variant="metadata"
+                      weight="bold"
+                      x-text="option.name + ': ' + option.value"
+                    />
+                  </template>
                 </div>
               </div>
             </div>
@@ -103,72 +117,106 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
           </div>
 
           <div class="mb-8">
-            <Text variant="paragraph" weight="bold" x-text="subHeading"></Text>
-            <div class="h-1 w-12 bg-accent-brass mt-2"></div>
+            <Text variant="paragraph" weight="bold" x-text="subHeading" />
+            <div class="bg-accent-brass mt-2 h-1 w-12"></div>
           </div>
 
           <div class="space-y-10">
             <template x-for="(item, index) in products" :key="item.id">
-              <div class="group relative flex gap-6 pb-2 border-b border-border-subtle/30 last:border-0">
+              <div
+                class="group border-border-subtle/30 relative flex gap-6 border-b pb-2 last:border-0"
+              >
                 <!-- Checkbox (Only for Upsell mode where items are optional) -->
                 <template x-if="mode === 'upsell'">
-                  <div class="absolute right-0 top-0">
-                    <input 
-                      type="checkbox" 
+                  <div class="absolute top-0 right-0">
+                    <input
+                      type="checkbox"
                       :id="'drawer-' + item.id"
                       x-model="selectedItems"
                       :value="item.id"
-                      class="h-5 w-5 rounded border-border-strong text-primary focus-glow cursor-pointer"
+                      class="border-border-strong text-primary focus-glow h-5 w-5 cursor-pointer rounded"
                     />
                   </div>
                 </template>
 
                 <!-- Product Image -->
-                <div class="h-28 w-28 shrink-0 overflow-hidden rounded-2xl border border-border-subtle/40 bg-surface-muted">
-                   <a :href="'/products/' + item.id" @click="close()" class="focus-glow block h-full">
-                     <img :src="item.image" :alt="item.title" class="h-full w-full object-cover object-center group-hover:scale-[1.04] transition-transform duration-700 ease-out" />
-                   </a>
+                <div
+                  class="border-border-subtle/40 bg-surface-muted h-28 w-28 shrink-0 overflow-hidden rounded-2xl border"
+                >
+                  <a
+                    :href="'/products/' + item.id"
+                    @click="close()"
+                    class="focus-glow block h-full"
+                  >
+                    <img
+                      :src="item.image"
+                      :alt="item.title"
+                      class="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    />
+                  </a>
                 </div>
 
                 <!-- Product Info -->
                 <div class="flex flex-1 flex-col">
                   <div>
                     <div class="flex justify-between">
-                      <Heading 
-                        as="h3" 
-                        color="main" 
-                        class="line-clamp-1 tracking-tight leading-normal font-semibold" 
+                      <Heading
+                        as="h3"
+                        color="main"
+                        class="line-clamp-1 leading-normal font-semibold tracking-tight"
                         style="font-size: clamp(1rem, 2.5vw, 1.15rem);"
                       >
-                        <a :href="'/products/' + item.id" @click="close()" class="focus-glow rounded" x-text="item.title"></a>
+                        <a
+                          :href="'/products/' + item.id"
+                          @click="close()"
+                          class="focus-glow rounded"
+                          x-text="item.title"></a>
                       </Heading>
                     </div>
                     <div class="mt-2 flex items-center gap-2">
-                       <template x-if="item.salePrice && Number(item.salePrice) < Number(item.price)">
-                         <Text variant="metadata" color="muted" class="line-through font-medium" x-text="'₹' + Number(item.price).toLocaleString('en-IN')"></Text>
-                       </template>
-                       <Text variant="paragraph" weight="bold" color="main" x-text="'₹' + (Number(item.salePrice) || Number(item.price)).toLocaleString('en-IN')"></Text>
+                      <template
+                        x-if="item.salePrice && Number(item.salePrice) < Number(item.price)"
+                      >
+                        <Text
+                          variant="metadata"
+                          color="muted"
+                          class="font-medium line-through"
+                          x-text="'₹' + Number(item.price).toLocaleString('en-IN')"
+                        />
+                      </template>
+                      <Text
+                        variant="paragraph"
+                        weight="bold"
+                        color="main"
+                        x-text="'₹' + (Number(item.salePrice) || Number(item.price)).toLocaleString('en-IN')"
+                      />
                     </div>
                   </div>
 
                   <!-- Variant Selectors (Flexible for up to 3 slots) -->
                   <div class="mt-6 space-y-5">
-                    <template x-for="v in [item.variant_1, item.variant_2, item.variant_3].filter(slot => slot && slot.values)" :key="v.name">
+                    <template
+                      x-for="v in [item.variant_1, item.variant_2, item.variant_3].filter(slot => slot && slot.values)"
+                      :key="v.name"
+                    >
                       <div>
-                        <div class="flex justify-between items-center mb-2">
-                          <Text variant="eyebrow" x-text="v.name"></Text>
+                        <div class="mb-2 flex items-center justify-between">
+                          <Text variant="eyebrow" x-text="v.name" />
                           <template x-if="selections[item.id]?.[v.name]">
-                             <Text variant="eyebrow" x-text="selections[item.id][v.name]"></Text>
+                            <Text variant="eyebrow" x-text="selections[item.id][v.name]" />
                           </template>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                          <template x-for="val in (v.values || '').split(',').map(v => v.trim()).filter(v => v !== '')" :key="val">
+                          <template
+                            x-for="val in (v.values || '').split(',').map(v => v.trim()).filter(v => v !== '')"
+                            :key="val"
+                          >
                             <button
                               @click="selectOption(item.id, v.name, val)"
-                              class="inline-flex h-9 min-w-9 items-center justify-center rounded border px-3 transition-all focus-glow cursor-pointer disabled:cursor-not-allowed"
+                              class="focus-glow inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded border px-3 transition-all disabled:cursor-not-allowed"
                               :class="selections[item.id]?.[v.name] === val ? 'border-primary bg-primary text-text-inverse' : 'border-border-strong bg-background text-text-main hover:border-accent-brass hover:text-accent-brass hover:bg-surface'"
                             >
-                              <Text variant="label" color="inherit" x-text="val"></Text>
+                              <Text variant="label" color="inherit" x-text="val" />
                             </button>
                           </template>
                         </div>
@@ -182,31 +230,45 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
         </div>
 
         <!-- Footer (Sticky) -->
-        <div class="border-t border-border-subtle px-6 py-8 sm:px-8 bg-surface/80 backdrop-blur-xs">
+        <div class="border-border-subtle bg-surface/80 border-t px-6 py-8 backdrop-blur-xs sm:px-8">
           <!-- Validation Message -->
-          <div x-show="typeof validationError !== 'undefined' && validationError" class="mb-5 bg-accent-coral/10 p-3 rounded-lg border border-accent-coral/20" x-transition>
-            <Text id="side-drawer-error-text" variant="label" color="coral" x-text="typeof validationError !== 'undefined' ? validationError : ''"></Text>
+          <div
+            x-show="typeof validationError !== 'undefined' && validationError"
+            class="bg-accent-coral/10 border-accent-coral/20 mb-5 rounded-lg border p-3"
+            x-transition
+          >
+            <Text
+              id="side-drawer-error-text"
+              variant="label"
+              color="coral"
+              x-text="typeof validationError !== 'undefined' ? validationError : ''"
+            />
           </div>
 
-          <Button 
+          <Button
             type="primary"
             @click="submit()"
             :disabled="((mode === 'master-set' || mode === 'upsell') && selectedItems.length === 0) || isSubmitting"
-            class="w-full py-5 text-base uppercase tracking-widest shadow-xl"
+            class="w-full py-5 text-base tracking-widest uppercase shadow-xl"
           >
             <span x-show="!isSubmitting">
-              <Text variant="label" color="inherit" x-text="submitButtonText"></Text>
+              <Text variant="label" color="inherit" x-text="submitButtonText" />
             </span>
             <span x-show="isSubmitting" class="flex items-center gap-2">
               <Icon name="PhCircleNotch" class="animate-spin" size={20} />
               <Text variant="label" color="inherit">Processing...</Text>
             </span>
           </Button>
-          
+
           <div class="mt-6 flex justify-center text-center">
-             <button @click="close()" class="focus-glow p-2 rounded cursor-pointer disabled:cursor-not-allowed">
-               <Text variant="eyebrow" color="muted" class="hover:text-primary transition-colors">Continue Shopping</Text>
-             </button>
+            <button
+              @click="close()"
+              class="focus-glow cursor-pointer rounded p-2 disabled:cursor-not-allowed"
+            >
+              <Text variant="eyebrow" color="muted" class="hover:text-primary transition-colors"
+                >Continue Shopping</Text
+              >
+            </button>
           </div>
         </div>
       </div>
@@ -214,11 +276,12 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
   </div>
 </div>
 
-
 <script>
   // Placeholder to satisfy Astro component indexing
 </script>
 
 <style is:global>
-  [x-cloak] { display: none !important; }
+  [x-cloak] {
+    display: none !important;
+  }
 </style>

@@ -11,6 +11,7 @@
 import { getCollection } from "astro:content";
 import GlassProductCard from "./GlassProductCard.astro";
 import ProductGrid from "../features/ProductGrid.astro";
+import Carousel from "./Carousel.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import BuySetButton from "../features/BuySetButton.astro";
@@ -70,7 +71,7 @@ const productsForButton = [
 {
   relatedProducts.length > 0 && (
     <section 
-      class:list={["mt-24 border-t border-(--color-border-subtle) pt-16 pb-8", className]}
+      class:list={["mt-12 md:mt-16 border-t border-(--color-border-subtle) pt-12 md:pt-16 pb-8 md:pb-12", className]}
       id="perfect-pairings"
     >
       <script is:inline define:vars={{ 
@@ -78,46 +79,53 @@ const productsForButton = [
       }}>
         // Expose related products for the Upsell Drawer with relative URLs
         // This ensures Snipcart's crawler resolves them against the CURRENT origin (tunnel, dev, or production)
-        window.ZAVIONA_UPSELL_CONTEXT = relatedItems.map(item => ({
+        window.ZELIA_UPSELL_CONTEXT = relatedItems.map(item => ({
           ...item,
           url: `/products/${item.id}`
         }));
       </script>
 
-      <div class="mb-10 lg:mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+      <div class="mb-8 lg:mb-12 flex flex-col items-center text-center md:flex-row md:items-end md:justify-between md:text-left gap-6">
         <div>
           <Heading as="h2" class="mb-2">
             Perfect Pairings
           </Heading>
-          <div class="flex items-center gap-3">
+          <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-3">
             <Text variant="paragraph" color="muted" class="mb-0">
               Curated pieces to elevate your ensemble
             </Text>
-            <span class="text-text-muted opacity-50">|</span>
+            <span class="text-text-muted opacity-50 hidden md:inline">|</span>
             <Text variant="caption" weight="bold" class="text-text-muted capitalize tracking-widest mt-0.5">
               {productsForButton.length} Items Total
             </Text>
           </div>
         </div>
-        <div class="w-full md:w-auto md:min-w-[300px]">
+        <div class="w-full md:w-auto md:min-w-75">
           <BuySetButton products={productsForButton} class="w-full" hideSavingsText={true} />
         </div>
       </div>
 
-      <ProductGrid>
+      <Carousel
+        x-data="carousel({ perPage: 4, gap: '2rem', type: 'slide', pagination: true, breakpoints: { 1024: { perPage: 3, gap: '1.5rem' }, 768: { perPage: 2 }, 640: { perPage: 1, padding: '10vw', gap: '1rem' } } })"
+        class="w-full pb-12"
+        trackClass="!py-4"
+        showArrows={true}
+      >
         {relatedProducts.map((product) => (
-          <GlassProductCard
-            id={product.slug}
-            title={product.data.title}
-            price={product.data.price}
-            salePrice={product.data.salePrice}
-            image={product.data.image}
-            description={product.data.description}
-            href={`/products/${product.slug}`}
-            badges={product.data.badges}
-          />
+          <li class="splide__slide flex flex-col group h-auto">
+            <GlassProductCard
+              id={product.slug}
+              title={product.data.title}
+              price={product.data.price}
+              salePrice={product.data.salePrice}
+              image={product.data.image}
+              description={product.data.description}
+              href={`/products/${product.slug}`}
+              badges={product.data.badges}
+            />
+          </li>
         ))}
-      </ProductGrid>
+      </Carousel>
     </section>
   )
 }
