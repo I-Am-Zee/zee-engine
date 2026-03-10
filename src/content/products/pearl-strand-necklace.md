@@ -30,7 +30,7 @@ related_products:
 
 The Pearl Strand Necklace features hand-selected Akoya pearls, each chosen for their exceptional luster and perfectly round shape. This classic piece has adorned elegant women for generations.
 
-**Features:**
+### Features
 
 - 7-7.5mm Akoya pearls
 - Hand-knotted silk strand

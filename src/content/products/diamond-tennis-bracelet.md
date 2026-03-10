@@ -35,7 +35,7 @@ related_products:
 
 The Diamond Tennis Bracelet is the ultimate statement of elegance. Each diamond is carefully selected and set to create a continuous line of brilliant sparkle around your wrist.
 
-**Features:**
+### Features
 
 - 2 total carats of VS clarity diamonds
 - 18k white gold setting

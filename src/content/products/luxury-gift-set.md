@@ -36,7 +36,7 @@ related_products:
 
 The Luxury Gift Set is perfect for celebrating life's special moments. This thoughtfully curated collection includes a delicate pearl pendant necklace and matching stud earrings.
 
-**Features:**
+### Features
 
 - Matching pearl necklace and earrings
 - Premium leather presentation box

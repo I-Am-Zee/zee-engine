@@ -31,7 +31,7 @@ related_products:
 
 The Emerald Drop Earrings showcase the mesmerizing beauty of Colombian emeralds, each stone displaying the rich, verdant green that has captivated jewelry lovers for millennia.
 
-**Features:**
+### Features
 
 - 2 carats total emerald weight
 - Diamond halo accents (0.5ct total)

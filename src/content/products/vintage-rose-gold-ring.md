@@ -31,7 +31,7 @@ related_products:
 
 The Vintage Rose Gold Ring embodies timeless romance with its warm, blush-toned metal and delicate filigree details. Each ring is crafted using traditional techniques passed down through generations of master jewelers.
 
-**Features:**
+### Features
 
 - 14k rose gold construction
 - Hand-engraved vintage patterns

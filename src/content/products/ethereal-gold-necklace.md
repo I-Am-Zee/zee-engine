@@ -37,7 +37,7 @@ The Ethereal Gold Necklace is our most beloved piece, combining minimalist elega
 
 The pendant features a unique celestial-inspired design that catches light beautifully, creating a subtle shimmer with every movement. The delicate chain ensures comfortable all-day wear without compromising on style.
 
-**Features:**
+### Features
 
 - Premium 14k yellow gold
 - Adjustable chain length

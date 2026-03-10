@@ -10,11 +10,11 @@ products:
 
 As the sun reaches its zenith, our Summer Solstice collection celebrates the brilliance of gold and the clarity of diamonds. These pieces are designed to shimmer under the golden hour sun and transition perfectly into warm summer nights.
 
-**The Look:**
+### The Look
 
 Layer our Ethereal Gold Necklace with light linen or silk. The Celestial Diamond Ring adds a touch of sparkle that catches every ray of light.
 
-**Styling Tips:**
+### Styling Tips
 
 - Perfect for beachfront dinners and summer garden parties.
 - Pairs beautifully with tan and neutral tones.

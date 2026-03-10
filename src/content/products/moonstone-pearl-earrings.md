@@ -28,7 +28,7 @@ These exquisite Moonstone Pearl Earrings are a testament to nature's beauty and 
 
 The combination of classic pearls with ethereal moonstones creates a unique piece that's both timeless and contemporary. Perfect for weddings, galas, or any occasion where you want to make an elegant statement.
 
-**Features:**
+### Features
 
 - Genuine freshwater pearls (8-9mm)
 - Natural moonstone accents

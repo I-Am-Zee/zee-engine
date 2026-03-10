@@ -33,7 +33,7 @@ related_products:
 
 The Diamond Tennis Necklace is the pinnacle of luxury jewelry. Each diamond is carefully matched for cut, clarity, and color to create a seamless flow of brilliance around your neck.
 
-**Features:**
+### Features
 
 - 3 total carats of VS clarity diamonds
 - 18k white gold setting

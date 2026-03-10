@@ -39,7 +39,7 @@ related_products:
 
 The Gold Chain Bracelet combines classic elegance with contemporary style. Its carefully crafted links catch the light beautifully, creating subtle shimmer with every movement.
 
-**Features:**
+### Features
 
 - 14k yellow gold
 - Secure lobster clasp

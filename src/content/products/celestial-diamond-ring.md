@@ -45,7 +45,7 @@ This stunning celestial diamond ring captures the essence of timeless elegance. 
 
 The ring's design draws inspiration from celestial bodies, with delicate details that catch the light from every angle. Made from premium 18k gold, it combines modern sophistication with classic beauty.
 
-**Features:**
+### Features
 
 - Brilliant-cut diamond (0.75 carats)
 - 18k gold setting

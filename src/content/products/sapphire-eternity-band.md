@@ -29,7 +29,7 @@ related_products:
 
 The Sapphire Eternity Band represents eternal love with its unbroken circle of hand-selected Ceylon sapphires. Each gemstone displays the coveted cornflower blue hue that has captivated royalty for centuries.
 
-**Features:**
+### Features
 
 - 18 natural Ceylon sapphires
 - Platinum setting
