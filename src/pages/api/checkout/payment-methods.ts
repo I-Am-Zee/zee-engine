@@ -71,7 +71,12 @@ export const POST: APIRoute = async ({ request }) => {
     // Get the base URL for the checkout page
     // DEPLOY_PRIME_URL is provided by Netlify for both preview and production
     // This enables free, unlimited Deploy Previews
-    const siteUrl = import.meta.env.DEPLOY_PRIME_URL || 
+    // Get the base URL dynamically from the incoming request's actual origin.
+    // This ensures we return the exact domain Snipcart is interacting with
+    // (e.g., zeliavance.com instead of zaviona-dev.netlify.app)
+    const siteOrigin = new URL(request.url).origin;
+    
+    const siteUrl = siteOrigin || 
                     import.meta.env.PUBLIC_SITE_URL || 
                     siteConfig.url ||
                     'http://localhost:4321';

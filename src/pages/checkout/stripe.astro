@@ -27,7 +27,7 @@ if (!publicToken) {
 
 // Get Stripe key for client-side
 const stripePublishableKey = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY;
-const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
+const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
 
 // Check if Stripe is configured
 const stripeConfigured = !!stripePublishableKey;
