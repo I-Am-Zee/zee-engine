@@ -1,0 +1,36 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Heading from '../components/primitives/Heading.astro';
+import Text from '../components/primitives/Text.astro';
+
+const entry = await getEntry('pages', 'privacy-policy');
+if (!entry) return new Response('Page not found', { status: 404 });
+
+const { Content } = await entry.render();
+
+export const prerender = true;
+---
+
+<BaseLayout title={`${entry.data.title} | Zelia Vance`}>
+  <main class="mx-auto max-w-4xl px-4 py-16 md:py-32">
+    <div class="text-center mb-16 md:mb-24">
+      <Text variant="eyebrow" class="text-accent-brass mb-4 block">Legal Center</Text>
+      <Heading as="h1" class="mb-6">{entry.data.title}</Heading>
+      {entry.data.description && (
+        <Text variant="lead" color="muted" class="max-w-2xl mx-auto">
+          {entry.data.description}
+        </Text>
+      )}
+      {entry.data.lastUpdated && (
+        <Text variant="caption" color="muted" class="mt-4 block italic">
+          Last Updated: {entry.data.lastUpdated.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </Text>
+      )}
+    </div>
+    
+    <div class="prose prose-stone md:prose-lg max-w-3xl mx-auto prose-headings:font-serif prose-headings:font-light prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-text-muted prose-p:leading-relaxed prose-a:text-accent-brass hover:prose-a:text-text-main transition-colors">
+      <Content />
+    </div>
+  </main>
+</BaseLayout>

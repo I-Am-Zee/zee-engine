@@ -2,27 +2,63 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
+import Accordion from "../components/ui/Accordion.astro";
+import AccordionItem from "../components/ui/AccordionItem.astro";
 
 export const prerender = true;
 ---
 
-<BaseLayout title="FAQ | Zaviona">
-  <main class="mx-auto max-w-3xl px-4 py-24">
-    <Heading as="h1" class="mb-12 text-center">Frequently Asked Questions</Heading>
+<BaseLayout title="FAQ | Zelia Vance">
+  <main class="mx-auto max-w-4xl px-4 py-16 md:py-24">
+    <div class="text-center mb-16">
+      <Heading as="h1" class="mb-4 text-4xl md:text-5xl">Client Care & FAQ</Heading>
+      <Text variant="lead" color="muted" class="max-w-2xl mx-auto italic font-serif">
+        Everything you need to know about our sourcing, shipping, and lifetime care.
+      </Text>
+    </div>
     
-    <div class="space-y-8">
-      <div>
-        <Heading as="h3" class="mb-2">Are your diamonds ethically sourced?</Heading>
-        <Text variant="muted">Yes, all Zaviona diamonds are conflict-free and sourced following the Kimberley Process.</Text>
-      </div>
-      <div>
-        <Heading as="h3" class="mb-2">Do you offer international shipping?</Heading>
-        <Text variant="muted">Currently we ship within India and selected international markets. Please contact us for details.</Text>
-      </div>
-      <div>
-        <Heading as="h3" class="mb-2">What is your return policy?</Heading>
-        <Text variant="muted">We offer a 30-day return policy for unused items in their original packaging.</Text>
-      </div>
+    <div class="space-y-12">
+      <section>
+        <Heading as="h3" class="mb-6 uppercase tracking-widest text-sm text-text-muted">Diamonds & Sourcing</Heading>
+        <div class="bg-surface p-6 md:p-10 rounded-2xl shadow-xs border border-border-subtle">
+          <Accordion>
+            <AccordionItem id="faq-ethical" title="Are your diamonds ethically sourced?">
+              <p>Yes, all Zelia Vance diamonds are strictly conflict-free and ethically sourced following the Kimberley Process. We work exclusively with suppliers who guarantee ethical mining and labor practices.</p>
+            </AccordionItem>
+            <AccordionItem id="faq-lab-grown" title="Do you offer lab-grown diamonds?">
+              <p>While our heritage collection focuses on natural, ethically sourced diamonds, we do offer a curated selection of premium lab-grown diamonds upon request for custom pieces. Please contact our concierge for more details.</p>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
+
+      <section>
+        <Heading as="h3" class="mb-6 uppercase tracking-widest text-sm text-text-muted">Shipping & Returns</Heading>
+        <div class="bg-surface p-6 md:p-10 rounded-2xl shadow-xs border border-border-subtle">
+          <Accordion>
+            <AccordionItem id="faq-shipping" title="Do you offer international shipping?">
+              <p>Currently, we ship within India and selected international markets safely via secured couriers. For specific international shipping inquiries outside our standard zones, please contact our concierge team directly.</p>
+            </AccordionItem>
+            <AccordionItem id="faq-returns" title="What is your return policy?">
+              <p>We offer a generous 30-day return policy for unused items in their original packaging, complete with all certifications. Custom, engraved, or bespoke pieces are final sale and non-returnable.</p>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
+
+      <section>
+        <Heading as="h3" class="mb-6 uppercase tracking-widest text-sm text-text-muted">Warranty & Care</Heading>
+        <div class="bg-surface p-6 md:p-10 rounded-2xl shadow-xs border border-border-subtle">
+          <Accordion>
+            <AccordionItem id="faq-warranty" title="Do your pieces come with a warranty?">
+              <p>Absolutely. Every Zelia Vance creation includes a lifetime warranty against manufacturing defects. This ensures your piece remains pristine for generations.</p>
+            </AccordionItem>
+            <AccordionItem id="faq-cleaning" title="How should I care for my jewelry?">
+              <p>We recommend gently cleaning your diamond jewelry with a soft brush and mild soapy water. We also offer complimentary professional cleaning and prong inspection once a year at our boutiques.</p>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
     </div>
   </main>
 </BaseLayout>
