@@ -32,6 +32,7 @@ const { images, alt, class: className = "" } = Astro.props;
           type="button"
           @click={`activeImage = '${image}'`}
           class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
+          :class={`activeImage === '${image}' ? 'ring-2 ring-accent-brass opacity-100 scale-105 z-10' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
             src={image}
@@ -51,6 +52,7 @@ const { images, alt, class: className = "" } = Astro.props;
           type="button"
           @click={`activeImage = '${image}'`}
           class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
+          :class={`activeImage === '${image}' ? 'ring-2 ring-accent-brass opacity-100 scale-105 z-10' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
             src={image}

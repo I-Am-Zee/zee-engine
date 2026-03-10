@@ -1,0 +1,78 @@
+---
+/**
+ * ProductCarousel - Organism
+ * 
+ * A reusable component that displays a list of products in a horizontally 
+ * scrollable carousel. Implements a strict 8px spatial system for gaps and margins.
+ * 
+ * @component Organism (features/)
+ */
+
+import Carousel from "../ui/Carousel.astro";
+import GlassProductCard from "../ui/GlassProductCard.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  products: CollectionEntry<"products">[];
+  columns?: 3 | 4;
+  loop?: boolean;
+  autoplay?: boolean;
+  class?: string;
+}
+
+const { 
+  products, 
+  columns = 4, 
+  loop = false, 
+  autoplay = false, 
+  class: className 
+} = Astro.props;
+
+// Determine spacing based on exact 8px grid scale fundamentals
+// 3 columns = larger items = more breathing room (48px / 3rem)
+// 4 columns = denser items = compact breathing room (24px / 1.5rem)
+const gapDesktop = columns === 3 ? 48 : 24;
+const gapTablet = columns === 3 ? 32 : 24;
+
+// Options Configuration for Splide
+const options = {
+  perPage: columns,
+  perMove: 1,
+  gap: gapDesktop,
+  type: loop || products.length > columns ? 'loop' : 'slide',
+  pagination: true,
+  autoplay: autoplay,
+  interval: 4000,
+  pauseOnHover: true,
+  breakpoints: {
+    1024: { perPage: columns === 4 ? 3 : 2, gap: gapTablet },
+    768: { perPage: 2, gap: 16 },
+    640: { perPage: 1, padding: "12vw", gap: 16 } // Mobile view peek
+  }
+};
+---
+
+<Carousel
+  options={options}
+  class:list={["w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16", className]}
+  trackClass="py-4"
+  showArrows={products.length > columns}
+>
+  {products.map((product) => (
+    <li class="splide__slide flex flex-col group h-auto">
+      <GlassProductCard
+        id={product.slug}
+        title={product.data?.title || (product as any).title}
+        price={product.data?.price || (product as any).price}
+        salePrice={product.data?.salePrice || (product as any).salePrice}
+        image={product.data?.image || (product as any).image}
+        description={product.data?.description || (product as any).description}
+        href={`/products/${product.slug}`}
+        badges={product.data?.badges || (product as any).badges}
+        variant_1={product.data?.variant_1 || (product as any).variant_1}
+        variant_2={product.data?.variant_2 || (product as any).variant_2}
+        variant_3={product.data?.variant_3 || (product as any).variant_3}
+      />
+    </li>
+  ))}
+</Carousel>

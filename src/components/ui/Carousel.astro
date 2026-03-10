@@ -16,14 +16,17 @@ interface Props {
   class?: string;
   trackClass?: string;
   showArrows?: boolean;
+  options?: any;
 }
 
-const { id, class: className, trackClass = "", showArrows = true, ...rest } = Astro.props;
+const { id, class: className, trackClass = "", showArrows = true, options, ...rest } = Astro.props;
+const xDataString = options ? `carousel(${JSON.stringify(options)})` : undefined;
 ---
 
 <div 
   id={id} 
   class:list={["splide", className]}
+  x-data={xDataString}
   {...rest}
 >
   <div class:list={["splide__track h-full", trackClass]}>

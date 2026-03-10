@@ -22,7 +22,7 @@ const lookbooks = await getCollection("lookbooks");
 <section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">
   <div class="relative mx-auto max-w-7xl h-125 sm:h-150 md:h-175">
     <Carousel 
-      x-data="carousel"
+      options={{}}
       class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-border-subtle/50"
     >
       {lookbooks.map((lookbook, index) => (
