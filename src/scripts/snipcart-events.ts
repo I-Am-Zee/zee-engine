@@ -51,7 +51,9 @@ async function tryApplyPendingCoupon() {
   const state = window.Snipcart.store.getState();
   const customer = state.customer;
   
-  if (!customer || !customer.email) {
+  console.log('[Coupon] Customer state:', customer?.status, customer?.email);
+  
+  if (!customer || customer.status !== 'SignedIn') {
     console.log('[Coupon] User not logged in yet, waiting...');
     return;
   }
@@ -80,12 +82,15 @@ function initSnipcartHandlers() {
 
   // Listen for new sign-ins (users who weren't logged in)
   window.Snipcart.events.on('customer.signedin', async (customer: any) => {
-    console.log('[Coupon] Customer signed in:', customer.email);
+    console.log('[Coupon] Customer signed in event fired:', customer?.email);
     tryApplyPendingCoupon();
   });
 
-  // Note: item.added listener for UpsellDrawer moved to inline script in BaseLayout.astro
-  // to ensure reliability across page navigations and script loading orders.
+  // Listen for items being added to the cart
+  window.Snipcart.events.on('item.added', async (item: any) => {
+    console.log('[Coupon] Item added event fired:', item?.name);
+    tryApplyPendingCoupon();
+  });
 }
 
 // Handle both 'ready' event and late script loading
