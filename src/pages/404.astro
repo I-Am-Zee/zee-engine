@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Heading from "../components/primitives/Heading.astro";
+import Text from "../components/primitives/Text.astro";
+import Button from "../components/primitives/Button.astro";
+import Icon from "../components/primitives/Icon.astro";
+
+// Pre-render 404 page
+export const prerender = true;
+---
+
+<BaseLayout title="Page Not Found | Zelia Vance">
+  <main class="flex min-h-[70vh] flex-col items-center justify-center px-4 py-24 text-center">
+    <div class="relative mb-8">
+      <Text 
+        variant="display" 
+        class="text-[12rem] font-bold leading-none tracking-tighter text-surface-muted opacity-20 select-none md:text-[20rem]"
+      >
+        404
+      </Text>
+      <div class="absolute inset-0 flex items-center justify-center pt-8">
+        <Icon name="PhMoonStars" size={64} class="text-accent-brass animate-pulse" />
+      </div>
+    </div>
+
+    <Heading as="h1" class="mb-4">Celestial Disconnect</Heading>
+    <Text variant="lead" color="muted" class="mb-12 max-w-md mx-auto">
+      The path you're seeking seems to have drifted into the cosmic void. Let us guide you back to our celestial collections.
+    </Text>
+
+    <div class="flex flex-col gap-4 sm:flex-row">
+      <Button href="/" type="primary" size="lg" class="min-w-50 uppercase tracking-widest">
+        Return Home
+      </Button>
+      <Button href="/shop" type="secondary" size="lg" class="min-w-50 uppercase tracking-widest">
+        Shop All
+      </Button>
+    </div>
+  </main>
+</BaseLayout>
