@@ -71,23 +71,28 @@ export const POST: APIRoute = async ({ request }) => {
     // Get the base URL for the checkout page
     // DEPLOY_PRIME_URL is provided by Netlify for both preview and production
     // This enables free, unlimited Deploy Previews
-    // Cleanly construct the URL using native APIs and Proxy headers
-    const forwardedHost = request.headers.get("x-forwarded-host");
+    // Cleanly construct the public-facing URL using proxy headers
+    // Cloudflare Named Tunnels set the `host` header, NOT `x-forwarded-host`
+    // The `x-forwarded-proto` tells us whether the client used https
+    const hostHeader = request.headers.get("host");
     const forwardedProto = request.headers.get("x-forwarded-proto");
+    const forwardedHost = request.headers.get("x-forwarded-host");
     
-    // Default to the incoming request's actual origin
-    let siteUrl = new URL(request.url).origin;
+    // Use whichever host header is present (prefer x-forwarded-host for Netlify, fall back to host for Cloudflare)
+    const effectiveHost = forwardedHost || hostHeader;
     
-    // If behind a trusted proxy (like Cloudflare Tunnel or Netlify), trust the forwarded headers
-    if (forwardedHost) {
-      // For local tunnels bridging public domains, enforce the public HTTPS protocol natively
-      const protocol = forwardedHost.includes('localhost') ? 'http' : (forwardedProto || 'https');
-      siteUrl = `${protocol}://${forwardedHost}`;
-    }
-
-    // Fallback safeguard for production if proxy resolution yields localhost
-    if (siteUrl.includes('localhost') && import.meta.env.PUBLIC_SITE_URL) {
-      siteUrl = import.meta.env.PUBLIC_SITE_URL.replace(/\/$/, ''); // strip trailing slash
+    let siteUrl: string;
+    if (effectiveHost && !effectiveHost.includes('localhost') && !effectiveHost.includes('127.0.0.1')) {
+      // Public domain - use https (either from x-forwarded-proto or always https for public domains)
+      const protocol = forwardedProto === 'https' ? 'https' : 'https'; // always https for public domains
+      siteUrl = `${protocol}://${effectiveHost}`;
+    } else {
+      // Local dev - use http
+      siteUrl = new URL(request.url).origin;
+      // Fallback: if still localhost and we have a configured URL, use it
+      if ((siteUrl.includes('localhost') || siteUrl.includes('127.0.0.1')) && import.meta.env.PUBLIC_SITE_URL) {
+        siteUrl = import.meta.env.PUBLIC_SITE_URL.replace(/\/$/, '');
+      }
     }
     
     // Get available gateways for customer's country
