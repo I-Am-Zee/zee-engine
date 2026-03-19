@@ -71,15 +71,24 @@ export const POST: APIRoute = async ({ request }) => {
     // Get the base URL for the checkout page
     // DEPLOY_PRIME_URL is provided by Netlify for both preview and production
     // This enables free, unlimited Deploy Previews
-    // Get the base URL dynamically from the incoming request's actual origin.
-    // This ensures we return the exact domain Snipcart is interacting with
-    // (e.g., zeliavance.com instead of zeliavance-dev.netlify.app)
-    const siteOrigin = new URL(request.url).origin;
+    // Cleanly construct the URL using native APIs and Proxy headers
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
     
-    const siteUrl = siteOrigin || 
-                    import.meta.env.PUBLIC_SITE_URL || 
-                    siteConfig.url ||
-                    'http://localhost:4321';
+    // Default to the incoming request's actual origin
+    let siteUrl = new URL(request.url).origin;
+    
+    // If behind a trusted proxy (like Cloudflare Tunnel or Netlify), trust the forwarded headers
+    if (forwardedHost) {
+      // For local tunnels bridging public domains, enforce the public HTTPS protocol natively
+      const protocol = forwardedHost.includes('localhost') ? 'http' : (forwardedProto || 'https');
+      siteUrl = `${protocol}://${forwardedHost}`;
+    }
+
+    // Fallback safeguard for production if proxy resolution yields localhost
+    if (siteUrl.includes('localhost') && import.meta.env.PUBLIC_SITE_URL) {
+      siteUrl = import.meta.env.PUBLIC_SITE_URL.replace(/\/$/, ''); // strip trailing slash
+    }
     
     // Get available gateways for customer's country
     const availableGateways = getGatewaysForCountry(customerCountry);
@@ -99,8 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
       id: gateway.id,
       name: gateway.name,
       checkoutUrl: `${siteUrl}/checkout/${gateway.id}`,
-      // Future: Add gateway-specific icons
-      // iconUrl: gateway.iconUrl
+      iconUrl: gateway.iconUrl || `${siteUrl}/favicon.svg`
     }));
 
     console.log('[payment-methods] Returning', paymentMethods.length, 'payment methods');

@@ -22,6 +22,7 @@ export const GATEWAYS: Record<string, PaymentGateway> = {
     supportedCountries: ['IN'],
     supportedCurrencies: ['INR'],
     enabled: true, // Active for Indian customers
+    iconUrl: 'https://cdn.razorpay.com/logos/Hw8mUaDxyC6d8j_medium.png'
   },
   
   stripe: {

@@ -42,7 +42,7 @@ export const siteConfig = {
   // Social Media Links
   // Add more as needed
   social: {
-    instagram: "https://instagram.com/zeliavance",
+    instagram: "https://instagram.com/zelia.vance",
     pinterest: "https://pinterest.com/zeliavance",
     // facebook: "https://facebook.com/zeliavance",
     // twitter: "https://twitter.com/zeliavance",
@@ -66,7 +66,7 @@ export const siteConfig = {
   },
   
   // Legal
-  copyright: `© ${new Date().getFullYear()} Zelia Vance. All rights reserved.`,
+  copyright: `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`,
   
   // Assets
   // Place your logo/favicon files in /public folder

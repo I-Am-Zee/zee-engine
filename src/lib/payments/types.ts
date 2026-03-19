@@ -9,6 +9,7 @@ export interface PaymentGateway {
   supportedCountries: string[]; // ISO country codes
   supportedCurrencies: string[]; // ISO currency codes
   enabled: boolean;
+  iconUrl?: string;
 }
 
 export interface PaymentMethod {

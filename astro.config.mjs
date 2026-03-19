@@ -31,7 +31,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     server: {
-      allowedHosts: true
+      allowedHosts: ['dev.zeliavance.com']
     },
     build: {
       rollupOptions: {
