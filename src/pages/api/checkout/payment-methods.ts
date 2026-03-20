@@ -109,11 +109,12 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Map gateways to Snipcart payment methods
+    // iconUrl is intentionally omitted — Snipcart renders the name as clean text when absent
     const paymentMethods: PaymentMethod[] = availableGateways.map((gateway) => ({
       id: gateway.id,
       name: gateway.name,
       checkoutUrl: `${siteUrl}/checkout/${gateway.id}`,
-      iconUrl: gateway.iconUrl || `${siteUrl}/favicon.svg`
+      ...(gateway.iconUrl ? { iconUrl: gateway.iconUrl } : {}),
     }));
 
     console.log('[payment-methods] Returning', paymentMethods.length, 'payment methods');

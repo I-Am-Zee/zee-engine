@@ -18,11 +18,12 @@ import type { PaymentGateway } from './types';
 export const GATEWAYS: Record<string, PaymentGateway> = {
   razorpay: {
     id: 'razorpay',
-    name: 'UPI, Cards, Wallets', // Generic name - Razorpay Optimizer handles routing
+    name: 'UPI, Cards, Wallets', // Razorpay Optimizer handles routing across all methods
     supportedCountries: ['IN'],
     supportedCurrencies: ['INR'],
-    enabled: true, // Active for Indian customers
-    iconUrl: 'https://cdn.razorpay.com/logos/Hw8mUaDxyC6d8j_medium.png'
+    enabled: true,
+    // iconUrl intentionally omitted — external Razorpay CDN URL was unreliable
+    // Snipcart renders the name label cleanly without an icon
   },
   
   stripe: {
