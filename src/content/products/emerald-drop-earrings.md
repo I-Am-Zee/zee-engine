@@ -27,6 +27,8 @@ urgency_tag: "Selling Fast"
 related_products:
   - sapphire-eternity-band
   - diamond-tennis-necklace
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Emerald Drop Earrings showcase the mesmerizing beauty of Colombian emeralds, each stone displaying the rich, verdant green that has captivated jewelry lovers for millennia.

@@ -22,6 +22,8 @@ publishDate: 2025-04-20
 related_products:
   - pearl-strand-necklace
   - vintage-rose-gold-ring
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 These exquisite Moonstone Pearl Earrings are a testament to nature's beauty and artisanal skill. Each freshwater pearl is carefully matched for size and luster, accented with genuine moonstone gems that display a captivating adularescence.

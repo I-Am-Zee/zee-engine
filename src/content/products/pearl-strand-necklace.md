@@ -26,6 +26,8 @@ variant_1:
 related_products:
   - moonstone-pearl-earrings
   - ethereal-gold-necklace
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Pearl Strand Necklace features hand-selected Akoya pearls, each chosen for their exceptional luster and perfectly round shape. This classic piece has adorned elegant women for generations.

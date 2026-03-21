@@ -31,6 +31,8 @@ urgency_tag: "Only 2 Left!"
 related_products:
   - diamond-tennis-necklace
   - diamond-stud-earrings
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Diamond Tennis Bracelet is the ultimate statement of elegance. Each diamond is carefully selected and set to create a continuous line of brilliant sparkle around your wrist.

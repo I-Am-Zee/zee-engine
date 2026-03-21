@@ -35,6 +35,8 @@ urgency_tag: "Restocked Today"
 related_products:
   - ethereal-gold-necklace
   - vintage-rose-gold-ring
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Gold Chain Bracelet combines classic elegance with contemporary style. Its carefully crafted links catch the light beautifully, creating subtle shimmer with every movement.

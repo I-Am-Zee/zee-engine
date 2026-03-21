@@ -31,6 +31,8 @@ related_products:
   - celestial-diamond-ring
   - diamond-stud-earrings
   - gold-chain-bracelet
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.

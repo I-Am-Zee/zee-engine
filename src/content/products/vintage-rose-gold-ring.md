@@ -27,6 +27,8 @@ variant_1:
 related_products:
   - moonstone-pearl-earrings
   - gold-chain-bracelet
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Vintage Rose Gold Ring embodies timeless romance with its warm, blush-toned metal and delicate filigree details. Each ring is crafted using traditional techniques passed down through generations of master jewelers.
