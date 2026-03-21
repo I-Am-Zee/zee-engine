@@ -18,6 +18,8 @@ tags:
   - luxury
   - "formal"
 sku: "DTN-005"
+weight: 12.5
+shipping_slab: "small-jewelry"
 publishDate: 2025-06-20
 
 # Object-based Variant Slots

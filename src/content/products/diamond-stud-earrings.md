@@ -14,6 +14,8 @@ tags:
   - "diamond"
   - classic
   - "everyday"
+weight: 2.1
+shipping_slab: "small-jewelry"
 publishDate: 2024-12-01
 sku: "DSE-004"
 

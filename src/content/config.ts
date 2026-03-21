@@ -87,6 +87,7 @@ const products = defineCollection({
 
     // MOLECULE: Shipping Logistics
     weight: z.number().positive().optional(),
+    shipping_slab: z.string().optional(),
     dimensions: z
       .object({
         length: z.number().positive(),

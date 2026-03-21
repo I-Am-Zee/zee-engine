@@ -2,6 +2,8 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
+import { getEntry } from "astro:content";
+import shippingConfig from "../../../config/shipping.json";
 
 // Global cache for Shiprocket Auth Token to avoid logging in on every request under high load
 let cachedToken: string | null = null;
@@ -41,6 +43,8 @@ async function getShiprocketToken(): Promise<string> {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
+    const isSyncEnabled = import.meta.env.SHIPROCKET_SYNC_ENABLED === "true";
+    
     let body;
     try {
       const text = await request.text();
@@ -67,18 +71,32 @@ export const POST: APIRoute = async ({ request }) => {
     const orderId = order.invoiceNumber || order.token.substring(0, 10);
     const date = new Date(order.creationDate).toISOString().replace('T', ' ').substring(0, 16);
     
-    const billingName = order.billingAddressName.split(" ");
-    const shippingName = order.shippingAddressName.split(" ");
+    const billingName = (order.billingAddressName || "Customer").split(" ");
+    const shippingName = (order.shippingAddressName || "Customer").split(" ");
     
-    const pickupLocation = import.meta.env.SHIPROCKET_PICKUP_LOCATION || "Primary";
+    const pickupLocation = import.meta.env.SHIPROCKET_PICKUP_LOCATION || "Home";
 
-    // 2. Map Items
-    let totalWeightKg = 0;
-    const orderItems = order.items.map((item: any) => {
-      // Snipcart item weight is typically in grams if not defined. 
-      // Treat default as 500g if missing.
-      const wGrams = item.weight || 500;
-      totalWeightKg += (wGrams * item.quantity) / 1000;
+    // 2. Map Items & Slabs
+    let totalWeightSumKg = 0;
+    let selectedSlabId = shippingConfig.default_slab;
+    let maxSlabWeight = 0;
+
+    const orderItems = await Promise.all(order.items.map(async (item: any) => {
+      // Fetch product metadata for slab info
+      const productEntry = await getEntry("products", item.id);
+      const weightFromData = productEntry?.data?.weight || item.weight || 0;
+      const productSlabId = productEntry?.data?.shipping_slab;
+
+      totalWeightSumKg += (weightFromData * item.quantity) / 1000;
+
+      // Track the "largest" slab based on minimum weight or specific hierarchy
+      if (productSlabId && shippingConfig.slabs[productSlabId as keyof typeof shippingConfig.slabs]) {
+        const slab = shippingConfig.slabs[productSlabId as keyof typeof shippingConfig.slabs];
+        if (slab.weight_kg > maxSlabWeight) {
+          maxSlabWeight = slab.weight_kg;
+          selectedSlabId = productSlabId;
+        }
+      }
       
       return {
         name: item.name,
@@ -89,16 +107,19 @@ export const POST: APIRoute = async ({ request }) => {
         tax: item.taxesTotal || 0,
         hsn: ""
       };
-    });
+    }));
 
-    if (totalWeightKg < 0.5) totalWeightKg = 0.5;
+    // Final Slab Resolution
+    const finalSlab = shippingConfig.slabs[selectedSlabId as keyof typeof shippingConfig.slabs];
+    const finalWeightKg = Math.max(totalWeightSumKg, finalSlab.weight_kg, 0.5);
 
-    // 3. Courier Mode Logic (Standard vs Express)
-    // Shiprocket API doesn't strictly have a "mode" field in Adhoc order creation.
-    // However, you can tag the order or add a sub-order ID suffix, 
-    // OR we append the shipping choice to the order ID so it's instantly obvious in the dashboard.
+    // 3. Payment & Shipping Mode
     const isExpress = order.shippingMethod?.toLowerCase().includes("express");
     const formattedOrderId = isExpress ? `${orderId}-EXPRESS` : `${orderId}-STD`;
+    
+    // Detect COD (Snipcart "Deferred" or "Manual" payment)
+    const isCOD = order.paymentMethod === 'Deferred' || order.paymentMethod === 'Manual';
+    const paymentMethodLabel = isCOD ? "COD" : "Prepaid";
 
     // 4. Build Shiprocket Adhoc Order Payload
     const shiprocketPayload = {
@@ -106,9 +127,9 @@ export const POST: APIRoute = async ({ request }) => {
       order_date: date,
       pickup_location: pickupLocation,
       channel_id: "",
-      comment: `Snipcart Order: ${order.shippingMethod || 'Standard'}`,
+      comment: `Snipcart Order: ${order.shippingMethod || 'Standard'} | Payment: ${paymentMethodLabel}`,
       billing_customer_name: billingName[0],
-      billing_last_name: billingName.slice(1).join(" "),
+      billing_last_name: billingName.slice(1).join(" ") || ".",
       billing_address: order.billingAddressAddress1 || order.shippingAddressAddress1,
       billing_address_2: order.billingAddressAddress2 || order.shippingAddressAddress2 || "",
       billing_city: order.billingAddressCity || order.shippingAddressCity,
@@ -116,10 +137,10 @@ export const POST: APIRoute = async ({ request }) => {
       billing_state: order.billingAddressProvince || order.shippingAddressProvince,
       billing_country: order.billingAddressCountry || order.shippingAddressCountry,
       billing_email: order.email,
-      billing_phone: order.billingAddressPhone || order.shippingAddressPhone || "0000000000",
-      shipping_is_billing: true, // We simplify and just use shipping as the primary fulfillment address
+      billing_phone: order.billingAddressPhone || order.shippingAddressPhone || "",
+      shipping_is_billing: true, 
       shipping_customer_name: shippingName[0],
-      shipping_last_name: shippingName.slice(1).join(" "),
+      shipping_last_name: shippingName.slice(1).join(" ") || ".",
       shipping_address: order.shippingAddressAddress1,
       shipping_address_2: order.shippingAddressAddress2 || "",
       shipping_city: order.shippingAddressCity,
@@ -127,19 +148,31 @@ export const POST: APIRoute = async ({ request }) => {
       shipping_country: order.shippingAddressCountry,
       shipping_state: order.shippingAddressProvince,
       shipping_email: order.email,
-      shipping_phone: order.shippingAddressPhone || "0000000000",
+      shipping_phone: order.shippingAddressPhone || "",
       order_items: orderItems,
-      payment_method: "Prepaid", // Razorpay/Stripe covers this
+      payment_method: paymentMethodLabel,
       shipping_charges: order.shippingFees || 0,
-      giftwrap_charges: 0,
-      transaction_charges: 0,
       total_discount: order.discountsTotal || 0,
       sub_total: order.subtotal,
-      length: 10,
-      breadth: 15,
-      height: 20,
-      weight: totalWeightKg
+      length: finalSlab.dimensions.length,
+      breadth: finalSlab.dimensions.breadth,
+      height: finalSlab.dimensions.height,
+      weight: finalWeightKg
     };
+
+    if (!isSyncEnabled) {
+      console.log(`[Shiprocket Order Sync] SKIPPING external sync for Order ${formattedOrderId} (SHIPROCKET_SYNC_ENABLED is false).`);
+      console.log("[Shiprocket Order Sync] Order Data:", JSON.stringify(shiprocketPayload, null, 2));
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: "Order received. Shiprocket sync skipped (Test Mode).",
+        test_mode: true,
+        mock_order_id: formattedOrderId
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     console.log(`[Shiprocket Order Sync] Syncing Order ${formattedOrderId} to Shiprocket...`);
 
@@ -155,6 +188,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     const srData = await srResponse.json();
+    console.log("[Shiprocket API Raw Response]:", JSON.stringify(srData, null, 2));
 
     if (!srResponse.ok) {
       console.error(`[Shiprocket Order Sync] Failed to create order ${formattedOrderId}`, srData);

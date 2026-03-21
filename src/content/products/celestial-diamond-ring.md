@@ -21,6 +21,7 @@ tags:
   - "white-gold"
 sku: "CDR-001"
 weight: 4.5
+shipping_slab: "small-jewelry"
 publishDate: 2026-01-15
 
 # Object-based Variant Slots (PagesCMS compatible)
