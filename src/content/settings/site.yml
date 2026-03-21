@@ -15,7 +15,7 @@ social:
 announcement_bar:
   enabled: true
   text: "✨ Free Shipping on Orders Above ₹{{threshold}} | Use Code: FIRST10 for 10% Off"
-  link: "/products"
+  link: "/shop"
   bg_color: "bg-surface border-b border-border-subtle"
   text_color: "text-text-main"
 

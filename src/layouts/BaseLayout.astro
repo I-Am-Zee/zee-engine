@@ -41,22 +41,122 @@ const {
     <link rel="preconnect" href="https://cdn.snipcart.com" />
     <link rel="preconnect" href="https://app.snipcart.com" />
 
-    <!-- Snipcart CSS (using v3.4.0 - Vanilla/Default styling) -->
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.css" />
+    <!-- Snipcart CSS (v3.7.5) -->
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.css" />
 
-    <!-- Snipcart JS (using v3.4.0, async loading) -->
-    <script async src="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.js" is:inline></script>
+    <!-- Snipcart JS (v3.7.5, async loading) -->
+    <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js" is:inline></script>
 
     <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }} is:inline>
       window.SnipcartSettings = {
         publicApiKey: apiKey,
         loadStrategy: "on-idle",
         modalStyle: "overlay",
-        addProductBehavior: "none", // Don't auto-open cart
+        addProductBehavior: "none"
       };
 
-      // Inline Listener for immediate response to item.added
       document.addEventListener('snipcart.ready', () => {
+        // --- 1. LOCALIZATION OVERRIDES FOR EMAIL HINTS ---
+        Snipcart.api.session.setLanguage('en', {
+          address_form: {
+            email: "Email (Please use a Gmail address)"
+          },
+          signin_form: {
+            email: "Email (Please use a Gmail address to access discounts)"
+          },
+          register_form: {
+            email: "Email (Please use a Gmail address)"
+          }
+        });
+
+        // --- 2. NO LOGIN = NO DISCOUNT STATE SYNC ---
+        // Dynamically track if the user is signed in to hide discount inputs
+        const toggleGuestState = () => {
+          const state = Snipcart.store.getState();
+          if (state && state.customer && state.customer.status === 'SignedOut') {
+            document.body.classList.add('zav-guest-user');
+          } else {
+            document.body.classList.remove('zav-guest-user');
+          }
+        };
+        Snipcart.store.subscribe(toggleGuestState);
+        toggleGuestState(); // Run initial setup
+
+        // --- 3. DUAL-LAYER VALIDATION API HOOK ---
+        Snipcart.events.on('page.validating', (ev, data) => {
+          if (ev.type === 'shipping-address' || ev.type === 'billing-address' || ev.name === 'shipping-address' || ev.name === 'billing-address') {
+            // PHONE VALIDATION
+            const phoneInput = document.querySelector('snipcart-input[name="phone"] input, input[name="phone"], input[name="shipping[phone]"], input[name="billing[phone]"], [name="phone"]');
+            let digits = '';
+            if (phoneInput) {
+              digits = String(phoneInput.value).replace(/\D/g, '');
+            } else if (data && data.phone) {
+              digits = String(data.phone).replace(/\D/g, '');
+            }
+
+            if (digits.length !== 10) {
+              const msg = digits.length === 0 ? 'Phone number is required.' : 'Please enter a valid 10-digit mobile number.';
+              if (typeof ev.addError === 'function') {
+                ev.addError('phone', msg);
+              } else if (ev.errors && Array.isArray(ev.errors)) {
+                ev.errors.push({ id: 'phone', message: msg });
+              }
+            }
+
+            // GMAIL VALIDATION
+            const emailInput = document.querySelector('snipcart-input[name="email"] input, input[name="email"], input[type="email"]');
+            let email = '';
+            if (emailInput) {
+              email = String(emailInput.value).trim().toLowerCase();
+            } else if (data && data.email) {
+              email = String(data.email).trim().toLowerCase();
+            }
+
+            if (email && !email.endsWith('@gmail.com')) {
+              const msg = 'Only Gmail addresses (@gmail.com) are accepted to prevent spam.';
+              if (typeof ev.addError === 'function') {
+                ev.addError('email', msg);
+              } else if (ev.errors && Array.isArray(ev.errors)) {
+                ev.errors.push({ id: 'email', message: msg });
+              }
+            }
+          }
+        });
+
+        // 2. HTML5 Physical DOM Validation (Browser-level block) + Digit Stripper
+        document.addEventListener('input', (e) => {
+          if (e.target && e.target.tagName === 'INPUT') {
+            const name = e.target.name || '';
+            if (name === 'phone' || name.includes('phone')) {
+              // Strip letters and limit length instantly
+              const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+              if (e.target.value !== digits) {
+                e.target.value = digits;
+                e.target.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+              // Set HTML5 validity: Modern browsers physically block the <form> submit
+              if (digits.length < 10) {
+                e.target.setCustomValidity('Please enter a valid 10-digit mobile number.');
+              } else {
+                e.target.setCustomValidity(''); 
+              }
+            }
+
+            // GMAIL Physical Block: applies to EVERY email input inside checkout
+            if ((name === 'email' || e.target.type === 'email') && e.target.value.length > 0) {
+              const emailVal = e.target.value.trim().toLowerCase();
+              if (!emailVal.endsWith('@gmail.com')) {
+                e.target.setCustomValidity('Please use a Gmail address (@gmail.com).');
+              } else {
+                e.target.setCustomValidity(''); 
+              }
+            }
+          }
+        }, true);
+
+        // Upsell Bridge: fires a dom event when a product is added to cart
+
+
         Snipcart.events.on('item.added', (item) => {
           console.log('[Upsell Bridge] Item added:', item.name);
           const event = new CustomEvent('zeliavance:item-added', {
@@ -72,6 +172,7 @@ const {
         });
       });
     </script>
+
   </head>
   <body class="flex flex-col min-h-screen">
     <AnnouncementBar data={announcement_bar} />
@@ -111,3 +212,22 @@ const {
     <Lightbox />
   </body>
 </html>
+
+<style is:global>
+  /* NO LOGIN = NO DISCOUNT LOGIC */
+  body.zav-guest-user .snipcart-discount-box__form {
+    display: none !important;
+  }
+  body.zav-guest-user .snipcart-discount-box::after {
+    content: "🔒 Sign in with Gmail to unlock discount codes.";
+    display: block;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: #4a5568;
+    text-align: center;
+    background: #f7fafc;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    border: 1px dashed #cbd5e0;
+  }
+</style>
