@@ -23,7 +23,7 @@ publishDate: 2025-01-05
 variant_1:
   name: "Bracelet Size"
   values: "6.5 inches, 7 inches, 7.5 inches"
-variant_3:
+variant_2:
   name: "Gift Wrap"
   values: "Add Gift Wrap (+₹99)"
   is_checkbox: true

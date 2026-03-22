@@ -7,25 +7,30 @@ export const POST: APIRoute = async ({ request }) => {
         const body = await request.json();
         const cart = body.content;
         
-        // Define shipping threshold and flat rate
+        // Define shipping threshold and flat rates
         const FREE_SHIPPING_THRESHOLD = 3000;
-        const FLAT_SHIPPING_RATE = 150;
+        const STANDARD_RATE = 70;
+        const EXPRESS_RATE = 150;
         
         // Calculate dynamic shipping cost
         const subtotal = cart?.subtotal || 0;
         const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
         
-        const cost = isFreeShipping ? 0 : FLAT_SHIPPING_RATE;
-        const description = isFreeShipping 
-            ? "Free Insured Delivery (3-5 Business Days)" 
-            : "Standard Insured Delivery (3-5 Business Days)";
+        const standardCost = isFreeShipping ? 0 : STANDARD_RATE;
 
         return new Response(JSON.stringify({
             rates: [
                 {
-                    cost: cost,
-                    description: description,
+                    cost: standardCost,
+                    description: "Standard Delivery",
+                    userDefinedId: "standard",
                     guaranteedDaysToDelivery: 5
+                },
+                {
+                    cost: EXPRESS_RATE,
+                    description: "Express Delivery",
+                    userDefinedId: "express",
+                    guaranteedDaysToDelivery: 2
                 }
             ]
         }), {
@@ -38,7 +43,8 @@ export const POST: APIRoute = async ({ request }) => {
             rates: [
                 {
                     cost: 150,
-                    description: "Standard Delivery (Fallback)"
+                    description: "Standard Delivery (Fallback)",
+                    userDefinedId: "fallback"
                 }
             ]
         }), {
