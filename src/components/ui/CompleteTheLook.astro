@@ -51,6 +51,8 @@ const productsForButton = [
         variant_1: p?.data?.variant_1,
         variant_2: p?.data?.variant_2,
         variant_3: p?.data?.variant_3,
+        weight: p?.data?.weight,
+        shipping_slab: p?.data?.shipping_slab,
       },
     ];
   })(),
@@ -65,6 +67,8 @@ const productsForButton = [
     variant_1: p.data.variant_1,
     variant_2: p.data.variant_2,
     variant_3: p.data.variant_3,
+    weight: p.data.weight,
+    shipping_slab: p.data.shipping_slab,
   })),
 ];
 ---
@@ -89,7 +93,7 @@ const productsForButton = [
       <SectionHeader 
         title="Perfect Pairings" 
         subtitle="Curated pieces to elevate your ensemble"
-        align="center"
+        align="left"
         class="mb-8 lg:mb-12"
       >
         <span class="text-text-muted capitalize tracking-widest text-xs mt-2 font-bold block">

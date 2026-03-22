@@ -154,6 +154,7 @@ export const sideDrawer = () => ({
           url: `/products/${item.id}`,
           image: item.image,
           description: item.description || item.title,
+          ...(item.weight && { weight: item.weight }),
           quantity: 1,
           customFields,
         };

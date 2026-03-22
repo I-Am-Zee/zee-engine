@@ -27,6 +27,8 @@ interface Props {
   variant_1?: any;
   variant_2?: any;
   variant_3?: any;
+  weight?: number;
+  shipping_slab?: string;
   description?: string;
   class?: string;
 }
@@ -42,6 +44,8 @@ const {
   variant_1 = "",
   variant_2 = "",
   variant_3 = "",
+  weight,
+  shipping_slab,
   description = title,
   class: className,
   ...rest
@@ -139,7 +143,7 @@ const priceTagProps = hasSale
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
-      x-on:click.prevent.stop={`$dispatch('zeliavance:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, description, variant_1, variant_2, variant_3})})`}
+      x-on:click.prevent.stop={`$dispatch('zeliavance:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, description, variant_1, variant_2, variant_3, weight, shipping_slab})})`}
       aria-label={"Quick shop " + title}
     >
       <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />
