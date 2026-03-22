@@ -31,7 +31,7 @@ urgency_tag: "Only 2 Left!"
 related_products:
   - diamond-tennis-necklace
   - diamond-stud-earrings
-weight: 10
+
 shipping_slab: "small-jewelry"
 ---
 

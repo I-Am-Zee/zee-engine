@@ -20,31 +20,23 @@ tags:
 sku: "EGN-003"
 weight: 5.2
 publishDate: 2025-03-15
-
 # Object-based Variant Slots
 variant_1:
   name: "Chain Length"
   values: "16 inches, 18 inches, 20 inches"
-
 # Complete the Look
 related_products:
   - celestial-diamond-ring
   - diamond-stud-earrings
   - gold-chain-bracelet
-weight: 10
 shipping_slab: "small-jewelry"
 ---
-
 The Ethereal Gold Necklace is our most beloved piece, combining minimalist elegance with artisanal craftsmanship. This versatile necklace transitions effortlessly from day to evening wear.
-
 The pendant features a unique celestial-inspired design that catches light beautifully, creating a subtle shimmer with every movement. The delicate chain ensures comfortable all-day wear without compromising on style.
-
 ### Features
-
 - Premium 14k yellow gold
 - Adjustable chain length
 - Lobster clasp closure
 - Hypoallergenic materials
 - Comes in luxury gift packaging
-
 Layer it with other necklaces for a contemporary look, or wear it alone as a statement of refined simplicity. Each piece is individually crafted, making yours truly one-of-a-kind.
