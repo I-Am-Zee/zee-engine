@@ -48,6 +48,8 @@ const productsForButton = (products || []).map((p) => ({
   variant_1: p.data?.variant_1,
   variant_2: p.data?.variant_2,
   variant_3: p.data?.variant_3,
+  weight: p.data?.weight,
+  shipping_slab: p.data?.shipping_slab,
 }));
 
 // SEO
@@ -214,7 +216,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     x-transition:leave="transition ease-in duration-200 transform"
     x-transition:leave-start="translate-y-0"
     x-transition:leave-end="translate-y-full"
-    class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)]"
+    class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)]"
     x-cloak
   >
     <div class="container mx-auto">

@@ -64,8 +64,10 @@ const buildVariantAttributes = () => {
 
     // Natively require this field in Snipcart checkout unless explicitly optional
     if (slot.is_checkbox) {
+      attrs[`data-item-custom${customIndex}-type`] = "checkbox";
       attrs[`data-item-custom${customIndex}-required`] = "false";
     } else {
+      attrs[`data-item-custom${customIndex}-type`] = "dropdown";
       attrs[`data-item-custom${customIndex}-required`] = "true";
     }
 

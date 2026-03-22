@@ -72,6 +72,8 @@ const options = {
         variant_1={product.data?.variant_1 || (product as any).variant_1}
         variant_2={product.data?.variant_2 || (product as any).variant_2}
         variant_3={product.data?.variant_3 || (product as any).variant_3}
+        weight={product.data?.weight || (product as any).weight}
+        shipping_slab={product.data?.shipping_slab || (product as any).shipping_slab}
       />
     </li>
   ))}

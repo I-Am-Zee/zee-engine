@@ -139,10 +139,10 @@ export const sideDrawer = () => ({
             const displayOptions = v.values.split(",").map((vs: any) => vs.trim()).join("|");
             customFields.push({
               name: v.name,
-              value: this.selections[item.id][v.name],
-              type: "dropdown",
               options: displayOptions,
-              required: true
+              value: this.selections[item.id][v.name],
+              type: v.is_checkbox ? "checkbox" : "dropdown",
+              required: v.is_checkbox ? false : true
             });
           }
         });
@@ -154,7 +154,7 @@ export const sideDrawer = () => ({
           url: `/products/${item.id}`,
           image: item.image,
           description: item.description || item.title,
-          ...(item.weight && { weight: item.weight }),
+          ...(item.weight && { dimensions: { weight: item.weight } }),
           quantity: 1,
           customFields,
         };
