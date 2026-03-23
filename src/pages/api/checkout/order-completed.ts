@@ -83,7 +83,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     const orderItems = await Promise.all(order.items.map(async (item: any) => {
       // Fetch product metadata for slab info
-      const productEntry = await getEntry("products", item.id);
+      // Use the technical slug from metadata if available (added in ecommerce.ts refactor)
+      // Otherwise fallback to item.id (which might be the SKU or Slug)
+      const lookupId = item.metadata?.slug || item.id;
+      const productEntry = await getEntry("products", lookupId);
+      
       const weightFromData = productEntry?.data?.weight || item.weight || 0;
       const productSlabId = productEntry?.data?.shipping_slab;
 
@@ -118,7 +122,17 @@ export const POST: APIRoute = async ({ request }) => {
     const formattedOrderId = isExpress ? `${orderId}-EXPRESS` : `${orderId}-STD`;
     
     // Detect COD (Snipcart "Deferred" or "Manual" payment)
-    const isCOD = order.paymentMethod === 'Deferred' || order.paymentMethod === 'Manual';
+    const normalizedMethod = (order.paymentMethod || "").toLowerCase();
+    const normalizedStatus = (order.paymentStatus || "").toLowerCase();
+    
+    // Snipcart's "Pay Later" (Deferred) shows up with paymentStatus: 'deferred'
+    // Manual payments (e.g. Bank Transfer) also count as COD for logistics
+    const isCOD = normalizedMethod.includes('deferred') || 
+                  normalizedMethod.includes('manual') || 
+                  normalizedMethod.includes('pay later') ||
+                  normalizedStatus.includes('deferred') ||
+                  normalizedStatus.includes('pending'); 
+                  
     const paymentMethodLabel = isCOD ? "COD" : "Prepaid";
 
     // 4. Build Shiprocket Adhoc Order Payload

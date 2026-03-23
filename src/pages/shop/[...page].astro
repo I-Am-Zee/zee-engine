@@ -61,19 +61,7 @@ const products = page.data;
                   : 0
               }
             >
-              <GlassProductCard
-                id={product.slug}
-                title={product.data.title}
-                price={product.data.price}
-                salePrice={product.data.salePrice}
-                image={product.data.image}
-                description={product.data.description}
-                href={`/products/${product.slug}`}
-                badges={product.data.badges}
-                variant_1={product.data.variant_1}
-                variant_2={product.data.variant_2}
-                variant_3={product.data.variant_3}
-              />
+              <GlassProductCard product={product} />
             </div>
           ))
         }

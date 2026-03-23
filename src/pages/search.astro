@@ -63,16 +63,7 @@ const searchableProducts = allProducts.map(p => ({
             data-slug={product.slug}
             x-cloak
           >
-            <GlassProductCard
-              id={product.slug}
-              title={product.data.title}
-              price={product.data.price}
-              salePrice={product.data.salePrice}
-              image={product.data.image}
-              description={product.data.description}
-              href={`/products/${product.slug}`}
-              badges={product.data.badges}
-            />
+            <GlassProductCard product={product} />
           </div>
         ))}
       </ProductGrid>
