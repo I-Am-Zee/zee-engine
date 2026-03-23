@@ -91,13 +91,14 @@ const formatVariantOptions = (slot: any) => {
 export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any) => {
   const product = mapProduct(input);
   
-  const attrs: Record<string, string | number> = {
+  const attrs: Record<string, any> = {
     // Professional ID Logic: Matches the JS version (SKU or Slug)
     "data-item-id": product.sku || product.id,
     "data-item-name": product.title,
-    "data-item-price": product.salePrice || product.price,
+    "data-item-price": product.salePrice !== undefined ? product.salePrice : product.price,
     "data-item-url": `/products/${product.id}`,
     "data-item-image": product.image,
+    "data-item-has-taxes-included": "true", // Crucial for Indian GST - User expects Rs. 500 to NOT increase at checkout
   };
 
   // Snipcart REQUIRES weight to be a whole integer (no decimals)
@@ -108,6 +109,8 @@ export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any) =
   
   // Also pass slug in metadata for the order sync API
   attrs["data-item-metadata-slug"] = product.id;
+  // Add HSN code 7117 (Costume Jewellery) for Indian GST webhook processing
+  attrs["data-item-metadata-hsn"] = "7117";
 
   // Process Variants
   [product.variant_1, product.variant_2, product.variant_3].forEach((slot, index) => {
@@ -158,8 +161,10 @@ export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, sele
     metadata: {
       shipping_slab: product.shipping_slab || "",
       slug: product.id,
+      hsn: "7117", // Indian GST classification for Costume Jewellery
       ...(product.sku && { sku: product.sku })
     },
+    hasTaxesIncluded: true,
     customFields,
     quantity: 1
   };
