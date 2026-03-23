@@ -79,6 +79,14 @@ const xDataString = options ? `carousel(${JSON.stringify(options)})` : undefined
     background: rgba(0, 0, 0, 0.8) !important;
     transform: scale(1.5);
   }
+  
+  /* Enforce localized stacking on native Splide controls to prevent drawer clipping */
+  .splide__arrow {
+    z-index: 20 !important;
+  }
+  .splide__pagination {
+    z-index: 20 !important;
+  }
 </style>
 
 

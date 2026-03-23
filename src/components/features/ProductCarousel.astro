@@ -46,8 +46,8 @@ const options = {
   pauseOnHover: true,
   breakpoints: {
     1024: { perPage: columns === 4 ? 3 : 2, gap: gapTablet },
-    768: { perPage: 2, gap: 16 },
-    640: { perPage: 1, padding: "12vw", gap: 16 } // Mobile view peek
+    768: { perPage: 2, padding: { left: "1rem", right: "2rem" }, gap: 16 },
+    640: { perPage: 1, padding: { left: "1rem", right: "5rem" }, gap: 16 } // Aligned peek
   }
 };
 ---
@@ -61,19 +61,7 @@ const options = {
   {products.map((product) => (
     <li class="splide__slide flex flex-col group h-auto">
       <GlassProductCard
-        id={product.slug}
-        title={product.data?.title || (product as any).title}
-        price={product.data?.price || (product as any).price}
-        salePrice={product.data?.salePrice || (product as any).salePrice}
-        image={product.data?.image || (product as any).image}
-        description={product.data?.description || (product as any).description}
-        href={`/products/${product.slug}`}
-        badges={product.data?.badges || (product as any).badges}
-        variant_1={product.data?.variant_1 || (product as any).variant_1}
-        variant_2={product.data?.variant_2 || (product as any).variant_2}
-        variant_3={product.data?.variant_3 || (product as any).variant_3}
-        weight={product.data?.weight || (product as any).weight}
-        shipping_slab={product.data?.shipping_slab || (product as any).shipping_slab}
+        product={product}
       />
     </li>
   ))}

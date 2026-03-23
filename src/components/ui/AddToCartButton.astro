@@ -10,20 +10,14 @@
  * @uses Icon (primitive)
  */
 
+import { getSnipcartHTMLAttrs } from "../../config/ecommerce";
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import Text from "../primitives/Text.astro";
 import type { CollectionEntry } from "astro:content";
 
-interface VariantSlot {
-  name: string;
-  values: string; // Comma-separated
-  price_modifiers?: string;
-  is_checkbox?: boolean;
-}
-
 interface Props {
-  product: CollectionEntry<"products">; // Product collection entry
+  product: CollectionEntry<"products">; // Raw product object
   variant?: "primary" | "secondary" | "neutral";
   size?: "sm" | "md" | "lg";
   showIcon?: boolean;
@@ -40,61 +34,8 @@ const {
   disabled = false,
 } = Astro.props;
 
-// Snipcart product URL validation: Use relative URL to support multiple environments
-const productUrl = `/products/${product.slug}`;
-
-// Build Snipcart custom fields from object-based variant slots
-const buildVariantAttributes = () => {
-  const attrs: Record<string, string> = {};
-  let customIndex = 1;
-
-  // Helper to process a variant slot
-  const processVariant = (slot: VariantSlot | undefined) => {
-    if (!slot?.name || !slot?.values) return;
-
-    const optionName = slot.name;
-    // Convert comma-separated values to pipe-separated for Snipcart
-    const optionValues = slot.values
-      .split(",")
-      .map((v) => v.trim())
-      .join("|");
-
-    attrs[`data-item-custom${customIndex}-name`] = optionName;
-    attrs[`data-item-custom${customIndex}-options`] = optionValues;
-
-    // Natively require this field in Snipcart checkout unless explicitly optional
-    if (slot.is_checkbox) {
-      attrs[`data-item-custom${customIndex}-type`] = "checkbox";
-      attrs[`data-item-custom${customIndex}-required`] = "false";
-    } else {
-      attrs[`data-item-custom${customIndex}-type`] = "dropdown";
-      attrs[`data-item-custom${customIndex}-required`] = "true";
-    }
-
-    customIndex++;
-  };
-
-  // Process each variant slot
-  processVariant(product.data.variant_1);
-  processVariant(product.data.variant_2);
-  processVariant(product.data.variant_3);
-
-  return attrs;
-};
-
-// Build data attributes object
-const snipcartAttributes = {
-  "data-item-id": product.slug,
-  "data-item-name": product.data.title,
-  "data-item-price": product.data.salePrice || product.data.price,
-  "data-item-url": productUrl,
-  "data-item-description": product.data.description,
-  "data-item-image": product.data.image,
-  ...(product.data.weight && { "data-item-weight": product.data.weight }),
-  ...(product.data.sku && { "data-item-sku": product.data.sku }),
-  // Dynamic variant fields from slots
-  ...buildVariantAttributes(),
-};
+// Build standardized Snipcart attributes using SSOT logic
+const snipcartAttributes = getSnipcartHTMLAttrs(product);
 ---
 
 <Button

@@ -8,6 +8,7 @@
  */
 
 declare const Snipcart: any;
+import { getSnipcartJSItem } from "../../config/ecommerce";
 
 export const sideDrawer = () => ({
   isOpen: false,
@@ -133,31 +134,7 @@ export const sideDrawer = () => ({
 
     try {
       const payload = itemsToAdd.map((item) => {
-        const customFields: any[] = [];
-        [item.variant_1, item.variant_2, item.variant_3].forEach((v) => {
-          if (v?.name && this.selections[item.id][v.name]) {
-            const displayOptions = v.values.split(",").map((vs: any) => vs.trim()).join("|");
-            customFields.push({
-              name: v.name,
-              options: displayOptions,
-              value: this.selections[item.id][v.name],
-              type: v.is_checkbox ? "checkbox" : "dropdown",
-              required: v.is_checkbox ? false : true
-            });
-          }
-        });
-
-        return {
-          id: item.id,
-          name: item.title,
-          price: Number(item.salePrice) || Number(item.price),
-          url: `/products/${item.id}`,
-          image: item.image,
-          description: item.description || item.title,
-          ...(item.weight && { dimensions: { weight: item.weight } }),
-          quantity: 1,
-          customFields,
-        };
+        return getSnipcartJSItem(item, this.selections[item.id]);
       });
 
       for (const item of payload) {
