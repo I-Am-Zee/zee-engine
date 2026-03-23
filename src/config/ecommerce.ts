@@ -100,7 +100,10 @@ export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any) =
     "data-item-image": product.image,
   };
 
-  if (product.weight) attrs["data-item-weight"] = product.weight;
+  // Snipcart REQUIRES weight to be a whole integer (no decimals)
+  // Source: https://docs.snipcart.com/v3/setup/products#product-dimensions
+  // "These attributes need to be integers and cannot have decimals."
+  if (product.weight) attrs["data-item-weight"] = Math.round(product.weight);
   if (product.sku) attrs["data-item-sku"] = product.sku;
   
   // Also pass slug in metadata for the order sync API
@@ -144,13 +147,17 @@ export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, sele
     // Professional ID Logic: Matches the HTML version (SKU or Slug)
     id: product.sku || product.id,
     name: product.title,
-    price: Number(product.salePrice) || Number(product.price),
+    // Use salePrice if it's explicitly set (even if lower), otherwise fall back to price
+    price: product.salePrice !== undefined ? Number(product.salePrice) : Number(product.price),
     url: `/products/${product.id}`,
     image: product.image,
-    ...(product.weight && { dimensions: { weight: product.weight } }),
+    // Snipcart v3 JS API uses nested dimensions.weight (confirmed by network inspection of Snipcart's own requests).
+    // Flat 'weight' at root level is silently ignored, causing the security crawl mismatch.
+    // Math.round required: Snipcart rejects decimal weights (must be integer).
+    ...(product.weight && { dimensions: { weight: Math.round(product.weight) } }),
     metadata: {
       shipping_slab: product.shipping_slab || "",
-      slug: product.id, // Keep the technical slug in metadata for lookups
+      slug: product.id,
       ...(product.sku && { sku: product.sku })
     },
     customFields,
