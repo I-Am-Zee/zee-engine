@@ -43,6 +43,18 @@
   --color-accent-emerald: #15803d; /* Emerald — success states (cart notifications) */
 }
 
+/* ─── Layer Architecture (Z-Index Hierarchy) ─── */
+@theme {
+  --z-sticky: 50;
+  --z-dropdown: 60;
+  --z-nav: 100;
+  --z-overlay: 110;
+  --z-modal: 120;
+  --z-drawer: 200;
+  --z-snipcart: 300;
+  --z-lightbox: 400;
+}
+
 /* Base Styles */
 * {
   box-sizing: border-box;
@@ -77,14 +89,31 @@ body {
   display: none !important;
 }
 
-/* Snipcart z-index overrides - ensure cart appears above navbar (z-50) */
+/* Snipcart Overrides - Shield against Tailwind v4 Preflight & Dark Mode */
 #snipcart {
-  z-index: 100 !important;
+  z-index: 9999 !important;
+  --bgColor-modal: var(--color-background);
+  --bgColor-cart: var(--color-background);
 }
 
 .snipcart-modal,
 .snipcart-modal__container {
-  z-index: 100 !important;
+  z-index: 9999 !important;
+  background-color: var(--color-background) !important;
+}
+
+.snipcart-cart-header {
+  background-color: var(--color-background) !important;
+}
+
+/* Navbar solid background fallback */
+.bg-navbar-glass {
+  background-color: rgba(249, 245, 240, 0.98); /* 98% opacity --color-background */
+  @supports (backdrop-filter: blur(8px)) {
+    background-color: rgba(249, 245, 240, 0.90);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
 /* ─── Luxury Editorial Typography (.prose-zelia) ─── */
