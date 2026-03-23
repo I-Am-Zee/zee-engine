@@ -27,7 +27,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
   x-effect="document.body.style.overflow = isOpen ? 'hidden' : ''"
   x-cloak
   @keydown.escape.window="close()"
-  class="fixed inset-0 z-[1000] overflow-hidden"
+  class="fixed inset-0 flex items-center justify-end overflow-hidden z-[200]"
   aria-labelledby="side-drawer-title"
   role="dialog"
   aria-modal="true"
@@ -57,7 +57,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
       x-transition:leave-end="translate-x-full"
       class="w-screen max-w-md will-change-transform"
     >
-      <div class="bg-background flex h-full flex-col overflow-y-scroll shadow-2xl">
+      <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
         <div class="border-border-subtle bg-surface/50 border-b px-6 py-6 sm:px-8">
           <div class="mb-4 flex items-center justify-between">
@@ -110,7 +110,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
         </div>
 
         <!-- Body: Product List -->
-        <div class="flex-1 px-6 py-8 sm:px-8">
+        <div class="flex-1 overflow-y-auto px-6 py-8 sm:px-8">
           {/* Dynamic Free Shipping Nudge */}
           <div class="mb-10">
             <FreeShippingNudge threshold={threshold} />
@@ -194,7 +194,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
                   </div>
 
                   <!-- Variant Selectors (Flexible for up to 3 slots) -->
-                  <div class="mt-6 space-y-5">
+                  <div class="mt-4 space-y-3">
                     <template
                       x-for="v in [item.variant_1, item.variant_2, item.variant_3].filter(slot => slot && slot.values)"
                       :key="v.name"
@@ -213,7 +213,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
                           >
                             <button
                               @click="selectOption(item.id, v.name, val)"
-                              class="focus-glow inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded border px-3 transition-all disabled:cursor-not-allowed"
+                              class="focus-glow inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded border px-2.5 transition-all disabled:cursor-not-allowed"
                               :class="selections[item.id]?.[v.name] === val ? 'border-primary bg-primary text-text-inverse' : 'border-border-strong bg-background text-text-main hover:border-accent-brass hover:text-accent-brass hover:bg-surface'"
                             >
                               <Text variant="label" color="inherit" x-text="val" />
@@ -230,7 +230,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
         </div>
 
         <!-- Footer (Sticky) -->
-        <div class="border-border-subtle bg-surface/80 border-t px-6 py-8 backdrop-blur-xs sm:px-8">
+        <div class="border-border-subtle bg-surface/80 border-t px-6 py-8 backdrop-blur-md sm:px-8">
           <!-- Validation Message -->
           <div
             x-show="typeof validationError !== 'undefined' && validationError"

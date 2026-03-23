@@ -73,7 +73,7 @@ import Icon from "../primitives/Icon.astro";
   @open-lightbox.window="open($event.detail.src, $event.detail.alt)"
   @keydown.escape.window="close()"
   x-show="isOpen"
-  class="fixed inset-0 z-10000 flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-300"
+  class="fixed inset-0 flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-300 z-[400]"
   :class="isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'"
 >
   <!-- Controls -->
