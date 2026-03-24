@@ -69,14 +69,14 @@ export const POST: APIRoute = async ({ request }) => {
         const splitAmount = Number((totalTaxAmount / 2).toFixed(2));
 
         taxesToApply.push({
-          name: "CGST (1.5%)",
+          name: "CGST (1.5%) [Included in Base Price]",
           amount: splitAmount,
           rate: 0.015,
           includedInPrice: true,
           numberForInvoice: "GSTIN: 03AALFI7890P1ZK"
         });
         taxesToApply.push({
-          name: "SGST (1.5%)",
+          name: "SGST (1.5%) [Included in Base Price]",
           amount: splitAmount,
           rate: 0.015,
           includedInPrice: true,
@@ -88,7 +88,7 @@ export const POST: APIRoute = async ({ request }) => {
         const igstAmount = Number((taxableSubtotal - (taxableSubtotal / (1 + igstRate))).toFixed(2));
 
         taxesToApply.push({
-          name: "IGST (3%)",
+          name: "IGST (3%) [Included in Base Price]",
           amount: igstAmount,
           rate: igstRate,
           includedInPrice: true,
