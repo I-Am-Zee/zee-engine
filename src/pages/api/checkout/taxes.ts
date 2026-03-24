@@ -48,11 +48,15 @@ export const POST: APIRoute = async ({ request }) => {
     );
 
     // Calculate total price of all items to base the tax amount on
-    // Even though Snipcart calculates the final math based on `rate`, the payload format
-    // usually requires `amount` as well.
     (order.items || []).forEach((item: any) => {
         taxableSubtotal += item.totalPrice || item.price || 0;
     });
+
+    // Handle "Principal Supply" Rule for Indian GST:
+    // If the cart contains 3% taxed jewellery (HSN 7117), the shipping fee MUST also be taxed at 3%.
+    // In Snipcart v3, active shipping fees are found in shippingInformation.fees or shippingRate.
+    const shippingFees = order.shippingInformation?.fees || order.shippingAddress?.shippingRate || order.shippingRate || 0;
+    taxableSubtotal += Number(shippingFees);
 
     if (taxableSubtotal > 0) {
       if (isPunjab) {
