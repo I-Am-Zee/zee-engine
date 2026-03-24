@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request }) => {
         units: item.quantity,
         selling_price: item.price,
         discount: 0,
-        tax: item.taxesTotal || 0,
+        tax: 3, // Shiprocket expects the tax PERCENTAGE, not the absolute amount. 3% for HSN 7117.
         hsn: item.metadata?.hsn || "7117"
       };
     }));
