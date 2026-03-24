@@ -102,14 +102,29 @@ export const POST: APIRoute = async ({ request }) => {
         }
       }
       
+      // Prevent Shiprocket 400 "SKU cannot be repeated" error by appending variant data to the SKU.
+      // E.g., diamond-tennis-necklace -> diamond-tennis-necklace-16inches
+      const variantSuffix = (item.customFields || [])
+        .map((cf: any) => String(cf.displayValue || cf.value || "").replace(/[^a-zA-Z0-9]/g, ""))
+        .filter(Boolean)
+        .join("-");
+      
+      const safeSku = variantSuffix ? `${item.id}-${variantSuffix}`.substring(0, 50) : item.id;
+      
+      // Pack the variant descriptions cleanly into the Name string so the warehouse packer sees it
+      const variantNames = (item.customFields || [])
+        .map((cf: any) => `${cf.name}: ${cf.displayValue || cf.value}`)
+        .join(", ");
+      const safeName = variantNames ? `${item.name} (${variantNames})` : item.name;
+
       return {
-        name: item.name,
-        sku: item.id,
+        name: safeName.substring(0, 50),
+        sku: safeSku,
         units: item.quantity,
         selling_price: item.price,
         discount: 0,
         tax: item.taxesTotal || 0,
-        hsn: ""
+        hsn: item.metadata?.hsn || "7117"
       };
     }));
 

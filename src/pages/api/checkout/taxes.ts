@@ -40,7 +40,7 @@ export const POST: APIRoute = async ({ request }) => {
     // We only apply this to items that have the HSN 7117 metadata tag.
     // (Though for this store, assuming all items are Costume Jewellery)
     let taxableSubtotal = 0;
-    const taxesToApply: { name: string; amount: number; rate: number; includedInPrice?: boolean }[] = [];
+    const taxesToApply: { name: string; amount: number; rate: number; includedInPrice?: boolean; numberForInvoice?: string }[] = [];
 
     // Check if there's any HSN 7117 item in the cart to trigger the GST logic
     const hasHSN7117 = (order.items || []).some((item: any) => 
@@ -72,13 +72,15 @@ export const POST: APIRoute = async ({ request }) => {
           name: "CGST (1.5%)",
           amount: splitAmount,
           rate: 0.015,
-          includedInPrice: true
+          includedInPrice: true,
+          numberForInvoice: "GSTIN: 03AALFI7890P1ZK"
         });
         taxesToApply.push({
           name: "SGST (1.5%)",
           amount: splitAmount,
           rate: 0.015,
-          includedInPrice: true
+          includedInPrice: true,
+          numberForInvoice: "GSTIN: 03AALFI7890P1ZK"
         });
       } else {
         // Inter-state: Single 3% IGST
@@ -89,7 +91,8 @@ export const POST: APIRoute = async ({ request }) => {
           name: "IGST (3%)",
           amount: igstAmount,
           rate: igstRate,
-          includedInPrice: true
+          includedInPrice: true,
+          numberForInvoice: "GSTIN: 03AALFI7890P1ZK"
         });
       }
     }

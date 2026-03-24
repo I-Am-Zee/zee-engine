@@ -170,6 +170,24 @@ const {
           });
           document.dispatchEvent(event);
         });
+
+        // --- 4. AMAZON-STYLE INCLUSIVE TAXES HIDER ---
+        // Snipcart removes the --taxes CSS modifier from its list items natively, preventing pure CSS targeting.
+        // We use an ultra-lightweight MutationObserver to continuously watch for the exact "Taxes" text node
+        // and visually collapse its parent instantly. This seamlessly matches top-tier e-commerce conventions
+        // without breaking or modifying the backend invoice calculations.
+        const observer = new MutationObserver(() => {
+          const taxTitles = document.querySelectorAll('.snipcart-summary-fees__title, .snipcart-cart-summary-fees__title');
+          taxTitles.forEach(el => {
+            if (el.textContent && el.textContent.includes('Taxes')) {
+              const row = el.closest('.snipcart-cart-summary-fees__item, .snipcart-summary-fees__item');
+              if (row && row.style.display !== 'none') {
+                row.style.display = 'none';
+              }
+            }
+          });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
       });
     </script>
 
