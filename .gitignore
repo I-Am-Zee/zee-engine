@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # Cloudflared binaries
 cloudflared.exe
+
+# Local Billing Icons (to be moved to R2)
+public/images/billing/

@@ -52,7 +52,8 @@ const {
         publicApiKey: apiKey,
         loadStrategy: "on-idle",
         modalStyle: "overlay",
-        addProductBehavior: "none"
+        addProductBehavior: "none",
+        templatesUrl: "/snipcart-templates.html"
       };
 
       document.addEventListener('snipcart.ready', () => {
@@ -172,22 +173,65 @@ const {
         });
 
         // --- 4. AMAZON-STYLE INCLUSIVE TAXES HIDER ---
-        // Snipcart removes the --taxes CSS modifier from its list items natively, preventing pure CSS targeting.
-        // We use an ultra-lightweight MutationObserver to continuously watch for the exact "Taxes" text node
-        // and visually collapse its parent instantly. This seamlessly matches top-tier e-commerce conventions
-        // without breaking or modifying the backend invoice calculations.
-        const observer = new MutationObserver(() => {
-          const taxTitles = document.querySelectorAll('.snipcart-summary-fees__title, .snipcart-cart-summary-fees__title');
+        function hideTaxes() {
+          const taxTitles = document.querySelectorAll('.snipcart-summary-fees__title, .snipcart-cart-summary-fees__title, .snipcart-summary-fees__item, .snipcart-cart-summary-fees__item');
           taxTitles.forEach(el => {
-            if (el.textContent && el.textContent.includes('Taxes')) {
-              const row = el.closest('.snipcart-cart-summary-fees__item, .snipcart-summary-fees__item');
+            // Target the text directly regardless of casing or extra characters like (?)
+            if (el.textContent && /taxes/i.test(el.textContent)) {
+              // If it's the title, hide the parent row. If it's already the row, hide it directly.
+              const row = el.classList.contains('snipcart-summary-fees__item') || el.classList.contains('snipcart-cart-summary-fees__item') 
+                ? el 
+                : el.closest('.snipcart-cart-summary-fees__item, .snipcart-summary-fees__item');
+              
               if (row && row.style.display !== 'none') {
-                row.style.display = 'none';
+                row.style.setProperty('display', 'none', 'important');
               }
             }
           });
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        const taxObserver = new MutationObserver(hideTaxes);
+        taxObserver.observe(document.body, { childList: true, subtree: true });
+
+        // --- 5. COD / PAY LATER LOGIN RESTRICTION ---
+        // We only allow "Pay later" (COD) for signed-in users to minimize RTO risk.
+        function updatePayLaterVisibility() {
+          const state = window.Snipcart.store.getState();
+          const isSignedIn = state.customer && state.customer.status === 'SignedIn';
+          
+          console.log('[COD Restriction] Status Check:', { 
+            customerStatus: state.customer?.status, 
+            isSignedIn 
+          });
+
+          // Look for either the container OR the button with the Pay Later text/label
+          const payLaterElements = document.querySelectorAll('.snipcart-payment-methods-list-item, .snipcart-payment-methods-list-item__button');
+          
+          payLaterElements.forEach(el => {
+            const hasPayLaterText = /pay later/i.test(el.textContent || '') || /pay later/i.test(el.getAttribute('aria-label') || '');
+            
+            if (hasPayLaterText) {
+              const target = el.classList.contains('snipcart-payment-methods-list-item') ? el : el.closest('.snipcart-payment-methods-list-item');
+              
+              if (target) {
+                if (!isSignedIn) {
+                  console.log('[COD Restriction] Hiding Pay Later for guest');
+                  target.style.setProperty('display', 'none', 'important');
+                } else {
+                  console.log('[COD Restriction] Showing Pay Later for signed-in user');
+                  target.style.setProperty('display', '', '');
+                }
+              }
+            }
+          });
+        }
+
+        // Subscribe to store updates to catch login/logout events in real-time
+        window.Snipcart.store.subscribe(updatePayLaterVisibility);
+
+        // Also use an observer to catch the payment list as soon as it's rendered by Snipcart
+        const payLaterObserver = new MutationObserver(updatePayLaterVisibility);
+        payLaterObserver.observe(document.body, { childList: true, subtree: true });
       });
     </script>
 
@@ -237,15 +281,17 @@ const {
     display: none !important;
   }
   body.zav-guest-user .snipcart-discount-box::after {
-    content: "🔒 Sign in with Gmail to unlock discount codes.";
+    content: "🔒 Sign in with Gmail to unlock discount codes.\A 🚚 Cash on Delivery is available for signed-in users.";
     display: block;
-    padding: 0.75rem;
+    padding: 1.25rem;
     font-size: 0.875rem;
+    line-height: 1.8;
     color: #4a5568;
     text-align: center;
     background: #f7fafc;
     border-radius: 4px;
     margin-top: 0.5rem;
     border: 1px dashed #cbd5e0;
+    white-space: pre-line;
   }
 </style>
