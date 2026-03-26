@@ -1,6 +1,7 @@
 ---
 // Import global CSS so Astro bundles it for production
 import "../styles/global.css";
+import "../styles/snipcart.css";
 import { siteConfig } from "../lib/site.config";
 import { getEntry } from "astro:content";
 import CartToast from "../components/ui/CartToast.astro";
@@ -275,23 +276,4 @@ const {
   </body>
 </html>
 
-<style is:global>
-  /* NO LOGIN = NO DISCOUNT LOGIC */
-  body.zav-guest-user .snipcart-discount-box__form {
-    display: none !important;
-  }
-  body.zav-guest-user .snipcart-discount-box::after {
-    content: "🔒 Sign in with Gmail to unlock discount codes.\A 🚚 Cash on Delivery is available for signed-in users.";
-    display: block;
-    padding: 1.25rem;
-    font-size: 0.875rem;
-    line-height: 1.8;
-    color: #4a5568;
-    text-align: center;
-    background: #f7fafc;
-    border-radius: 4px;
-    margin-top: 0.5rem;
-    border: 1px dashed #cbd5e0;
-    white-space: pre-line;
-  }
-</style>
+

@@ -1,0 +1,35 @@
+/* --- Snipcart Branding & UI Overrides --- */
+
+/* Guest State: No Login = No Discount */
+body.zav-guest-user .snipcart-discount-box__form {
+  display: none !important;
+}
+
+body.zav-guest-user .snipcart-discount-box::after {
+  content: "🔒 Sign in with Gmail to unlock discount codes.\A 🚚 Cash on Delivery is available for signed-in users.";
+  display: block;
+  padding: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: #4a5568;
+  text-align: center;
+  background: #f7fafc;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  border: 1px dashed #cbd5e0;
+  white-space: pre-line;
+}
+
+/* Mobile Cart Summary: Product Image Fix (Viewport < 1022px) */
+/* Targets the figure element containing the small thumbnail */
+.snipcart-item-line__media.snipcart-item-line__media--small {
+  min-width: 25px !important;
+  margin-right: 4px !important;
+}
+
+/* Ensure the image itself fills the space correctly without distortion */
+.snipcart-item-line__media--small .snipcart-item-line__image {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
