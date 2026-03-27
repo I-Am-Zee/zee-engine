@@ -281,4 +281,30 @@ function initSnipcartLogic() {
   function updatePayLaterVisibility() {
     const state = window.Snipcart.store.getState();
     const isSignedIn = state.customer && state.customer.status === 'SignedIn';
-    const payLaterElements = document.querySelectorAll('.snipcart-p
+    const payLaterElements = document.querySelectorAll('.snipcart-payment-methods-list-item, .snipcart-payment-methods-list-item__button');
+    
+    payLaterElements.forEach(el => {
+      const hasPayLaterText = /pay later/i.test(el.textContent || '') || /pay later/i.test(el.getAttribute('aria-label') || '');
+      if (hasPayLaterText) {
+        const target = (el.classList.contains('snipcart-payment-methods-list-item') ? el : el.closest('.snipcart-payment-methods-list-item')) as HTMLElement;
+        if (target) {
+          if (!isSignedIn) {
+            target.style.setProperty('display', 'none', 'important');
+          } else {
+            target.style.setProperty('display', '', '');
+          }
+        }
+      }
+    });
+  }
+  window.Snipcart.store.subscribe(updatePayLaterVisibility);
+  const payLaterObserver = new MutationObserver(updatePayLaterVisibility);
+  payLaterObserver.observe(document.body, { childList: true, subtree: true });
+}
+
+// Start logic immediately if Snipcart is already loaded, otherwise wait for event
+if ((window as any).Snipcart) {
+  initSnipcartLogic();
+} else {
+  document.addEventListener('snipcart.ready', initSnipcartLogic);
+}
