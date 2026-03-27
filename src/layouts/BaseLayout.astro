@@ -45,20 +45,15 @@ const {
     <!-- Snipcart CSS (v3.7.5) -->
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.css" />
 
-    <!-- Snipcart JS (v3.7.5, async loading) -->
-    <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js" is:inline></script>
-
     <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }} is:inline>
       window.SnipcartSettings = {
         publicApiKey: apiKey,
         version: "3.7.5",
         modalStyle: "overlay",
         addProductBehavior: "none",
-        templatesUrl: "/snipcart-templates.html?v=1.0.8"
+        templatesUrl: "/snipcart-templates.html?v=1.2.5"
       };
     </script>
-    <!-- <script src="../scripts/snipcart-init.ts"></script> -->
-
   </head>
   <body class="flex flex-col min-h-screen">
     <AnnouncementBar data={announcement_bar} />
@@ -83,9 +78,7 @@ const {
       data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}>
     </div>
 
-    <!-- Snipcart script imports are temporarily commented out to prevent interference during template debugging -->
-    <!-- <script src="../scripts/snipcart-events.ts"></script> -->
-    <!-- <script src="../scripts/behaviors/options-sync.ts"></script> -->
+    <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
 
     <PopupModal data={popup_modal} />
     <Lightbox />
