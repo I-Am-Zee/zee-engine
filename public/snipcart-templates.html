@@ -73,6 +73,53 @@
 
 
   <!-- ============================================== -->
+  <!-- 1.5 SHIPPING SECTION OVERRIDES                 -->
+  <!-- ============================================== -->
+  <shipping-address>
+    <div>
+      <snipcart-form @submit="save" id="snipcart-shipping-address-form">
+        <div class="snipcart__box">
+          
+          <div class="snipcart__box--header">
+            <div class="snipcart__box--title">
+              <div class="snipcart__box--badge snipcart__box--badge-highlight snipcart__font--bold snipcart__font--secondary">
+                {{ number }}
+              </div>
+              <h1 class="snipcart__font--subtitle">{{ $localize('shipping.title') }}</h1>
+            </div>
+          </div>
+          
+          <snipcart-form-error></snipcart-form-error>
+
+          <!-- Google Address Autocomplete for Shipping -->
+          <div class="snipcart-form__field snipcart-search-field">
+            <snipcart-label class="snipcart__font--tiny" for="address-search">Search your address (Google Autocomplete)</snipcart-label>
+            <snipcart-address-autocomplete style="margin-top: -15px !important;"></snipcart-address-autocomplete>
+          </div>
+
+          <!-- Full Name for Shipping -->
+          <fieldset class="snipcart-form__set">
+            <div class="snipcart-form__field">
+              <snipcart-label class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
+              <snipcart-input name="name" required autocomplete="name"></snipcart-input>
+              <snipcart-field-error name="name"></snipcart-field-error>
+            </div>
+          </fieldset>
+
+          <!-- Reusing the Indestructible Address Fields -->
+          <address-fields type="shipping"></address-fields>
+
+          <div class="snipcart-form__footer">
+            <snipcart-submit :label="labelSubmit"></snipcart-submit>
+          </div>
+
+        </div>
+      </snipcart-form>
+    </div>
+  </shipping-address>
+
+
+  <!-- ============================================== -->
   <!-- 2. ADDRESS FIELDS OVERRIDES                    -->
   <!-- ============================================== -->
   <address-fields>

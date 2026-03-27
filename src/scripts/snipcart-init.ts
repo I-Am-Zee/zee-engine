@@ -23,6 +23,62 @@ declare global {
 function initSnipcartLogic() {
   if (!(window as any).Snipcart) return;
 
+  // --- 0. SMART NEWSLETTER WATCHDOG (State-Aware & Shadow-Piercing) ---
+  const autoCheckNewsletter = () => {
+    // 1. Recursive Shadow-DOM piercing finder
+    const findCheckbox = (root: Document | ShadowRoot | Element): HTMLInputElement | null => {
+      const el = root.querySelector('input[name="subscribeToNewsletter"]') as HTMLInputElement;
+      if (el) return el;
+      const children = Array.from(root.querySelectorAll('*'));
+      for (const child of children) {
+        if (child.shadowRoot) {
+          const found = findCheckbox(child.shadowRoot);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const checkbox = findCheckbox(document);
+    if (!checkbox || checkbox.getAttribute('data-autochecked')) return;
+
+    // 2. State-Awareness: Check if Snipcart already has a session-stored value (User manual choice)
+    const state = window.Snipcart.store.getState();
+    const billing = state?.cart?.billingAddress || {};
+    const metadata = billing.metadata || {};
+    
+    // If the value is already present in metadata, the user has already made a choice this session.
+    // If it's undefined, this is a fresh lead.
+    const currentVal = metadata.subscribeToNewsletter;
+
+    if (currentVal === undefined) {
+      console.log('[Zelia Vance] Fresh session detected: Auto-checking newsletter.');
+      checkbox.checked = true;
+      checkbox.setAttribute('data-autochecked', 'true');
+      // Sync it with Snipcart's Vue engine
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      checkbox.dispatchEvent(new Event('input', { bubbles: true }));
+    } else {
+      console.log('[Zelia Vance] Existing session found: Respecting manual choice.');
+      checkbox.setAttribute('data-autochecked', 'true'); // Don't touch it again
+    }
+  };
+
+  // The 'Patrol': Watch for Snipcart re-renders
+  const checkoutContainer = document.querySelector('#snipcart');
+  if (checkoutContainer) {
+    const observer = new MutationObserver((mutations) => {
+      // Small delay to let Snipcart/Vue settle after a DOM change
+      setTimeout(autoCheckNewsletter, 100);
+    });
+    observer.observe(checkoutContainer, { childList: true, subtree: true });
+  }
+
+  // Fallback for direct page entries
+  window.Snipcart.events.on('page.change', (page: string) => {
+    if (page === 'billing') setTimeout(autoCheckNewsletter, 500);
+  });
+
   // --- 1. LOCALIZATION OVERRIDES FOR EMAIL HINTS ---
   window.Snipcart.api.session.setLanguage('en', {
     address_form: {
@@ -225,30 +281,4 @@ function initSnipcartLogic() {
   function updatePayLaterVisibility() {
     const state = window.Snipcart.store.getState();
     const isSignedIn = state.customer && state.customer.status === 'SignedIn';
-    const payLaterElements = document.querySelectorAll('.snipcart-payment-methods-list-item, .snipcart-payment-methods-list-item__button');
-    
-    payLaterElements.forEach(el => {
-      const hasPayLaterText = /pay later/i.test(el.textContent || '') || /pay later/i.test(el.getAttribute('aria-label') || '');
-      if (hasPayLaterText) {
-        const target = (el.classList.contains('snipcart-payment-methods-list-item') ? el : el.closest('.snipcart-payment-methods-list-item')) as HTMLElement;
-        if (target) {
-          if (!isSignedIn) {
-            target.style.setProperty('display', 'none', 'important');
-          } else {
-            target.style.setProperty('display', '', '');
-          }
-        }
-      }
-    });
-  }
-  window.Snipcart.store.subscribe(updatePayLaterVisibility);
-  const payLaterObserver = new MutationObserver(updatePayLaterVisibility);
-  payLaterObserver.observe(document.body, { childList: true, subtree: true });
-}
-
-// Start logic immediately if Snipcart is already loaded, otherwise wait for event
-if ((window as any).Snipcart) {
-  initSnipcartLogic();
-} else {
-  document.addEventListener('snipcart.ready', initSnipcartLogic);
-}
+    const payLaterElements = document.querySelectorAll('.snipcart-p
