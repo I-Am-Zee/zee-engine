@@ -33,3 +33,10 @@ body.zav-guest-user .snipcart-discount-box::after {
   height: auto !important;
   display: block;
 }
+
+/* Ensuring the text "Shipping and taxes will be calculated after
+   an address is provided." looks fine and not cluttered in the order summary */
+.snipcart-summary-fees__notice.snipcart__font--regular {
+  margin-bottom: 10px !important;
+  line-height: 1.5 !important;
+}

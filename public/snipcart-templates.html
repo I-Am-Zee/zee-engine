@@ -1,160 +1,190 @@
 <div id="snipcart-templates">
-  <!-- 1. Billing Step Shell (Master Container) -->
+
+  <!-- ============================================== -->
+  <!-- 1. BILLING SECTION OVERRIDES                   -->
+  <!-- ============================================== -->
   <billing>
     <div>
       <snipcart-form @submit="save" id="snipcart-billing-form">
         <div class="snipcart__box">
+          
           <div class="snipcart__box--header">
             <div class="snipcart__box--title">
-              <div class="snipcart__box--badge snipcart__box--badge-highlight snipcart__font--bold snipcart__font--secondary">{{ number }}</div>
-              <h1 class="snipcart__font--subtitle">
-                {{ $localize('billing.title') }}
-              </h1>
+              <div class="snipcart__box--badge snipcart__box--badge-highlight snipcart__font--bold snipcart__font--secondary">
+                {{ number }}
+              </div>
+              <h1 class="snipcart__font--subtitle">{{ $localize('billing.title') }}</h1>
             </div>
           </div>
-
+          
           <snipcart-form-error></snipcart-form-error>
-
+          
+          <!-- Google Address Autocomplete -->
+          <div class="snipcart-form__field snipcart-search-field">
+            <snipcart-label class="snipcart__font--tiny" for="address-search">Search your address (Google Autocomplete)</snipcart-label>
+            <snipcart-address-autocomplete style="margin-top: -15px !important;"></snipcart-address-autocomplete>
+          </div>
+          
+          <!-- Basic Info -->
           <fieldset class="snipcart-form__set">
-            <!-- FULL NAME -->
             <div class="snipcart-form__field">
               <snipcart-label class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
-              <snipcart-input name="name" autocomplete="name"></snipcart-input>
+              <snipcart-input name="name" required autocomplete="name"></snipcart-input>
               <snipcart-field-error name="name"></snipcart-field-error>
             </div>
-
-            <!-- EMAIL -->
+            
             <div class="snipcart-form__field">
               <snipcart-label class="snipcart__font--tiny" for="email">Email</snipcart-label>
-              <snipcart-input name="email" v-if="!emailIsReadonly"></snipcart-input>
+              <snipcart-input name="email" required v-if="!emailIsReadonly"></snipcart-input>
               <span class="snipcart-input--readonly snipcart__font--secondary snipcart__font--bold" v-else>{{ customer.email }}</span>
               <snipcart-field-error name="email"></snipcart-field-error>
             </div>
           </fieldset>
-
-          <!-- INJECT ADDRESS BLOCK -->
+          
+          <!-- Address Fields Injector -->
           <address-fields type="billing"></address-fields>
-
+          
+          <!-- Shipping Address + Newsletter Toggle -->
           <hr class="snipcart-form__separator" v-if="hasShippingStep" />
-
           <fieldset class="snipcart-form__set snipcart-form__set--different-shipping" v-if="hasShippingStep">
             <div class="snipcart-form__field">
+              
               <div class="snipcart-form__field-checkbox">
                 <snipcart-checkbox name="useDifferentShippingAddress"></snipcart-checkbox>
-                <snipcart-label class="snipcart__font--tiny snipcart-form__label--checkbox" for="useDifferentShippingAddress">
-                  {{ $localize('billing.use_different_shipping_address') }}
-                </snipcart-label>
+                <snipcart-label class="snipcart__font--tiny snipcart-form__label--checkbox" for="useDifferentShippingAddress">{{ $localize('billing.use_different_shipping_address') }}</snipcart-label>
               </div>
+
+              <div class="snipcart-form__field-checkbox">
+                <snipcart-checkbox name="subscribeToNewsletter"></snipcart-checkbox>
+                <snipcart-label for="subscribeToNewsletter" class="snipcart__font--tiny snipcart-form__label--checkbox">Receive exclusive privileges, early access, and curated offers via email</snipcart-label>
+              </div>
+
             </div>
           </fieldset>
-
+          
           <div class="snipcart-form__footer">
             <snipcart-submit :label="labelSubmit"></snipcart-submit>
           </div>
+
         </div>
       </snipcart-form>
     </div>
   </billing>
 
-  <!-- 2. Address Fields Component (Child Container) -->
+
+  <!-- ============================================== -->
+  <!-- 2. ADDRESS FIELDS OVERRIDES                    -->
+  <!-- ============================================== -->
   <address-fields>
     <div>
       <fieldset class="snipcart-form__set">
         
-        <!-- COUNTRY (Native) -->
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
             <snipcart-label class="snipcart__font--tiny" for="country">Country</snipcart-label>
-            <snipcart-typeahead type="dropdown" name="country" autocomplete="country"></snipcart-typeahead>
+            <snipcart-typeahead type="dropdown" name="country" required autocomplete="country"></snipcart-typeahead>
             <snipcart-field-error name="country"></snipcart-field-error>
           </div>
         </div>
-
-        <!-- ADDRESS LINE 1 -->
+        
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="address1">Address Line 1</snipcart-label>
-            <snipcart-input name="address1" autocomplete="address-line1"></snipcart-input>
+            <snipcart-label class="snipcart__font--tiny" for="address1">Address Line 1 (Please enter the exact address)</snipcart-label>
+            <snipcart-input name="address1" required autocomplete="address-line1"></snipcart-input>
             <snipcart-field-error name="address1"></snipcart-field-error>
           </div>
         </div>
-
-        <!-- ADDRESS LINE 2 -->
+        
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
             <snipcart-label class="snipcart__font--tiny" for="address2">Address Line 2 (Optional)</snipcart-label>
-            <snipcart-input name="address2" autocomplete="address-line2"></snipcart-input>
+            <snipcart-input name="address2" autocomplete="address-line2" placeholder="Any Landmark, add here."></snipcart-input>
           </div>
         </div>
-
-        <!-- TOWN / CITY -->
+        
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
             <snipcart-label class="snipcart__font--tiny" for="city">Town / City</snipcart-label>
-            <snipcart-input name="city"></snipcart-input>
+            <snipcart-input name="city" required autocomplete="address-level2"></snipcart-input>
             <snipcart-field-error name="city"></snipcart-field-error>
           </div>
         </div>
-
-        <!-- STATE / PROVINCE (NO LOGIC TEST) -->
+        
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
             <snipcart-label class="snipcart__font--tiny" for="province">State / Province</snipcart-label>
-            <snipcart-input name="province"></snipcart-input>
+            <snipcart-input name="province" required autocomplete="address-level1"></snipcart-input>
             <snipcart-field-error name="province"></snipcart-field-error>
           </div>
         </div>
-
-        <!-- POSTAL / ZIP CODE -->
+        
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
             <snipcart-label class="snipcart__font--tiny" for="postalCode">Postal / Zip Code</snipcart-label>
-            <snipcart-input name="postalCode"></snipcart-input>
+            <snipcart-input name="postalCode" required autocomplete="postal-code"></snipcart-input>
             <snipcart-field-error name="postalCode"></snipcart-field-error>
           </div>
         </div>
-
-        <!-- PHONE (NO PREFIX LOGIC TEST) -->
+        
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
             <snipcart-label class="snipcart__font--tiny" for="phone">Phone Number</snipcart-label>
-            <snipcart-input name="phone" type="tel" autocomplete="tel-national"></snipcart-input>
+            <snipcart-input name="phone" required type="tel" autocomplete="tel" placeholder="Enter mobile number"></snipcart-input>
             <snipcart-field-error name="phone"></snipcart-field-error>
           </div>
         </div>
+        
       </fieldset>
     </div>
   </address-fields>
 
-  <!-- 3. Payment Footer -->
+
+  <!-- ============================================== -->
+  <!-- 3. FEATURED PAYMENT METHODS OVERRIDES          -->
+  <!-- ============================================== -->
   <featured-payment-methods>
     <div class="snipcart-featured-payment-methods">
-        <h3 class="snipcart__font--secondary snipcart__font--bold  snipcart-featured-payment-methods__title">
-            <a :href="securedByUrl" class="snipcart-featured-payment-methods__link" target="_blank" rel="nofollow noopener">
-                <icon name="lock" class="snipcart-featured-payment-methods__title-icon"></icon>
-                {{ $localize('cart.secured_by') }}
-            </a>
-        </h3>
-        <ul class="snipcart-featured-payment-methods__list" style="display: flex; justify-content: center; align-items: center;">
-            <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px;">
-              <img src="/images/billing/apple-pay.svg" alt="Apple Pay" style="max-width: 56px; min-width: 40px; height: auto;"/>
-            </li>
-            <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px;">
-              <img src="/images/billing/google-pay.svg" alt="Google Pay" style="max-width: 56px; min-width: 40px; height: auto;"/>
-            </li>
-            <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px;">
-                <img src="/images/billing/visa.svg" alt="Visa" style="max-width: 56px; min-width: 40px; height: auto;"/>
-            </li>
-            <li class="snipcart-featured-payment-methods__list-item">
-                <img src="/images/billing/mastercard.svg" alt="Mastercard" style="max-width: 56px; min-width: 40px; height: auto;"/>
-            </li>
-        </ul>
+      <h3 class="snipcart__font--secondary snipcart__font--bold snipcart-featured-payment-methods__title">
+        <a :href="securedByUrl" class="snipcart-featured-payment-methods__link" target="_blank" rel="nofollow noopener">
+          <icon name="lock" class="snipcart-featured-payment-methods__title-icon"></icon>
+          {{ $localize('cart.secured_by') }}
+        </a>
+      </h3>
+      <ul class="snipcart-featured-payment-methods__list" style="display: flex; justify-content: center; align-items: center">
+        <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px">
+          <img src="/images/billing/apple-pay.svg" alt="Apple Pay" style="max-width: 56px; min-width: 40px; height: auto" />
+        </li>
+        <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px">
+          <img src="/images/billing/google-pay.svg" alt="Google Pay" style="max-width: 56px; min-width: 40px; height: auto" />
+        </li>
+        <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px">
+          <img src="/images/billing/visa.svg" alt="Visa" style="max-width: 56px; min-width: 40px; height: auto" />
+        </li>
+        <li class="snipcart-featured-payment-methods__list-item" style="padding: 0px 8px">
+          <img src="/images/billing/mastercard.svg" alt="Mastercard" style="max-width: 56px; min-width: 40px; height: auto" />
+        </li>
+      </ul>
     </div>
   </featured-payment-methods>
 
+
+  <!-- ============================================== -->
+  <!-- 4. CHECKOUT INLINE STYLING                     -->
+  <!-- ============================================== -->
   <style>
-    .snipcart-form__set { border-bottom: none !important; margin-bottom: 0 !important; border-top: none !important; padding-top: 0 !important; }
-    .snipcart-featured-payment-methods__list { border-top: none !important; }
-    .snipcart-typeahead { width: 100% !important; }
+    /* Clean up default borders */
+    .snipcart-form__set {
+      border-bottom: none !important;
+      margin-bottom: 0 !important;
+      border-top: none !important;
+      padding-top: 0 !important;
+    }
+    .snipcart-featured-payment-methods__list {
+      border-top: none !important;
+    }
+    .snipcart-typeahead {
+      width: 100% !important;
+    }
   </style>
+
 </div>

@@ -16,10 +16,13 @@ declare global {
   interface Window {
     Snipcart: any;
     SnipcartSettings: any;
+    libphonenumber: any;
   }
 }
 
-document.addEventListener('snipcart.ready', () => {
+function initSnipcartLogic() {
+  if (!(window as any).Snipcart) return;
+
   // --- 1. LOCALIZATION OVERRIDES FOR EMAIL HINTS ---
   window.Snipcart.api.session.setLanguage('en', {
     address_form: {
@@ -45,42 +48,61 @@ document.addEventListener('snipcart.ready', () => {
   window.Snipcart.store.subscribe(toggleGuestState);
   toggleGuestState();
 
-  // --- 3. DUAL-LAYER VALIDATION API HOOK ---
+  // --- 3. DUAL-LAYER VALIDATION API HOOK (BLOCKING) ---
   window.Snipcart.events.on('page.validating', (ev: any, data: any) => {
-    if (ev.type === 'shipping-address' || ev.type === 'billing-address' || ev.name === 'shipping-address' || ev.name === 'billing-address') {
-      // PHONE VALIDATION
-      const phoneInput = document.querySelector('snipcart-input[name="phone"] input, input[name="phone"], input[name="shipping[phone]"], input[name="billing[phone]"], [name="phone"]') as HTMLInputElement;
-      let digits = '';
-      if (phoneInput) {
-        digits = String(phoneInput.value).replace(/\D/g, '');
-      } else if (data && data.phone) {
-        digits = String(data.phone).replace(/\D/g, '');
-      }
+    // Target both billing and shipping steps
+    const isAddressStep = ev.type === 'shipping-address' || ev.type === 'billing-address' || ev.name === 'shipping-address' || ev.name === 'billing-address';
+    if (!isAddressStep) return;
 
-      if (digits.length !== 10) {
-        const msg = digits.length === 0 ? 'Phone number is required.' : 'Please enter a valid 10-digit mobile number.';
-        if (typeof ev.addError === 'function') {
-          ev.addError('phone', msg);
-        } else if (ev.errors && Array.isArray(ev.errors)) {
-          ev.errors.push({ id: 'phone', message: msg });
+    const billing = data || {};
+    
+    // DIRECT FIELD CHECK (Zero-Bypass): Look at the screen if data is missing
+    const emailInput = document.querySelector('snipcart-input[name="email"] input, input[name="email"]') as HTMLInputElement;
+    const phoneInput = document.querySelector('snipcart-input[name="phone"] input, input[name="phone"]') as HTMLInputElement;
+    const countryInput = document.querySelector('select[name="country"], .snipcart-typeahead__input') as HTMLSelectElement;
+
+    const email = (emailInput ? emailInput.value : (billing.email || '')).trim().toLowerCase();
+    const phone = (phoneInput ? phoneInput.value : (billing.phone || '')).trim();
+    const rawCountry = countryInput ? countryInput.value : (billing.country || 'IN');
+    
+    // NATIVE COUNTRY MAPPING: Handle full names like 'India' or 'United States'
+    let countryCode = rawCountry;
+    if (rawCountry === 'India') countryCode = 'IN';
+    if (rawCountry === 'United States') countryCode = 'US';
+    if (rawCountry === 'Canada') countryCode = 'CA';
+
+    const isIndia = countryCode === 'IN';
+
+    // 3a. GMAIL ENFORCEMENT
+    if (email && !email.endsWith('@gmail.com')) {
+      const msg = 'Please use a Gmail address (@gmail.com).';
+      if (typeof ev.addError === 'function') ev.addError('email', msg);
+      else if (ev.reject) ev.reject(msg);
+    }
+
+    // 3b. SMART PHONE VALIDATION (Concierge)
+    if (phone) {
+      const lib = (window as any).libphonenumber;
+      if (lib) {
+        try {
+          const parsed = lib.parsePhoneNumberWithError(phone, countryCode);
+          if (!parsed.isValid()) {
+            const msg = 'Invalid mobile number for ' + rawCountry + '.';
+            if (typeof ev.addError === 'function') ev.addError('phone', msg);
+            else if (ev.reject) ev.reject(msg);
+          }
+        } catch (e: any) {
+          const msg = e.message?.includes('TOO_LONG') ? 'This number is too long.' : 'Invalid mobile number.';
+          if (typeof ev.addError === 'function') ev.addError('phone', msg);
+          else if (ev.reject) ev.reject(msg);
         }
-      }
-
-      // GMAIL VALIDATION
-      const emailInput = document.querySelector('snipcart-input[name="email"] input, input[name="email"], input[type="email"]') as HTMLInputElement;
-      let email = '';
-      if (emailInput) {
-        email = String(emailInput.value).trim().toLowerCase();
-      } else if (data && data.email) {
-        email = String(data.email).trim().toLowerCase();
-      }
-
-      if (email && !email.endsWith('@gmail.com')) {
-        const msg = 'Only Gmail addresses (@gmail.com) are accepted to prevent spam.';
-        if (typeof ev.addError === 'function') {
-          ev.addError('email', msg);
-        } else if (ev.errors && Array.isArray(ev.errors)) {
-          ev.errors.push({ id: 'email', message: msg });
+      } else if (isIndia) {
+        // Strict 10-digit Fallback for India if library isn't available
+        const digits = phone.replace(/\D/g, '');
+        if (digits.length !== 10) {
+          const msg = 'India deliveries require a 10-digit mobile number.';
+          if (typeof ev.addError === 'function') ev.addError('phone', msg);
+          else if (ev.reject) ev.reject(msg);
         }
       }
     }
@@ -92,21 +114,72 @@ document.addEventListener('snipcart.ready', () => {
     if (target && target.tagName === 'INPUT') {
       const name = target.name || '';
       if (name === 'phone' || name.includes('phone')) {
-        const digits = target.value.replace(/\D/g, '').slice(0, 10);
-        if (target.value !== digits) {
-          target.value = digits;
-          target.dispatchEvent(new Event('input', { bubbles: true }));
+        // DATA HARDENING: Strip everything except digits and '+'
+        let cleanedValue = target.value.replace(/[^\d+]/g, '');
+        
+        // SMART PREFIX: Prepend '+' if a digit is typed and '+' is missing
+        if (cleanedValue.length > 0 && !cleanedValue.startsWith('+')) {
+          cleanedValue = '+' + cleanedValue;
         }
-        if (digits.length < 10) {
-          target.setCustomValidity('Please enter a valid 10-digit mobile number.');
-        } else {
+
+        // SMART DELETE: If only '+' is left, clear the field
+        if (cleanedValue === '+') {
+          cleanedValue = '';
+        }
+
+        if (target.value !== cleanedValue) {
+          target.value = cleanedValue;
+        }
+
+        const countryElement = document.querySelector('select[name="country"], .snipcart-typeahead__input') as HTMLSelectElement;
+        const countryCode = countryElement ? countryElement.value : 'IN';
+        const val = target.value.trim();
+
+        if (!val) {
           target.setCustomValidity(''); 
+          return;
+        }
+
+        try {
+          // Use the library we added to BaseLayout
+          if (typeof (window as any).libphonenumber !== 'undefined') {
+            const phoneNumber = (window as any).libphonenumber.parsePhoneNumberWithError(val, countryCode);
+            if (phoneNumber.isValid()) {
+              target.setCustomValidity('');
+            } else {
+              target.setCustomValidity('Please enter a valid mobile number for early delivery updates.');
+            }
+          } else {
+            // Strict Fallback for India if library is still loading
+            const digits = val.replace(/\D/g, '');
+            if (countryCode === 'IN' || countryCode === 'India') {
+              if (digits.length !== 10) {
+                target.setCustomValidity('Please enter a valid 10-digit mobile number.');
+              } else {
+                target.setCustomValidity('');
+              }
+            } else {
+              target.setCustomValidity('');
+            }
+          }
+        } catch (error: any) {
+          // Handle specific error types for a "Concierge" feel
+          const reason = error.message || '';
+          if (reason.includes('TOO_SHORT')) {
+            target.setCustomValidity('This number is too short. Please check again.');
+          } else if (reason.includes('TOO_LONG')) {
+            target.setCustomValidity('This number is too long. Please check again.');
+          } else if (reason.includes('INVALID_COUNTRY_CODE')) {
+            target.setCustomValidity('Please select the correct country above.');
+          } else {
+            target.setCustomValidity('Please enter a valid mobile number.');
+          }
         }
       }
 
-      if ((name === 'email' || target.type === 'email') && target.value.length > 0) {
+      if ((name === 'email' || target.type === 'email')) {
         const emailVal = target.value.trim().toLowerCase();
-        if (!emailVal.endsWith('@gmail.com')) {
+        if (emailVal.length > 0 && !emailVal.endsWith('@gmail.com')) {
           target.setCustomValidity('Please use a Gmail address (@gmail.com).');
         } else {
           target.setCustomValidity(''); 
@@ -171,4 +244,11 @@ document.addEventListener('snipcart.ready', () => {
   window.Snipcart.store.subscribe(updatePayLaterVisibility);
   const payLaterObserver = new MutationObserver(updatePayLaterVisibility);
   payLaterObserver.observe(document.body, { childList: true, subtree: true });
-});
+}
+
+// Start logic immediately if Snipcart is already loaded, otherwise wait for event
+if ((window as any).Snipcart) {
+  initSnipcartLogic();
+} else {
+  document.addEventListener('snipcart.ready', initSnipcartLogic);
+}

@@ -51,9 +51,10 @@ const {
         version: "3.7.5",
         modalStyle: "overlay",
         addProductBehavior: "none",
-        templatesUrl: "/snipcart-templates.html?v=1.2.8"
+        templatesUrl: "/snipcart-templates.html?v=1.7.1"
       };
     </script>
+    <script src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
   </head>
   <body class="flex flex-col min-h-screen">
     <AnnouncementBar data={announcement_bar} />
@@ -79,6 +80,7 @@ const {
     </div>
 
     <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
+    <script src="../scripts/snipcart-init.ts"></script>
 
     <PopupModal data={popup_modal} />
     <Lightbox />
