@@ -1,6 +1,185 @@
 <div id="snipcart-templates">
+  <!-- 1. Billing Step Shell (The "Boss") -->
+  <!-- Overriding this allows us to control the high-level sequence and force our custom address fields -->
+  <billing>
+    <snipcart-form @submit="save" id="snipcart-billing-form">
+      <div class="snipcart__box">
+        <div class="snipcart__box--header">
+          <div class="snipcart__box--title">
+            <div class="snipcart__box--badge snipcart__box--badge snipcart__box--badge-highlight snipcart__font--bold snipcart__font--secondary">{{ number }}</div>
+            <h1 class="snipcart__font--subtitle">
+              {{ $localize('billing.title') }}
+            </h1>
+          </div>
+        </div>
 
-  <!-- Payment Footer Customization -->
+        <snipcart-form-error></snipcart-form-error>
+
+        <!-- TOP SECTION: Email Only (Name and Phone have been moved into address-fields for sequencing) -->
+        <fieldset class="snipcart-form__set">
+          <div class="snipcart-form__field">
+            <snipcart-label class="snipcart__font--tiny" for="email">
+              {{ $localize('address_form.email' )}}
+            </snipcart-label>
+            <snipcart-input name="email" v-if="!emailIsReadonly"></snipcart-input>
+            <span class="snipcart-input--readonly snipcart__font--secondary snipcart__font--bold" v-else>{{ customer.email }}</span>
+            <snipcart-field-error name="email"></snipcart-field-error>
+          </div>
+        </fieldset>
+
+        <!-- CORE ADDRESS BLOCK: Contains Name, Country, Address, City, State, Postal, Phone -->
+        <address-fields type="billing"></address-fields>
+
+        <hr class="snipcart-form__separator" v-if="hasShippingStep" />
+
+        <!-- Shipping Toggle -->
+        <fieldset class="snipcart-form__set snipcart-form__set--different-shipping" v-if="hasShippingStep">
+          <div class="snipcart-form__field">
+            <div class="snipcart-form__field-checkbox">
+              <snipcart-checkbox name="useDifferentShippingAddress"></snipcart-checkbox>
+              <snipcart-label class="snipcart__font--tiny snipcart-form__label--checkbox" for="useDifferentShippingAddress">
+                {{ $localize('billing.use_different_shipping_address') }}
+              </snipcart-label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="snipcart-form__footer">
+          <snipcart-submit :label="labelSubmit"></snipcart-submit>
+        </div>
+      </div>
+    </snipcart-form>
+  </billing>
+
+  <!-- 2. Address Fields Component (The "Employee") -->
+  <!-- Consolidated Source of Truth for the 8-field sequence -->
+  <address-fields>
+    <div class="snipcart-address-fields">
+      <fieldset class="snipcart-form__set">
+        
+        <!-- 1. NAME (Moved here from Billing) -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
+            <snipcart-input name="name"></snipcart-input>
+            <snipcart-error-message name="name"></snipcart-error-message>
+          </div>
+        </div>
+
+        <!-- 2. COUNTRY -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="country">Country</snipcart-label>
+            <snipcart-typeahead type="dropdown" name="country" autocomplete="country"></snipcart-typeahead>
+            <snipcart-error-message name="country"></snipcart-error-message>
+          </div>
+        </div>
+
+        <!-- 3. ADDRESS LINE 1 -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="address1">Address Line 1</snipcart-label>
+            <snipcart-input name="address1" autocomplete="address-line1"></snipcart-input>
+            <snipcart-error-message name="address1"></snipcart-error-message>
+          </div>
+        </div>
+
+        <!-- 4. ADDRESS LINE 2 -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="address2">Address Line 2 (Optional / Landmark)</snipcart-label>
+            <snipcart-input name="address2" autocomplete="address-line2"></snipcart-input>
+          </div>
+        </div>
+
+        <!-- 5. TOWN / CITY -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="city">Town / City</snipcart-label>
+            <snipcart-input name="city"></snipcart-input>
+            <snipcart-error-message name="city"></snipcart-error-message>
+          </div>
+        </div>
+
+        <!-- 6. STATE / PROVINCE -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="province">State / Union Territory</snipcart-label>
+            <!-- India-Specific State Dropdown with v-model binding -->
+            <div v-if="model && model.country === 'IN'">
+              <snipcart-select name="province" v-model="model.province">
+                <option value="" disabled selected>Select state...</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Puducherry">Puducherry</option>
+              </snipcart-select>
+            </div>
+            <!-- Standard Input for Other Countries -->
+            <div v-else>
+              <snipcart-typeahead type="dropdown" name="province" autocomplete="address-level1"></snipcart-typeahead>
+            </div>
+            <snipcart-error-message name="province"></snipcart-error-message>
+          </div>
+        </div>
+
+        <!-- 7. POSTAL / ZIP CODE -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="postalCode">Postal / Zip Code</snipcart-label>
+            <snipcart-input name="postalCode"></snipcart-input>
+            <snipcart-error-message name="postalCode"></snipcart-error-message>
+          </div>
+        </div>
+
+        <!-- 8. PHONE (Moved here from Billing) -->
+        <div class="snipcart-form__row">
+          <div class="snipcart-form__field snipcart-form__cell--large">
+            <snipcart-label class="snipcart__font--tiny" for="phone">Mobile Number</snipcart-label>
+            <div class="snipcart-input--phone-container" style="display: flex; align-items: center; gap: 8px;">
+               <span v-if="model && model.country === 'IN'" style="font-weight: 600; font-size: 0.8rem; color: #4a5568; background: #edf2f7; padding: 10px 12px; border-radius: 4px; border: 1px solid #e2e8f0; min-width: 45px; text-align: center; cursor: not-allowed; user-select: none;">+91</span>
+               <snipcart-input name="phone" type="tel" :placeholder="model && model.country === 'IN' ? '98xxx xxxxx' : 'Phone number'" autocomplete="tel-national"></snipcart-input>
+            </div>
+            <snipcart-error-message name="phone"></snipcart-error-message>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </address-fields>
+
+  <!-- 3. Payment Footer Customization (Character-for-character from 8fc6465) -->
   <featured-payment-methods>
     <div class="snipcart-featured-payment-methods">
         <h3 class="snipcart__font--secondary snipcart__font--bold  snipcart-featured-payment-methods__title">
@@ -25,4 +204,11 @@
         </ul>
     </div>
   </featured-payment-methods>
+
+  <style>
+    .snipcart-form__set { border-bottom: none !important; margin-bottom: 0 !important; border-top: none !important; padding-top: 0 !important; }
+    .snipcart-featured-payment-methods__list { border-top: none !important; }
+    .snipcart-input--phone-container span { box-shadow: none !important; }
+    .snipcart-typeahead { width: 100% !important; }
+  </style>
 </div>
