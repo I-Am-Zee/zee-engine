@@ -21,20 +21,20 @@
           
           <!-- Google Address Autocomplete -->
           <div class="snipcart-form__field snipcart-search-field">
-            <snipcart-label class="snipcart__font--tiny" for="address-search">Search your address (Google Autocomplete)</snipcart-label>
+            <snipcart-label id="ov-1" class="snipcart__font--tiny" for="address-search">Search your address (Google Autocomplete)</snipcart-label>
             <snipcart-address-autocomplete style="margin-top: -15px !important;"></snipcart-address-autocomplete>
           </div>
           
           <!-- Basic Info -->
           <fieldset class="snipcart-form__set">
             <div class="snipcart-form__field">
-              <snipcart-label class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
+              <snipcart-label id="ov-2" class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
               <snipcart-input name="name" required autocomplete="name"></snipcart-input>
               <snipcart-field-error name="name"></snipcart-field-error>
             </div>
             
             <div class="snipcart-form__field">
-              <snipcart-label class="snipcart__font--tiny" for="email">Email</snipcart-label>
+              <snipcart-label id="ov-3" class="snipcart__font--tiny" for="email">Email</snipcart-label>
               <snipcart-input name="email" required v-if="!emailIsReadonly"></snipcart-input>
               <span class="snipcart-input--readonly snipcart__font--secondary snipcart__font--bold" v-else>{{ customer.email }}</span>
               <snipcart-field-error name="email"></snipcart-field-error>
@@ -51,12 +51,12 @@
               
               <div class="snipcart-form__field-checkbox">
                 <snipcart-checkbox name="useDifferentShippingAddress"></snipcart-checkbox>
-                <snipcart-label class="snipcart__font--tiny snipcart-form__label--checkbox" for="useDifferentShippingAddress">{{ $localize('billing.use_different_shipping_address') }}</snipcart-label>
+                <snipcart-label id="ov-4" class="snipcart__font--tiny snipcart-form__label--checkbox" for="useDifferentShippingAddress">{{ $localize('billing.use_different_shipping_address') }}</snipcart-label>
               </div>
 
               <div class="snipcart-form__field-checkbox">
                 <snipcart-checkbox name="subscribeToNewsletter"></snipcart-checkbox>
-                <snipcart-label for="subscribeToNewsletter" class="snipcart__font--tiny snipcart-form__label--checkbox">Receive exclusive privileges, early access, and curated offers via email</snipcart-label>
+                <snipcart-label id="ov-5" for="subscribeToNewsletter" class="snipcart__font--tiny snipcart-form__label--checkbox">Receive exclusive privileges, early access, and curated offers via email</snipcart-label>
               </div>
 
             </div>
@@ -93,14 +93,14 @@
 
           <!-- Google Address Autocomplete for Shipping -->
           <div class="snipcart-form__field snipcart-search-field">
-            <snipcart-label class="snipcart__font--tiny" for="address-search">Search your address (Google Autocomplete)</snipcart-label>
+            <snipcart-label id="ov-6" class="snipcart__font--tiny" for="address-search">Search your address (Google Autocomplete)</snipcart-label>
             <snipcart-address-autocomplete style="margin-top: -15px !important;"></snipcart-address-autocomplete>
           </div>
 
           <!-- Full Name for Shipping -->
           <fieldset class="snipcart-form__set">
             <div class="snipcart-form__field">
-              <snipcart-label class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
+              <snipcart-label id="ov-7" class="snipcart__font--tiny" for="name">Full Name</snipcart-label>
               <snipcart-input name="name" required autocomplete="name"></snipcart-input>
               <snipcart-field-error name="name"></snipcart-field-error>
             </div>
@@ -128,7 +128,7 @@
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="country">Country</snipcart-label>
+            <snipcart-label id="ov-8" class="snipcart__font--tiny" for="country">Country</snipcart-label>
             <snipcart-typeahead type="dropdown" name="country" required autocomplete="country"></snipcart-typeahead>
             <snipcart-field-error name="country"></snipcart-field-error>
           </div>
@@ -136,7 +136,7 @@
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="address1">Address Line 1 (Please enter the exact address)</snipcart-label>
+            <snipcart-label id="ov-9" class="snipcart__font--tiny" for="address1">Address Line 1 (Please enter the exact address)</snipcart-label>
             <snipcart-input name="address1" required autocomplete="address-line1"></snipcart-input>
             <snipcart-field-error name="address1"></snipcart-field-error>
           </div>
@@ -144,14 +144,14 @@
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="address2">Address Line 2 (Optional)</snipcart-label>
+            <snipcart-label id="ov-10" class="snipcart__font--tiny" for="address2">Address Line 2 (Optional)</snipcart-label>
             <snipcart-input name="address2" autocomplete="address-line2" placeholder="Any Landmark, add here."></snipcart-input>
           </div>
         </div>
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="city">Town / City</snipcart-label>
+            <snipcart-label id="ov-11" class="snipcart__font--tiny" for="city">Town / City</snipcart-label>
             <snipcart-input name="city" required autocomplete="address-level2"></snipcart-input>
             <snipcart-field-error name="city"></snipcart-field-error>
           </div>
@@ -159,7 +159,7 @@
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="province">State / Province</snipcart-label>
+            <snipcart-label id="ov-12" class="snipcart__font--tiny" for="province">State / Province</snipcart-label>
             <snipcart-input name="province" required autocomplete="address-level1"></snipcart-input>
             <snipcart-field-error name="province"></snipcart-field-error>
           </div>
@@ -167,7 +167,7 @@
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="postalCode">Postal / Zip Code</snipcart-label>
+            <snipcart-label id="ov-13" class="snipcart__font--tiny" for="postalCode">Postal / Zip Code</snipcart-label>
             <snipcart-input name="postalCode" required autocomplete="postal-code"></snipcart-input>
             <snipcart-field-error name="postalCode"></snipcart-field-error>
           </div>
@@ -175,7 +175,7 @@
         
         <div class="snipcart-form__row">
           <div class="snipcart-form__field snipcart-form__cell--large">
-            <snipcart-label class="snipcart__font--tiny" for="phone">Phone Number</snipcart-label>
+            <snipcart-label id="ov-14" class="snipcart__font--tiny" for="phone">Phone Number</snipcart-label>
             <snipcart-input name="phone" required type="tel" autocomplete="tel" placeholder="Enter mobile number"></snipcart-input>
             <snipcart-field-error name="phone"></snipcart-field-error>
           </div>

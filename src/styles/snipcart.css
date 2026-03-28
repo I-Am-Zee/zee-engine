@@ -40,3 +40,24 @@ body.zav-guest-user .snipcart-discount-box::after {
   margin-bottom: 10px !important;
   line-height: 1.5 !important;
 }
+
+
+.snipcart-cart-header__option {
+  min-width: 80px !important;
+}
+
+
+:is(#ov-1, #ov-2, #ov-3, #ov-4, #ov-5, #ov-6, #ov-7, #ov-8, #ov-9, #ov-10, #ov-11, #ov-12, #ov-13, #ov-14).snipcart__font--tiny {
+  text-wrap: wrap !important;
+  line-height: 1.5 !important;
+}
+
+/* THE ANTI-SQUASH RULE: Targeted only at the Newsletter Box (#ov-5) */
+:is(#ov-4, #ov-5).snipcart-form__label--checkbox::before {
+    min-width: 20px !important;
+    flex-shrink: 0 !important; /* Forces it to stay a square */
+}
+
+.snipcart-checkbox+label {
+  align-items: stretch !important;
+}
