@@ -62,6 +62,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
   <div x-data={`{ 
     showStickyCart: false,
     error: '',
+    errorTimer: null,
     validateAdd(e) {
       const btn = e.currentTarget;
       for(let i=1; i<=3; i++) {
@@ -72,7 +73,12 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             this.error = 'Please select a ' + customName + ' to add to cart.';
             e.preventDefault();
             e.stopImmediatePropagation();
-            if (window.innerWidth < 1024) window.scrollTo({ top: document.querySelector('.product-actions-row').offsetTop - 100, behavior: 'smooth' });
+            
+            // Final 3: Self-destruct timer (matches SideDrawer)
+            if(this.errorTimer) clearTimeout(this.errorTimer);
+            this.errorTimer = setTimeout(() => this.error = '', 4000);
+
+            if (window.innerWidth < 1024) window.scrollTo({ top: document.querySelector('.product-actions-row').offsetTop - 150, behavior: 'smooth' });
             return;
           } else if(sel && sel.value) {
             btn.dataset['itemCustom' + i + 'Value'] = sel.value;
@@ -80,8 +86,12 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         }
       }
       this.error = '';
+      if(this.errorTimer) clearTimeout(this.errorTimer);
     }
-  }`} @scroll.window="showStickyCart = window.scrollY > 500 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800">
+  }`} 
+  @scroll.window="showStickyCart = window.scrollY > 500 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
+  @change="if($event.target.closest('fieldset')) { error = ''; if(errorTimer) clearTimeout(errorTimer); }"
+  >
     <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
       {/* Breadcrumbs */}
       <div class="mt-4 mb-8">
@@ -210,10 +220,13 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             )
           }
 
-          <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6 relative">
-            <div x-show="error" x-transition x-cloak class="absolute -top-14 left-0 right-0 bg-accent-coral/10 border border-accent-coral/20 text-accent-coral px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-sm">
+          <template x-if="error">
+            <div x-show="error" x-transition x-cloak class="mt-6 bg-accent-coral/10 border border-accent-coral/20 text-accent-coral px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-sm">
               <span x-text="error"></span>
             </div>
+          </template>
+
+          <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
             {/* Add to Cart Button - Snipcart */}
             <AddToCartButton
               product={product}

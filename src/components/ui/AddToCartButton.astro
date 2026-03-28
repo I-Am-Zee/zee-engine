@@ -32,6 +32,7 @@ const {
   showIcon = true,
   class: className,
   disabled = false,
+  ...rest
 } = Astro.props;
 
 // Build standardized Snipcart attributes using SSOT logic
@@ -45,6 +46,7 @@ const snipcartAttributes = getSnipcartHTMLAttrs(product);
   class:list={["snipcart-add-item", className]}
   disabled={disabled}
   {...snipcartAttributes}
+  {...rest}
 >
   {showIcon && <Icon name="PhShoppingCart" size={size === "sm" ? 16 : size === "lg" ? 20 : 18} />}
   <Text variant="label" color="inherit">
