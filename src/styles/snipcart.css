@@ -41,12 +41,20 @@ body.zav-guest-user .snipcart-discount-box::after {
   line-height: 1.5 !important;
 }
 
-
 .snipcart-cart-header__option {
   min-width: 80px !important;
 }
 
+/* 
+   MASTER SPECIFICITY OVERRIDES:
+   Targeting Snipcart components with a combination of high-specificity IDs 
+   and classes to ensure styles persist through Snipcart's dynamic re-rendering.
+   
+   Using :is() for clean grouping of unique IDs (ov-1 to ov-14).
+   Math: #id.class = (1, 1, 0) Specificity — Superior to Snipcart's default theme.
 
+   --------- from here ---------
+*/
 :is(#ov-1, #ov-2, #ov-3, #ov-4, #ov-5, #ov-6, #ov-7, #ov-8, #ov-9, #ov-10, #ov-11, #ov-12, #ov-13, #ov-14).snipcart__font--tiny {
   text-wrap: wrap !important;
   line-height: 1.5 !important;
@@ -61,3 +69,5 @@ body.zav-guest-user .snipcart-discount-box::after {
 .snipcart-checkbox+label {
   align-items: stretch !important;
 }
+
+/* --------- till here -------- */
