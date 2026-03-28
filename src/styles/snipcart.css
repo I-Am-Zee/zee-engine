@@ -71,3 +71,212 @@ body.zav-guest-user .snipcart-discount-box::after {
 }
 
 /* --------- till here -------- */
+
+/* ── Legacy shadow/bg block removed — superseded by ZELIA VANCE BRAND RECOLORING below ── */
+
+
+/* ================================================================
+   ZELIA VANCE BRAND RECOLORING
+   Converts Snipcart's generic blue palette to the Zelia Vance
+   Royal Conservatory palette. Inspired by razorpay.astro design
+   language: sharp, conversion-focused, luxury fintech.
+
+   Palette:
+     Midnight Jungle  #052b22  — primary authority
+     Lighter Silk     #fefcfa  — elevated surface
+     Luminous Silk    #f9f5f0  — page background
+     Muted Silk       #f3ede6  — inactive / muted areas
+     Warm Sand        #e8ddd3  — borders
+     Polished Brass   #bfa05f  — accent, focus, links
+     Warm Gray        #6b5e54  — secondary text
+     Spiced Coral     #e65142  — errors / urgency
+     Jungle Emerald   #15803d  — success
+   ================================================================ */
+
+/* ── 1. Global Token Overrides ── */
+#snipcart {
+  /* Typography: replace Open Sans with Plus Jakarta Sans */
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif !important;
+
+  /* ── Color: Text ── */
+  --color-default:              #052b22; /* Midnight Jungle  → body text */
+  --color-alt:                  #6b5e54; /* Warm Gray        → muted/secondary */
+  --color-link:                 #bfa05f; /* Polished Brass   → hyperlinks */
+  --color-icon:                 #bfa05f; /* Polished Brass   → icon fills */
+  --color-input:                #052b22; /* Midnight Jungle  → input text */
+  --color-inputLabel:           #052b22; /* Midnight Jungle  → form labels */
+  --color-inputPlaceholder:     #6b5e54; /* Warm Gray        → placeholder */
+  --color-inputIcon:            #6b5e54; /* Warm Gray        → inner icons */
+  --color-inputIcon-hover:      #052b22; /* Midnight Jungle  → icon on hover */
+  --color-inputIcon-focus:      #bfa05f; /* Polished Brass   → icon on focus */
+  --color-error:                #e65142; /* Spiced Coral     → errors */
+  --color-success:              #15803d; /* Jungle Emerald   → success */
+
+  /* ── Color: Badges (step indicators 1, 2, 3) ── */
+  --color-badge:                #052b22; /* Midnight Jungle  → badge number */
+  --color-badge-active:         #fefcfa; /* Lighter Silk     → active badge text */
+  --color-badge-disabled:       #6b5e54; /* Warm Gray        → inactive badge text */
+
+  /* ── Color: Checkboxes ── */
+  --color-input-checked:        #fefcfa; /* Lighter Silk     → checkmark tick */
+
+  /* ── Color: Primary Button ── */
+  --color-buttonPrimary:        #fefcfa; /* Lighter Silk     → button text */
+  --color-buttonPrimary-hover:  #052b22; /* Midnight Jungle  → inverted hover text */
+  --color-buttonPrimary-focus:  #fefcfa;
+  --color-buttonPrimary-active: #fefcfa;
+
+  /* ── Background: Surfaces ── */
+  --bgColor-default:            #fefcfa; /* Lighter Silk     → cards / forms */
+  --bgColor-alt:                #f3ede6; /* Muted Silk       → inactive sections */
+  --bgColor-modal:              #f9f5f0; /* Luminous Silk    → overall modal bg */
+
+  /* ── Background: Inputs ── */
+  --bgColor-input:              #fefcfa; /* Lighter Silk     → input fields */
+  --bgColor-input-hover:        #fefcfa;
+  --bgColor-input-focus:        #fefcfa;
+  --bgColor-input-autofill:     #f3ede6; /* Muted Silk       → autofill wash */
+
+  /* ── Background: Checkboxes ── */
+  --bgColor-input-checked:      #052b22; /* Midnight Jungle  → checked fill */
+
+  /* ── Background: Step Badges ── */
+  --bgColor-badge:              #fefcfa;
+  --bgColor-badge-active:       #e8ddd3; /* Warm Sand        → active badge bg */
+  --bgColor-badge-disabled:     #f3ede6; /* Muted Silk       → inactive badge bg */
+
+  /* ── Background: Primary Button ── */
+  --bgColor-buttonPrimary:          #052b22;    /* Midnight Jungle  → CTA fill */
+  --bgColor-buttonPrimary-hover:    transparent; /* Inverted hover — razorpay.astro trick */
+  --bgColor-buttonPrimary-focus:    #052b22;
+  --bgColor-buttonPrimary-active:   #052b22;
+  --bgColor-buttonPrimary-disabled: #6b5e54;
+
+  /* ── Background: States ── */
+  --bgColor-error:              rgba(230, 81, 66, 0.05);
+  --bgColor-success:            rgba(21, 128, 61, 0.05);
+
+  /* ── Borders ── */
+  --borderColor-default:        #e8ddd3; /* Warm Sand        → all borders */
+  --borderColor-input:          #e8ddd3; /* Warm Sand        → input border */
+  --borderColor-input-hover:    #bfa05f; /* Polished Brass   → hover */
+  --borderColor-input-focus:    #bfa05f; /* Polished Brass   → focus */
+  --borderColor-input-checked:  #052b22; /* Midnight Jungle  → checked */
+  --borderColor-input-error:    #e65142; /* Spiced Coral     → error */
+  --borderColor-link:           #bfa05f; /* Polished Brass   → link underline */
+
+  /* Button border required for inverted hover to show card shape */
+  --borderColor-buttonPrimary:          #052b22;
+  --borderColor-buttonPrimary-hover:    #052b22;
+  --borderColor-buttonPrimary-focus:    #052b22;
+  --borderColor-buttonPrimary-active:   #052b22;
+  --borderColor-buttonPrimary-disabled: transparent;
+
+  /* ── Shadows ── */
+  /* Jungle-tinted airy lift — replaces heavy generic black */
+  --shadow-default: 0 4px 12px rgba(5, 43, 34, 0.06), 0 1px 3px rgba(5, 43, 34, 0.04);
+
+  /* Polished Brass glow on input focus — matches razorpay.astro */
+  --shadow-input-focus: 0 0 0 3px rgba(191, 160, 95, 0.22);
+
+  /* CTA button: clean flat inversion on hover, no shadow */
+  --shadow-buttonPrimary-hover: none;
+  --shadow-buttonPrimary-active: none;
+
+  /* Brass focus ring on CTA */
+  --shadow-buttonPrimary-focus: 0 0 0 3px rgba(191, 160, 95, 0.4);
+
+  /* Tooltip */
+  --shadow-tooltip: 0 4px 16px rgba(5, 43, 34, 0.1);
+}
+
+/* ── 2. Fraunces for checkout step headings (like razorpay.astro .card-title) ── */
+#snipcart .snipcart__font--subtitle,
+#snipcart .snipcart__font--subtitle-small {
+  font-family: "Fraunces", ui-serif, Georgia, Cambria, serif !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* ── 3. Primary CTA: Inverted hover — razorpay.astro .pay-button pattern ── */
+#snipcart .snipcart-button-primary:hover:not(:disabled):not(.is-loading) {
+  background-color: transparent !important;
+  color: #052b22 !important;
+  border: 1px solid #052b22 !important;
+  box-shadow: none !important;
+}
+
+/* ── 4. Primary CTA: Polished Brass focus ring ── */
+#snipcart .snipcart-button-primary:focus-visible {
+  box-shadow:
+    0 0 0 2px #f9f5f0,
+    0 0 0 4px #bfa05f,
+    0 0 12px rgba(191, 160, 95, 0.28) !important;
+}
+
+/* ── 5. Error: left-border style from razorpay.astro .error-box ── */
+#snipcart .snipcart-flash-message--error {
+  border: none !important;
+  border-left: 3px solid #e65142 !important;
+  background-color: rgba(230, 81, 66, 0.04) !important;
+  border-radius: 2px !important;
+}
+
+/* ── 6. Links: Polished Brass everywhere ── */
+#snipcart .snipcart__actions--link,
+#snipcart .snipcart-button-link {
+  color: #bfa05f !important;
+  border-color: #bfa05f !important;
+}
+#snipcart .snipcart__actions--link:hover,
+#snipcart .snipcart-button-link:hover {
+  color: #052b22 !important;
+  border-color: #052b22 !important;
+}
+
+/* ── 7. Cart header close / icons: Polished Brass ── */
+#snipcart .snipcart-cart-header .snipcart-modal__close-icon,
+#snipcart .snipcart-cart-header__icon {
+  color: #bfa05f !important;
+}
+
+/* ── 8. Step badges: authority for active, muted for inactive ── */
+#snipcart .snipcart__box--badge-highlight {
+  color: #fefcfa !important;
+  background-color: #052b22 !important;
+  border-color: transparent !important;
+}
+#snipcart .snipcart__box--badge-disabled {
+  color: #6b5e54 !important;
+  background-color: #f3ede6 !important;
+  border-color: #e8ddd3 !important;
+}
+
+
+/* ── 9. Secondary buttons (+/- quantity, back links) → Warm Sand palette ── */
+#snipcart {
+  --color-buttonSecondary:        #052b22; /* Midnight Jungle text */
+  --color-buttonSecondary-hover:  #052b22;
+  --color-buttonSecondary-focus:  #052b22;
+  --color-buttonSecondary-active: #052b22;
+  --bgColor-buttonSecondary:          #f3ede6; /* Muted Silk fill */
+  --bgColor-buttonSecondary-hover:    #e8ddd3; /* Warm Sand on hover */
+  --bgColor-buttonSecondary-focus:    #f3ede6;
+  --bgColor-buttonSecondary-active:   #e8ddd3;
+  --bgColor-buttonSecondary-disabled: #f3ede6;
+  --borderColor-buttonSecondary:          transparent;
+  --borderColor-buttonSecondary-hover:    transparent;
+  --borderColor-buttonSecondary-focus:    transparent;
+  --borderColor-buttonSecondary-active:   transparent;
+  --shadow-buttonSecondary-hover: none;
+  --shadow-buttonSecondary-focus: 0 0 0 3px rgba(191, 160, 95, 0.35);
+
+  /* ── Danger buttons (delete item trash icon) → Coral tones ── */
+  --color-buttonDanger:        #e65142; /* Spiced Coral text */
+  --color-buttonDanger-hover:  #e65142;
+  --bgColor-buttonDanger:          rgba(230, 81, 66, 0.06);
+  --bgColor-buttonDanger-hover:    rgba(230, 81, 66, 0.12);
+  --borderColor-buttonDanger:          transparent;
+  --borderColor-buttonDanger-hover:    transparent;
+}
+
+
