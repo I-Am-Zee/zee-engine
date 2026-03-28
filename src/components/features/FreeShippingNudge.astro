@@ -1,12 +1,12 @@
 ---
 /**
  * FreeShippingNudge - Conversion Optimizer
- * 
+ *
  * Displays progress bar and message encouraging customers
  * to add more items to qualify for free shipping.
- * 
+ *
  * Business Impact: Drives cart value to hit free shipping threshold
- * 
+ *
  * @component Feature (features/)
  */
 
@@ -18,107 +18,169 @@ interface Props {
 const { threshold = 10000, class: className } = Astro.props;
 ---
 
-<div 
+<div
   x-data={`{
     cartTotal: 0,
     threshold: ${threshold},
-    
+
     get amountNeeded() {
       return Math.max(0, this.threshold - this.cartTotal);
     },
-    
+
     get progressPercent() {
       return Math.min(100, (this.cartTotal / this.threshold) * 100);
     },
-    
+
     get isQualified() {
       return this.cartTotal >= this.threshold;
     },
-    
+
     updateCartTotal() {
       if (typeof Snipcart === 'undefined') return;
-      
       const state = Snipcart.store.getState();
       this.cartTotal = state.cart.total || 0;
     },
-    
+
     init() {
-      // Update on Snipcart ready
       if (typeof Snipcart !== 'undefined') {
-        Snipcart.events.on('snipcart.ready', () => {
-          this.updateCartTotal();
-        });
-        
-        // Update on cart change
-        Snipcart.events.on('item.added', () => this.updateCartTotal());
-        Snipcart.events.on('item.removed', () => this.updateCartTotal());
+        Snipcart.events.on('snipcart.ready', () => { this.updateCartTotal(); });
+        Snipcart.events.on('item.added',     () => this.updateCartTotal());
+        Snipcart.events.on('item.removed',   () => this.updateCartTotal());
         Snipcart.events.on('cart.confirmed', () => this.updateCartTotal());
       }
     }
   }`}
   x-init="init()"
-  class:list={["free-shipping-nudge p-4 bg-gradient-to-r from-green-50 to-blue-50 border-l-4", className]}
-  :class="isQualified ? 'border-green-500' : 'border-blue-500'"
+  class:list={["free-shipping-nudge", className]}
 >
-  <!-- Qualified Message (Dopamine Hit) -->
-  <div x-show="isQualified" class="flex items-center gap-3">
-    <svg class="w-6 h-6 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+
+  <!-- Qualified: Dopamine hit — success state -->
+  <div x-show="isQualified" class="qualified-state">
+    <svg class="nudge-icon nudge-icon--success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
     </svg>
-    <div class="flex-1">
-      <p class="font-semibold text-green-800 text-sm">
-        🎉 You qualified for FREE SHIPPING!
-      </p>
-      <p class="text-xs text-green-700 mt-0.5">
-        Your order ships at no extra cost
-      </p>
+    <div class="nudge-text">
+      <p class="nudge-title">🎉 Free shipping unlocked!</p>
+      <p class="nudge-subtitle">Your order ships at no extra cost</p>
     </div>
   </div>
 
-  <!-- Progress Message (Motivation) -->
-  <div x-show="!isQualified">
-    <div class="flex items-center justify-between mb-2">
-      <p class="text-sm font-medium text-gray-700">
-        <span class="font-bold text-blue-600" x-text="`₹${amountNeeded.toLocaleString('en-IN')}`"></span>
-        away from FREE SHIPPING
+  <!-- Progress: Motivation state -->
+  <div x-show="!isQualified" class="progress-state">
+    <div class="progress-header">
+      <p class="progress-label">
+        <span class="progress-amount" x-text="`₹${amountNeeded.toLocaleString('en-IN')}`"></span>
+        away from free shipping
       </p>
-      <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+      <svg class="nudge-icon nudge-icon--shipping" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
       </svg>
     </div>
 
     <!-- Progress Bar -->
-    <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-      <div 
-        class="bg-gradient-to-r from-blue-500 to-green-500 h-2.5 rounded-full transition-all duration-500 ease-out"
-        :style="`width: ${progressPercent}%`"
-      ></div>
+    <div class="progress-track" role="progressbar" :aria-valuenow="progressPercent" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-fill" :style="`width: ${progressPercent}%`"></div>
     </div>
 
-    <p class="text-xs text-gray-500 mt-1.5">
+    <p class="progress-threshold">
       Free shipping on orders above ₹<span x-text="threshold.toLocaleString('en-IN')"></span>
     </p>
   </div>
+
 </div>
 
 <style>
+  /* ── Container ── */
   .free-shipping-nudge {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.25rem;
+    background-color: var(--color-surface, #fefcfa);
+    border-left: 3px solid var(--color-accent-brass, #bfa05f);
+    border-radius: 2px;
+    animation: nudgeIn 0.3s ease-out;
   }
 
-  /* Smooth entrance animation */
-  .free-shipping-nudge {
-    animation: slideIn 0.3s ease-out;
+  @keyframes nudgeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* ── Qualified state ── */
+  .qualified-state {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* ── Progress state ── */
+  .progress-state {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* ── Icons ── */
+  .nudge-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+  }
+  .nudge-icon--success  { color: var(--color-accent-emerald, #15803d); width: 1.5rem; height: 1.5rem; }
+  .nudge-icon--shipping { color: var(--color-accent-brass, #bfa05f); }
+
+  /* ── Text ── */
+  .nudge-text { flex: 1; }
+
+  .nudge-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-main, #052b22);
+    margin: 0;
+  }
+
+  .nudge-subtitle {
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #6b5e54);
+    margin: 0.125rem 0 0;
+  }
+
+  .progress-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted, #6b5e54);
+    margin: 0;
+  }
+
+  .progress-amount {
+    font-weight: 700;
+    color: var(--color-accent-brass, #bfa05f);
+  }
+
+  .progress-threshold {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted, #6b5e54);
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Progress bar ── */
+  .progress-track {
+    width: 100%;
+    height: 4px;
+    background-color: var(--color-border-subtle, #e8ddd3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary, #052b22) 0%, var(--color-accent-brass, #bfa05f) 100%);
+    border-radius: 2px;
+    transition: width 0.5s ease-out;
   }
 </style>

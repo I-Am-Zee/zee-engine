@@ -1,85 +1,19 @@
-/* --- Snipcart Branding & UI Overrides --- */
+/* ═══════════════════════════════════════════════════════════════
+   SNIPCART UI OVERRIDES — Zelia Vance
 
-/* Guest State: No Login = No Discount */
-body.zav-guest-user .snipcart-discount-box__form {
-  display: none !important;
-}
-
-body.zav-guest-user .snipcart-discount-box::after {
-  content: "🔒 Sign in with Gmail to unlock discount codes.\A 🚚 Cash on Delivery is available for signed-in users.";
-  display: block;
-  padding: 1.25rem;
-  font-size: 0.875rem;
-  line-height: 1.8;
-  color: #4a5568;
-  text-align: center;
-  background: #f7fafc;
-  border-radius: 4px;
-  margin-top: 0.5rem;
-  border: 1px dashed #cbd5e0;
-  white-space: pre-line;
-}
-
-/* Mobile Cart Summary: Product Image Fix (Viewport < 1022px) */
-/* Targets the figure element containing the small thumbnail */
-.snipcart-item-line__media.snipcart-item-line__media--small {
-  min-width: 25px !important;
-  margin-right: 4px !important;
-}
-
-/* Ensure the image itself fills the space correctly without distortion */
-.snipcart-item-line__media--small .snipcart-item-line__image {
-  width: 100% !important;
-  height: auto !important;
-  display: block;
-}
-
-/* Ensuring the text "Shipping and taxes will be calculated after
-   an address is provided." looks fine and not cluttered in the order summary */
-.snipcart-summary-fees__notice.snipcart__font--regular {
-  margin-bottom: 10px !important;
-  line-height: 1.5 !important;
-}
-
-.snipcart-cart-header__option {
-  min-width: 80px !important;
-}
-
-/* 
-   MASTER SPECIFICITY OVERRIDES:
-   Targeting Snipcart components with a combination of high-specificity IDs 
-   and classes to ensure styles persist through Snipcart's dynamic re-rendering.
-   
-   Using :is() for clean grouping of unique IDs (ov-1 to ov-14).
-   Math: #id.class = (1, 1, 0) Specificity — Superior to Snipcart's default theme.
-
-   --------- from here ---------
-*/
-:is(#ov-1, #ov-2, #ov-3, #ov-4, #ov-5, #ov-6, #ov-7, #ov-8, #ov-9, #ov-10, #ov-11, #ov-12, #ov-13, #ov-14).snipcart__font--tiny {
-  text-wrap: wrap !important;
-  line-height: 1.5 !important;
-}
-
-/* THE ANTI-SQUASH RULE: Targeted only at the Newsletter Box (#ov-5) */
-:is(#ov-4, #ov-5).snipcart-form__label--checkbox::before {
-    min-width: 20px !important;
-    flex-shrink: 0 !important; /* Forces it to stay a square */
-}
-
-.snipcart-checkbox+label {
-  align-items: stretch !important;
-}
-
-/* --------- till here -------- */
-
-/* ── Legacy shadow/bg block removed — superseded by ZELIA VANCE BRAND RECOLORING below ── */
+   Structure:
+     § 1. THEME       — CSS variable palette (brand tokens)
+     § 2. TYPOGRAPHY  — Font family overrides
+     § 3. COMPONENTS  — Direct selector behavioral overrides
+     § 4. STRUCTURE   — Layout + anti-squash specificity fixes
+     § 5. BUSINESS    — Guest state, conditional display
+   ═══════════════════════════════════════════════════════════════ */
 
 
-/* ================================================================
-   ZELIA VANCE BRAND RECOLORING
-   Converts Snipcart's generic blue palette to the Zelia Vance
-   Royal Conservatory palette. Inspired by razorpay.astro design
-   language: sharp, conversion-focused, luxury fintech.
+/* ──────────────────────────────────────────────────────────────
+   § 1. THEME — Zelia Vance Royal Conservatory Palette
+   All Snipcart CSS variables overridden to match brand identity.
+   Inspired by razorpay.astro: sharp, conversion-focused, luxury.
 
    Palette:
      Midnight Jungle  #052b22  — primary authority
@@ -91,14 +25,13 @@ body.zav-guest-user .snipcart-discount-box::after {
      Warm Gray        #6b5e54  — secondary text
      Spiced Coral     #e65142  — errors / urgency
      Jungle Emerald   #15803d  — success
-   ================================================================ */
+   ────────────────────────────────────────────────────────────── */
 
-/* ── 1. Global Token Overrides ── */
 #snipcart {
-  /* Typography: replace Open Sans with Plus Jakarta Sans */
+  /* ── Typography ── */
   font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif !important;
 
-  /* ── Color: Text ── */
+  /* ── Colors: Text ── */
   --color-default:              #052b22; /* Midnight Jungle  → body text */
   --color-alt:                  #6b5e54; /* Warm Gray        → muted/secondary */
   --color-link:                 #bfa05f; /* Polished Brass   → hyperlinks */
@@ -112,47 +45,68 @@ body.zav-guest-user .snipcart-discount-box::after {
   --color-error:                #e65142; /* Spiced Coral     → errors */
   --color-success:              #15803d; /* Jungle Emerald   → success */
 
-  /* ── Color: Badges (step indicators 1, 2, 3) ── */
+  /* ── Colors: Badges (step indicators 1, 2, 3) ── */
   --color-badge:                #052b22; /* Midnight Jungle  → badge number */
   --color-badge-active:         #fefcfa; /* Lighter Silk     → active badge text */
   --color-badge-disabled:       #6b5e54; /* Warm Gray        → inactive badge text */
 
-  /* ── Color: Checkboxes ── */
+  /* ── Colors: Checkboxes ── */
   --color-input-checked:        #fefcfa; /* Lighter Silk     → checkmark tick */
 
-  /* ── Color: Primary Button ── */
+  /* ── Colors: Primary Button ── */
   --color-buttonPrimary:        #fefcfa; /* Lighter Silk     → button text */
   --color-buttonPrimary-hover:  #052b22; /* Midnight Jungle  → inverted hover text */
   --color-buttonPrimary-focus:  #fefcfa;
   --color-buttonPrimary-active: #fefcfa;
 
-  /* ── Background: Surfaces ── */
+  /* ── Colors: Secondary Button (+/- quantity) ── */
+  --color-buttonSecondary:        #052b22;
+  --color-buttonSecondary-hover:  #052b22;
+  --color-buttonSecondary-focus:  #052b22;
+  --color-buttonSecondary-active: #052b22;
+
+  /* ── Colors: Danger Button (trash/delete) ── */
+  --color-buttonDanger:        #e65142; /* Spiced Coral */
+  --color-buttonDanger-hover:  #e65142;
+
+  /* ── Backgrounds: Surfaces ── */
   --bgColor-default:            #fefcfa; /* Lighter Silk     → cards / forms */
   --bgColor-alt:                #f3ede6; /* Muted Silk       → inactive sections */
   --bgColor-modal:              #f9f5f0; /* Luminous Silk    → overall modal bg */
 
-  /* ── Background: Inputs ── */
-  --bgColor-input:              #fefcfa; /* Lighter Silk     → input fields */
+  /* ── Backgrounds: Inputs ── */
+  --bgColor-input:              #fefcfa;
   --bgColor-input-hover:        #fefcfa;
   --bgColor-input-focus:        #fefcfa;
-  --bgColor-input-autofill:     #f3ede6; /* Muted Silk       → autofill wash */
+  --bgColor-input-autofill:     #f3ede6; /* Muted Silk → autofill wash */
 
-  /* ── Background: Checkboxes ── */
+  /* ── Backgrounds: Checkboxes ── */
   --bgColor-input-checked:      #052b22; /* Midnight Jungle  → checked fill */
 
-  /* ── Background: Step Badges ── */
+  /* ── Backgrounds: Step Badges ── */
   --bgColor-badge:              #fefcfa;
   --bgColor-badge-active:       #e8ddd3; /* Warm Sand        → active badge bg */
   --bgColor-badge-disabled:     #f3ede6; /* Muted Silk       → inactive badge bg */
 
-  /* ── Background: Primary Button ── */
-  --bgColor-buttonPrimary:          #052b22;    /* Midnight Jungle  → CTA fill */
-  --bgColor-buttonPrimary-hover:    transparent; /* Inverted hover — razorpay.astro trick */
+  /* ── Backgrounds: Primary Button ── */
+  --bgColor-buttonPrimary:          #052b22;    /* Midnight Jungle → CTA fill */
+  --bgColor-buttonPrimary-hover:    transparent; /* Inverted hover — razorpay.astro pattern */
   --bgColor-buttonPrimary-focus:    #052b22;
   --bgColor-buttonPrimary-active:   #052b22;
   --bgColor-buttonPrimary-disabled: #6b5e54;
 
-  /* ── Background: States ── */
+  /* ── Backgrounds: Secondary Button ── */
+  --bgColor-buttonSecondary:          #f3ede6; /* Muted Silk */
+  --bgColor-buttonSecondary-hover:    #e8ddd3; /* Warm Sand on hover */
+  --bgColor-buttonSecondary-focus:    #f3ede6;
+  --bgColor-buttonSecondary-active:   #e8ddd3;
+  --bgColor-buttonSecondary-disabled: #f3ede6;
+
+  /* ── Backgrounds: Danger Button ── */
+  --bgColor-buttonDanger:          rgba(230, 81, 66, 0.06);
+  --bgColor-buttonDanger-hover:    rgba(230, 81, 66, 0.12);
+
+  /* ── Backgrounds: States ── */
   --bgColor-error:              rgba(230, 81, 66, 0.05);
   --bgColor-success:            rgba(21, 128, 61, 0.05);
 
@@ -165,39 +119,57 @@ body.zav-guest-user .snipcart-discount-box::after {
   --borderColor-input-error:    #e65142; /* Spiced Coral     → error */
   --borderColor-link:           #bfa05f; /* Polished Brass   → link underline */
 
-  /* Button border required for inverted hover to show card shape */
+  /* Primary button border — enables inverted hover shape */
   --borderColor-buttonPrimary:          #052b22;
   --borderColor-buttonPrimary-hover:    #052b22;
   --borderColor-buttonPrimary-focus:    #052b22;
   --borderColor-buttonPrimary-active:   #052b22;
   --borderColor-buttonPrimary-disabled: transparent;
 
+  /* Secondary button border */
+  --borderColor-buttonSecondary:          transparent;
+  --borderColor-buttonSecondary-hover:    transparent;
+  --borderColor-buttonSecondary-focus:    transparent;
+  --borderColor-buttonSecondary-active:   transparent;
+
+  /* Danger button border */
+  --borderColor-buttonDanger:          transparent;
+  --borderColor-buttonDanger-hover:    transparent;
+
   /* ── Shadows ── */
-  /* Jungle-tinted airy lift — replaces heavy generic black */
-  --shadow-default: 0 4px 12px rgba(5, 43, 34, 0.06), 0 1px 3px rgba(5, 43, 34, 0.04);
-
-  /* Polished Brass glow on input focus — matches razorpay.astro */
-  --shadow-input-focus: 0 0 0 3px rgba(191, 160, 95, 0.22);
-
-  /* CTA button: clean flat inversion on hover, no shadow */
-  --shadow-buttonPrimary-hover: none;
+  /* Jungle-tinted airy lift — no more heavy generic black */
+  --shadow-default:              0 4px 12px rgba(5, 43, 34, 0.06), 0 1px 3px rgba(5, 43, 34, 0.04);
+  /* Polished Brass glow on input focus */
+  --shadow-input-focus:          0 0 0 3px rgba(191, 160, 95, 0.22);
+  /* CTA: clean flat inversion, no shadow theatre */
+  --shadow-buttonPrimary-hover:  none;
   --shadow-buttonPrimary-active: none;
-
-  /* Brass focus ring on CTA */
-  --shadow-buttonPrimary-focus: 0 0 0 3px rgba(191, 160, 95, 0.4);
-
+  --shadow-buttonPrimary-focus:  0 0 0 3px rgba(191, 160, 95, 0.4);
+  /* Secondary */
+  --shadow-buttonSecondary-hover: none;
+  --shadow-buttonSecondary-focus: 0 0 0 3px rgba(191, 160, 95, 0.35);
   /* Tooltip */
-  --shadow-tooltip: 0 4px 16px rgba(5, 43, 34, 0.1);
+  --shadow-tooltip:              0 4px 16px rgba(5, 43, 34, 0.1);
 }
 
-/* ── 2. Fraunces for checkout step headings (like razorpay.astro .card-title) ── */
+
+/* ──────────────────────────────────────────────────────────────
+   § 2. TYPOGRAPHY — Brand font hierarchy
+   ────────────────────────────────────────────────────────────── */
+
+/* Fraunces for checkout section headings (editorial, like razorpay.astro .card-title) */
 #snipcart .snipcart__font--subtitle,
 #snipcart .snipcart__font--subtitle-small {
   font-family: "Fraunces", ui-serif, Georgia, Cambria, serif !important;
   letter-spacing: 0.01em !important;
 }
 
-/* ── 3. Primary CTA: Inverted hover — razorpay.astro .pay-button pattern ── */
+
+/* ──────────────────────────────────────────────────────────────
+   § 3. COMPONENTS — Behavioral + visual selector overrides
+   ────────────────────────────────────────────────────────────── */
+
+/* Primary CTA: Inverted hover — mirrors razorpay.astro .pay-button */
 #snipcart .snipcart-button-primary:hover:not(:disabled):not(.is-loading) {
   background-color: transparent !important;
   color: #052b22 !important;
@@ -205,7 +177,7 @@ body.zav-guest-user .snipcart-discount-box::after {
   box-shadow: none !important;
 }
 
-/* ── 4. Primary CTA: Polished Brass focus ring ── */
+/* Primary CTA: Polished Brass focus ring */
 #snipcart .snipcart-button-primary:focus-visible {
   box-shadow:
     0 0 0 2px #f9f5f0,
@@ -213,7 +185,7 @@ body.zav-guest-user .snipcart-discount-box::after {
     0 0 12px rgba(191, 160, 95, 0.28) !important;
 }
 
-/* ── 5. Error: left-border style from razorpay.astro .error-box ── */
+/* Error flash: left-border only (razorpay.astro .error-box pattern) */
 #snipcart .snipcart-flash-message--error {
   border: none !important;
   border-left: 3px solid #e65142 !important;
@@ -221,7 +193,7 @@ body.zav-guest-user .snipcart-discount-box::after {
   border-radius: 2px !important;
 }
 
-/* ── 6. Links: Polished Brass everywhere ── */
+/* Links: Polished Brass with Midnight Jungle on hover */
 #snipcart .snipcart__actions--link,
 #snipcart .snipcart-button-link {
   color: #bfa05f !important;
@@ -233,13 +205,13 @@ body.zav-guest-user .snipcart-discount-box::after {
   border-color: #052b22 !important;
 }
 
-/* ── 7. Cart header close / icons: Polished Brass ── */
+/* Cart header close icon + action icons: Polished Brass */
 #snipcart .snipcart-cart-header .snipcart-modal__close-icon,
 #snipcart .snipcart-cart-header__icon {
   color: #bfa05f !important;
 }
 
-/* ── 8. Step badges: authority for active, muted for inactive ── */
+/* Step badges: active = authority, inactive = muted */
 #snipcart .snipcart__box--badge-highlight {
   color: #fefcfa !important;
   background-color: #052b22 !important;
@@ -252,31 +224,77 @@ body.zav-guest-user .snipcart-discount-box::after {
 }
 
 
-/* ── 9. Secondary buttons (+/- quantity, back links) → Warm Sand palette ── */
-#snipcart {
-  --color-buttonSecondary:        #052b22; /* Midnight Jungle text */
-  --color-buttonSecondary-hover:  #052b22;
-  --color-buttonSecondary-focus:  #052b22;
-  --color-buttonSecondary-active: #052b22;
-  --bgColor-buttonSecondary:          #f3ede6; /* Muted Silk fill */
-  --bgColor-buttonSecondary-hover:    #e8ddd3; /* Warm Sand on hover */
-  --bgColor-buttonSecondary-focus:    #f3ede6;
-  --bgColor-buttonSecondary-active:   #e8ddd3;
-  --bgColor-buttonSecondary-disabled: #f3ede6;
-  --borderColor-buttonSecondary:          transparent;
-  --borderColor-buttonSecondary-hover:    transparent;
-  --borderColor-buttonSecondary-focus:    transparent;
-  --borderColor-buttonSecondary-active:   transparent;
-  --shadow-buttonSecondary-hover: none;
-  --shadow-buttonSecondary-focus: 0 0 0 3px rgba(191, 160, 95, 0.35);
+/* ──────────────────────────────────────────────────────────────
+   § 4. STRUCTURE — Layout integrity & anti-squash specificity
+   ────────────────────────────────────────────────────────────── */
 
-  /* ── Danger buttons (delete item trash icon) → Coral tones ── */
-  --color-buttonDanger:        #e65142; /* Spiced Coral text */
-  --color-buttonDanger-hover:  #e65142;
-  --bgColor-buttonDanger:          rgba(230, 81, 66, 0.06);
-  --bgColor-buttonDanger-hover:    rgba(230, 81, 66, 0.12);
-  --borderColor-buttonDanger:          transparent;
-  --borderColor-buttonDanger-hover:    transparent;
+/* Mobile cart thumbnail: prevent collapse below 25px */
+.snipcart-item-line__media.snipcart-item-line__media--small {
+  min-width: 25px !important;
+  margin-right: 4px !important;
+}
+.snipcart-item-line__media--small .snipcart-item-line__image {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+/* Order summary shipping notice: prevent line clutter */
+.snipcart-summary-fees__notice.snipcart__font--regular {
+  margin-bottom: 10px !important;
+  line-height: 1.5 !important;
+}
+
+/* Cart header back/option: prevent icon collapse */
+.snipcart-cart-header__option {
+  min-width: 80px !important;
+}
+
+/*
+   MASTER SPECIFICITY OVERRIDES
+   Targets checkout labels via unique IDs (ov-1 to ov-14) + class.
+   Math: #id.class = (1,1,0) — beats Snipcart's default (0,1,0).
+   IDs assigned in public/snipcart-templates.html for rendering stability.
+   See: snipcart-templates.html for the full ID-to-label mapping.
+*/
+:is(#ov-1, #ov-2, #ov-3, #ov-4, #ov-5, #ov-6, #ov-7, #ov-8, #ov-9, #ov-10, #ov-11, #ov-12, #ov-13, #ov-14).snipcart__font--tiny {
+  text-wrap: wrap !important;
+  line-height: 1.5 !important;
+}
+
+/* Anti-squash: lock checkbox pseudo-element to fixed size on wrapped labels */
+:is(#ov-4, #ov-5).snipcart-form__label--checkbox::before {
+  min-width: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Checkbox label: full stretch alignment for multi-line text wrapping */
+.snipcart-checkbox + label {
+  align-items: stretch !important;
 }
 
 
+/* ──────────────────────────────────────────────────────────────
+   § 5. BUSINESS LOGIC — Guest state & conditional display
+   ────────────────────────────────────────────────────────────── */
+
+/* Guest state: hide the discount code form */
+body.zav-guest-user .snipcart-discount-box__form {
+  display: none !important;
+}
+
+/* Guest state: show a branded lock message instead */
+body.zav-guest-user .snipcart-discount-box::after {
+  content: "🔒 Sign in with Gmail to unlock discount codes.\A 🚚 Cash on Delivery is available for signed-in users.";
+  display: block;
+  padding: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: #6b5e54;      /* Warm Gray */
+  text-align: center;
+  background: #f3ede6; /* Muted Silk */
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  border: 1px dashed #e8ddd3; /* Warm Sand */
+  white-space: pre-line;
+}
