@@ -7,6 +7,7 @@
 
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
+import Text from "../primitives/Text.astro";
 
 interface Props {
   productId: string;
@@ -96,25 +97,27 @@ const buttonSizes = {
     x-bind:aria-label={`$store.wishlist.has('${productId}') ? 'Remove from wishlist' : 'Add to wishlist'`}
     {...rest}
   >
-    <div class="relative flex items-center justify-center">
-      <Icon 
-        name="PhHeart" 
-        size={iconNumSizes[size]}
-        class:list={[iconSizes[size], "block"]}
-        x-show={`!$store.wishlist.has('${productId}')`}
-      />
-      <Icon 
-        name="PhHeart" 
-        weight="fill" 
-        size={iconNumSizes[size]}
-        class:list={[iconSizes[size], "block"]}
-        x-show={`$store.wishlist.has('${productId}')`}
-        x-cloak
-      />
-    </div>
-    <span x-text={`$store.wishlist.has('${productId}') ? 'In Wishlist' : 'Add to Wishlist'`}>
+    <Icon 
+      name="PhHeart" 
+      size={iconNumSizes[size]}
+      class:list={[iconSizes[size], "block"]}
+      x-show={`!$store.wishlist.has('${productId}')`}
+    />
+    <Icon 
+      name="PhHeart" 
+      weight="fill" 
+      size={iconNumSizes[size]}
+      class:list={[iconSizes[size], "block"]}
+      x-show={`$store.wishlist.has('${productId}')`}
+      x-cloak
+    />
+    <Text 
+      variant="label" 
+      color="inherit" 
+      x-text={`$store.wishlist.has('${productId}') ? 'In Wishlist' : 'Add to Wishlist'`}
+    >
       Add to Wishlist
-    </span>
+    </Text>
   </Button>
 )}
 
