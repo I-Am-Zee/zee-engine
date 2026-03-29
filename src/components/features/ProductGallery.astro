@@ -16,23 +16,23 @@ const { images, alt, class: className = "" } = Astro.props;
 >
   {/* Mobile Layout: Main Image Top, Thumbnails Bottom */}
   <div class="flex flex-col gap-4 lg:hidden">
-    {/* Main Image (Mobile) */}
-    <div class="relative aspect-[4/5] max-h-[70vh] overflow-hidden rounded-lg bg-(--color-surface)">
+    <div class="relative aspect-4/5 max-h-[70vh] overflow-hidden rounded-lg bg-(--color-surface)">
       <img
         :src="activeImage"
         alt={alt}
-        class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+        @click={`$dispatch('open-lightbox', { src: activeImage, alt: '${alt}' })`}
+        class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in active:scale-[0.98]"
       />
     </div>
 
     {/* Thumbnails (Mobile - Horizontal Scroll) */}
-    <div class="flex gap-2 overflow-x-auto pb-2">
+    <div class="flex gap-2 overflow-x-auto pb-3 pt-1 px-1">
       {images.map((image) => (
         <button
           type="button"
           @click={`activeImage = '${image}'`}
-          :class={`activeImage === '${image}' ? 'ring-2 ring-(--color-ring) opacity-100' : 'opacity-60 hover:opacity-80'`}
-          class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
+          class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
+          :class={`activeImage === '${image}' ? 'ring-2 ring-accent-brass opacity-100 scale-105 z-10' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
             src={image}
@@ -46,14 +46,13 @@ const { images, alt, class: className = "" } = Astro.props;
 
   {/* Desktop Layout: Thumbnails Left, Main Image Right */}
   <div class="hidden gap-4 lg:flex lg:flex-row lg:max-h-[85vh]">
-    {/* Thumbnails (Desktop - Vertical Strip) */}
-    <div class="flex w-20 flex-shrink-0 flex-col gap-3 overflow-y-auto">
+    <div class="flex w-22 shrink-0 flex-col gap-3 overflow-y-auto px-1 py-1">
       {images.map((image) => (
         <button
           type="button"
           @click={`activeImage = '${image}'`}
-          :class={`activeImage === '${image}' ? 'ring-2 ring-(--color-ring) opacity-100' : 'opacity-60 hover:opacity-80'`}
-          class="aspect-[4/5] w-20 flex-shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
+          class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed"
+          :class={`activeImage === '${image}' ? 'ring-2 ring-accent-brass opacity-100 scale-105 z-10' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
             src={image}
@@ -64,12 +63,12 @@ const { images, alt, class: className = "" } = Astro.props;
       ))}
     </div>
 
-    {/* Main Image (Desktop) */}
-    <div class="relative aspect-[4/5] flex-1 overflow-hidden rounded-lg bg-(--color-surface)">
+    <div class="relative aspect-4/5 flex-1 overflow-hidden rounded-lg bg-(--color-surface)">
       <img
         :src="activeImage"
         alt={alt}
-        class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+        @click={`$dispatch('open-lightbox', { src: activeImage, alt: '${alt}' })`}
+        class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in active:scale-[0.98]"
       />
     </div>
   </div>

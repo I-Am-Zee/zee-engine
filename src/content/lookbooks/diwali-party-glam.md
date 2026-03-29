@@ -10,11 +10,11 @@ products:
 
 This festive season, make a statement with our curated Diwali collection. Each piece is carefully selected to complement the other, creating a harmonious ensemble that captures the spirit of celebration.
 
-**The Look:**
+### The Look
 
 Start with the Celestial Diamond Ring as your statement piece, pair it with our bestselling Ethereal Gold Necklace, and complete the look with Diamond Stud Earrings for that perfect sparkle.
 
-**Styling Tips:**
+### Styling Tips
 
 - Layer the necklace over a velvet blouse for maximum impact
 - The ring pairs beautifully with gold bangles

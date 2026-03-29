@@ -31,23 +31,23 @@ const shopCategories = shopNav?.items || [];
   ]}
   {...rest}
 >
-  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+  <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
+    <div class="grid gap-12 lg:gap-16 md:grid-cols-2 lg:grid-cols-4 text-center md:text-left">
       {/* Brand Column */}
-      <div class="flex flex-col">
+      <div class="flex flex-col items-center md:items-start">
         <Logo variant="full" class="mb-2" />
         <Text as="p" variant="caption" color="muted" class="max-w-xs leading-relaxed">
           Handcrafted celestial jewelry for those who seek to adorn themselves with the beauty of the cosmos.
         </Text>
         <div class="mt-6">
-          <SocialLinks orientation="horizontal" />
+          <SocialLinks orientation="horizontal" class="justify-center md:justify-start" />
         </div>
       </div>
 
       {/* Shop Column */}
       <div>
-        <Heading as="h6" class="mb-4">Shop</Heading>
-        <ul class="space-y-2">
+        <Heading as="h5" class="mb-6">Shop</Heading>
+        <ul class="space-y-4">
           {shopCategories.map((item) => (
             <li>
               <Link href={item.href} variant="plain">
@@ -62,8 +62,8 @@ const shopCategories = shopNav?.items || [];
 
       {/* Support Column */}
       <div>
-        <Heading as="h6" class="mb-4">Support</Heading>
-        <ul class="space-y-2">
+        <Heading as="h5" class="mb-6">Support</Heading>
+        <ul class="space-y-4">
           {supportLinks.map((item) => (
             <li>
               <Link href={item.href} variant="plain">
@@ -78,25 +78,27 @@ const shopCategories = shopNav?.items || [];
 
       {/* Newsletter Column */}
       <div>
-        <Heading as="h6" class="mb-4">Join the Celestial Club</Heading>
-        <Text variant="caption" color="muted" class="mb-4">
+        <Heading as="h5" class="mb-6">Join the Celestial Club</Heading>
+        <Text variant="caption" color="muted" class="mb-6 leading-relaxed">
           Subscribe to get exclusive offers, new arrivals, and celestial inspirations.
         </Text>
-        <NewsletterForm />
+        <div class="max-w-sm mx-auto md:mx-0">
+          <NewsletterForm />
+        </div>
       </div>
     </div>
 
     {/* Bottom Bar */}
-    <div class="mt-12 border-t border-border-subtle pt-8">
-      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <div class="mt-16 border-t border-border-subtle pt-8">
+      <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
         <Text variant="metadata">
           {siteConfig.copyright}
         </Text>
         <div class="flex gap-4">
-          <Link href="/privacy" variant="plain" class="text-text-muted">
+          <Link href="/privacy-policy" variant="plain" class="text-text-muted">
             <Text variant="metadata">Privacy Policy</Text>
           </Link>
-          <Link href="/terms" variant="plain" class="text-text-muted">
+          <Link href="/terms-of-service" variant="plain" class="text-text-muted">
             <Text variant="metadata">Terms of Service</Text>
           </Link>
         </div>

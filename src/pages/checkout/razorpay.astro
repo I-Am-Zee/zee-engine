@@ -2,431 +2,422 @@
 /**
  * Razorpay Payment Page
  *
- * Customer-facing payment page that:
- * 1. Receives publicToken from Snipcart redirect
- * 2. Fetches payment session details
- * 3. Creates Razorpay order
- * 4. Shows Razorpay checkout
- * 5. On success, verifies and confirms payment
+ * Custom payment bridge page for Snipcart's Custom Payment Gateway.
+ * Flow:
+ * 1. Receives `publicToken` from Snipcart redirect
+ * 2. Fetches payment session from Snipcart's API
+ * 3. Presents order summary in brand UI
+ * 4. Opens Razorpay Standard Checkout
+ * 5. On success, POSTs to /api/checkout/verify → Snipcart confirmation
  */
 
-// This page needs to be server-rendered
+// Server-rendered: reads URL params and env at request time
 export const prerender = false;
+
+import CheckoutLayout from "../../layouts/CheckoutLayout.astro";
 
 const publicToken = Astro.url.searchParams.get("publicToken");
 
-// Redirect if no token
+// Guard: no token → back to home
 if (!publicToken) {
   return Astro.redirect("/");
 }
 
-// Get Razorpay key for client-side
 const razorpayKeyId = import.meta.env.PUBLIC_RAZORPAY_KEY_ID;
-const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
+const siteUrl = Astro.url.origin;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Complete Payment - Zaviona</title>
+<CheckoutLayout title="Secure Checkout — Zelia Vance">
+  <!-- Razorpay SDK injected into <head> via named slot -->
+  <script slot="head" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <!-- Razorpay Checkout Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- ── Checkout Card ── -->
+  <div class="checkout-card">
+    <div class="card-accent" aria-hidden="true"></div>
 
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:wght@300;400;500;600;700&display=swap");
+    <div class="card-body">
+      <p class="step-label">Step 3 of 3</p>
+      <h1 class="card-title">Payment</h1>
+      <p class="card-subtitle" id="email-display">Connecting securely&hellip;</p>
 
-      :root {
-        /* Use Zaviona's color system */
-        --color-background: #ffffff;
-        --color-surface: #f8fafc;
-        --color-text: #0f172a;
-        --color-text-muted: #64748b;
-        --color-primary: #0f172a;
-        --color-border: #e2e8f0;
-        --color-accent: #0f172a;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-        background: var(--color-background);
-        color: var(--color-text);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-      }
-
-      .container {
-        max-width: 480px;
-        width: 100%;
-      }
-
-      .card {
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: 12px;
-        padding: 2.5rem 2rem;
-        text-align: center;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      }
-
-      .logo {
-        font-family: "Fraunces", serif;
-        font-size: 1.75rem;
-        font-weight: 500;
-        letter-spacing: 0.05em;
-        color: var(--color-primary);
-        margin-bottom: 2rem;
-      }
-
-      .title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: var(--color-text);
-      }
-
-      .subtitle {
-        color: var(--color-text-muted);
-        font-size: 0.875rem;
-        margin-bottom: 2rem;
-      }
-
-      .amount {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--color-primary);
-        margin-bottom: 0.25rem;
-        font-family: "Fraunces", serif;
-      }
-
-      .currency {
-        font-size: 0.875rem;
-        color: var(--color-text-muted);
-        margin-bottom: 2rem;
-      }
-
-      .pay-button {
-        width: 100%;
-        padding: 0.875rem 2rem;
-        font-size: 0.9375rem;
-        font-weight: 600;
-        color: #ffffff;
-        background: var(--color-primary);
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-family: "Plus Jakarta Sans", sans-serif;
-      }
-
-      .pay-button:hover:not(:disabled) {
-        background: #1e293b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-      }
-
-      .pay-button:active:not(:disabled) {
-        transform: translateY(0);
-      }
-
-      .pay-button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      .loader {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .spinner {
-        width: 18px;
-        height: 18px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-top-color: currentColor;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      .error {
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        color: #991b1b;
-        padding: 0.875rem 1rem;
-        border-radius: 8px;
-        margin-top: 1rem;
-        font-size: 0.875rem;
-        line-height: 1.5;
-      }
-
-      .status {
-        margin-top: 1rem;
-        font-size: 0.875rem;
-        color: var(--color-text-muted);
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      @media (max-width: 480px) {
-        .card {
-          padding: 2rem 1.5rem;
-        }
-
-        .amount {
-          font-size: 2rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="card">
-        <div class="logo">Zaviona</div>
-
-        <h1 class="title">Complete Your Payment</h1>
-        <p class="subtitle" id="email-display">Loading order details...</p>
-
-        <div id="amount-section" class="hidden">
-          <div class="amount" id="amount-display">₹0</div>
-          <div class="currency">Indian Rupees (INR)</div>
+      <!-- Amount — populated after session load -->
+      <div id="amount-section" class="amount-block hidden" aria-live="polite">
+        <div class="amount-meta">
+          <span class="amount-label">Order Total</span>
         </div>
-
-        <button class="pay-button cursor-pointer disabled:cursor-not-allowed" id="pay-button" disabled>
-          <span class="loader">
-            <span class="spinner"></span>
-            Loading...
-          </span>
-        </button>
-
-        <div class="status" id="status"></div>
-        <div class="error hidden" id="error"></div>
+        <div class="amount-value" id="amount-display" aria-label="Order total">&#8377;0</div>
       </div>
+
+      <!-- Pay CTA -->
+      <button
+        class="pay-button"
+        id="pay-button"
+        disabled
+        aria-label="Loading payment session"
+      >
+        <span class="loader" aria-hidden="true">
+          <span class="spinner"></span>
+          Loading&hellip;
+        </span>
+      </button>
+
+      <p class="status-text" id="status" role="status" aria-live="polite"></p>
+      <div class="error-box hidden" id="error" role="alert"></div>
     </div>
 
-    <script define:vars={{ publicToken, razorpayKeyId, siteUrl }} is:inline>
-      // State
-      let paymentSession = null;
-      let razorpayOrder = null;
+    <!-- Trust strip -->
+    <div class="trust-strip" aria-label="Security information">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+      </svg>
+      256-bit SSL Encryption
+      <span class="trust-dot" aria-hidden="true"></span>
+      Powered by Razorpay
+      <span class="trust-dot" aria-hidden="true"></span>
+      PCI DSS Compliant
+    </div>
+  </div>
 
-      // DOM Elements
-      const payButton = document.getElementById("pay-button");
-      const emailDisplay = document.getElementById("email-display");
-      const amountSection = document.getElementById("amount-section");
-      const amountDisplay = document.getElementById("amount-display");
-      const statusEl = document.getElementById("status");
-      const errorEl = document.getElementById("error");
+  <!-- ── Payment Logic ── -->
+  <script define:vars={{ publicToken, razorpayKeyId, siteUrl }} is:inline>
+    /** @type {object|null} */
+    let paymentSession = null;
 
-      // Helper Functions
-      function showError(message, details = "") {
-        errorEl.textContent = message + (details ? ": " + details : "");
-        errorEl.classList.remove("hidden");
-        console.error("Payment Error:", message, details);
+    // ── DOM refs ──
+    const payButton     = document.getElementById("pay-button");
+    const emailDisplay  = document.getElementById("email-display");
+    const amountSection = document.getElementById("amount-section");
+    const amountDisplay = document.getElementById("amount-display");
+    const statusEl      = document.getElementById("status");
+    const errorEl       = document.getElementById("error");
+
+    // ── Helpers ──
+    function showError(message, detail = "") {
+      errorEl.textContent = detail ? `${message}: ${detail}` : message;
+      errorEl.classList.remove("hidden");
+    }
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function formatINR(amount) {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+    }
+
+    function setButtonBusy(label) {
+      payButton.disabled = true;
+      payButton.setAttribute("aria-label", label);
+      payButton.innerHTML = `<span class="loader" aria-hidden="true"><span class="spinner"></span>${label}</span>`;
+    }
+
+    function setButtonReady(label) {
+      payButton.disabled = false;
+      payButton.setAttribute("aria-label", label);
+      payButton.textContent = label;
+    }
+
+    // ── Step 1: Fetch Snipcart payment session ──
+    async function fetchPaymentSession() {
+      setStatus("Fetching your order…");
+      const params = new URLSearchParams({ publicToken });
+      const url = `https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?${params}`;
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        const body = await response.text().catch(() => "");
+        throw new Error(`Session fetch failed (${response.status})${body ? `: ${body}` : ""}`);
       }
 
-      function updateStatus(message) {
-        console.log("Status update:", message);
-        statusEl.textContent = message;
+      paymentSession = await response.json();
+
+      // Populate UI
+      emailDisplay.textContent = paymentSession.invoice.email || "Verified customer";
+      amountDisplay.textContent = formatINR(paymentSession.invoice.amount);
+      amountSection.classList.remove("hidden");
+    }
+
+    // ── Step 2: Open Razorpay Standard Checkout ──
+    function openRazorpay() {
+      setStatus("Opening secure payment window…");
+
+      const amountInPaise = Math.round(paymentSession.invoice.amount * 100);
+
+      const options = {
+        key: razorpayKeyId,
+        amount: amountInPaise,
+        currency: "INR",
+        name: "Zelia Vance",
+        description: `Order #${String(paymentSession.id).substring(0, 8).toUpperCase()}`,
+        image: `${siteUrl}/favicon.svg`,
+        prefill: {
+          name:    paymentSession.invoice.billingAddress?.name || "",
+          email:   paymentSession.invoice.email               || "",
+          contact: "",
+        },
+        theme: { color: "#052b22" },
+        modal: {
+          ondismiss() {
+            setStatus("Payment cancelled. Click below to try again.");
+            setButtonReady("Pay Now");
+          },
+        },
+        handler: async (response) => {
+          await verifyPayment(response);
+        },
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on("payment.failed", (ev) => {
+        showError("Payment failed", ev.error?.description || "Unknown error");
+        setButtonReady("Try Again");
+      });
+      rzp.open();
+    }
+
+    // ── Step 3: Verify & confirm with Snipcart ──
+    async function verifyPayment(razorpayResponse) {
+      setButtonBusy("Verifying…");
+      setStatus("Confirming your payment…");
+
+      const payload = {
+        razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+        razorpay_order_id:   razorpayResponse.razorpay_order_id  || "",
+        razorpay_signature:  razorpayResponse.razorpay_signature  || "",
+        paymentSessionId: paymentSession.id,
+        amount:   paymentSession.invoice.amount,
+        currency: paymentSession.invoice.currency,
+      };
+
+      const res = await fetch("/api/checkout/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        setStatus("✓ Payment confirmed! Redirecting…");
+        payButton.textContent = "✓ Payment Complete";
+        const redirect = result.redirectUrl
+          || paymentSession.paymentAuthorizationRedirectUrl
+          || "/";
+        window.location.href = redirect;
+      } else {
+        throw new Error(result.error || "Verification failed");
       }
+    }
 
-      function formatCurrency(amount, currency = "INR") {
-        return new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: currency,
-        }).format(amount);
+    // ── Boot ──
+    async function init() {
+      if (!razorpayKeyId) {
+        showError("Configuration error — contact support");
+        return;
       }
-
-      // Step 1: Fetch payment session from Snipcart
-      async function fetchPaymentSession() {
-        updateStatus("Fetching order details...");
-
-        try {
-          const params = new URLSearchParams({ publicToken });
-          const url = `https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?${params.toString()}`;
-
-          console.log("[Razorpay] Fetching session from:", url);
-
-          const response = await fetch(url);
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error("[Razorpay] Session fetch failed:", response.status, errorText);
-            throw new Error(`Failed to fetch payment session: ${response.status}`);
-          }
-
-          paymentSession = await response.json();
-          console.log("[Razorpay] Payment session loaded:", paymentSession);
-
-          // Update UI
-          emailDisplay.textContent = paymentSession.invoice.email;
-          amountDisplay.textContent = formatCurrency(
-            paymentSession.invoice.amount,
-            paymentSession.invoice.currency
-          );
-          amountSection.classList.remove("hidden");
-
-          return paymentSession;
-        } catch (error) {
-          console.error("[Razorpay] Error in fetchPaymentSession:", error);
-          showError(
-            "Failed to load order details. This usually happens if the payment session has expired or the token is invalid.",
-            error.message
-          );
-          throw error;
-        }
-      }
-
-      // Step 2: Open Razorpay checkout directly (no order creation needed)
-      function openRazorpayCheckout() {
-        updateStatus("Opening payment gateway...");
-
-        // Calculate amount in paise for Razorpay
-        // Note: We force INR currency because Razorpay only supports INR for Indian merchants
-        // If Snipcart sends USD/CAD, we need to handle currency conversion separately
-        const amountInPaise = Math.round(paymentSession.invoice.amount * 100);
-
-        const options = {
-          key: razorpayKeyId,
-          amount: amountInPaise,
-          currency: "INR", // Force INR - Razorpay only supports INR for Indian merchants
-          name: "Zaviona",
-          description: `Order #${paymentSession.id.substring(0, 8)}`,
-          // order_id: razorpayOrder.orderId, // No longer needed
-          prefill: {
-            name: paymentSession.invoice.billingAddress?.name || "",
-            email: paymentSession.invoice.email || "",
-            contact: "",
-          },
-          theme: {
-            color: "#d4af37",
-          },
-          handler: async function (response) {
-            console.log("Razorpay success:", response);
-            await verifyPayment(response);
-          },
-          modal: {
-            ondismiss: function () {
-              updateStatus("Payment cancelled. Click the button to try again.");
-              payButton.disabled = false;
-              payButton.innerHTML = "Pay Now";
-            },
-          },
+      try {
+        await fetchPaymentSession();
+        setButtonReady("Pay Now");
+        setStatus("");
+        payButton.onclick = () => {
+          setButtonBusy("Opening…");
+          openRazorpay();
         };
-
-        const rzp = new Razorpay(options);
-        rzp.on("payment.failed", function (response) {
-          console.error("Razorpay payment failed:", response.error);
-          showError(`Payment failed: ${response.error.description}`);
-          payButton.disabled = false;
-          payButton.innerHTML = "Try Again";
-        });
-
-        rzp.open();
-      }
-
-      // Step 3: Verify payment
-      async function verifyPayment(razorpayResponse) {
-        updateStatus("Verifying payment...");
+      } catch (err) {
+        showError("Unable to load your order. The session may have expired.", err?.message);
         payButton.disabled = true;
-        payButton.innerHTML =
-          '<span class="loader"><span class="spinner"></span> Verifying...</span>';
-
-        try {
-          const payload = {
-            razorpay_payment_id: razorpayResponse.razorpay_payment_id,
-            razorpay_order_id: razorpayResponse.razorpay_order_id || "", // Order ID might not be present for direct payments
-            razorpay_signature: razorpayResponse.razorpay_signature || "", // Signature might not be present for direct payments
-            paymentSessionId: paymentSession.id,
-            amount: paymentSession.invoice.amount,
-            currency: paymentSession.invoice.currency,
-          };
-
-          console.log("Sending verification payload:", payload);
-
-          const response = await fetch(`/api/checkout/verify`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-
-          const result = await response.json();
-          console.log("Verification result:", result);
-
-          if (result.success) {
-            updateStatus("Payment successful! Redirecting...");
-            payButton.innerHTML = "✓ Payment Complete";
-
-            // Redirect back to Snipcart confirmation
-            if (result.redirectUrl) {
-              window.location.href = result.redirectUrl;
-            } else if (paymentSession.paymentAuthorizationRedirectUrl) {
-              window.location.href = paymentSession.paymentAuthorizationRedirectUrl;
-            } else {
-              // Fallback: go to home
-              setTimeout(() => {
-                window.location.href = "/";
-              }, 2000);
-            }
-          } else {
-            throw new Error(result.error || "Payment verification failed");
-          }
-        } catch (error) {
-          console.error("Error verifying payment:", error);
-          showError("Payment verification failed. Please contact support.");
-          payButton.disabled = false;
-          payButton.innerHTML = "Try Again";
-        }
+        payButton.textContent = "Session Expired";
       }
+    }
 
-      // Initialize
-      async function init() {
-        console.log("Payment initialized with token:", publicToken ? "YES" : "NO");
-        if (!razorpayKeyId) console.error("PUBLIC_RAZORPAY_KEY_ID is missing!");
+    init();
+  </script>
+</CheckoutLayout>
 
-        try {
-          await fetchPaymentSession();
-          // await createRazorpayOrder(); // No longer needed
+<style>
+/* ── Card ── */
+.checkout-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
 
-          // Enable pay button - NO ORDER CREATION NEEDED
-          payButton.disabled = false;
-          payButton.innerHTML = "Pay Now";
-          updateStatus("Ready to pay");
+.card-accent {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent-brass) 100%);
+}
 
-          // Set up click handler
-          payButton.onclick = () => {
-            payButton.disabled = true;
-            payButton.innerHTML =
-              '<span class="loader"><span class="spinner"></span> Opening checkout...</span>';
-            openRazorpayCheckout();
-          };
-        } catch (error) {
-          payButton.disabled = true;
-          payButton.innerHTML = "Error";
-        }
-      }
+.card-body {
+  padding: 2.5rem 2.5rem 2rem;
+}
 
-      // Start
-      init();
-    </script>
-  </body>
-</html>
+/* ── Hierarchy ── */
+.step-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-brass);
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 1.75rem;
+  letter-spacing: 0.01em;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+  min-height: 1.25rem;
+}
+
+/* ── Amount block ── */
+.amount-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-background);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.amount-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.amount-value {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ── CTA ── */
+.pay-button {
+  width: 100%;
+  padding: 0.9375rem 2rem;
+  font-family: var(--font-sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary-foreground);
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.pay-button:hover:not(:disabled) {
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.pay-button:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 4px var(--color-accent-brass),
+    0 0 12px var(--color-ring-glow);
+}
+
+.pay-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+.spinner {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+.pay-button:hover .spinner {
+  border-color: rgba(5,43,34,0.15);
+  border-top-color: var(--color-primary);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Trust strip ── */
+.trust-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--color-border-subtle);
+  background: var(--color-background);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.trust-strip svg { color: var(--color-accent-brass); flex-shrink: 0; }
+
+.trust-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--color-border-subtle);
+}
+
+/* ── Status / Error ── */
+.status-text {
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  min-height: 1.25rem;
+}
+
+.error-box {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--color-accent-coral);
+  background: rgba(230, 81, 66, 0.05);
+  border-radius: 2px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-accent-coral);
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 480px) {
+  .card-body { padding: 2rem 1.5rem 1.5rem; }
+  .amount-value { font-size: 1.625rem; }
+  .trust-strip { flex-wrap: wrap; gap: 0.5rem; padding: 0.875rem 1.25rem; }
+}
+</style>

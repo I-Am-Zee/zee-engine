@@ -1,0 +1,32 @@
+{
+  "default_slab": "small-jewelry",
+  "slabs": {
+    "small-jewelry": {
+      "name": "Small Jewelry Box",
+      "weight_kg": 0.5,
+      "dimensions": {
+        "length": 15,
+        "breadth": 15,
+        "height": 10
+      }
+    },
+    "medium-box": {
+      "name": "Medium Outer Box",
+      "weight_kg": 1.0,
+      "dimensions": {
+        "length": 20,
+        "breadth": 20,
+        "height": 15
+      }
+    },
+    "large-box": {
+      "name": "Large Outer Box",
+      "weight_kg": 2.0,
+      "dimensions": {
+        "length": 30,
+        "breadth": 30,
+        "height": 20
+      }
+    }
+  }
+}

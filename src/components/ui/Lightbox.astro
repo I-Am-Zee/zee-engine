@@ -1,0 +1,120 @@
+---
+/**
+ * Lightbox - UI Primitive
+ * 
+ * A blazing fast, Alpine-powered full-screen image viewer.
+ * Supports zoom and pan mechanics.
+ * 
+ * @component Primitive (ui/)
+ */
+
+import Icon from "../primitives/Icon.astro";
+---
+
+<div
+  x-data="{
+    isOpen: false,
+    imageSrc: '',
+    imageAlt: '',
+    scale: 1,
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    translateX: 0,
+    translateY: 0,
+    open(src, alt) {
+      this.imageSrc = src;
+      this.imageAlt = alt || '';
+      this.isOpen = true;
+      this.resetZoom();
+      document.body.style.overflow = 'hidden';
+    },
+    close() {
+      this.isOpen = false;
+      document.body.style.overflow = '';
+      setTimeout(() => this.resetZoom(), 300);
+    },
+    resetZoom() {
+      this.scale = 1;
+      this.translateX = 0;
+      this.translateY = 0;
+    },
+    zoom(e) {
+      // Toggle zoom on click/double-click
+      if (this.scale > 1) {
+        this.resetZoom();
+      } else {
+        this.scale = 2;
+        // Optionally center zoom on click coordinates:
+        // this.translateX = (window.innerWidth / 2 - e.clientX) * 1;
+        // this.translateY = (window.innerHeight / 2 - e.clientY) * 1;
+      }
+    },
+    startDrag(e) {
+      if (this.scale <= 1) return;
+      this.isDragging = true;
+      this.startX = e.clientX || e.touches?.[0]?.clientX;
+      this.startY = e.clientY || e.touches?.[0]?.clientY;
+    },
+    drag(e) {
+      if (!this.isDragging) return;
+      e.preventDefault();
+      const currentX = e.clientX || e.touches?.[0]?.clientX;
+      const currentY = e.clientY || e.touches?.[0]?.clientY;
+      this.translateX += currentX - this.startX;
+      this.translateY += currentY - this.startY;
+      this.startX = currentX;
+      this.startY = currentY;
+    },
+    endDrag() {
+      this.isDragging = false;
+    }
+  }"
+  @open-lightbox.window="open($event.detail.src, $event.detail.alt)"
+  @keydown.escape.window="close()"
+  x-show="isOpen"
+  class="fixed inset-0 flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-300 z-[400]"
+  :class="isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+>
+  <!-- Controls -->
+  <div class="absolute top-0 left-0 w-full p-4 flex justify-end z-20">
+    <button 
+      @click="close()" 
+      class="text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors"
+      aria-label="Close fullscreen"
+    >
+      <Icon name="PhX" size={24} weight="bold" />
+    </button>
+  </div>
+  <div class="absolute bottom-6 left-0 w-full text-center z-20 pointer-events-none">
+    <span class="text-white/60 text-xs tracking-widest uppercase bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm shadow-xl">
+      Click to Zoom &bull; Drag to Pan
+    </span>
+  </div>
+
+  <!-- Image Container -->
+  <div class="relative w-full h-full flex items-center justify-center overflow-hidden cursor-zoom-in"
+       :class="scale > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-zoom-in'"
+       @click.self="close()"
+  >
+    <img 
+      :src="imageSrc" 
+      :alt="imageAlt"
+      @click="zoom($event)"
+      @mousedown="startDrag"
+      @mousemove="drag"
+      @mouseup="endDrag"
+      @mouseleave="endDrag"
+      @touchstart="startDrag"
+      @touchmove="drag"
+      @touchend="endDrag"
+      class="max-w-full max-h-[90vh] object-contain transition-transform duration-300 select-none shadow-2xl"
+      :style="`transform: translate(${translateX}px, ${translateY}px) scale(${scale}); transition: ${isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)'};`"
+      draggable="false"
+    />
+  </div>
+</div>
+
+<style is:global>
+  [x-cloak] { display: none !important; }
+</style>

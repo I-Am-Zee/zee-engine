@@ -1,6 +1,7 @@
 ---
 // Import global CSS so Astro bundles it for production
 import "../styles/global.css";
+import "../styles/snipcart.css";
 import { siteConfig } from "../lib/site.config";
 import { getEntry } from "astro:content";
 import CartToast from "../components/ui/CartToast.astro";
@@ -9,6 +10,7 @@ import PopupModal from "../components/ui/PopupModal.astro";
 import Navbar from "../components/features/Navbar.astro";
 import Footer from "../components/features/Footer.astro";
 import SideDrawer from "../components/ui/SideDrawer.astro";
+import Lightbox from "../components/ui/Lightbox.astro";
 
 // Fetch Global Settings
 const siteSettings = await getEntry("settings", "site");
@@ -40,37 +42,19 @@ const {
     <link rel="preconnect" href="https://cdn.snipcart.com" />
     <link rel="preconnect" href="https://app.snipcart.com" />
 
-    <!-- Snipcart CSS (using v3.4.0 - Vanilla/Default styling) -->
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.css" />
-
-    <!-- Snipcart JS (using v3.4.0, async loading) -->
-    <script async src="https://cdn.snipcart.com/themes/v3.4.0/default/snipcart.js" is:inline></script>
+    <!-- Snipcart CSS (v3.7.5) -->
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.css" />
 
     <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }} is:inline>
       window.SnipcartSettings = {
         publicApiKey: apiKey,
-        loadStrategy: "on-idle",
+        version: "3.7.5",
         modalStyle: "overlay",
-        addProductBehavior: "none", // Don't auto-open cart
+        addProductBehavior: "none",
+        templatesUrl: "/snipcart-templates.html?v=1.7.2"
       };
-
-      // Inline Listener for immediate response to item.added
-      document.addEventListener('snipcart.ready', () => {
-        Snipcart.events.on('item.added', (item) => {
-          console.log('[Upsell Bridge] Item added:', item.name);
-          const event = new CustomEvent('zaviona:item-added', {
-            detail: {
-              id: item.id,
-              name: item.name,
-              image: item.image,
-              price: item.unitPrice,
-              options: item.customFields || []
-            }
-          });
-          document.dispatchEvent(event);
-        });
-      });
     </script>
+    <script src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
   </head>
   <body class="flex flex-col min-h-screen">
     <AnnouncementBar data={announcement_bar} />
@@ -92,20 +76,15 @@ const {
     <div
       hidden
       id="snipcart"
-      data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}
-      data-config-modal-style="overlay"
-      data-currency="INR"
-      data-config-add-product-behavior="none"
-    >
+      data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}>
     </div>
 
-    <!-- Alpine.js is now handled by @astrojs/alpinejs integration -->
-    <!-- The entrypoint in astro.config.mjs registers the wishlist store before Alpine starts -->
-
-    <!-- Global Snipcart Event Handler (Intent-Based Coupon System) -->
-    <script src="../scripts/snipcart-events.ts"></script>
-    <script src="../scripts/behaviors/options-sync.ts"></script>
+    <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
+    <script src="../scripts/snipcart-init.ts"></script>
 
     <PopupModal data={popup_modal} />
+    <Lightbox />
   </body>
 </html>
+
+

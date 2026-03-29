@@ -8,6 +8,7 @@
  */
 
 declare const Snipcart: any;
+import { getSnipcartJSItem } from "../../config/ecommerce";
 
 export const sideDrawer = () => ({
   isOpen: false,
@@ -21,16 +22,16 @@ export const sideDrawer = () => ({
 
   init() {
     // Listen for all entry points
-    document.addEventListener("zaviona:item-added", (e: any) => this.openUpsell(e.detail));
-    document.addEventListener("zaviona:quick-shop", (e: any) => this.openQuickShop(e.detail));
-    document.addEventListener("zaviona:master-set", (e: any) => this.openMasterSet(e.detail));
+    document.addEventListener("zeliavance:item-added", (e: any) => this.openUpsell(e.detail));
+    document.addEventListener("zeliavance:quick-shop", (e: any) => this.openQuickShop(e.detail));
+    document.addEventListener("zeliavance:master-set", (e: any) => this.openMasterSet(e.detail));
   },
 
   openUpsell(item: any) {
     console.log("[SideDrawer] Mode: Upsell", item);
     this.mode = "upsell";
     this.mainItem = item;
-    this.products = (window as any).ZAVIONA_UPSELL_CONTEXT || [];
+    this.products = (window as any).ZELIA_UPSELL_CONTEXT || [];
     this.resetInternalState();
     this.isOpen = true;
   },
@@ -133,36 +134,13 @@ export const sideDrawer = () => ({
 
     try {
       const payload = itemsToAdd.map((item) => {
-        const customFields: any[] = [];
-        [item.variant_1, item.variant_2, item.variant_3].forEach((v) => {
-          if (v?.name && this.selections[item.id][v.name]) {
-            const displayOptions = v.values.split(",").map((vs: any) => vs.trim()).join("|");
-            customFields.push({
-              name: v.name,
-              value: this.selections[item.id][v.name],
-              type: "dropdown",
-              options: displayOptions,
-              required: true
-            });
-          }
-        });
-
-        return {
-          id: item.id,
-          name: item.title,
-          price: Number(item.salePrice) || Number(item.price),
-          url: `/products/${item.id}`,
-          image: item.image,
-          description: item.description || item.title,
-          quantity: 1,
-          customFields,
-        };
+        return getSnipcartJSItem(item, this.selections[item.id]);
       });
 
       for (const item of payload) {
         await Snipcart.api.cart.items.add(item);
         if (this.mode === "quick-shop" || this.mode === "master-set") {
-          document.dispatchEvent(new CustomEvent("zaviona:show-toast", { detail: item }));
+          document.dispatchEvent(new CustomEvent("zeliavance:show-toast", { detail: item }));
         }
       }
 

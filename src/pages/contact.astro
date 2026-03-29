@@ -1,7 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/features/Navbar.astro";
-import Footer from "../components/features/Footer.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
@@ -11,11 +9,10 @@ export const prerender = true;
 ---
 
 <BaseLayout title={`Contact Us | ${siteConfig.name}`}>
-  <Navbar />
-  <main class="mx-auto max-w-3xl px-4 py-24 text-center">
+  <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
     <Heading as="h1" class="mb-6">Contact Us</Heading>
     <Text variant="lead" color="muted" class="mb-8">
-      Zaviona is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship. 
+      Zelia Vance is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship. 
       Our mission is to bring brilliance and elegance to your most cherished moments.
     </Text>
     
@@ -34,5 +31,4 @@ export const prerender = true;
       </div>
     </div>
   </main>
-  <Footer />
 </BaseLayout>

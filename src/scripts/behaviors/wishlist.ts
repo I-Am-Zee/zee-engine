@@ -5,7 +5,7 @@ export const wishlistStore = {
   items: [] as string[],
 
   init() {
-    const saved = localStorage.getItem('zaviona_wishlist');
+    const saved = localStorage.getItem('zeliavance_wishlist');
     if (saved) {
       try {
         this.items = JSON.parse(saved);
@@ -42,7 +42,7 @@ export const wishlistStore = {
   },
 
   save() {
-    localStorage.setItem('zaviona_wishlist', JSON.stringify(this.items));
+    localStorage.setItem('zeliavance_wishlist', JSON.stringify(this.items));
   },
 
   get count() {

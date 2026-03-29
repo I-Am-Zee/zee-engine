@@ -33,17 +33,17 @@ const { icon, heading, description, action, class: className, ...rest } = Astro.
   {...rest}
 >
   {/* Large muted icon */}
-  <div class="mb-6 text-text-muted">
+  <div class="mb-10 text-text-muted">
     <Icon name={icon as any} class="h-16 w-16" />
   </div>
 
   {/* Heading */}
-  <Heading as="h3" class="mb-2">
+  <Heading as="h3" class="mb-4">
     {heading}
   </Heading>
 
   {/* Description */}
-  <Text variant="muted" class="mb-6 max-w-sm">
+  <Text variant="muted" class="mb-10 max-w-sm">
     {description}
   </Text>
 

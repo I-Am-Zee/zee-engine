@@ -23,7 +23,7 @@ publishDate: 2025-01-05
 variant_1:
   name: "Bracelet Size"
   values: "6.5 inches, 7 inches, 7.5 inches"
-variant_3:
+variant_2:
   name: "Gift Wrap"
   values: "Add Gift Wrap (+₹99)"
   is_checkbox: true
@@ -35,11 +35,13 @@ urgency_tag: "Restocked Today"
 related_products:
   - ethereal-gold-necklace
   - vintage-rose-gold-ring
+weight: 10
+shipping_slab: "small-jewelry"
 ---
 
 The Gold Chain Bracelet combines classic elegance with contemporary style. Its carefully crafted links catch the light beautifully, creating subtle shimmer with every movement.
 
-**Features:**
+### Features
 
 - 14k yellow gold
 - Secure lobster clasp

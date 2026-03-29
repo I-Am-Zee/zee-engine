@@ -8,12 +8,15 @@
  * @component Molecule (ui/)
  */
 
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { mapProduct } from "../../config/ecommerce";
 import GlassProductCard from "./GlassProductCard.astro";
 import ProductGrid from "../features/ProductGrid.astro";
+import ProductCarousel from "../features/ProductCarousel.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import BuySetButton from "../features/BuySetButton.astro";
+import SectionHeader from "./SectionHeader.astro";
 
 interface Props {
   productSlugs: string[];
@@ -36,88 +39,47 @@ const relatedProducts = productSlugs
   .filter((p): p is NonNullable<typeof p> => !!p)
   .slice(0, 4); // Max 4 products
 
-// Transform for BuySetButton (needs id, title, price, salePrice, image)
+// Transform for BuySetButton
 const productsForButton = [
-  // CRITICAL: Include the MAIN product first (what user came to view)
-  ...(() => {
-    if (!currentProduct) return [];
-    const p = allProducts.find((item) => item.slug === currentProduct.id);
-    return [
-      {
-        ...currentProduct,
-        description: p?.data?.description,
-        variant_1: p?.data?.variant_1,
-        variant_2: p?.data?.variant_2,
-        variant_3: p?.data?.variant_3,
-      },
-    ];
-  })(),
-  // Then add the related products (to complete the look)
-  ...relatedProducts.map((p: any) => ({
-    id: p.slug,
-    title: p.data.title,
-    price: p.data.price,
-    salePrice: p.data.salePrice,
-    image: p.data.image,
-    description: p.data.description,
-    variant_1: p.data.variant_1,
-    variant_2: p.data.variant_2,
-    variant_3: p.data.variant_3,
-  })),
-];
+  // Include the MAIN product
+  ...(currentProduct ? [allProducts.find(p => p.slug === currentProduct.id)].filter(Boolean) : []),
+  // Then the related products
+  ...relatedProducts
+] as CollectionEntry<"products">[];
 ---
 
 {
   relatedProducts.length > 0 && (
     <section 
-      class:list={["mt-24 border-t border-(--color-border-subtle) pt-16 pb-8", className]}
+      class:list={["mt-12 md:mt-16 border-t border-(--color-border-subtle) pt-12 md:pt-16 pb-8 md:pb-12 px-4 lg:px-8 max-w-7xl mx-auto", className]}
       id="perfect-pairings"
     >
       <script is:inline define:vars={{ 
-        relatedItems: productsForButton.slice(1)
+        relatedItems: productsForButton.slice(1).map(item => mapProduct(item))
       }}>
         // Expose related products for the Upsell Drawer with relative URLs
         // This ensures Snipcart's crawler resolves them against the CURRENT origin (tunnel, dev, or production)
-        window.ZAVIONA_UPSELL_CONTEXT = relatedItems.map(item => ({
+        window.ZELIA_UPSELL_CONTEXT = relatedItems.map(item => ({
           ...item,
           url: `/products/${item.id}`
         }));
       </script>
 
-      <div class="mb-10 lg:mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div>
-          <Heading as="h2" class="mb-2">
-            Perfect Pairings
-          </Heading>
-          <div class="flex items-center gap-3">
-            <Text variant="paragraph" color="muted" class="mb-0">
-              Curated pieces to elevate your ensemble
-            </Text>
-            <span class="text-text-muted opacity-50">|</span>
-            <Text variant="caption" weight="bold" class="text-text-muted capitalize tracking-widest mt-0.5">
-              {productsForButton.length} Items Total
-            </Text>
-          </div>
-        </div>
-        <div class="w-full md:w-auto md:min-w-[300px]">
+      <SectionHeader 
+        title="Perfect Pairings" 
+        subtitle="Curated pieces to elevate your ensemble"
+        align="left"
+        class="mb-10 lg:mb-14"
+      >
+        <span class="text-text-muted capitalize tracking-widest text-xs mt-2 font-bold block">
+          {productsForButton.length} Items Total
+        </span>
+        <Fragment slot="action">
           <BuySetButton products={productsForButton} class="w-full" hideSavingsText={true} />
-        </div>
-      </div>
+        </Fragment>
+      </SectionHeader>
 
-      <ProductGrid>
-        {relatedProducts.map((product) => (
-          <GlassProductCard
-            id={product.slug}
-            title={product.data.title}
-            price={product.data.price}
-            salePrice={product.data.salePrice}
-            image={product.data.image}
-            description={product.data.description}
-            href={`/products/${product.slug}`}
-            badges={product.data.badges}
-          />
-        ))}
-      </ProductGrid>
+      <ProductCarousel products={relatedProducts} columns={4} />
     </section>
   )
 }

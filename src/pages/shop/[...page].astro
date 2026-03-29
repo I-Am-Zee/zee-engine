@@ -27,9 +27,9 @@ const { page } = Astro.props;
 const products = page.data;
 ---
 
-<BaseLayout title="Shop All Jewelry | Zaviona">
+<BaseLayout title="Shop All Jewelry | Zelia Vance">
 
-  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data="productSorter">
+  <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8" x-data="productSorter">
     {/* Page Header */}
     <div class="mb-8 max-[425px]:text-center">
       <Heading as="h1" class="mb-2">All Jewelry</Heading>
@@ -61,19 +61,7 @@ const products = page.data;
                   : 0
               }
             >
-              <GlassProductCard
-                id={product.slug}
-                title={product.data.title}
-                price={product.data.price}
-                salePrice={product.data.salePrice}
-                image={product.data.image}
-                description={product.data.description}
-                href={`/products/${product.slug}`}
-                badges={product.data.badges}
-                variant_1={product.data.variant_1}
-                variant_2={product.data.variant_2}
-                variant_3={product.data.variant_3}
-              />
+              <GlassProductCard product={product} />
             </div>
           ))
         }

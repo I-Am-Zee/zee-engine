@@ -14,6 +14,8 @@ tags:
   - "diamond"
   - classic
   - "everyday"
+weight: 2.1
+shipping_slab: "small-jewelry"
 publishDate: 2024-12-01
 sku: "DSE-004"
 
@@ -26,7 +28,7 @@ related_products:
 
 Diamond Stud Earrings are the essential piece every jewelry collection needs. These brilliant-cut diamonds are set in a classic four-prong setting that maximizes light entry and sparkle.
 
-**Features:**
+### Features
 
 - 1 carat total weight (0.5ct each)
 - VS clarity, G color diamonds

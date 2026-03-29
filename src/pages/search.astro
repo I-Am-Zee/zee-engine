@@ -27,11 +27,11 @@ const searchableProducts = allProducts.map(p => ({
 }));
 ---
 
-<BaseLayout title="Search Our Collection | Zaviona">
+<BaseLayout title="Search Our Collection | Zelia Vance">
 
   <main class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data={`searchApp(${JSON.stringify(searchableProducts)})`}>
     <div class="mb-12 text-center">
-      <Heading as="h1" class="mb-4 uppercase tracking-wider">Search Our Collection</Heading>
+      <Heading as="h1" class="mb-12 uppercase tracking-wider">Search Our Collection</Heading>
       <div class="relative mx-auto max-w-2xl">
         <input
           type="text"
@@ -63,16 +63,7 @@ const searchableProducts = allProducts.map(p => ({
             data-slug={product.slug}
             x-cloak
           >
-            <GlassProductCard
-              id={product.slug}
-              title={product.data.title}
-              price={product.data.price}
-              salePrice={product.data.salePrice}
-              image={product.data.image}
-              description={product.data.description}
-              href={`/products/${product.slug}`}
-              badges={product.data.badges}
-            />
+            <GlassProductCard product={product} />
           </div>
         ))}
       </ProductGrid>
@@ -90,7 +81,7 @@ const searchableProducts = allProducts.map(p => ({
 
     {/* Initial State (when query is empty) */}
     <div x-show="query.length < 2" class="text-center py-20">
-      <div class="mb-6 opacity-30">
+      <div class="mb-10 opacity-30">
         <svg class="mx-auto h-24 w-24 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>

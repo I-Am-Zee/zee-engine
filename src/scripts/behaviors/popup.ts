@@ -36,12 +36,12 @@ export const popupBehavior = (couponCode: string) => ({
   },
 
   hasSeenPopup() {
-    const stored = localStorage.getItem('zaviona_popup_seen');
+    const stored = localStorage.getItem('zeliavance_popup_seen');
     if (!stored) return false;
     
     const now = new Date().getTime();
     if (now > parseInt(stored)) {
-      localStorage.removeItem('zaviona_popup_seen');
+      localStorage.removeItem('zeliavance_popup_seen');
       return false;
     }
     return true;
@@ -50,7 +50,7 @@ export const popupBehavior = (couponCode: string) => ({
   closePopup() {
     this.open = false;
     const expiry = new Date().getTime() + this.EXPIRY_TIME;
-    localStorage.setItem('zaviona_popup_seen', expiry.toString());
+    localStorage.setItem('zeliavance_popup_seen', expiry.toString());
   },
 
   /**

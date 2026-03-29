@@ -7,11 +7,12 @@ import Button from "../components/primitives/Button.astro";
 import Image from "../components/primitives/Image.astro";
 import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import CollectionCard from "../components/ui/CollectionCard.astro";
-import ProductGrid from "../components/features/ProductGrid.astro";
+import ProductCarousel from "../components/features/ProductCarousel.astro";
 
 import LookbookCarousel from "../components/features/LookbookCarousel.astro";
 import TrustSection from "../components/ui/TrustSection.astro";
 import Carousel from "../components/ui/Carousel.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
 
 // Pre-render at build time
 export const prerender = true;
@@ -33,7 +34,7 @@ const categories = [
 }));
 ---
 
-<BaseLayout title="Zaviona | Luxury Jewelry & Timeless Elegance">
+<BaseLayout title="Zelia Vance | Luxury Jewelry & Timeless Elegance">
   <main>
     {/* Hero Section */}
     <section class="relative h-[90vh] overflow-hidden bg-white">
@@ -67,27 +68,27 @@ const categories = [
     </section>
 
     {/* Categories Section */}
-    <section class="bg-background py-24 px-4 lg:px-8">
+    <section class="bg-background py-16 md:py-24 px-4 lg:px-8">
       <div class="mx-auto max-w-7xl">
-        <div class="mb-12 flex flex-col items-center justify-between gap-6 md:flex-row md:items-end max-[425px]:text-center">
-          <div class="flex flex-col items-center md:items-start">
-            <Heading as="h2">Shop by Category</Heading>
-            <Text variant="paragraph" color="muted" class="mt-2 text-center md:text-left">
-              Explore our diverse ranges of jewelry, designed with luxury and sophistication in mind.
-            </Text>
-          </div>
-          <Button as="a" href="/collections" type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
-            Explore All Categories &rarr;
-          </Button>
-        </div>
+        <SectionHeader 
+          title="Shop by Category" 
+          subtitle="Explore our diverse ranges of jewelry, designed with luxury and sophistication in mind."
+          align="left"
+        >
+          <Fragment slot="action">
+            <Button as="a" href="/collections" type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
+              Explore All Categories &rarr;
+            </Button>
+          </Fragment>
+        </SectionHeader>
         
         <Carousel 
-          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1, padding: '12vw', gap: '1rem' } } })" 
-          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0"
-          trackClass="!py-8 !-my-8"
+          options={{ perPage: 4, perMove: 1, gap: 24, type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3, gap: 24 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' }, gap: 16 }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }}
+          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16"
+          trackClass="py-4"
         >
           {categories.map((category) => (
-            <li class="splide__slide h-auto pb-4">
+            <li class="splide__slide h-auto py-4">
               <CollectionCard 
                 title={category.name}
                 href={category.href}
@@ -101,42 +102,21 @@ const categories = [
     </section>
 
     {/* Featured Products */}
-    <section class="bg-surface py-24 px-4 lg:px-8">
+    <section class="bg-surface py-16 md:py-24 px-4 lg:px-8">
       <div class="mx-auto max-w-7xl">
-        <div class="mb-12 flex flex-col items-center justify-between gap-6 md:flex-row md:items-end max-[425px]:text-center">
-          <div class="flex flex-col items-center md:items-start">
-            <Heading as="h2">Featured Pieces</Heading>
-            <Text variant="paragraph" color="muted" class="mt-2 text-center md:text-left">Hand-selected favorites from our latest season.</Text>
-          </div>
-          <Button as="a" href="/shop" type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
-            View All Products &rarr;
-          </Button>
-        </div>
-        
-        <Carousel 
-          x-data="carousel({ perPage: 4, gap: '1.5rem', type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3 }, 768: { perPage: 2 }, 640: { perPage: 1, padding: '12vw', gap: '1rem' } } })" 
-          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-12"
-          trackClass="!py-8 !-my-8"
-          showArrows={true}
+        <SectionHeader 
+          title="Featured Pieces" 
+          subtitle="Hand-selected favorites from our latest season."
+          align="left"
         >
-          {featuredProducts.map((product) => (
-            <li class="splide__slide h-auto pt-4 relative group">
-              <GlassProductCard
-                id={product.slug}
-                title={product.data.title}
-                price={product.data.price}
-                salePrice={product.data.salePrice}
-                image={product.data.image}
-                description={product.data.description}
-                href={`/products/${product.slug}`}
-                badges={product.data.badges}
-                variant_1={product.data.variant_1}
-                variant_2={product.data.variant_2}
-                variant_3={product.data.variant_3}
-              />
-            </li>
-          ))}
-        </Carousel>
+          <Fragment slot="action">
+            <Button as="a" href="/shop" type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
+              View All Products &rarr;
+            </Button>
+          </Fragment>
+        </SectionHeader>
+        
+        <ProductCarousel products={featuredProducts} columns={4} />
       </div>
     </section>
 

@@ -71,15 +71,29 @@ export const POST: APIRoute = async ({ request }) => {
     // Get the base URL for the checkout page
     // DEPLOY_PRIME_URL is provided by Netlify for both preview and production
     // This enables free, unlimited Deploy Previews
-    // Get the base URL dynamically from the incoming request's actual origin.
-    // This ensures we return the exact domain Snipcart is interacting with
-    // (e.g., zeliavance.com instead of zaviona-dev.netlify.app)
-    const siteOrigin = new URL(request.url).origin;
+    // Cleanly construct the public-facing URL using proxy headers
+    // Cloudflare Named Tunnels set the `host` header, NOT `x-forwarded-host`
+    // The `x-forwarded-proto` tells us whether the client used https
+    const hostHeader = request.headers.get("host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    const forwardedHost = request.headers.get("x-forwarded-host");
     
-    const siteUrl = siteOrigin || 
-                    import.meta.env.PUBLIC_SITE_URL || 
-                    siteConfig.url ||
-                    'http://localhost:4321';
+    // Use whichever host header is present (prefer x-forwarded-host for Netlify, fall back to host for Cloudflare)
+    const effectiveHost = forwardedHost || hostHeader;
+    
+    let siteUrl: string;
+    if (effectiveHost && !effectiveHost.includes('localhost') && !effectiveHost.includes('127.0.0.1')) {
+      // Public domain - use https (either from x-forwarded-proto or always https for public domains)
+      const protocol = forwardedProto === 'https' ? 'https' : 'https'; // always https for public domains
+      siteUrl = `${protocol}://${effectiveHost}`;
+    } else {
+      // Local dev - use http
+      siteUrl = new URL(request.url).origin;
+      // Fallback: if still localhost and we have a configured URL, use it
+      if ((siteUrl.includes('localhost') || siteUrl.includes('127.0.0.1')) && import.meta.env.PUBLIC_SITE_URL) {
+        siteUrl = import.meta.env.PUBLIC_SITE_URL.replace(/\/$/, '');
+      }
+    }
     
     // Get available gateways for customer's country
     const availableGateways = getGatewaysForCountry(customerCountry);
@@ -95,12 +109,12 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Map gateways to Snipcart payment methods
+    // iconUrl is intentionally omitted — Snipcart renders the name as clean text when absent
     const paymentMethods: PaymentMethod[] = availableGateways.map((gateway) => ({
       id: gateway.id,
       name: gateway.name,
       checkoutUrl: `${siteUrl}/checkout/${gateway.id}`,
-      // Future: Add gateway-specific icons
-      // iconUrl: gateway.iconUrl
+      ...(gateway.iconUrl ? { iconUrl: gateway.iconUrl } : {}),
     }));
 
     console.log('[payment-methods] Returning', paymentMethods.length, 'payment methods');

@@ -1,17 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/features/Navbar.astro";
-import Footer from "../components/features/Footer.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 
 export const prerender = true;
 ---
 
-<BaseLayout title="Shipping & Returns | Zaviona">
-  <Navbar />
-  <main class="mx-auto max-w-3xl px-4 py-24 text-center">
-    <Heading as="h1" class="mb-6">Shipping & Returns</Heading>
+<BaseLayout title="Shipping & Deliveries | Zelia Vance">
+  <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
+    <Heading as="h1" class="mb-6">Shipping & Deliveries</Heading>
     <Text variant="lead" color="muted" class="mb-8">
       We want you to be completely satisfied with your purchase. Returns and exchanges are accepted within 30 days of delivery.
     </Text>
@@ -19,5 +16,4 @@ export const prerender = true;
       Our full returns portal is currently under development. Please contact our concierge team for assistance with a return.
     </Text>
   </main>
-  <Footer />
 </BaseLayout>

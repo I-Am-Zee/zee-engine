@@ -15,37 +15,52 @@ import Icon from "../primitives/Icon.astro";
 import Image from "../primitives/Image.astro";
 import PriceTag from "./PriceTag.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
+import { mapProduct } from "../../config/ecommerce";
+import type { CollectionEntry } from "astro:content";
 
 interface Props {
+  product?: CollectionEntry<"products">; // Raw product entry (optional for backward compatibility)
   id?: string;
-  image: string;
-  title: string;
-  price: number;
+  title?: string;
+  price?: number;
   salePrice?: number;
-  href: string;
+  image?: string;
+  href?: string;
   badges?: string[];
-  variant_1?: any;
-  variant_2?: any;
-  variant_3?: any;
-  description?: string;
   class?: string;
+  [key: string]: any;
 }
 
 const {
-  id = "",
-  image,
-  title,
-  price,
-  salePrice,
-  href,
-  badges = [],
-  variant_1 = "",
-  variant_2 = "",
-  variant_3 = "",
-  description = title,
+  product,
+  id: manualId,
+  title: manualTitle,
+  price: manualPrice,
+  salePrice: manualSalePrice,
+  image: manualImage,
+  href: manualHref,
+  badges: manualBadges,
   class: className,
   ...rest
 } = Astro.props;
+
+// Use mapping for consistent data access
+// prioritize raw product data, fallback to manual props
+const p = product ? mapProduct(product) : {
+  id: manualId || "",
+  title: manualTitle || "",
+  price: manualPrice || 0,
+  salePrice: manualSalePrice,
+  image: manualImage || "",
+};
+
+const title = p.title;
+const price = p.price;
+const salePrice = p.salePrice;
+const image = p.image;
+const href = manualHref || `/products/${p.id}`;
+const id = p.id;
+const badges = manualBadges || (product?.data?.badges) || [];
 
 const sortedBadges = sortBadgesByHierarchy(badges);
 
@@ -109,28 +124,27 @@ const priceTagProps = hasSale
   )}
 
   {/* Protective radial scrim for icon contrast on light backgrounds */}
-  <div class="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-black/20 via-black/0 to-transparent z-20 pointer-events-none rounded-tr-2xl"></div>
+  <div class="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-black/20 via-black/0 to-transparent z-20 pointer-events-none rounded-tr-2xl"></div>
+  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700
+              bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent"></div>
 
   {/*
     TOP-RIGHT: Action buttons.
-    - isolate: prevents z-index compositing glitches
-    - transition-[transform,...]: prevents layout-jitter from transition-all
-    - transform-gpu: hardware-accelerated scale, eliminates pixel jitter on hover
   */}
   <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2 isolate">
     <button
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
-             bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-md
+             bg-white/50 backdrop-blur-3xl border border-white/60 shadow-md
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed group relative"
       x-data={`{ id: '${id}' }`}
       x-on:click.prevent="$store.wishlist.toggle(id)"
-      x-bind:class="$store.wishlist.has(id) ? '!text-red-500 !bg-white !border-transparent' : ''"
+      x-bind:class="$store.wishlist.has(id) ? 'text-red-500! bg-white! border-transparent!' : ''"
       aria-label="Toggle wishlist"
     >
       <Icon name="PhHeart" size={17} weight="regular" class="absolute shrink-0 transition-colors" x-show="!$store.wishlist.has(id)" />
-      <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 !text-red-500 transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
+      <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 text-red-500! transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
     </button>
 
     <button
@@ -139,7 +153,7 @@ const priceTagProps = hasSale
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
-      x-on:click.prevent.stop={`$dispatch('zaviona:quick-shop', ${JSON.stringify({id, title, price, salePrice, image, description, variant_1, variant_2, variant_3})})`}
+      x-on:click.prevent.stop={`$dispatch('zeliavance:quick-shop', ${JSON.stringify(p)})`}
       aria-label={"Quick shop " + title}
     >
       <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />

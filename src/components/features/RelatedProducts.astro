@@ -2,8 +2,14 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import ProductGrid from "./ProductGrid.astro";
+import ProductCarousel from "./ProductCarousel.astro";
+import Carousel from "../ui/Carousel.astro";
 import GlassProductCard from "../ui/GlassProductCard.astro";
 import Heading from "../primitives/Heading.astro";
+
+import GlassProductCard from "../ui/GlassProductCard.astro";
+import Heading from "../primitives/Heading.astro";
+import SectionHeader from "../ui/SectionHeader.astro";
 
 interface Props {
   currentProduct: CollectionEntry<"products">;
@@ -28,29 +34,14 @@ const displayProducts = allProducts
 
 {
   displayProducts.length > 0 && (
-    <section class="mt-24 border-t border-(--color-border-subtle) pt-16 pb-8">
-      <div class="mb-10 lg:mb-12">
-        <Heading as="h2" class="mb-2">
-          You May Also Like
-        </Heading>
-        <p class="text-(--color-text-muted)">
-          Complement your look with these handpicked pieces
-        </p>
-      </div>
+    <section class="mt-12 md:mt-16 border-t border-(--color-border-subtle) pt-12 md:pt-16 pb-8 md:pb-12 px-4 lg:px-8 max-w-7xl mx-auto">
+      <SectionHeader 
+        title="You May Also Like" 
+        subtitle="Complement your look with these handpicked pieces" 
+        align="left"
+      />
 
-      <ProductGrid>
-        {displayProducts.map((p) => (
-          <GlassProductCard
-            id={p.slug}
-            title={p.data.title}
-            price={p.data.price}
-            salePrice={p.data.salePrice}
-            image={p.data.image}
-            href={`/products/${p.slug}`}
-            badges={p.data.badges}
-          />
-        ))}
-      </ProductGrid>
+      <ProductCarousel products={displayProducts} columns={4} />
     </section>
   )
 }

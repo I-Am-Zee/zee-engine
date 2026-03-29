@@ -21,14 +21,14 @@ import EmptyState from "../components/ui/EmptyState.astro";
 const allProducts = await getCollection("products");
 ---
 
-<BaseLayout title="My Wishlist | Zaviona">
+<BaseLayout title="My Wishlist | Zelia Vance">
 
   <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data>
     {/* Page Header */}
-    <div class="mb-8 border-b border-[var(--color-border-subtle)] pb-6">
-      <Heading as="h1" class="mb-2">My Wishlist</Heading>
+    <div class="mb-8 border-b border-(--color-border-subtle) pb-6">
+      <Heading as="h1" class="mb-2 text-text-main font-serif">My Wishlist</Heading>
       <Text variant="paragraph" color="muted">
-        <span x-text="$store.wishlist.count">0</span> saved items
+        <span x-text="$store.wishlist.count" class="font-bold text-text-main">0</span> saved items
       </Text>
     </div>
 
@@ -48,15 +48,7 @@ const allProducts = await getCollection("products");
         {
           allProducts.map((product) => (
             <div x-show={`$store.wishlist.has('${product.slug}')`} x-cloak>
-              <GlassProductCard
-                id={product.slug}
-                title={product.data.title}
-                price={product.data.price}
-                salePrice={product.data.salePrice}
-                image={product.data.image}
-                href={`/products/${product.slug}`}
-                badges={product.data.badges}
-              />
+              <GlassProductCard product={product} />
             </div>
           ))
         }

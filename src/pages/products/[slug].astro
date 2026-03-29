@@ -58,8 +58,40 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
 const sortedBadges = sortBadgesByHierarchy(badges);
 ---
 
-<BaseLayout title={`${product.data.title} | Zaviona`}>
-  <div x-data="{ showStickyCart: false }" @scroll.window="showStickyCart = window.scrollY > 500">
+<BaseLayout title={`${product.data.title} | Zelia Vance`}>
+  <div x-data={`{ 
+    showStickyCart: false,
+    error: '',
+    errorTimer: null,
+    validateAdd(e) {
+      const btn = e.currentTarget;
+      for(let i=1; i<=3; i++) {
+        const customName = btn.dataset['itemCustom' + i + 'Name'];
+        if(customName) {
+          const sel = document.querySelector('.product-variant-selector[data-variant-name="' + customName + '"]');
+          if(sel && !sel.value) {
+            this.error = 'Please select a ' + customName + ' to add to cart.';
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            // Final 3: Self-destruct timer (matches SideDrawer)
+            if(this.errorTimer) clearTimeout(this.errorTimer);
+            this.errorTimer = setTimeout(() => this.error = '', 4000);
+
+            if (window.innerWidth < 1024) window.scrollTo({ top: document.querySelector('.product-actions-row').offsetTop - 150, behavior: 'smooth' });
+            return;
+          } else if(sel && sel.value) {
+            btn.dataset['itemCustom' + i + 'Value'] = sel.value;
+          }
+        }
+      }
+      this.error = '';
+      if(this.errorTimer) clearTimeout(this.errorTimer);
+    }
+  }`} 
+  @scroll.window="showStickyCart = window.scrollY > 500 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
+  @change="if($event.target.closest('fieldset')) { error = ''; if(errorTimer) clearTimeout(errorTimer); }"
+  >
     <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
       {/* Breadcrumbs */}
       <div class="mt-4 mb-8">
@@ -188,19 +220,26 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             )
           }
 
-          <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6 relative">
+          <template x-if="error">
+            <div x-show="error" x-transition x-cloak class="mt-6 bg-accent-coral/10 border border-accent-coral/20 text-accent-coral px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-sm">
+              <span x-text="error"></span>
+            </div>
+          </template>
+
+          <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
             {/* Add to Cart Button - Snipcart */}
             <AddToCartButton
               product={product}
               size="lg"
-              class="w-full sm:flex-1 whitespace-nowrap h-[52px]"
+              class="w-full sm:flex-1 whitespace-nowrap h-13"
               disabled={isComingSoon ?? false}
+              @click="validateAdd($event)"
             >
               {isComingSoon ? "Coming Soon" : "Add to Cart"}
             </AddToCartButton>
 
             {/* Wishlist Button - Uses global store */}
-            <WishlistButton productId={product.slug} variant="with-label" size="lg" class="h-[52px]" />
+            <WishlistButton productId={product.slug} variant="with-label" size="lg" class="h-13" />
           </div>
         </div>
 
@@ -208,7 +247,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         <hr class="my-12 border-(--color-border-subtle)" />
 
         {/* Details Zone: The Story (Markdown Content) */}
-        <div class="product-story prose prose-slate max-w-none">
+        <div class="product-story prose prose-zelia max-w-none">
           <Content />
         </div>
       </div>
@@ -243,7 +282,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
       x-transition:leave="transition ease-in duration-200 transform"
       x-transition:leave-start="translate-y-0 opacity-100"
       x-transition:leave-end="translate-y-full opacity-0"
-      class="fixed right-0 bottom-0 left-0 z-50 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+      class="fixed right-0 bottom-0 left-0 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-[50]"
       x-cloak
     >
       <div class="mx-auto flex max-w-lg items-center gap-3">
@@ -256,6 +295,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
           size="md"
           disabled={isComingSoon ?? false}
           class="shrink-0"
+          @click="validateAdd($event)"
         >
           {isComingSoon ? "Soon" : "Add"}
         </AddToCartButton>
@@ -336,10 +376,5 @@ const sortedBadges = sortBadgesByHierarchy(badges);
     padding-left: 0.5rem;
   }
 
-  /* Add padding to account for sticky mobile bar */
-  @media (max-width: 1023px) {
-    :global(body) {
-      padding-bottom: 80px;
-    }
-  }
+  /* Removed padding for sticky mobile bar as it now auto-hides at footer */
 </style>

@@ -29,63 +29,69 @@ async function applyCouponCode(code: string): Promise<boolean> {
     sessionStorage.removeItem('pending_coupon');
     
     // TODO: Show toast notification "Discount Applied!"
-    // You can integrate with your existing CartAlert component here
     console.log('[Coupon] ✅ Applied successfully:', code);
     
     return true;
   } catch (error) {
     console.error('[Coupon] ❌ Failed to apply:', error);
-    // Keep in storage for retry
+    // Remove from storage to prevent infinite loops on invalid/expired coupons
+    sessionStorage.removeItem('pending_coupon');
     return false;
   }
 }
 
+let isApplyingCoupon = false;
+
 // Helper: Check if we can apply the coupon now
 async function tryApplyPendingCoupon() {
+  if (isApplyingCoupon) return;
+  
   const pendingCode = sessionStorage.getItem('pending_coupon');
   if (!pendingCode) return;
-
-  console.log('[Coupon] Found pending coupon:', pendingCode);
 
   // Check if user is logged in
   const state = window.Snipcart.store.getState();
   const customer = state.customer;
   
-  if (!customer || !customer.email) {
-    console.log('[Coupon] User not logged in yet, waiting...');
+  if (!customer || customer.status !== 'SignedIn') {
+    // Only log once to avoid spamming the console on every state change
+    if (!window.sessionStorage.getItem('snipcart_hydration_logged')) {
+      console.log('[Coupon] User not logged in (or session still hydrating)...');
+      window.sessionStorage.setItem('snipcart_hydration_logged', 'true');
+    }
     return;
   }
-
-  console.log('[Coupon] User is logged in:', customer.email);
 
   // Check if cart has items
   const cart = state.cart;
   const itemCount = cart?.items?.count || 0;
 
   if (itemCount > 0) {
-    console.log('[Coupon] Cart has items, applying now...');
+    console.log('[Coupon] Conditions met (Logged in + Items in cart). Applying now...');
+    isApplyingCoupon = true;
     await applyCouponCode(pendingCode);
-  } else {
-    console.log('[Coupon] Cart is empty, will apply when item is added...');
-    // Listener is set up below to handle item.added
+    isApplyingCoupon = false;
   }
 }
 
 // Initialize when Snipcart is ready
 function initSnipcartHandlers() {
   console.log('[Coupon] Snipcart ready/detected, initializing event handlers...');
+  
+  // Clear the hydration log flag on fresh load
+  window.sessionStorage.removeItem('snipcart_hydration_logged');
 
-  // CRITICAL: Check immediately for already-logged-in users
+  // Check immediately in case session is already hydrated
   tryApplyPendingCoupon();
 
-  // Listen for new sign-ins (users who weren't logged in)
-  window.Snipcart.events.on('customer.signedin', async (customer: any) => {
-    console.log('[Coupon] Customer signed in:', customer.email);
-    tryApplyPendingCoupon();
+  // Subscribe to state changes to catch session restorations and cart updates dynamically
+  // This handles the "page refresh" hydration correctly and watches for new items
+  window.Snipcart.store.subscribe(() => {
+    const pendingCode = sessionStorage.getItem('pending_coupon');
+    if (pendingCode) {
+      tryApplyPendingCoupon();
+    }
   });
-
-  // Note: item.added listener for UpsellDrawer moved to inline script in BaseLayout.astro
-  // to ensure reliability across page navigations and script loading orders.
 }
 
 // Handle both 'ready' event and late script loading

@@ -1,14 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from "astro:content";
+import { mapProduct } from "../../config/ecommerce";
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
 import Icon from '../../components/primitives/Icon.astro';
+import Button from '../../components/primitives/Button.astro';
 import GlassProductCard from '../../components/ui/GlassProductCard.astro';
 import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
 import Image from '../../components/primitives/Image.astro';
+import CompleteTheLook from '../../components/ui/CompleteTheLook.astro';
+import Carousel from '../../components/ui/Carousel.astro';
+import ProductCarousel from '../../components/features/ProductCarousel.astro';
+import CollectionCard from '../../components/ui/CollectionCard.astro';
+import SectionHeader from '../../components/ui/SectionHeader.astro';
 
 export const getStaticPaths = (async () => {
   const lookbooks = await getCollection('lookbooks');
@@ -24,34 +31,26 @@ const { Content } = await lookbook.render();
 
 // Fetch full product data
 const allProducts = await getCollection('products');
+const allLookbooks = await getCollection('lookbooks');
+const relatedLookbooks = allLookbooks.filter((lb) => lb.slug !== lookbook.slug);
 
 // Filter only valid products that exist in the collection
 const products = (productSlugs || [])
   .map((slug) => allProducts.find((p) => p.slug === slug))
   .filter((p): p is NonNullable<typeof p> => !!p);
 
-// Transform for BuySetButton - Include Variant Data with Safety
-const productsForButton = (products || []).map((p) => ({
-  id: p.slug,
-  title: p.data?.title || 'Unknown Product',
-  price: p.data?.price || 0,
-  salePrice: p.data?.salePrice,
-  image: p.data?.image || '',
-  description: p.data?.description || '',
-  variant_1: p.data?.variant_1,
-  variant_2: p.data?.variant_2,
-  variant_3: p.data?.variant_3,
-}));
+// Transform for BuySetButton - Flatten to clean objects for client-side serialization
+const productsForButton = products.map(p => mapProduct(p));
 
 // SEO
-const pageTitle = `${title} | Shop the Look | Zaviona`;
+const pageTitle = `${title} | Shop the Look | Zelia Vance`;
 const pageDescription = description || 'Discover our curated jewelry collection';
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <!-- Breadcrumbs -->
   <nav class="bg-surface border-b border-border-subtle py-3">
-    <div class="container mx-auto px-4 max-w-7xl">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
       <ol class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-text-muted">
         <li><a href="/" class="hover:text-text-main transition-colors">Home</a></li>
         <li class="opacity-30">/</li>
@@ -75,7 +74,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     
     <!-- Title Overlay -->
     <div class="absolute bottom-0 left-0 right-0 p-8 md:p-20 text-white">
-      <div class="container mx-auto max-w-7xl">
+      <div class="mx-auto max-w-7xl px-4 lg:px-8">
         <Text variant="caption" class="text-accent-brass font-bold uppercase tracking-[0.3em] mb-4">Editorial Spotlight</Text>
         <Heading as="h1" class="mb-6 text-white">
           {title}
@@ -89,38 +88,43 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     </div>
   </div>
 
+  <!-- Editorial Gallery -->
+  {lookbook.data.gallery && lookbook.data.gallery.length > 0 && (
+    <section class="bg-surface py-12 md:py-16 px-4">
+      <div class="mx-auto max-w-7xl px-4 lg:px-8">
+        <SectionHeader title="Editorial Gallery" subtitle="A closer look at the intricate details and design language." />
+        <Carousel 
+          options={{ perPage: 3, gap: 24, type: lookbook.data.gallery.length > 3 ? 'loop' : 'slide', pagination: true, autoplay: lookbook.data.gallery.length > 3, interval: 4000, pauseOnHover: true, breakpoints: { 1024: { perPage: 2 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' } }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }} 
+          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-8"
+          trackClass="py-4"
+          showArrows={lookbook.data.gallery.length > 3}
+        >
+          {lookbook.data.gallery.map((img) => (
+            <li class="splide__slide flex justify-center items-center h-auto">
+              <div class="aspect-4/5 w-full max-w-sm md:max-w-md lg:max-w-lg rounded-2xl overflow-hidden cursor-zoom-in active:scale-[0.98] transition-all">
+                <Image 
+                  src={img} 
+                  alt={`${title} Editorial Detail`} 
+                  class="w-full h-full object-cover transition-transform duration-1000 hover:scale-[1.03]"
+                  @click={`$dispatch('open-lightbox', { src: '${img}', alt: '${title} Editorial Detail' })`}
+                />
+              </div>
+            </li>
+          ))}
+        </Carousel>
+      </div>
+    </section>
+  )}
+
   <!-- Products Section -->
   {products.length > 0 && (
-    <section class="container mx-auto px-4 py-16 md:py-24 max-w-7xl" id="products">
-      <div class="mb-12 md:mb-20 text-center px-4">
-        <Heading as="h2" class="mb-4 md:mb-6">
-          Shop the Ensemble
-        </Heading>
-        <div class="h-1 w-16 md:w-20 bg-accent-brass mx-auto mb-6 md:mb-8"></div>
-        <Text class="max-w-2xl mx-auto italic text-text-muted text-sm md:text-base">
-          Our senior stylists have curated these pieces specifically for their complementary silhouettes and materials.
-        </Text>
-      </div>
+    <section class="mx-auto max-w-7xl px-4 lg:px-8 py-12 md:py-16" id="products">
+      <SectionHeader 
+        title="Shop the Ensemble" 
+        subtitle="Our senior stylists have curated these pieces specifically for their complementary silhouettes and materials." 
+      />
 
-      <!-- Product Grid with Selection -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 mb-24">
-        {products.map((product) => (
-          <div class="flex flex-col group">
-            <GlassProductCard
-              id={product.slug}
-              title={product.data.title}
-              price={product.data.price}
-              salePrice={product.data.salePrice}
-              image={product.data.image}
-              description={product.data.description}
-              href={`/products/${product.slug}`}
-              variant_1={product.data.variant_1}
-              variant_2={product.data.variant_2}
-              variant_3={product.data.variant_3}
-            />
-          </div>
-        ))}
-      </div>
+      <ProductCarousel products={products} columns={3} class="mb-16" />
 
       <!-- Buy Complete Look Button -->
       <div class="bg-white/50 backdrop-blur-sm relative overflow-hidden rounded-3xl p-6 md:p-20 border border-border-subtle/50 max-w-5xl mx-auto text-center shadow-sm">
@@ -145,12 +149,12 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   )}
 
   <!-- Story Content -->
-  <section class="bg-background py-32 border-y border-border-subtle relative">
+  <section class="bg-background py-12 md:py-16 border-y border-border-subtle relative">
     <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/silk-weave.png');"></div>
     <div class="container mx-auto px-4 relative z-10">
       <div class="max-w-4xl mx-auto">
-        <Heading as="h3" class="text-center mb-16 uppercase tracking-[0.4em] font-black text-text-muted">The Narrative</Heading>
-        <div class="prose prose-stone prose-xl mx-auto italic font-serif leading-relaxed text-center text-text-main drop-shadow-sm">
+        <SectionHeader title="The Narrative" />
+        <div class="prose prose-zelia max-w-3xl mx-auto">
           <Content />
         </div>
       </div>
@@ -158,8 +162,8 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   </section>
 
   <!-- Related Lookbooks (Recommendation) -->
-  <section class="container mx-auto px-4 py-32 max-w-7xl">
-     <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-16 border-b border-border-subtle pb-8 max-[425px]:items-center max-[425px]:text-center">
+  <section class="mx-auto max-w-7xl px-4 lg:px-8 py-12 md:py-16">
+     <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-8 md:mb-12 max-[425px]:items-center max-[425px]:text-center">
        <div>
          <Heading as="h2">Continue Exploring</Heading>
          <Text variant="caption" class="mt-2 block uppercase tracking-widest text-accent-brass font-bold">More Editorial Stories</Text>
@@ -168,24 +172,33 @@ const pageDescription = description || 'Discover our curated jewelry collection'
          All Stories <span class="group-hover:translate-x-2 transition-transform">&rarr;</span>
        </a>
      </div>
-     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {(await getCollection('lookbooks')).filter(lb => lb.slug !== lookbook.slug).slice(0, 2).map(lb => (
-          <a href={`/lookbooks/${lb.slug}`} class="group relative aspect-video overflow-hidden rounded-2xl bg-black">
-            <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-2000 group-hover:scale-110 brightness-75" />
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-12 transition-colors group-hover:bg-black/20">
-              <Text variant="caption" class="text-white/60 mb-2 uppercase tracking-widest group-hover:text-white transition-colors">Editorial</Text>
-              <Heading as="h3" class="text-white tracking-widest uppercase">{lb.data.title}</Heading>
-              <div class="mt-6 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-24"></div>
-            </div>
-          </a>
+     
+     <Carousel 
+        options={{ perPage: 3, gap: 32, type: relatedLookbooks.length > 3 ? 'loop' : 'slide', pagination: true, breakpoints: { 1024: { perPage: 2 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' } }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }} 
+        class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16 related-carousel"
+        trackClass="py-4"
+        showArrows={relatedLookbooks.length > 3}
+      >
+        {relatedLookbooks.map(lb => (
+          <li class="splide__slide flex justify-center h-auto">
+            <a href={`/lookbooks/${lb.slug}`} class="group block relative w-full max-w-sm md:max-w-md lg:max-w-lg aspect-4/5 overflow-hidden rounded-3xl bg-black focus-glow">
+              <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-[1.05]" />
+              <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/10"></div>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                <Text variant="caption" class="text-accent-brass mb-3 uppercase tracking-widest block font-bold drop-shadow-md">Editorial Story</Text>
+                <Heading as="h3" class="text-white font-serif tracking-tight text-3xl md:text-4xl mb-6 drop-shadow-lg">{lb.data.title}</Heading>
+                <div class="h-0.5 w-12 bg-white/50 mx-auto group-hover:w-24 group-hover:bg-accent-brass transition-all duration-500"></div>
+              </div>
+            </a>
+          </li>
         ))}
-     </div>
+     </Carousel>
   </section>
 
   <!-- Sticky Mobile CTA -->
   <div 
     x-data="{ show: false }"
-    @scroll.window="show = window.scrollY > 800"
+    @scroll.window="show = window.scrollY > 800 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
     x-show="show"
     x-transition:enter="transition ease-out duration-300 transform"
     x-transition:enter-start="translate-y-full"
@@ -193,19 +206,19 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     x-transition:leave="transition ease-in duration-200 transform"
     x-transition:leave-start="translate-y-0"
     x-transition:leave-end="translate-y-full"
-    class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)]"
+    class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-[50]"
     x-cloak
   >
     <div class="container mx-auto">
-      <button
-        @click="$dispatch('zaviona:master-set', { products: productsForButton })"
-        class="relative w-full rounded-xl bg-primary px-8 py-4 text-sm font-black tracking-[0.2em] text-white uppercase shadow-lg active:scale-[0.98] transition-all cursor-pointer disabled:cursor-not-allowed"
+      <Button
+        type="primary"
+        size="lg"
+        @click={`$dispatch('zeliavance:master-set', { products: ${JSON.stringify(productsForButton)} })`}
+        class="w-full py-4 uppercase tracking-[0.2em] text-xs font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
       >
-        <div class="flex items-center justify-center gap-3">
-          <Icon name="PhShoppingBagOpen" size={18} weight="bold" />
-          <span>Acquire Set (₹{productsForButton.reduce((sum, p) => sum + (p.salePrice || p.price), 0).toLocaleString("en-IN")})</span>
-        </div>
-      </button>
+        <Icon name="PhShoppingBagOpen" size={20} weight="bold" />
+        <span>Acquire Set (₹{productsForButton.reduce((sum, p) => sum + (p.salePrice || p.price || 0), 0).toLocaleString("en-IN")})</span>
+      </Button>
     </div>
   </div>
 </BaseLayout>
