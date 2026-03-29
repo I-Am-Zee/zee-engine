@@ -36,6 +36,7 @@ This is the only evidence we accept. Claims without an unboxing video **cannot b
 **Why?** Because it protects you from courier damage being attributed to you, and it protects us from fraudulent claims. It's fair to everyone.
 
 **Tips for a valid video:**
+
 - Film in good lighting
 - Don't pause or cut the recording
 - Capture the sealed outer box, then the inner packaging, then the product
@@ -72,10 +73,10 @@ Once your claim is reviewed and approved:
 
 ### Refund Timeline
 
-| Payment Method | Refund Process | Timeline |
-|---|---|---|
-| **Prepaid** (UPI / Card / Net Banking) | Automatic via Razorpay | 5–7 business days to source account |
-| **Cash on Delivery (COD)** | Manual NEFT/UPI transfer | 7–10 business days (we'll request your bank details) |
+| Payment Method                         | Refund Process           | Timeline                                             |
+| -------------------------------------- | ------------------------ | ---------------------------------------------------- |
+| **Prepaid** (UPI / Card / Net Banking) | Automatic via Razorpay   | 5–7 business days to source account                  |
+| **Cash on Delivery (COD)**             | Manual NEFT/UPI transfer | 7–10 business days (we'll request your bank details) |
 
 ---
 

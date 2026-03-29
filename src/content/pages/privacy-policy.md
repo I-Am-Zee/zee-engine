@@ -15,7 +15,7 @@ This policy is compliant with the **Digital Personal Data Protection (DPDP) Act,
 **I Am Zee** (operating as Zelia Vance)
 Sector 77, S.A.S. Nagar (Mohali), Punjab — 160077, India
 
-Contact for privacy queries: **support@zeliavance.com**
+Contact for privacy queries: **legal@zeliavance.com**
 
 ---
 
@@ -25,13 +25,13 @@ Contact for privacy queries: **support@zeliavance.com**
 
 When you place an order or interact with our platform, you provide:
 
-| Data | Why We Collect It |
-|---|---|
-| Full name | Order fulfilment, shipping label |
-| Email address | Order confirmation, transactional emails |
-| Phone number | Delivery coordination, tracking updates |
-| Delivery address | Shipping via Shiprocket |
-| Payment details | Processed securely by Razorpay — **we never see or store your card/UPI details** |
+| Data             | Why We Collect It                                                                |
+| ---------------- | -------------------------------------------------------------------------------- |
+| Full name        | Order fulfilment, shipping label                                                 |
+| Email address    | Order confirmation, transactional emails                                         |
+| Phone number     | Delivery coordination, tracking updates                                          |
+| Delivery address | Shipping via Shiprocket                                                          |
+| Payment details  | Processed securely by Razorpay — **we never see or store your card/UPI details** |
 
 ### 2.2 Data Collected Automatically
 
@@ -40,7 +40,7 @@ When you browse our website, we automatically collect:
 - **Device & browser information** (type, OS, screen resolution)
 - **IP address** (for geographic analytics only)
 - **Pages visited, time spent, referral source** (via analytics)
-- **Cookies** (see Section 5)
+- **Cookies & Web Beacons** (see Section 5)
 
 This data is aggregated and anonymised — it helps us understand how our store is used so we can improve the experience.
 
@@ -56,7 +56,7 @@ We use your personal data strictly for the following purposes:
 4. **Transactional communication** — sending order confirmations, shipping updates, and delivery notifications
 5. **Marketing** (with your consent only) — promotional emails if you've opted in via our newsletter. You can unsubscribe at any time.
 
-We do not use your data for profiling, automated decision-making, or targeted advertising.
+We do not use your data for profiling or automated decision-making.
 
 ---
 
@@ -64,25 +64,26 @@ We do not use your data for profiling, automated decision-making, or targeted ad
 
 We share your data only where strictly necessary:
 
-| Third Party | What They Receive | Why |
-|---|---|---|
-| **Snipcart** | Name, email, order details | Cart & order management platform |
-| **Razorpay** | Name, email, phone, payment details | Secure payment processing |
-| **Shiprocket** | Name, phone, delivery address | Shipping logistics & tracking |
+| Third Party                   | Purpose                                                 |
+| ----------------------------- | ------------------------------------------------------- |
+| **Snipcart**                  | Cart & order management platform                        |
+| **Razorpay**                  | Secure payment processing                               |
+| **Shiprocket**                | Shipping logistics, WhatsApp updates, and tracking      |
+| **Meta (Facebook/Instagram)** | Marketing analytics and ad retargeting (Pixel)          |
+| **Google**                    | Site analytics (Analytics) and ad retargeting (AdSense) |
 
 **None of these parties are permitted to use your data for their own marketing or to share it further.**
 
-We do not sell, rent, or trade your personal data to any third party. Ever.
-
 ---
 
-## 5. Cookies
+## 5. Cookies & Local Storage
 
-We use the following types of cookies:
+We use the following storage technologies:
 
 - **Essential cookies** — required for the cart and checkout to function (Snipcart)
-- **Analytics cookies** — anonymous usage data to improve the website
-- **Preference cookies** — to remember your cart contents and browsing preferences
+- **Analytics cookies** — anonymous usage data to improve the website (Google Analytics)
+- **Marketing cookies** — to show you Zelia Vance pieces you might have missed when browsing the web (Meta Pixel, Google AdSense)
+- **Local Storage** — to store your persistent site preferences, such as your **Wishlist**, without needing an account. This stays in your browser.
 
 You can disable cookies in your browser settings. Note that disabling essential cookies will break the cart functionality.
 
@@ -106,7 +107,7 @@ As a data principal under India's Digital Personal Data Protection Act, 2023, yo
 - **Withdraw consent** for marketing at any time
 - **Nominate** a representative to exercise your rights on your behalf
 
-To exercise any of these rights, email us at **support@zeliavance.com** with the subject line: `Data Request — [Your Name]`. We will respond within **30 days**.
+To exercise any of these rights, email us at **legal@zeliavance.com** with the subject line: `Data Request — [Your Name]`. We will respond within **30 days**.
 
 ---
 
@@ -138,7 +139,7 @@ We may update this Privacy Policy from time to time. The "Last Updated" date at 
 
 For any privacy-related questions, requests, or grievances:
 
-**Email**: support@zeliavance.com
+**Email**: legal@zeliavance.com
 **Address**: I Am Zee, Sector 77, S.A.S. Nagar (Mohali), Punjab — 160077, India
 **Business Hours**: Monday – Saturday, 10:00 AM – 6:00 PM IST
 

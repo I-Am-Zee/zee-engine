@@ -47,6 +47,7 @@ By placing an order, you confirm that:
 Orders are processed through **Snipcart** (our cart platform). Payment is handled by **Razorpay**, a PCI-DSS compliant payment gateway.
 
 We accept:
+
 - UPI
 - Credit/Debit Cards (Visa, Mastercard, RuPay)
 - Net Banking
@@ -56,7 +57,7 @@ We accept:
 
 **Physical Invoice**: A printed Shiprocket invoice will be included in your package at dispatch. This is the official tax document.
 
-We reserve the right to cancel any order suspected of fraudulent activity, incorrect pricing display, or for reasons of stock unavailability. A full refund will be issued immediately for cancelled prepaid orders.
+We reserve the right to cancel any order suspected of fraudulent activity, incorrect pricing display, or for reasons of stock unavailability. A full refund will be issued immediately for cancelled prepaid orders — unless the order has already been shipped.
 
 ---
 
@@ -115,7 +116,7 @@ Our total liability in any dispute shall not exceed the original purchase price 
 
 These Terms of Service are governed by the laws of **India**. Any disputes arising from these terms or from a purchase made on this platform shall be subject to the exclusive jurisdiction of the courts in **Mohali, Punjab, India**.
 
-We encourage you to contact us at **support@zeliavance.com** before escalating any dispute. Most issues can be resolved directly and quickly.
+We encourage you to contact us at **legal@zeliavance.com** before escalating any dispute. Most issues can be resolved directly and quickly.
 
 ---
 
@@ -129,5 +130,5 @@ We may update these Terms of Service at any time without prior notice. The "Last
 
 For any questions regarding these Terms:
 
-**Email**: support@zeliavance.com
+**Email**: legal@zeliavance.com  
 **Business Hours**: Monday – Saturday, 10:00 AM – 6:00 PM IST

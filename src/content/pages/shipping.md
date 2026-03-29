@@ -18,16 +18,16 @@ For orders below ₹3,000, a flat shipping charge will be calculated and display
 
 ---
 
-## Delivery Timelines
+## Standard Delivery Timelines
 
-| Location Type | Estimated Delivery |
-|---|---|
-| **Metro Cities** (Delhi NCR, Mumbai, Bangalore, Chennai, Hyderabad, Kolkata, Pune) | 2–4 business days |
-| **Tier 2 & Tier 3 Cities** | 4–6 business days |
-| **Rural / Non-Metro / Remote Areas** | 5–8 business days |
+| Location Type                                                                      | Estimated Delivery |
+| ---------------------------------------------------------------------------------- | ------------------ |
+| **Metro Cities** (Delhi NCR, Mumbai, Bangalore, Chennai, Hyderabad, Kolkata, Pune) | 2–4 business days  |
+| **Tier 2 & Tier 3 Cities**                                                         | 4–6 business days  |
+| **Rural / Non-Metro / Remote Areas**                                               | 5–8 business days  |
 
 > **Business days** = Monday to Saturday, excluding public holidays.
-> Timelines are estimates based on Shiprocket's network. Delays due to courier partner operations, weather, or public holidays are outside our control.
+> Timelines are estimates based on Shiprocket's network. Delays due to courier partner operations, weather, or public holidays are outside our control. Any Express Delivery options, where available, will be displayed at checkout.
 
 ---
 
@@ -41,12 +41,11 @@ For orders below ₹3,000, a flat shipping charge will be calculated and display
 
 ## Tracking Your Order
 
-Once your order is dispatched, you'll receive:
+We’ve made tracking easy. No need to login or remember IDs—just click the unique tracking link sent to you via:
 
-- **Email notification** with a tracking link (via Shiprocket)
-- **SMS update** at key milestones (dispatched, out for delivery, delivered)
-
-You can also track your order at any time at [zeliavance.com](/) by entering your order details in the confirmation email.
+- **WhatsApp** (Priority channel for real-time updates)
+- **SMS** (Key milestones such as Out for Delivery)
+- **Email** (Full dispatch details and invoice)
 
 ---
 
@@ -55,19 +54,23 @@ You can also track your order at any time at [zeliavance.com](/) by entering you
 COD is available at select pin codes across India. Availability will be confirmed at checkout.
 
 When selecting COD:
+
 - Please keep the exact amount ready at the time of delivery
 - Refusals or failed deliveries may result in your account being flagged for prepaid-only orders in future
 
 ---
 
-## Packaging
+## Packaging & Delivery
 
 Every Zelia Vance order is carefully packed to protect the jewellery in transit. We use:
 
 - Padded inner packaging to prevent movement and damage
 - A sealed outer courier pouch
 
-If your package arrives visibly damaged or tampered with, **do not accept it**. Mark it as "Refused — Damaged" with the delivery agent and contact us at **support@zeliavance.com** immediately.
+**The Golden Rule at Receipt:**
+
+- **Refuse the package only if:** The security seal is broken or the outer pouch is clearly tampered with/cut open.
+- **For minor box damage:** (dents/scuffs) Accept the delivery but ensure you record the **Unboxing Video** immediately as per our [Returns Policy](/returns). The video is your proof if the product inside is affected.
 
 ---
 
