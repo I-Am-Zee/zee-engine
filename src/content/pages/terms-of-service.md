@@ -1,19 +1,133 @@
 ---
 title: "Terms of Service"
-description: "Rules and guidelines for using our platform."
-lastUpdated: 2026-03-10
+description: "The rules of engagement between you and us. Straightforward, no legalese traps."
+lastUpdated: 2026-03-29
 ---
 
-## Agreement to Terms
+Please read these terms carefully before placing an order or using the Zelia Vance website.
 
-By accessing or using the Zelia Vance website (operated by I Am Zee), you agree to be bound by these Terms of Service.
+By accessing **zeliavance.com** or making a purchase, you agree to be bound by these Terms of Service. If you don't agree, please don't use our platform — no hard feelings.
 
-## Intellectual Property
+---
 
-All content, including jewelry designs, photography, text, and logos, are the exclusive intellectual property of Zelia Vance.
+## 1. Who We Are
 
-## Modifications
+The Zelia Vance website is owned and operated by:
 
-We reserve the right to update or modify these terms at any time without prior notice.
+**I Am Zee**
+Partnership Firm
+Sector 77, S.A.S. Nagar (Mohali), Punjab — 160077, India
 
-_More details will be provided by the legal team._
+"Zelia Vance" is the registered trade name (DBA) of I Am Zee. When these Terms say "we," "us," or "our," they mean I Am Zee operating as Zelia Vance.
+
+---
+
+## 2. What We Sell
+
+All products listed on this website are **Costume Jewellery** classified under **HSN Code 7117** as per the Indian GST framework. Our products are fashion accessories made from base metals and alloys, including PVD-coated pieces, and are not precious or fine jewellery.
+
+**Price Range**: ₹399 – ₹5,000 per piece.
+
+All prices are listed in **Indian Rupees (INR)** and are inclusive of applicable taxes where stated.
+
+---
+
+## 3. Eligibility
+
+By placing an order, you confirm that:
+
+- You are at least 18 years of age or are accessing the site with the consent of a parent or legal guardian
+- You are a resident of **India** (we only ship domestically)
+- The information you provide — name, address, contact details — is accurate and complete
+
+---
+
+## 4. Orders & Payment
+
+Orders are processed through **Snipcart** (our cart platform). Payment is handled by **Razorpay**, a PCI-DSS compliant payment gateway.
+
+We accept:
+- UPI
+- Credit/Debit Cards (Visa, Mastercard, RuPay)
+- Net Banking
+- Cash on Delivery (COD) — available at select pin codes
+
+**Order Confirmation**: You will receive a digital confirmation email from Snipcart immediately after a successful payment. This is your receipt.
+
+**Physical Invoice**: A printed Shiprocket invoice will be included in your package at dispatch. This is the official tax document.
+
+We reserve the right to cancel any order suspected of fraudulent activity, incorrect pricing display, or for reasons of stock unavailability. A full refund will be issued immediately for cancelled prepaid orders.
+
+---
+
+## 5. Shipping
+
+We ship across India only. No international orders are accepted at this time.
+
+All orders are fulfilled via **Shiprocket**. Delivery timelines and logistics are governed by our [Shipping & Delivery Policy](/shipping).
+
+---
+
+## 6. Returns & Refunds
+
+Our returns and refunds policy is governed by the separate [Returns & Refunds Policy](/returns) page. Key summary:
+
+- 48-hour claim window from delivery
+- Defect/damage only — no change-of-mind returns
+- Mandatory unboxing video for all claims
+- Refund processed only after item is returned and passes QC
+
+---
+
+## 7. Intellectual Property
+
+All content on this website — including product designs, photography, copy, brand name, logo, lookbooks, and visual assets — is the exclusive intellectual property of **I Am Zee (Zelia Vance)**.
+
+You may not reproduce, copy, republish, upload, scrape, or distribute any content from this website without our written permission.
+
+---
+
+## 8. Product Representation
+
+We make every effort to display our products accurately. However:
+
+- Colours may appear differently depending on your screen calibration
+- Minor variations in product finish are inherent to the manufacturing process of costume jewellery
+- Product images are for illustrative purposes
+
+These are not grounds for return.
+
+---
+
+## 9. Limitation of Liability
+
+To the maximum extent permitted by Indian law, I Am Zee (Zelia Vance) shall not be liable for:
+
+- Indirect, incidental, or consequential damages arising from the use of our products
+- Loss or damage to jewellery caused by improper care (see our Care Guide)
+- Delays in delivery caused by courier partners or force majeure events
+
+Our total liability in any dispute shall not exceed the original purchase price of the item in question.
+
+---
+
+## 10. Governing Law & Dispute Resolution
+
+These Terms of Service are governed by the laws of **India**. Any disputes arising from these terms or from a purchase made on this platform shall be subject to the exclusive jurisdiction of the courts in **Mohali, Punjab, India**.
+
+We encourage you to contact us at **support@zeliavance.com** before escalating any dispute. Most issues can be resolved directly and quickly.
+
+---
+
+## 11. Changes to These Terms
+
+We may update these Terms of Service at any time without prior notice. The "Last Updated" date at the top of this page reflects the most recent revision. Continued use of the website after an update constitutes acceptance of the revised terms.
+
+---
+
+## 12. Contact
+
+For any questions regarding these Terms:
+
+**Email**: support@zeliavance.com
+**Business Hours**: Monday – Saturday, 10:00 AM – 6:00 PM IST
