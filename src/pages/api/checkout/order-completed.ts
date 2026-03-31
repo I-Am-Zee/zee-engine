@@ -67,6 +67,57 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: "Invalid order payload" }), { status: 400 });
     }
 
+    // ── MailerLite: Checkout Newsletter Signup (Trigger A — "Eager" subscriber) ──
+    // Fires immediately when the customer checks "Receive exclusive privileges..." at checkout.
+    // Non-fatal: a MailerLite error will never interrupt the main Shiprocket flow.
+    const mlKey = import.meta.env.MAILERLITE_API_KEY;
+    const mlGroup = import.meta.env.MAILERLITE_GROUP_ID;
+    const didSubscribe = order.subscribeToNewsletter === true
+      || order.metadata?.subscribeToNewsletter === true
+      || String(order.metadata?.subscribeToNewsletter).toLowerCase() === "true";
+
+    if (mlKey && mlGroup && order.email && didSubscribe) {
+      console.log(`[MailerLite] Checkout opt-in detected for ${order.email}. Adding to group ${mlGroup}...`);
+      try {
+        const nameParts = (order.billingAddressName || "").split(" ");
+        const mlRes = await fetch("https://connect.mailerlite.com/api/subscribers", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${mlKey}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            email: order.email,
+            fields: {
+              name: nameParts[0] || "",
+              last_name: nameParts.slice(1).join(" ") || "",
+            },
+            groups: [mlGroup],
+            status: "active",
+          })
+        });
+
+        if (mlRes.ok) {
+          console.log(`[MailerLite] ✓ ${order.email} added to Newsletter group.`);
+        } else {
+          const mlErr = await mlRes.text();
+          // 409 = already subscribed, which is perfectly fine
+          if (mlRes.status === 409) {
+            console.log(`[MailerLite] ${order.email} already subscribed. No action needed.`);
+          } else {
+            console.warn(`[MailerLite] Non-fatal error ${mlRes.status}: ${mlErr}`);
+          }
+        }
+      } catch (mlErr: any) {
+        console.warn("[MailerLite] Call failed (non-fatal):", mlErr.message);
+      }
+    } else if (mlKey && mlGroup && order.email && !didSubscribe) {
+      console.log(`[MailerLite] ${order.email} opted out at checkout. Skipping.`);
+    }
+    // ── End MailerLite block ──
+
+
     // 1. Snipcart Payload Extraction
     const orderId = order.invoiceNumber || order.token.substring(0, 10);
     const date = new Date(order.creationDate).toISOString().replace('T', ' ').substring(0, 16);

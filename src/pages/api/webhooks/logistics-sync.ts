@@ -115,7 +115,76 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     if (updateResponse.ok) {
-      console.log(`[Logistics Webhook] Successfully updated ${invoiceNumber} to ${snipcartStatus}.`);
+      console.log(`[Logistics Webhook] Status updated: ${invoiceNumber} -> ${snipcartStatus}.`);
+
+      // E. Trigger Delivery Email + MailerLite Signup (ONLY for Delivered)
+      if (snipcartStatus === "Delivered") {
+        console.log(`[Logistics Webhook] Triggering delivery notification for ${invoiceNumber}...`);
+
+        const deliveryMessage = `<p>Your piece has made it home — and we genuinely hope it brings a quiet kind of joy when you first wear it. That moment when something just <em>fits</em>, not just physically but in the way it feels like it was always yours? That's what Zelia Vance is here for.</p>
+
+<p>We'd love to hear about your experience — the order, the packaging, the piece itself. Not a generic star rating. Your real thoughts. If something felt off, we want to know. If something surprised you in a good way, we'd love to hear that too. It's how we get better at what we do — <a href="https://tally.so/r/YOURFORMID" style="color: #1a1a1a; text-decoration: underline;">share your thoughts here</a>. It only takes a minute, and it means more than you know.</p>
+
+<p>If you'd like to be among the first to know about new arrivals, seasonal pieces, and the occasional exclusive codes we share with people who've been here since the beginning — <a href="https://zeliavance.com/newsletter" style="color: #1a1a1a; text-decoration: underline;">stay in the loop</a>. There's always something worth discovering.</p>`;
+        
+        const notifyResponse = await fetch(`https://app.snipcart.com/api/orders/${order.token}/notifications`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Basic ${authBase64}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            type: "Comment",
+            deliveryMethod: "Email",
+            message: deliveryMessage,
+          })
+        });
+        
+        if (notifyResponse.ok) {
+          console.log(`[Logistics Webhook] Notification triggered successfully for ${invoiceNumber}.`);
+        } else {
+          const errorText = await notifyResponse.text();
+          console.error(`[Logistics Webhook] Notification failed: ${notifyResponse.status} - ${errorText}`);
+        }
+
+        // F. MailerLite — Silently add customer to marketing list
+        // Gate: Only runs when MAILERLITE_API_KEY + MAILERLITE_GROUP_ID are set in .env
+        // Action: Set these vars once your MailerLite account is ready.
+        const mailerliteKey = import.meta.env.MAILERLITE_API_KEY;
+        const mailerliteGroup = import.meta.env.MAILERLITE_GROUP_ID;
+
+        if (mailerliteKey && mailerliteGroup && order.email) {
+          console.log(`[Logistics Webhook] Adding ${order.email} to MailerLite...`);
+          try {
+            const mlRes = await fetch(`https://connect.mailerlite.com/api/subscribers`, {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${mailerliteKey}`,
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              },
+              body: JSON.stringify({
+                email: order.email,
+                fields: {
+                  name: order.billingAddress?.firstName || "",
+                  last_name: order.billingAddress?.lastName || "",
+                },
+                groups: [mailerliteGroup],
+                status: "active",
+              })
+            });
+            if (mlRes.ok) {
+              console.log(`[Logistics Webhook] MailerLite: ${order.email} added to group ${mailerliteGroup}.`);
+            } else {
+              const mlErr = await mlRes.text();
+              console.warn(`[Logistics Webhook] MailerLite non-fatal error: ${mlRes.status} - ${mlErr}`);
+            }
+          } catch (mlErr: any) {
+            console.warn("[Logistics Webhook] MailerLite call failed (non-fatal):", mlErr.message);
+          }
+        }
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), { 
