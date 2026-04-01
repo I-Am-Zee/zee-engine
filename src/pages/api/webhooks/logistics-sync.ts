@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request }) => {
 
         const deliveryMessage = `<p>Your piece has made it home — and we genuinely hope it brings a quiet kind of joy when you first wear it. That moment when something just <em>fits</em>, not just physically but in the way it feels like it was always yours? That's what Zelia Vance is here for.</p>
 
-<p>We'd love to hear about your experience — the order, the packaging, the piece itself. Not a generic star rating. Your real thoughts. If something felt off, we want to know. If something surprised you in a good way, we'd love to hear that too. It's how we get better at what we do — <a href="https://tally.so/r/YOURFORMID" style="color: #1a1a1a; text-decoration: underline;">share your thoughts here</a>. It only takes a minute, and it means more than you know.</p>
+<p>We'd love to hear about your experience — the order, the packaging, the piece itself. Not a generic star rating. Your real thoughts. If something felt off, we want to know. If something surprised you in a good way, we'd love to hear that too. It's how we get better at what we do — <a href="https://tally.so/r/pbWyo1" style="color: #1a1a1a; text-decoration: underline;">share your thoughts here</a>. It only takes a minute, and it means more than you know.</p>
 
 <p>If you'd like to be among the first to know about new arrivals, seasonal pieces, and the occasional exclusive codes we share with people who've been here since the beginning — <a href="https://zeliavance.com/newsletter" style="color: #1a1a1a; text-decoration: underline;">stay in the loop</a>. There's always something worth discovering.</p>`;
         
