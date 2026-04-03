@@ -13,9 +13,11 @@ import LookbookCarousel from "../components/features/LookbookCarousel.astro";
 import TrustSection from "../components/ui/TrustSection.astro";
 import Carousel from "../components/ui/Carousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
+import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 
 // Pre-render at build time
 export const prerender = true;
+
 
 const allProducts = await getCollection("products");
 const featuredProducts = allProducts.slice(0, 8);
@@ -125,6 +127,8 @@ const categories = [
 
     {/* Trust Section */}
     <TrustSection />
+
   </main>
 </BaseLayout>
+
 

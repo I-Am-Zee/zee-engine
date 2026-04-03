@@ -21,6 +21,7 @@ interface Props {
   variant?: 'section' | 'footer' | 'sidebar' | 'modal';
   brand?: string;
   hideHeading?: boolean;
+  hideDisclaimer?: boolean;
   class?: string;
   id?: string;
 }
@@ -29,6 +30,7 @@ const {
   variant = 'section', 
   brand = 'zelia-vance', 
   hideHeading = false,
+  hideDisclaimer = false,
   class: className,
   id: customId 
 } = Astro.props;
@@ -101,18 +103,20 @@ const isSidebar = variant === 'sidebar';
         id={`${uid}-form`}
         placeholder="Enter your Gmail address"
         buttonText={isSection ? "Join the Inner Circle" : "Subscribe"}
-        layout={isFooter ? "col" : "row"}
+        layout="row"
       />
-      <Text 
-        variant="caption" 
-        class:list={[
-          "mt-4 block opacity-60",
-          isSection && "text-center",
-          isFooter && "text-left"
-        ]}
-      >
-        We only accept Gmail addresses for high-intent delivery.
-      </Text>
+      {!hideDisclaimer && (
+        <Text 
+          variant="caption" 
+          class:list={[
+            "mt-4 block opacity-60",
+            isSection && "text-center",
+            isFooter && "text-left"
+          ]}
+        >
+          We only accept Gmail addresses for high-intent delivery.
+        </Text>
+      )}
     </div>
     
   </div>

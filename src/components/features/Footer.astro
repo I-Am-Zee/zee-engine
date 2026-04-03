@@ -38,23 +38,24 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
   {/* ── Section 1: Newsletter Strip ─────────────────────────────── */}
   <div class="border-t border-border-subtle">
     <div class="mx-auto max-w-7xl px-6 lg:px-12 py-16 lg:py-20">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
-        <div class="max-w-lg">
-          <Heading as="h3" class="mb-3">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
+        <div class="w-full lg:flex-1 lg:pr-10 max-w-2xl">
+          <Heading as="h2">
             Get drop alerts & Zee's style notes straight to your inbox.
           </Heading>
-          <Text variant="body" color="muted">
-            Early access. Style notes. No noise.
-          </Text>
-          <div class="mt-6">
-            <Text variant="metadata" class="mb-3 block font-medium uppercase tracking-wider text-text-main">
-              Follow Us
-            </Text>
-            <SocialLinks orientation="horizontal" />
-          </div>
         </div>
-        <div class="w-full lg:max-w-md">
-          <NewsletterWidget variant="footer" hideHeading />
+        <div class="w-full lg:max-w-md flex flex-col">
+          <NewsletterWidget variant="footer" hideHeading hideDisclaimer />
+        </div>
+      </div>
+      
+      {/* Social Links Row */}
+      <div class="mt-8 flex flex-col lg:flex-row lg:justify-end w-full">
+        <div class="w-full lg:max-w-md flex flex-col gap-3">
+          <Text variant="metadata" class="block font-medium uppercase tracking-wider text-text-main">
+            Follow Us
+          </Text>
+          <SocialLinks orientation="horizontal" />
         </div>
       </div>
     </div>
@@ -66,17 +67,17 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
       <div class="flex flex-col lg:flex-row-reverse gap-16 lg:gap-8 w-full items-start">
         
         {/* Right side (Desktop) / Top (Mobile): Imagery Block */}
-        <div class="w-full lg:w-1/2 flex justify-center lg:justify-end gap-3 sm:gap-6">
+        <div class="w-full lg:w-1/2 flex justify-center lg:justify-end gap-3 sm:gap-6 mb-12 lg:mb-0">
           <img 
             src="/images/products/1515562141207-7a88fb7ce338.jpg" 
             alt="Zelia Vance Curated Style"
-            class="w-1/2 max-w-70 aspect-4/5 object-cover rounded-sm shadow-sm"
+            class="w-1/2 aspect-square lg:max-w-70 lg:aspect-4/5 object-cover rounded-sm shadow-sm"
             loading="lazy"
           />
           <img 
             src="/images/products/1535632066927-ab7c9ab60908.jpg" 
             alt="Zelia Vance Authentic Detail"
-            class="w-1/2 max-w-70 aspect-4/5 object-cover rounded-sm shadow-sm translate-y-6 lg:translate-y-12"
+            class="w-1/2 aspect-square lg:max-w-70 lg:aspect-4/5 object-cover rounded-sm shadow-sm lg:translate-y-12"
             loading="lazy"
           />
         </div>
@@ -85,12 +86,12 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
         <div class="w-full lg:w-1/2 flex flex-col justify-between h-full min-h-75">
           
           {/* Top Half: 3-Column Link Grid */}
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12 mb-16 lg:mb-24 w-full">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-16 lg:mb-24 w-full">
             
             {/* Column 1: Shop */}
             <div x-data="{ open: false }">
               <button
-                class="flex w-full items-center justify-between py-4 border-b border-border-subtle sm:hidden"
+                class="flex w-full items-center justify-between py-4 border-b border-border-subtle lg:hidden"
                 @click="open = !open"
               >
                 <Heading as="h5">Shop</Heading>
@@ -102,8 +103,8 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <Heading as="h5" class="hidden sm:block mb-5">Shop</Heading>
-              <div x-show="open" x-collapse class="sm:hidden!">
+              <Heading as="h5" class="hidden lg:block mb-5">Shop</Heading>
+              <div x-show="open" x-collapse class="lg:hidden!">
                 <ul class="space-y-3 pt-3 pb-4">
                   {shopCategories.map((item) => (
                     <li>
@@ -116,7 +117,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
                   ))}
                 </ul>
               </div>
-              <ul class="hidden sm:flex flex-col space-y-3">
+              <ul class="hidden lg:flex flex-col space-y-3">
                 {shopCategories.map((item) => (
                   <li>
                     <Link href={item.href} variant="plain">
@@ -132,7 +133,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
             {/* Column 2: Explore */}
             <div x-data="{ open: false }">
               <button
-                class="flex w-full items-center justify-between py-4 border-b border-border-subtle sm:hidden"
+                class="flex w-full items-center justify-between py-4 border-b border-border-subtle lg:hidden"
                 @click="open = !open"
               >
                 <Heading as="h5">Explore</Heading>
@@ -144,8 +145,8 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <Heading as="h5" class="hidden sm:block mb-5">Explore</Heading>
-              <div x-show="open" x-collapse class="sm:hidden!">
+              <Heading as="h5" class="hidden lg:block mb-5">Explore</Heading>
+              <div x-show="open" x-collapse class="lg:hidden!">
                 <ul class="space-y-3 pt-3 pb-4">
                   {exploreLinks.map((item) => (
                     <li>
@@ -158,7 +159,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
                   ))}
                 </ul>
               </div>
-              <ul class="hidden sm:flex flex-col space-y-3">
+              <ul class="hidden lg:flex flex-col space-y-3">
                 {exploreLinks.map((item) => (
                   <li>
                     <Link href={item.href} variant="plain">
@@ -174,7 +175,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
             {/* Column 3: Support */}
             <div x-data="{ open: false }">
               <button
-                class="flex w-full items-center justify-between py-4 border-b border-border-subtle sm:hidden"
+                class="flex w-full items-center justify-between py-4 border-b border-border-subtle lg:hidden"
                 @click="open = !open"
               >
                 <Heading as="h5">Support</Heading>
@@ -186,8 +187,8 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <Heading as="h5" class="hidden sm:block mb-5">Support</Heading>
-              <div x-show="open" x-collapse class="sm:hidden!">
+              <Heading as="h5" class="hidden lg:block mb-5">Support</Heading>
+              <div x-show="open" x-collapse class="lg:hidden!">
                 <ul class="space-y-3 pt-3 pb-4">
                   {supportLinks.map((item) => (
                     <li>
@@ -200,7 +201,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
                   ))}
                 </ul>
               </div>
-              <ul class="hidden sm:flex flex-col space-y-3">
+              <ul class="hidden lg:flex flex-col space-y-3">
                 {supportLinks.map((item) => (
                   <li>
                     <Link href={item.href} variant="plain">
@@ -217,11 +218,11 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
 
           {/* Bottom Half: Watermark Area & Copyright Anchored strict left */}
           <div class="flex flex-col gap-6 items-start justify-end w-full">
-             <div class="pointer-events-none select-none opacity-20 transform -translate-x-1 lg:-translate-x-3">
-               <Logo variant="full" class="text-[3rem]! sm:text-[4rem]! lg:text-[5.5rem]! leading-[0.8]! tracking-tighter" />
+             <div class="pointer-events-none select-none opacity-20 transform -translate-x-1 lg:-translate-x-3 w-full overflow-hidden">
+               <Logo variant="full" class="text-[17vw]! min-[400px]:text-[4rem]! md:text-[6rem]! lg:text-[5.5rem]! xl:text-[6.5rem]! leading-[0.8]! tracking-tighter whitespace-nowrap" />
              </div>
              
-             <div class="flex flex-col 2xl:flex-row 2xl:items-center gap-2 sm:gap-4 2xl:gap-8 pt-2 2xl:pt-4 w-full">
+             <div class="flex flex-row flex-wrap items-center justify-between gap-y-4 gap-x-8 pt-2 2xl:pt-4 w-full">
                 <Text variant="metadata" color="muted">{siteConfig.copyright}</Text>
                 <div class="flex flex-wrap gap-4 sm:gap-5">
                   <Link href="/privacy-policy" variant="plain">

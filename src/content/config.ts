@@ -199,10 +199,24 @@ const settings = defineCollection({
   }),
 });
 
+const newsletter = defineCollection({
+  type: "data",
+  schema: z.record(
+    z.string(),
+    z.object({
+      heading: z.string(),
+      description: z.string(),
+      success_message: z.string().optional(),
+    })
+  ),
+});
+
 export const collections = {
   products,
   lookbooks,
   blog,
   pages,
   settings,
+  newsletter,
 };
+
