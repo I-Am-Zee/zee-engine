@@ -1,0 +1,264 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/BaseLayout.astro";
+
+const email = Astro.url.searchParams.get("email") || "";
+const hasEmail = email.length > 0;
+---
+
+<Layout title="Stay in the Loop | Zelia Vance" description="Join the Zelia Vance inner circle for rare arrivals, seasonal pieces, and the occasional exclusive.">
+
+  <section class="confirm-root">
+    <div class="confirm-card">
+
+      <!-- Wordmark -->
+      <p class="wordmark">Zelia Vance</p>
+      <div class="divider"></div>
+
+      <!-- Headline -->
+      <h1 class="headline">
+        {hasEmail
+          ? "One quiet step to join our inner circle."
+          : "Stay in the loop."}
+      </h1>
+
+      <!-- Body -->
+      <p class="body-copy">
+        {hasEmail
+          ? "We share rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning. Nothing more."
+          : "Enter your email below to receive rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning."}
+      </p>
+
+      <!-- Form -->
+      <form id="subscribe-form" class="subscribe-form" novalidate>
+
+        {hasEmail
+          ? (
+            <input type="hidden" name="email" value={email} />
+            <p class="email-display">{email}</p>
+          )
+          : (
+            <div class="field-wrap">
+              <input
+                id="email-input"
+                type="email"
+                name="email"
+                class="email-input"
+                placeholder="your@email.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          )
+        }
+
+        <button type="submit" id="confirm-btn" class="confirm-btn">
+          <span id="btn-label">Yes, stay in the loop</span>
+        </button>
+
+        <p id="form-error" class="form-error" hidden>
+          Something went wrong. Please try again in a moment.
+        </p>
+
+      </form>
+
+      <p class="privacy-note">
+        Your email stays private. No spam, no exceptions.
+        You can leave any time via the unsubscribe link in any email.
+      </p>
+
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  const form = document.getElementById("subscribe-form") as HTMLFormElement;
+  const btn = document.getElementById("confirm-btn") as HTMLButtonElement;
+  const label = document.getElementById("btn-label") as HTMLElement;
+  const errorEl = document.getElementById("form-error") as HTMLElement;
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+
+    const data = new FormData(form);
+    const email = (data.get("email") as string)?.trim();
+
+    if (!email || !email.includes("@")) {
+      const input = document.getElementById("email-input") as HTMLInputElement | null;
+      if (input) input.focus();
+      return;
+    }
+
+    // Loading state
+    btn.disabled = true;
+    label.textContent = "Confirming…";
+
+    try {
+      const res = await fetch("/api/actions/newsletter-subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        window.location.href = "/newsletter/success";
+      } else {
+        throw new Error("Non-200 response");
+      }
+    } catch {
+      label.textContent = "Yes, stay in the loop";
+      btn.disabled = false;
+      errorEl.hidden = false;
+    }
+  });
+</script>
+
+<style>
+  .confirm-root {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f5f0;
+    padding: 3rem 1.25rem;
+  }
+
+  .confirm-card {
+    background: #fefcfa;
+    border: 1px solid #e8ddd3;
+    max-width: 480px;
+    width: 100%;
+    padding: 3.5rem 3rem;
+    text-align: center;
+  }
+
+  .wordmark {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #6b5e54;
+    margin: 0 0 1.5rem;
+  }
+
+  .divider {
+    width: 2rem;
+    height: 1px;
+    background-color: #bfa05f;
+    margin: 0 auto 2.25rem;
+  }
+
+  .headline {
+    font-family: "Fraunces", serif;
+    font-size: clamp(1.35rem, 4vw, 1.8rem);
+    font-weight: 400;
+    color: #052b22;
+    line-height: 1.35;
+    margin: 0 0 1.25rem;
+  }
+
+  .body-copy {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.875rem;
+    color: #6b5e54;
+    line-height: 1.75;
+    margin: 0 0 2.25rem;
+  }
+
+  .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .email-display {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.8rem;
+    color: #6b5e54;
+    background: #f3ede6;
+    border: 1px solid #e8ddd3;
+    padding: 0.625rem 1.25rem;
+    letter-spacing: 0.03em;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
+
+  .field-wrap {
+    width: 100%;
+  }
+
+  .email-input {
+    width: 100%;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.875rem;
+    color: #052b22;
+    background: #fff;
+    border: 1px solid #e8ddd3;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .email-input::placeholder {
+    color: #bfa05f;
+    opacity: 0.6;
+  }
+
+  .email-input:focus {
+    border-color: #bfa05f;
+    box-shadow: 0 0 0 3px rgba(191, 160, 95, 0.15);
+  }
+
+  .confirm-btn {
+    background-color: #052b22;
+    color: #fefcfa;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: none;
+    padding: 0.875rem 2.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    width: 100%;
+  }
+
+  .confirm-btn:hover:not(:disabled) {
+    background-color: #bfa05f;
+  }
+
+  .confirm-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .form-error {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.75rem;
+    color: #e65142;
+    margin: 0;
+  }
+
+  .privacy-note {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.7rem;
+    color: #6b5e54;
+    line-height: 1.7;
+    margin: 2rem 0 0;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 520px) {
+    .confirm-card {
+      padding: 2.5rem 1.5rem;
+    }
+  }
+</style>
