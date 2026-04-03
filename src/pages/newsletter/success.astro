@@ -1,151 +1,67 @@
 ---
-import Layout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import Text from "../../components/primitives/Text.astro";
+import Button from "../../components/primitives/Button.astro";
 ---
 
-<Layout title="You're in the Loop | Zelia Vance" description="Welcome to the Zelia Vance inner circle.">
+<BaseLayout
+  title="You're in the Loop | Zelia Vance"
+  description="Welcome to the Zelia Vance inner circle."
+>
+  <div class="min-h-[80dvh] flex items-center justify-center bg-background px-4 py-16 md:py-24">
+    <div class="w-full max-w-md border border-border-subtle bg-surface px-8 py-12 md:px-12 text-center">
 
-  <section class="success-root">
-    <div class="success-card">
-
-      <!-- Emblem -->
-      <div class="emblem" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bfa05f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Polished Brass checkmark emblem -->
+      <div class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-accent-brass">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-accent-brass)"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
           <path d="M20 6 9 17l-5-5"/>
         </svg>
       </div>
 
-      <!-- Wordmark -->
-      <p class="wordmark">Zelia Vance</p>
-      <div class="divider"></div>
+      <!-- Wordmark eyebrow -->
+      <Text variant="eyebrow" class="mb-4 block">Zelia Vance</Text>
+
+      <!-- Brass rule -->
+      <div class="mx-auto mb-8 h-px w-8 bg-accent-brass"></div>
 
       <!-- Headline -->
-      <h1 class="headline">You're in the loop.</h1>
+      <Heading as="h1" class="mb-5 text-[clamp(1.5rem,5vw,2.1rem)]!">
+        You're in the loop.
+      </Heading>
 
       <!-- Body -->
-      <p class="body-copy">
+      <Text variant="caption" color="muted" class="mb-3 block leading-relaxed">
         From this moment forward, you'll be among the first to hear about new
         arrivals, seasonal pieces, and things we quietly reserve for people
         who've been here since the beginning.
-      </p>
+      </Text>
 
-      <p class="body-copy secondary">
+      <Text variant="caption" color="muted" italic class="mb-10 block opacity-80">
         We write rarely. When we do, it means something.
-      </p>
+      </Text>
 
       <!-- CTA -->
-      <a href="/collections/all" class="explore-btn">
+      <Button as="a" href="/collections/all" type="primary" size="lg" class="w-full tracking-widest uppercase text-xs!">
         Continue Exploring
-      </a>
+      </Button>
 
-      <p class="privacy-note">
+      <!-- Unsubscribe note -->
+      <Text variant="metadata" class="mt-8 block opacity-60">
         You can unsubscribe at any time from any email we send.
-      </p>
+      </Text>
 
     </div>
-  </section>
-
-</Layout>
-
-<style>
-  .success-root {
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9f5f0;
-    padding: 3rem 1.25rem;
-  }
-
-  .success-card {
-    background: #fefcfa;
-    border: 1px solid #e8ddd3;
-    max-width: 480px;
-    width: 100%;
-    padding: 3.5rem 3rem;
-    text-align: center;
-  }
-
-  .emblem {
-    width: 3rem;
-    height: 3rem;
-    border: 1px solid #bfa05f;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    background: transparent;
-  }
-
-  .wordmark {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #6b5e54;
-    margin: 0 0 1.5rem;
-  }
-
-  .divider {
-    width: 2rem;
-    height: 1px;
-    background-color: #bfa05f;
-    margin: 0 auto 2.25rem;
-  }
-
-  .headline {
-    font-family: "Fraunces", serif;
-    font-size: clamp(1.5rem, 5vw, 2.1rem);
-    font-weight: 400;
-    color: #052b22;
-    line-height: 1.25;
-    margin: 0 0 1.5rem;
-  }
-
-  .body-copy {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.875rem;
-    color: #6b5e54;
-    line-height: 1.8;
-    margin: 0 0 1rem;
-  }
-
-  .body-copy.secondary {
-    font-style: italic;
-    margin-bottom: 2.25rem;
-    opacity: 0.85;
-  }
-
-  .explore-btn {
-    display: inline-block;
-    background-color: #052b22;
-    color: #fefcfa;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 0.875rem 2.5rem;
-    transition: background-color 0.2s ease;
-  }
-
-  .explore-btn:hover {
-    background-color: #bfa05f;
-  }
-
-  .privacy-note {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.7rem;
-    color: #6b5e54;
-    margin: 2rem 0 0;
-    opacity: 0.7;
-  }
-
-  @media (max-width: 520px) {
-    .success-card {
-      padding: 2.5rem 1.5rem;
-    }
-  }
-</style>
+  </div>
+</BaseLayout>

@@ -1,100 +1,126 @@
 ---
 export const prerender = false;
 
-import Layout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import Text from "../../components/primitives/Text.astro";
+import Input from "../../components/primitives/Input.astro";
+import Button from "../../components/primitives/Button.astro";
 
 const email = Astro.url.searchParams.get("email") || "";
 const hasEmail = email.length > 0;
 ---
 
-<Layout title="Stay in the Loop | Zelia Vance" description="Join the Zelia Vance inner circle for rare arrivals, seasonal pieces, and the occasional exclusive.">
+<BaseLayout
+  title="Stay in the Loop | Zelia Vance"
+  description="Join the Zelia Vance inner circle for rare arrivals, seasonal pieces, and the occasional exclusive."
+>
+  <div class="min-h-[80dvh] flex items-center justify-center bg-background px-4 py-16 md:py-24">
+    <div class="w-full max-w-md border border-border-subtle bg-surface px-8 py-12 md:px-12 text-center">
 
-  <section class="confirm-root">
-    <div class="confirm-card">
+      <!-- Wordmark eyebrow -->
+      <Text variant="eyebrow" class="mb-4 block">Zelia Vance</Text>
 
-      <!-- Wordmark -->
-      <p class="wordmark">Zelia Vance</p>
-      <div class="divider"></div>
+      <!-- Brass rule -->
+      <div class="mx-auto mb-8 h-px w-8 bg-accent-brass"></div>
 
       <!-- Headline -->
-      <h1 class="headline">
+      <Heading as="h1" class="mb-4 text-[clamp(1.35rem,4vw,1.85rem)]!">
         {hasEmail
           ? "One quiet step to join our inner circle."
           : "Stay in the loop."}
-      </h1>
+      </Heading>
 
       <!-- Body -->
-      <p class="body-copy">
+      <Text variant="caption" color="muted" class="mb-8 block leading-relaxed">
         {hasEmail
           ? "We share rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning. Nothing more."
           : "Enter your email below to receive rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning."}
-      </p>
+      </Text>
 
       <!-- Form -->
-      <form id="subscribe-form" class="subscribe-form" novalidate>
+      <form id="subscribe-form" class="flex flex-col gap-3" novalidate>
 
-        {hasEmail
-          ? (
-            <input type="hidden" name="email" value={email} />
-            <p class="email-display">{email}</p>
-          )
-          : (
-            <div class="field-wrap">
-              <input
-                id="email-input"
-                type="email"
-                name="email"
-                class="email-input"
-                placeholder="your@email.com"
-                autocomplete="email"
-                required
-              />
-            </div>
-          )
-        }
+        {hasEmail ? (
+          <input type="hidden" name="email" value={email} />
+          <div class="border border-border-subtle bg-surface-muted px-4 py-2.5 text-center">
+            <Text variant="caption" color="muted">{email}</Text>
+          </div>
+        ) : (
+            <div class="flex flex-col gap-1 text-left">
+            <Input
+              id="email-input"
+              type="email"
+              name="email"
+              placeholder="your@gmail.com"
+            />
+            <p id="email-error" class="hidden text-xs text-accent-coral font-sans px-1">
+              Please enter a valid Gmail address.
+            </p>
+          </div>
+        )}
 
-        <button type="submit" id="confirm-btn" class="confirm-btn">
+        <Button id="confirm-btn" type="primary" size="lg" class="w-full tracking-widest uppercase text-xs!">
           <span id="btn-label">Yes, stay in the loop</span>
-        </button>
+        </Button>
 
-        <p id="form-error" class="form-error" hidden>
+        <p id="form-error" class="hidden text-xs text-accent-coral font-sans">
           Something went wrong. Please try again in a moment.
         </p>
 
       </form>
 
-      <p class="privacy-note">
-        Your email stays private. No spam, no exceptions.
+      <!-- Privacy note -->
+      <Text variant="metadata" class="mt-8 block leading-relaxed opacity-70">
+        Your email stays private. No spam, no exceptions.<br/>
         You can leave any time via the unsubscribe link in any email.
-      </p>
+      </Text>
 
     </div>
-  </section>
-
-</Layout>
+  </div>
+</BaseLayout>
 
 <script>
   const form = document.getElementById("subscribe-form") as HTMLFormElement;
   const btn = document.getElementById("confirm-btn") as HTMLButtonElement;
   const label = document.getElementById("btn-label") as HTMLElement;
   const errorEl = document.getElementById("form-error") as HTMLElement;
+  const emailInput = document.getElementById("email-input") as HTMLInputElement | null;
+  const emailError = document.getElementById("email-error") as HTMLElement | null;
+
+  const isGmail = (val: string) => /^[^\s@]+@gmail\.com$/i.test(val.trim());
+
+  // Show inline error on blur if not Gmail
+  emailInput?.addEventListener("blur", () => {
+    const val = emailInput.value.trim();
+    if (val && !isGmail(val)) {
+      emailError?.classList.remove("hidden");
+    } else {
+      emailError?.classList.add("hidden");
+    }
+  });
+
+  // Clear inline error while typing
+  emailInput?.addEventListener("input", () => {
+    emailError?.classList.add("hidden");
+  });
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    errorEl.hidden = true;
+    if (errorEl) errorEl.classList.add("hidden");
 
     const data = new FormData(form);
     const email = (data.get("email") as string)?.trim();
 
-    if (!email || !email.includes("@")) {
-      const input = document.getElementById("email-input") as HTMLInputElement | null;
-      if (input) input.focus();
+    if (!isGmail(email)) {
+      emailError?.classList.remove("hidden");
+      emailInput?.focus();
       return;
     }
 
-    // Loading state
+    emailError?.classList.add("hidden");
     btn.disabled = true;
-    label.textContent = "Confirming…";
+    if (label) label.textContent = "Confirming…";
 
     try {
       const res = await fetch("/api/actions/newsletter-subscribe", {
@@ -109,156 +135,9 @@ const hasEmail = email.length > 0;
         throw new Error("Non-200 response");
       }
     } catch {
-      label.textContent = "Yes, stay in the loop";
+      if (label) label.textContent = "Yes, stay in the loop";
       btn.disabled = false;
-      errorEl.hidden = false;
+      if (errorEl) errorEl.classList.remove("hidden");
     }
   });
 </script>
-
-<style>
-  .confirm-root {
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9f5f0;
-    padding: 3rem 1.25rem;
-  }
-
-  .confirm-card {
-    background: #fefcfa;
-    border: 1px solid #e8ddd3;
-    max-width: 480px;
-    width: 100%;
-    padding: 3.5rem 3rem;
-    text-align: center;
-  }
-
-  .wordmark {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #6b5e54;
-    margin: 0 0 1.5rem;
-  }
-
-  .divider {
-    width: 2rem;
-    height: 1px;
-    background-color: #bfa05f;
-    margin: 0 auto 2.25rem;
-  }
-
-  .headline {
-    font-family: "Fraunces", serif;
-    font-size: clamp(1.35rem, 4vw, 1.8rem);
-    font-weight: 400;
-    color: #052b22;
-    line-height: 1.35;
-    margin: 0 0 1.25rem;
-  }
-
-  .body-copy {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.875rem;
-    color: #6b5e54;
-    line-height: 1.75;
-    margin: 0 0 2.25rem;
-  }
-
-  .subscribe-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.875rem;
-  }
-
-  .email-display {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.8rem;
-    color: #6b5e54;
-    background: #f3ede6;
-    border: 1px solid #e8ddd3;
-    padding: 0.625rem 1.25rem;
-    letter-spacing: 0.03em;
-    width: 100%;
-    text-align: center;
-    margin: 0;
-  }
-
-  .field-wrap {
-    width: 100%;
-  }
-
-  .email-input {
-    width: 100%;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.875rem;
-    color: #052b22;
-    background: #fff;
-    border: 1px solid #e8ddd3;
-    padding: 0.75rem 1rem;
-    outline: none;
-    transition: border-color 0.2s ease;
-    box-sizing: border-box;
-  }
-
-  .email-input::placeholder {
-    color: #bfa05f;
-    opacity: 0.6;
-  }
-
-  .email-input:focus {
-    border-color: #bfa05f;
-    box-shadow: 0 0 0 3px rgba(191, 160, 95, 0.15);
-  }
-
-  .confirm-btn {
-    background-color: #052b22;
-    color: #fefcfa;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border: none;
-    padding: 0.875rem 2.5rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.15s ease;
-    width: 100%;
-  }
-
-  .confirm-btn:hover:not(:disabled) {
-    background-color: #bfa05f;
-  }
-
-  .confirm-btn:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-  }
-
-  .form-error {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.75rem;
-    color: #e65142;
-    margin: 0;
-  }
-
-  .privacy-note {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.7rem;
-    color: #6b5e54;
-    line-height: 1.7;
-    margin: 2rem 0 0;
-    opacity: 0.8;
-  }
-
-  @media (max-width: 520px) {
-    .confirm-card {
-      padding: 2.5rem 1.5rem;
-    }
-  }
-</style>
