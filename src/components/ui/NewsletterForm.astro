@@ -9,26 +9,47 @@ import Button from "../primitives/Button.astro";
 import Text from "../primitives/Text.astro";
 
 interface Props {
+  id?: string;
   placeholder?: string;
   buttonText?: string;
+  layout?: 'row' | 'col';
   class?: string;
 }
 
-const { placeholder = "Your email...", buttonText = "Subscribe", class: className, ...rest } = Astro.props;
+const { 
+  placeholder = "Your email...", 
+  buttonText = "Subscribe", 
+  layout = 'row',
+  class: className, 
+  ...rest 
+} = Astro.props;
 ---
 
 <form
-  class:list={["flex flex-col gap-3 sm:flex-row sm:gap-2 mt-6", className]}
+  class:list={[
+    "flex gap-3",
+    layout === 'row' ? "flex-col sm:flex-row items-stretch sm:items-start" : "flex-col",
+    className
+  ]}
   {...rest}
 >
-  <Input
-    id="newsletter-email"
-    type="email"
-    name="email"
-    placeholder={placeholder}
-    class="flex-1"
-  />
-  <Button type="primary">
+  <div class="flex-1 flex flex-col gap-1">
+    <Input
+      id="newsletter-email"
+      type="email"
+      name="email"
+      placeholder={placeholder}
+      class="w-full h-11"
+    />
+    <p 
+      data-email-error 
+      class="hidden text-xs text-red-500 font-medium"
+    >
+      Enter valid Gmail address
+    </p>
+  </div>
+  <Button type="primary" class="h-11">
     <Text variant="label" color="inverse">{buttonText}</Text>
   </Button>
 </form>
+

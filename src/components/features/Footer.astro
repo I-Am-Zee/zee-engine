@@ -1,7 +1,12 @@
 ---
 /**
- * Footer - Main site footer
- * Responsive grid: 1 column mobile, 4 columns desktop
+ * Footer - Kaleido-inspired premium layout
+ *
+ * Structure:
+ * 1. Newsletter strip (full-width, airy)
+ * 2. Navigation row: brand tagline left, link columns center, socials right
+ * 3. Bottom bar: copyright + legal
+ * 4. Giant "Zelia Vance" brand name watermark
  */
 
 import Logo from "../primitives/Logo.astro";
@@ -9,7 +14,7 @@ import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Link from "../primitives/Link.astro";
 import SocialLinks from "../ui/SocialLinks.astro";
-import NewsletterForm from "../ui/NewsletterForm.astro";
+import NewsletterWidget from "./NewsletterWidget.astro";
 import { navigation, supportLinks } from "../../config/navigation";
 import { siteConfig } from "../../lib/site.config";
 
@@ -19,90 +24,220 @@ interface Props {
 
 const { class: className, ...rest } = Astro.props;
 
-// Get shop categories from navigation
 const shopNav = navigation.find((item) => item.label === "Shop");
 const shopCategories = shopNav?.items || [];
+
+const exploreLinks = navigation.filter((item) => item.label !== "Shop");
 ---
 
 <footer
-  class:list={[
-    "border-t border-border-subtle bg-surface",
-    className,
-  ]}
+  class:list={["bg-surface overflow-hidden", className]}
   {...rest}
 >
-  <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
-    <div class="grid gap-12 lg:gap-16 md:grid-cols-2 lg:grid-cols-4 text-center md:text-left">
-      {/* Brand Column */}
-      <div class="flex flex-col items-center md:items-start">
-        <Logo variant="full" class="mb-2" />
-        <Text as="p" variant="caption" color="muted" class="max-w-xs leading-relaxed">
-          Handcrafted celestial jewelry for those who seek to adorn themselves with the beauty of the cosmos.
-        </Text>
-        <div class="mt-6">
-          <SocialLinks orientation="horizontal" class="justify-center md:justify-start" />
+
+  {/* ── Section 1: Newsletter Strip ─────────────────────────────── */}
+  <div class="border-t border-border-subtle">
+    <div class="mx-auto max-w-7xl px-6 lg:px-12 py-16 lg:py-20">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+        <div class="max-w-lg">
+          <Heading as="h3" class="mb-3">
+            Get drop alerts & Zee's style notes straight to your inbox.
+          </Heading>
+          <Text variant="body" color="muted">
+            Early access. Style notes. No noise.
+          </Text>
+          <div class="mt-6">
+            <Text variant="metadata" class="mb-3 block font-medium uppercase tracking-wider text-text-main">
+              Follow Us
+            </Text>
+            <SocialLinks orientation="horizontal" />
+          </div>
         </div>
-      </div>
-
-      {/* Shop Column */}
-      <div>
-        <Heading as="h5" class="mb-6">Shop</Heading>
-        <ul class="space-y-4">
-          {shopCategories.map((item) => (
-            <li>
-              <Link href={item.href} variant="plain">
-                <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                  {item.label}
-                </Text>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Support Column */}
-      <div>
-        <Heading as="h5" class="mb-6">Support</Heading>
-        <ul class="space-y-4">
-          {supportLinks.map((item) => (
-            <li>
-              <Link href={item.href} variant="plain">
-                <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                  {item.label}
-                </Text>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Newsletter Column */}
-      <div>
-        <Heading as="h5" class="mb-6">Join the Celestial Club</Heading>
-        <Text variant="caption" color="muted" class="mb-6 leading-relaxed">
-          Subscribe to get exclusive offers, new arrivals, and celestial inspirations.
-        </Text>
-        <div class="max-w-sm mx-auto md:mx-0">
-          <NewsletterForm />
-        </div>
-      </div>
-    </div>
-
-    {/* Bottom Bar */}
-    <div class="mt-16 border-t border-border-subtle pt-8">
-      <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
-        <Text variant="metadata">
-          {siteConfig.copyright}
-        </Text>
-        <div class="flex gap-4">
-          <Link href="/privacy-policy" variant="plain" class="text-text-muted">
-            <Text variant="metadata">Privacy Policy</Text>
-          </Link>
-          <Link href="/terms-of-service" variant="plain" class="text-text-muted">
-            <Text variant="metadata">Terms of Service</Text>
-          </Link>
+        <div class="w-full lg:max-w-md">
+          <NewsletterWidget variant="footer" hideHeading />
         </div>
       </div>
     </div>
   </div>
+
+  {/* ── Section 2: Nav Row and Images (50/50 Split) ────────────────── */}
+  <div class="border-t border-border-subtle relative z-10 overflow-hidden bg-surface">
+    <div class="mx-auto max-w-7xl px-6 lg:px-12 py-10 lg:py-20">
+      <div class="flex flex-col lg:flex-row-reverse gap-16 lg:gap-8 w-full items-start">
+        
+        {/* Right side (Desktop) / Top (Mobile): Imagery Block */}
+        <div class="w-full lg:w-1/2 flex justify-center lg:justify-end gap-3 sm:gap-6">
+          <img 
+            src="/images/products/1515562141207-7a88fb7ce338.jpg" 
+            alt="Zelia Vance Curated Style"
+            class="w-1/2 max-w-70 aspect-4/5 object-cover rounded-sm shadow-sm"
+            loading="lazy"
+          />
+          <img 
+            src="/images/products/1535632066927-ab7c9ab60908.jpg" 
+            alt="Zelia Vance Authentic Detail"
+            class="w-1/2 max-w-70 aspect-4/5 object-cover rounded-sm shadow-sm translate-y-6 lg:translate-y-12"
+            loading="lazy"
+          />
+        </div>
+
+        {/* Left side (Desktop) / Bottom (Mobile): Link Grid, Watermark, Legal */}
+        <div class="w-full lg:w-1/2 flex flex-col justify-between h-full min-h-75">
+          
+          {/* Top Half: 3-Column Link Grid */}
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12 mb-16 lg:mb-24 w-full">
+            
+            {/* Column 1: Shop */}
+            <div x-data="{ open: false }">
+              <button
+                class="flex w-full items-center justify-between py-4 border-b border-border-subtle sm:hidden"
+                @click="open = !open"
+              >
+                <Heading as="h5">Shop</Heading>
+                <svg
+                  class="h-4 w-4 text-text-muted shrink-0 transition-transform duration-300"
+                  :class="open && 'rotate-180'"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <Heading as="h5" class="hidden sm:block mb-5">Shop</Heading>
+              <div x-show="open" x-collapse class="sm:hidden!">
+                <ul class="space-y-3 pt-3 pb-4">
+                  {shopCategories.map((item) => (
+                    <li>
+                      <Link href={item.href} variant="plain">
+                        <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                          {item.label}
+                        </Text>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <ul class="hidden sm:flex flex-col space-y-3">
+                {shopCategories.map((item) => (
+                  <li>
+                    <Link href={item.href} variant="plain">
+                      <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                        {item.label}
+                      </Text>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 2: Explore */}
+            <div x-data="{ open: false }">
+              <button
+                class="flex w-full items-center justify-between py-4 border-b border-border-subtle sm:hidden"
+                @click="open = !open"
+              >
+                <Heading as="h5">Explore</Heading>
+                <svg
+                  class="h-4 w-4 text-text-muted shrink-0 transition-transform duration-300"
+                  :class="open && 'rotate-180'"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <Heading as="h5" class="hidden sm:block mb-5">Explore</Heading>
+              <div x-show="open" x-collapse class="sm:hidden!">
+                <ul class="space-y-3 pt-3 pb-4">
+                  {exploreLinks.map((item) => (
+                    <li>
+                      <Link href={item.href} variant="plain">
+                        <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                          {item.label}
+                        </Text>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <ul class="hidden sm:flex flex-col space-y-3">
+                {exploreLinks.map((item) => (
+                  <li>
+                    <Link href={item.href} variant="plain">
+                      <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                        {item.label}
+                      </Text>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 3: Support */}
+            <div x-data="{ open: false }">
+              <button
+                class="flex w-full items-center justify-between py-4 border-b border-border-subtle sm:hidden"
+                @click="open = !open"
+              >
+                <Heading as="h5">Support</Heading>
+                <svg
+                  class="h-4 w-4 text-text-muted shrink-0 transition-transform duration-300"
+                  :class="open && 'rotate-180'"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <Heading as="h5" class="hidden sm:block mb-5">Support</Heading>
+              <div x-show="open" x-collapse class="sm:hidden!">
+                <ul class="space-y-3 pt-3 pb-4">
+                  {supportLinks.map((item) => (
+                    <li>
+                      <Link href={item.href} variant="plain">
+                        <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                          {item.label}
+                        </Text>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <ul class="hidden sm:flex flex-col space-y-3">
+                {supportLinks.map((item) => (
+                  <li>
+                    <Link href={item.href} variant="plain">
+                      <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
+                        {item.label}
+                      </Text>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Bottom Half: Watermark Area & Copyright Anchored strict left */}
+          <div class="flex flex-col gap-6 items-start justify-end w-full">
+             <div class="pointer-events-none select-none opacity-20 transform -translate-x-1 lg:-translate-x-3">
+               <Logo variant="full" class="text-[3rem]! sm:text-[4rem]! lg:text-[5.5rem]! leading-[0.8]! tracking-tighter" />
+             </div>
+             
+             <div class="flex flex-col 2xl:flex-row 2xl:items-center gap-2 sm:gap-4 2xl:gap-8 pt-2 2xl:pt-4 w-full">
+                <Text variant="metadata" color="muted">{siteConfig.copyright}</Text>
+                <div class="flex flex-wrap gap-4 sm:gap-5">
+                  <Link href="/privacy-policy" variant="plain">
+                    <Text variant="metadata" color="muted">Privacy Policy</Text>
+                  </Link>
+                  <Link href="/terms-of-service" variant="plain">
+                    <Text variant="metadata" color="muted">Terms of Service</Text>
+                  </Link>
+                </div>
+             </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </footer>

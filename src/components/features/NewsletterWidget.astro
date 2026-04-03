@@ -1,0 +1,133 @@
+---
+/**
+ * NewsletterWidget - Multi-variant, brand-aware newsletter feature.
+ * 
+ * Variants:
+ * - 'section': Full-width call-to-action with background image.
+ * - 'footer': Minimal, single-column for layout-confined areas.
+ * - 'sidebar': Compressed vertical for constrained widths.
+ * - 'modal': Floating (future/planned).
+ * 
+ * Data:
+ * - Brand-specific copy is loaded from src/content/{brand}/newsletter.json.
+ */
+
+import { getEntry } from 'astro:content';
+import Heading from '../primitives/Heading.astro';
+import Text from '../primitives/Text.astro';
+import NewsletterForm from '../ui/NewsletterForm.astro';
+
+interface Props {
+  variant?: 'section' | 'footer' | 'sidebar' | 'modal';
+  brand?: string;
+  hideHeading?: boolean;
+  class?: string;
+  id?: string;
+}
+
+const { 
+  variant = 'section', 
+  brand = 'zelia-vance', 
+  hideHeading = false,
+  class: className,
+  id: customId 
+} = Astro.props;
+
+// Generate a unique ID for targeting the behavior
+const uid = customId || `newsletter-${variant}-${Math.random().toString(36).substring(2, 7)}`;
+
+// Fetch the brand-specific copy
+const entry = await getEntry('newsletter', brand);
+const copy = entry?.data?.[variant] || {
+  heading: "Subscribe to our newsletter",
+  description: "Stay updated with our latest news and offers.",
+  success_message: "Thank you for subscribing!"
+};
+
+const isSection = variant === 'section';
+const isFooter = variant === 'footer';
+const isSidebar = variant === 'sidebar';
+---
+
+<section 
+  id={uid}
+  class:list={[
+    "relative overflow-hidden w-full",
+    isSection && "py-24 px-6 bg-linear-to-b from-surface to-background-soft",
+    isFooter && "py-0",
+    isSidebar && "p-6 bg-white border border-(--color-divider) rounded-xl",
+    className
+  ]}
+>
+  <div class:list={[
+    "mx-auto",
+    isSection && "max-w-2xl text-center",
+    isFooter && "w-full",
+    isSidebar && "w-full"
+  ]}>
+    
+    {!hideHeading && (
+      <div class:list={[
+        isSection && "mb-8",
+        isSidebar && "text-center mb-6",
+        isFooter && "mb-4"
+      ]}>
+        <Heading 
+          as={isSection ? "h2" : "h4"}
+          class="mb-3"
+        >
+          {copy.heading}
+        </Heading>
+        <Text 
+          variant="body" 
+          class:list={[
+            "text-text-muted",
+            isSection && "text-lg",
+            isFooter && "leading-relaxed",
+            isSidebar && "text-sm"
+          ]}
+        >
+          {copy.description}
+        </Text>
+      </div>
+    )}
+
+    <div class:list={[
+      isSection && "mx-auto max-w-md",
+      isFooter && "w-full",
+      isSidebar && "w-full"
+    ]}>
+      <NewsletterForm
+        id={`${uid}-form`}
+        placeholder="Enter your Gmail address"
+        buttonText={isSection ? "Join the Inner Circle" : "Subscribe"}
+        layout={isFooter ? "col" : "row"}
+      />
+      <Text 
+        variant="caption" 
+        class:list={[
+          "mt-4 block opacity-60",
+          isSection && "text-center",
+          isFooter && "text-left"
+        ]}
+      >
+        We only accept Gmail addresses for high-intent delivery.
+      </Text>
+    </div>
+    
+  </div>
+
+  <script>
+    import { initNewsletterWidget } from '../../scripts/behaviors/newsletter';
+    
+    // Target all newsletter widgets on the page
+    const widgets = document.querySelectorAll('section[id^="newsletter-"]');
+    widgets.forEach(widget => {
+      const form = widget.querySelector('form');
+      if (form && form.id) {
+        initNewsletterWidget(form.id);
+      }
+    });
+  </script>
+</section>
+
