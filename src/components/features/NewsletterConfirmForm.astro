@@ -1,0 +1,97 @@
+---
+/**
+ * NewsletterConfirmForm — Feature Component
+ * The newsletter subscription confirmation form.
+ *
+ * Two modes:
+ *  - Locked (email prop supplied): pre-fills the email from the delivery link.
+ *    Uses a readonly Input for display. Skips Gmail restriction — the customer's
+ *    order email may not be a Gmail.
+ *  - Open (no email prop): shows an editable Input with Gmail-only validation.
+ *
+ * Layer: Feature (has API calls, event listeners via behavior script)
+ * Uses: NewsletterPageCard (UI), Input, Button, Text (Primitives)
+ * Behavior: scripts/behaviors/newsletter.ts → initNewsletterConfirm()
+ */
+
+import NewsletterPageCard from "../ui/NewsletterPageCard.astro";
+import Input from "../primitives/Input.astro";
+import Button from "../primitives/Button.astro";
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  email?: string;
+}
+
+const { email = "" } = Astro.props;
+const hasEmail = email.length > 0;
+---
+
+<NewsletterPageCard
+  heading={hasEmail
+    ? "One quiet step to join our inner circle."
+    : "Stay in the loop."}
+  description={hasEmail
+    ? "We share rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning. Nothing more."
+    : "Enter your Gmail below to receive rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning."}
+>
+  <form
+    id="newsletter-confirm-form"
+    class="flex flex-col gap-3"
+    data-locked={hasEmail ? "true" : "false"}
+    novalidate
+  >
+    {hasEmail ? (
+      <>
+        {/* Hidden field — the actual value submitted to the API */}
+        <input type="hidden" name="email" value={email} />
+
+        {/* Readonly display field — same visual as Input, just locked.
+            Styled with text-center; cursor-default removes the text cursor. */}
+        <Input
+          id="newsletter-email-display"
+          type="email"
+          name="_display"
+          value={email}
+          class="text-center cursor-default!"
+          readonly
+        />
+      </>
+    ) : (
+      <div class="flex flex-col gap-1 text-left">
+        <Input
+          id="newsletter-email-input"
+          type="email"
+          name="email"
+          placeholder="Enter your Gmail address"
+        />
+        <p id="newsletter-email-error" class="hidden px-1 font-sans text-xs text-accent-coral">
+          Please enter a valid Gmail address.
+        </p>
+      </div>
+    )}
+
+    <Button
+      id="newsletter-submit-btn"
+      type="primary"
+      size="lg"
+      class="w-full uppercase tracking-widest text-xs!"
+    >
+      <span id="newsletter-submit-label">Yes, stay in the loop</span>
+    </Button>
+
+    <p id="newsletter-form-error" class="hidden text-center font-sans text-xs text-accent-coral">
+      Something went wrong. Please try again in a moment.
+    </p>
+  </form>
+
+  <Text variant="metadata" class="mt-8 block leading-relaxed opacity-70">
+    Your email stays private. No spam, no exceptions.<br />
+    You can leave any time via the unsubscribe link in any email.
+  </Text>
+</NewsletterPageCard>
+
+<script>
+  import { initNewsletterConfirm } from '../../scripts/behaviors/newsletter';
+  initNewsletterConfirm();
+</script>
