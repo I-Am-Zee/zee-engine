@@ -4,7 +4,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import alpinejs from '@astrojs/alpinejs';
 
-import netlify from '@astrojs/netlify';
+import cloudflare from '@astrojs/cloudflare';
 
 // Site URL for Snipcart product URL validation
 // Using production URL because Snipcart crawls product pages to verify prices.
@@ -47,6 +47,6 @@ export default defineConfig({
     })
   ],
 
-  // Netlify adapter for deployment (supports hybrid mode)
-  adapter: netlify()
+  // Cloudflare adapter for deployment (supports hybrid mode)
+  adapter: cloudflare()
 });
