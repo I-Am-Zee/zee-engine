@@ -1,19 +1,33 @@
 {
+  "context": "This project has just been migrated to the Astro 5 Content Layer API. The `src/content/config.ts` now uses `glob` loaders that point to brand-specific subdirectories (e.g., `src/content/zelia-vance/products/`). Your task is to physically move the existing content files into that new directory structure so the loaders can find them. Do NOT modify any Astro component files or the config.ts. Only move/create files as described below.",
   "tasks": [
     {
-      "title": "Update Worker SnapBucket Array",
-      "targetFile": "image-engine/src/index.ts",
-      "instruction": "The worker currently snaps image widths to [400, 800, 1200]. Add 200 to this active parameter array so that tiny UI thumbnail grids don't unnecessarily load 400px files."
+      "title": "Create Brand Directory Structure",
+      "instruction": "Create the following empty directories if they do not already exist: `src/content/zelia-vance/products/`, `src/content/zelia-vance/lookbooks/`, `src/content/zelia-vance/settings/`, `src/content/zelia-vance/newsletter/`, `src/content/zelia-vance/blog/`."
     },
     {
-      "title": "Hook up Image.astro to the Cloudflare Edge",
-      "targetFile": "src/components/primitives/Image.astro",
-      "instruction": "Implement native responsive design using the `srcset` attribute. Consume the `IMAGE_GATEWAY_URL` environment variable. Automatically generate the `srcset` string requesting the `400w`, `800w`, and `1200w` variants from the Gateway. Ensure the default `src` fallback uses the 800px variant."
+      "title": "Migrate Product Files",
+      "instruction": "Move all `.md` files from `src/content/products/` into `src/content/zelia-vance/products/`. After moving, delete the now-empty `src/content/products/` directory."
     },
     {
-      "title": "Cloudflare Email Obfuscation + View Transitions",
-      "targetFile": "src/layouts/BaseLayout.astro",
-      "instruction": "Astro's ClientRouter blocks Cloudflare's edge-injected email-decode.min.js from re-executing upon client-side navigation. Read the research file at CONTEXT FILES.AGENTS/CLOUDFLARE EMAIL OBFUSCATION.md and implement the exact astro:page-load script detailed at the bottom of the document to solve this issue."
+      "title": "Migrate Lookbook Files",
+      "instruction": "Move all `.md` files from `src/content/lookbooks/` into `src/content/zelia-vance/lookbooks/`. After moving, delete the now-empty `src/content/lookbooks/` directory."
+    },
+    {
+      "title": "Migrate Settings Files",
+      "instruction": "Move all files (`.yml`, `.yaml`, `.json`) from `src/content/settings/` into `src/content/zelia-vance/settings/`. After moving, delete the now-empty `src/content/settings/` directory."
+    },
+    {
+      "title": "Migrate Newsletter Files",
+      "instruction": "Check if `src/content/newsletter/` exists. If it does, move all files into `src/content/zelia-vance/newsletter/` and delete the old directory."
+    },
+    {
+      "title": "Keep Legal Pages Shared",
+      "instruction": "Do NOT move `src/content/pages/`. Legal pages (returns.md, terms-of-service.md, privacy-policy.md, shipping.md) are intentionally SHARED across all brands and must remain at `src/content/pages/`. This is by design."
+    },
+    {
+      "title": "Verify Build",
+      "instruction": "After all file moves, run `npm run build` (or `npm run check` if build is not available). The build MUST succeed with no errors. The only acceptable warnings are pre-existing ones about the `image-engine/test` TypeScript module. If there are errors about missing content, double-check that all files were moved to the correct destinations."
     }
   ]
 }
