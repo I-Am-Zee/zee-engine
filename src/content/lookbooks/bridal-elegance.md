@@ -5,7 +5,7 @@ description: "Timeless diamonds for your most precious moment. Discover our cura
 gallery:
   - "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1780&auto=format&fit=crop"
   - "https://images.unsplash.com/photo-1512163143273-bde0e3cc7407?q=80&w=2070&auto=format&fit=crop"
-  - "https://images.unsplash.com/photo-1594998760775-802c6d48227b?q=80&w=1964&auto=format&fit=crop"
+  - "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1964&auto=format&fit=crop"
 products:
   - diamond-tennis-necklace
   - diamond-stud-earrings

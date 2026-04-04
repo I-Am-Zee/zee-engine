@@ -45,8 +45,9 @@ export default {
     let qualityStr = url.searchParams.get("q");
 
     let width = parseInt(widthStr || "800", 10);
-    if (isNaN(width) || ![400, 800, 1200].includes(width)) {
-      if (!isNaN(width) && width <= 600) width = 400;
+    if (isNaN(width) || ![200, 400, 800, 1200].includes(width)) {
+      if (!isNaN(width) && width <= 300) width = 200;
+      else if (!isNaN(width) && width <= 600) width = 400;
       else if (!isNaN(width) && width <= 1000) width = 800;
       else width = 1200;
     }

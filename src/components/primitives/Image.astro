@@ -39,14 +39,37 @@ const ratioStyles = {
 
 const combinedClasses = `${baseStyles} ${ratioStyles[ratio]} ${className || ""}`.trim();
 
+const gateway = import.meta.env.IMAGE_GATEWAY_URL || "";
 const isString = typeof src === "string";
 const isPublicFile = isString && src.startsWith("/");
 const isRemote = isString && src.startsWith("http");
-const bypassAstroImage = isPublicFile || (import.meta.env.DEV && isRemote);
+const isGatewayImage = isPublicFile && gateway !== "";
+const bypassAstroImage = isGatewayImage || isPublicFile || (import.meta.env.DEV && isRemote);
+
+let gatewaySrc = src;
+let gatewaySrcset = undefined;
+
+if (isGatewayImage) {
+  gatewaySrc = `${gateway}${src}?w=800`;
+  gatewaySrcset = `${gateway}${src}?w=200 200w, ${gateway}${src}?w=400 400w, ${gateway}${src}?w=800 800w, ${gateway}${src}?w=1200 1200w`;
+}
 ---
 
 {
-  bypassAstroImage ? (
+  isGatewayImage ? (
+    <img
+      src={gatewaySrc}
+      srcset={gatewaySrcset}
+      alt={alt}
+      class={combinedClasses}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      {...rest}
+    />
+  ) : bypassAstroImage ? (
     <img 
       src={src} 
       alt={alt} 

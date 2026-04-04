@@ -55,6 +55,21 @@ const {
       };
     </script>
     <script src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
+    <script is:inline>
+      document.addEventListener('astro:page-load', () => {
+        // Locate the Cloudflare obfuscation script
+        const cloudflareScript = document.querySelector('script[src*="email-decode.min.js"]');
+
+        if (cloudflareScript) {
+          // Create a fresh copy of the script to force re-execution
+          const newScript = document.createElement('script');
+          newScript.src = cloudflareScript.src;
+          // Use Astro's rerun attribute to ensure it executes on every transition
+          newScript.dataset.astroRerun = "";
+          cloudflareScript.replaceWith(newScript);
+        }
+      });
+    </script>
   </head>
   <body class="flex flex-col min-h-screen">
     <AnnouncementBar data={announcement_bar} />
