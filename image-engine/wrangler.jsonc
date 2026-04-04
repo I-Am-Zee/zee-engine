@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "image-engine",
+	"name": "zee-media-gateway",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-04-03",
 	"observability": {
@@ -20,7 +20,7 @@
 	"r2_buckets": [
 		{
 			"binding": "IMAGES_BUCKET",
-			"bucket_name": "image-engine-bucket"
+			"bucket_name": "zee-media-production"
 		}
 	]
 }

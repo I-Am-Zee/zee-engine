@@ -71,7 +71,10 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
-    const imageRequest = new Request(request.url, request);
+    // Connect to the secret origin domain created by the user in the dashboard
+    const originUrl = new URL(`https://vault-x92k-zee.zeliavance.com${url.pathname}`);
+    const imageRequest = new Request(originUrl.toString(), request);
+    
     return fetch(imageRequest, options);
   },
 };

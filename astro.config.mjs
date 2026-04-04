@@ -15,9 +15,8 @@ const siteUrl = 'https://zaviona-dev.netlify.app';
 export default defineConfig({
   site: siteUrl,
   
-  // Static mode: Pre-renders everything by default. 
-  // We opt-out of pre-rendering for dynamic routes using export const prerender = false.
-  output: 'static',
+  // Server mode: Required for API webhooks and dynamic Server-Side rendering.
+  output: 'server',
 
   server: {
     host: '127.0.0.1',
