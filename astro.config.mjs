@@ -15,8 +15,8 @@ const siteUrl = 'https://zaviona-dev.netlify.app';
 export default defineConfig({
   site: siteUrl,
   
-  // Server mode: Required for API webhooks and dynamic Server-Side rendering.
-  output: 'server',
+  // Static by default (hybrid automatically supported in Astro 5 for API routes)
+  output: 'static',
 
   server: {
     host: '127.0.0.1',
