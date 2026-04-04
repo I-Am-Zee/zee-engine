@@ -5,10 +5,11 @@ This codebase is a **Multi-Tenant White-Label E-Commerce Engine.**
 **The Vision:**
 
 - One Git repo → Multiple Cloudflare Pages deployments
-- Each deployment differs by a `BRAND` environment variable
-- Brand-specific content in `src/content/BrandName/` folders
-- Brand-specific tokens in `src/styles/BrandName/global.css`
-- Same component library, different tokens/content/config = different website
+- Each deployment differs by the `PUBLIC_BRAND_ID` environment variable. This acts as the "Master Key" to the correct R2 media folder and content directory.
+- The project source code remains entirely brand-neutral.
+- Brand-specific content in `src/content/<PUBLIC_BRAND_ID>/` folders.
+- Brand-specific tokens in `src/styles/<PUBLIC_BRAND_ID>/global.css`.
+- Same component library, different tokens/content/config = different website.
 
 **Three Brand Modes:**
 
