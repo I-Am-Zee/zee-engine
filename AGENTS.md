@@ -290,26 +290,20 @@ All aliases route to `zeliavance.official@gmail.com`. Gmail SMTP "send as" via A
 
 ---
 
-## 10. Image Engine — R2 + Cloudflare Worker (Planned)
+## 10. Image Engine — R2 + Cloudflare Worker (LIVE)
 
-A "Source → Storage → Processor → Consumer" pipeline:
+A "Source → Processor → Consumer" pipeline is fully active:
 
-1. **Source**: High-res unoptimized product photos uploaded to Cloudflare R2 bucket.
-2. **Storage**: R2 holds master files. GitHub repo is code-only — no images.
-3. **Processor (Worker)**: A Cloudflare Worker listens on `assets.{brand}.com`. Intercepts requests, extracts R2 key from pathname, parses `?w=` and `?q=` URL params, invokes `cf.image` for hardware-accelerated transformation.
+1. **Source**: High-res unoptimized product photos uploaded to Cloudflare R2 bucket (`zee-media-production`).
+   - Standard Folder Structure: `/\<brand-name\>/\<category\>/file.webp`
+2. **Storage**: R2 holds master files accessed securely via `vault-x92k-zee.zeliavance.com`.
+3. **Processor (Worker)**: A Cloudflare Worker listens on `assets.zeliavance.com`. It applies the 5,000 Free Tier monthly limit trick by proxying via `fetch({ cf: { image } })`.
 4. **Consumer**: `Image.astro` primitive generates `srcset` using `IMAGE_GATEWAY_URL` env var.
 
-**Worker implementation rules:**
-
-- Must include `sharpen: 1.0` for jewellery detail clarity.
-- Must use `format: 'auto'` for AVIF/WebP modern browser support.
-- Use a fixed width array (400, 800, 1200) to stay under the 5,000 unique transformations/month free limit.
-- Include a security allow-list or secret header check — the worker must not be publicly exploitable as a free image resizing service.
-- Env var: `IMAGE_GATEWAY_URL` → consumed by `Image.astro` primitive.
-
-**Per-brand multi-tenancy**: Only `IMAGE_GATEWAY_URL` changes between brands. All component logic stays identical.
-
-**Status**: Not yet implemented. Implement in a separate session with full Cloudflare Wrangler setup.
+**Worker implementation rules (Already Implemented):**
+- Includes `sharpen: 1.0` and `format: 'auto'`.
+- Fixed snapping width array (200, 400, 800, 1200).
+- Security block ensures `ALLOWED_DOMAINS` referers only.
 
 ---
 
@@ -339,11 +333,11 @@ A "Source → Storage → Processor → Consumer" pipeline:
 
 ### Pending (Next Sessions)
 
-- ⏳ **Cloudflare adapter** — Replace `@astrojs/netlify` with `@astrojs/cloudflare`. Separate session.
+- ✅ **Cloudflare adapter** — Replaced `@astrojs/netlify`.
 - ⏳ **Keystatic CMS integration** — Separate session. Git-based CMS for Cloudflare Pages.
 - ⏳ **NewsletterWidget.astro** — Feature component with variants (`section`, `footer`, `sidebar`, `modal`). Copy from brand JSON. Not yet built.
 - ⏳ **PopupModal scoping** — Currently fires on all pages via BaseLayout. Should be gated per page (not appropriate on checkout, PDP, shop, lookbook).
-- ⏳ **R2 + Worker image engine** — Separate session with Wrangler setup.
+- ✅ **R2 + Worker image engine** — Implemented and handling all `400|800|1200` transformations via 5k Free Tier proxy loophole.
 - ⏳ **About page** — GSAP + Lenis scroll, JSON-driven screenplay. Immersive layout.
 - ⏳ **Care Guide page** — Same as About. GSAP + Lenis. JSON-driven.
 - ⏳ **Blog system** — Including sticky TOC sidebar.
