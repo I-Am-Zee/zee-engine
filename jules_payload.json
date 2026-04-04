@@ -1,19 +1,24 @@
 {
   "tasks": [
     {
-      "title": "Update Worker SnapBucket Array",
-      "targetFile": "image-engine/src/index.ts",
-      "instruction": "The worker currently snaps image widths to [400, 800, 1200]. Add 200 to this active parameter array so that tiny UI thumbnail grids don't unnecessarily load 400px files."
+      "title": "Project Brain Graduation: Folder Reorganization",
+      "targetFile": "CONTEXT FILES.AGENTS",
+      "instruction": "Rename the folder `CONTEXT FILES.AGENTS` to `.agents/context/`. This creates a professional, tool-friendly directory structure for our system specifications. Ensure all 6 internal files are moved without loss."
     },
     {
-      "title": "Hook up Image.astro to the Cloudflare Edge",
-      "targetFile": "src/components/primitives/Image.astro",
-      "instruction": "Implement native responsive design using the `srcset` attribute. Consume the `IMAGE_GATEWAY_URL` environment variable. Automatically generate the `srcset` string requesting the `400w`, `800w`, and `1200w` variants from the Gateway. Ensure the default `src` fallback uses the 800px variant."
+      "title": "Graduate Image Engine Spec to LIVE Status",
+      "targetFile": ".agents/context/IMAGE-ENGINE R2 WORKER.md",
+      "instruction": "The Image Engine is now officially LIVE. Update this document to reflect the absolute current reality: 1. Document the 200/400/800/1200 SnapBucket width array. 2. Document the dynamic multi-tenant prefixing (mapping `/images/` to `PUBLIC_BRAND_ID/` in R2). 3. Document the automated Dev-Mode fallback to local disk. Remove all 'Proposed' or 'Discovery' language."
     },
     {
-      "title": "Cloudflare Email Obfuscation + View Transitions",
-      "targetFile": "src/layouts/BaseLayout.astro",
-      "instruction": "Astro's ClientRouter blocks Cloudflare's edge-injected email-decode.min.js from re-executing upon client-side navigation. Read the research file at CONTEXT FILES.AGENTS/CLOUDFLARE EMAIL OBFUSCATION.md and implement the exact astro:page-load script detailed at the bottom of the document to solve this issue."
+      "title": "Formalize Multi-Brand Architecture Rules",
+      "targetFile": ".agents/context/ARCHITECTURE OF A MULTI-BRAND ENGINE.md",
+      "instruction": "Update this document to include the `PUBLIC_BRAND_ID` rule. Explain that the project source code remains brand-neutral, while the brand name in the environment variable acts as the 'Master Key' to the correct R2 media folder and content directory."
+    },
+    {
+      "title": "Create Documentation Library Index",
+      "targetFile": ".agents/context/README.md",
+      "instruction": "Create a professional index file for the new `.agents/context/` directory. Explain the purpose of each of the 6 spec files and why this folder is the 'Source of Truth' for all future AI agents and human developers."
     }
   ]
 }
