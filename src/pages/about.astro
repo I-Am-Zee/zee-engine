@@ -1,5 +1,5 @@
 ---
-import { getEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 
@@ -8,7 +8,7 @@ export const prerender = true;
 
 // Fetch the "about" page content
 const page = await getEntry("pages", "about");
-const { Content } = page ? await page.render() : { Content: null };
+const { Content } = page ? await render(page) : { Content: null };
 ---
 
 <BaseLayout title={page?.data.title || "About Us"} description={page?.data.description}>

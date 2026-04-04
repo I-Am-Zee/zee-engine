@@ -1,5 +1,5 @@
 ---
-import { getEntry } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Heading from '../components/primitives/Heading.astro';
 import Text from '../components/primitives/Text.astro';
@@ -7,7 +7,7 @@ import Text from '../components/primitives/Text.astro';
 const entry = await getEntry('pages', 'shipping');
 if (!entry) return new Response('Page not found', { status: 404 });
 
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 export const prerender = true;
 ---
