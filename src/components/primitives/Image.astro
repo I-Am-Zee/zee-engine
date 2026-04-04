@@ -40,18 +40,29 @@ const ratioStyles = {
 const combinedClasses = `${baseStyles} ${ratioStyles[ratio]} ${className || ""}`.trim();
 
 const gateway = import.meta.env.IMAGE_GATEWAY_URL || "";
+const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
+const isDev = import.meta.env.DEV;
+
 const isString = typeof src === "string";
 const isPublicFile = isString && src.startsWith("/");
 const isRemote = isString && src.startsWith("http");
-const isGatewayImage = isPublicFile && gateway !== "";
-const bypassAstroImage = isGatewayImage || isPublicFile || (import.meta.env.DEV && isRemote);
+
+// Logic: 
+// 1. If it starts with /images/, it needs to be mapped to the brand-prefixed R2 path
+// 2. We only use the gateway in PRODUCTION or if the user explicitly wants R2 in Dev
+const isGatewayImage = isPublicFile && gateway !== "" && !isDev;
+const bypassAstroImage = isGatewayImage || isPublicFile || (isDev && isRemote);
 
 let gatewaySrc = src;
 let gatewaySrcset = undefined;
 
 if (isGatewayImage) {
-  gatewaySrc = `${gateway}${src}?w=800`;
-  gatewaySrcset = `${gateway}${src}?w=200 200w, ${gateway}${src}?w=400 400w, ${gateway}${src}?w=800 800w, ${gateway}${src}?w=1200 1200w`;
+  // Transform path: /images/products/photo.jpg -> /zelia-vance/products/photo.jpg
+  // This aligns the project's local-path structure with the R2 multi-tenant structure
+  const r2Path = src.replace(/^\/images\//, `/${brandId}/`);
+  
+  gatewaySrc = `${gateway}${r2Path}?w=800`;
+  gatewaySrcset = `${gateway}${r2Path}?w=200 200w, ${gateway}${r2Path}?w=400 400w, ${gateway}${r2Path}?w=800 800w, ${gateway}${r2Path}?w=1200 1200w`;
 }
 ---
 

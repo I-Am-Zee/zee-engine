@@ -295,10 +295,16 @@ All aliases route to `zeliavance.official@gmail.com`. Gmail SMTP "send as" via A
 A "Source → Processor → Consumer" pipeline is fully active:
 
 1. **Source**: High-res unoptimized product photos uploaded to Cloudflare R2 bucket (`zee-media-production`).
-   - Standard Folder Structure: `/\<brand-name\>/\<category\>/file.webp`
+   - Standard Folder Structure: `/\<brand-id\>/\<category\>/file.webp`
 2. **Storage**: R2 holds master files accessed securely via `vault-x92k-zee.zeliavance.com`.
-3. **Processor (Worker)**: A Cloudflare Worker listens on `assets.zeliavance.com`. It applies the 5,000 Free Tier monthly limit trick by proxying via `fetch({ cf: { image } })`.
-4. **Consumer**: `Image.astro` primitive generates `srcset` using `IMAGE_GATEWAY_URL` env var.
+3. **Processor (Worker)**: A Cloudflare Worker listens on `assets.zeliavance.com`.
+4. **Consumer**: `Image.astro` primitive generates `srcset` using `IMAGE_GATEWAY_URL`.
+
+**Multi-Tenant Mapping Rules:**
+- **Dynamic Prefixing**: The system uses `PUBLIC_BRAND_ID` from `.env` to map local-style paths (e.g., `/images/products/`) to R2-style paths (e.g., `zelia-vance/products/`).
+- **Dev Fallback**: In `DEV` mode, the engine automatically falls back to local disk files (`/public/images/`) to bypass Cloudflare Referrer restrictions on localhost.
+- **Production**: In build/production, the engine strictly uses the R2 Gateway for optimized delivery.
+
 
 **Worker implementation rules (Already Implemented):**
 - Includes `sharpen: 1.0` and `format: 'auto'`.
@@ -376,11 +382,14 @@ A "Source → Processor → Consumer" pipeline is fully active:
 
 | Variable                   | Purpose                                               |
 | -------------------------- | ----------------------------------------------------- |
+| `PUBLIC_BRAND_ID`        | The unique identifier for the brand (e.g., `zelia-vance`). Used for R2 path mapping. |
 | `PUBLIC_SNIPCART_API_KEY`  | Snipcart public key (client-side)                     |
-| `SNIPCART_SECRET_KEY`      | Snipcart private key (server-side API calls)          |
+| `SNIPCART_SECRET_API_KEY`  | Snipcart private key (server-side API calls)          |
+
 | `RAZORPAY_KEY_ID`          | Razorpay public key                                   |
 | `RAZORPAY_KEY_SECRET`      | Razorpay secret                                       |
 | `SHIPROCKET_EMAIL`         | Shiprocket API login email                            |
+| `SHIPROCKET_PASSWORD`      | Shiprocket API login password (Raw string, no escaping) |
 | `SHIPROCKET_WEBHOOK_TOKEN` | Webhook auth token (`ZeliaVance_Secure_Deploy_2026`)  |
 | `MAILERLITE_API_KEY`       | MailerLite API v3 key                                 |
 | `MAILERLITE_GROUP_ID`      | MailerLite Newsletter group ID (`183469983098995840`) |
