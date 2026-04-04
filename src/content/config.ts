@@ -1,13 +1,21 @@
 import { defineCollection, z } from "astro:content";
+import { glob, file } from "astro/loaders";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MULTI-TENANT BRAND RESOLUTION
+// The BRAND_ID env var drives all content paths. This is the "Master Switch."
+// Convention: PUBLIC_BRAND_ID="zelia-vance" → reads from src/content/zelia-vance/
+// ─────────────────────────────────────────────────────────────────────────────
+const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRODUCTS COLLECTION
 // ═══════════════════════════════════════════════════════════════════════════
-// Validation Strategy: Mirrors .pages.yml constraints + advanced runtime checks
-// Critical: salePrice < price enforced via refine() to prevent Snipcart conflicts
-// ═══════════════════════════════════════════════════════════════════════════
 const products = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.md",
+    base: `./src/content/${brandId}/products`,
+  }),
   schema: z.object({
     // MOLECULE: Core Identity
     title: z.string().max(100, "Product title must be ≤100 characters for SEO"),
@@ -102,11 +110,11 @@ const products = defineCollection({
         if (data.salePrice && data.price) {
           return data.salePrice < data.price;
         }
-        return true; // If no salePrice, validation passes
+        return true;
       },
       {
         message: "Sale price must be less than regular price",
-        path: ["salePrice"], // Error shows on salePrice field
+        path: ["salePrice"],
       }
     ),
 });
@@ -115,7 +123,10 @@ const products = defineCollection({
 // LOOKBOOKS COLLECTION - Shop the Look
 // ═══════════════════════════════════════════════════════════════════════════
 const lookbooks = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.md",
+    base: `./src/content/${brandId}/lookbooks`,
+  }),
   schema: z.object({
     title: z.string(),
     hero_image: z.string(),
@@ -129,7 +140,10 @@ const lookbooks = defineCollection({
 // BLOG POSTS
 // ═══════════════════════════════════════════════════════════════════════════
 const blog = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.md",
+    base: `./src/content/${brandId}/blog`,
+  }),
   schema: z.object({
     title: z.string(),
     excerpt: z.string(),
@@ -142,10 +156,13 @@ const blog = defineCollection({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// STATIC PAGES
+// STATIC PAGES — Legal (Shared across all brands, NOT brand-specific)
 // ═══════════════════════════════════════════════════════════════════════════
 const pages = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.md",
+    base: `./src/content/pages`,
+  }),
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
@@ -154,10 +171,13 @@ const pages = defineCollection({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// GLOBAL SETTINGS - Marketing Command Center
+// GLOBAL SETTINGS - Marketing Command Center (brand-specific)
 // ═══════════════════════════════════════════════════════════════════════════
 const settings = defineCollection({
-  type: "data",
+  loader: glob({
+    pattern: "**/*.{yml,yaml,json}",
+    base: `./src/content/${brandId}/settings`,
+  }),
   schema: z.object({
     name: z.string(),
     tagline: z.string(),
@@ -200,7 +220,10 @@ const settings = defineCollection({
 });
 
 const newsletter = defineCollection({
-  type: "data",
+  loader: glob({
+    pattern: "**/*.{yml,yaml,json}",
+    base: `./src/content/${brandId}/newsletter`,
+  }),
   schema: z.record(
     z.string(),
     z.object({
@@ -219,4 +242,3 @@ export const collections = {
   settings,
   newsletter,
 };
-

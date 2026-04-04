@@ -1,5 +1,6 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
 import { mapProduct } from "../../config/ecommerce";
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -20,24 +21,26 @@ import SectionHeader from '../../components/ui/SectionHeader.astro';
 export const getStaticPaths = (async () => {
   const lookbooks = await getCollection('lookbooks');
   return lookbooks.map((lookbook) => ({
-    params: { slug: lookbook.slug },
+    params: { slug: lookbook.id },
     props: { lookbook },
   }));
 }) satisfies GetStaticPaths;
 
+
 const { lookbook } = Astro.props;
 const { title, description, hero_image, products: productSlugs } = lookbook.data;
-const { Content } = await lookbook.render();
+const { Content } = await render(lookbook);
 
 // Fetch full product data
 const allProducts = await getCollection('products');
 const allLookbooks = await getCollection('lookbooks');
-const relatedLookbooks = allLookbooks.filter((lb) => lb.slug !== lookbook.slug);
+const relatedLookbooks = allLookbooks.filter((lb) => lb.id !== lookbook.id);
 
 // Filter only valid products that exist in the collection
 const products = (productSlugs || [])
-  .map((slug) => allProducts.find((p) => p.slug === slug))
+  .map((slug) => allProducts.find((p) => p.id === slug))
   .filter((p): p is NonNullable<typeof p> => !!p);
+
 
 // Transform for BuySetButton - Flatten to clean objects for client-side serialization
 const productsForButton = products.map(p => mapProduct(p));
@@ -181,7 +184,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
       >
         {relatedLookbooks.map(lb => (
           <li class="splide__slide flex justify-center h-auto">
-            <a href={`/lookbooks/${lb.slug}`} class="group block relative w-full max-w-sm md:max-w-md lg:max-w-lg aspect-4/5 overflow-hidden rounded-3xl bg-black focus-glow">
+          <a href={`/lookbooks/${lb.id}`} class="group block relative w-full max-w-sm md:max-w-md lg:max-w-lg aspect-4/5 overflow-hidden rounded-3xl bg-black focus-glow">
               <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-[1.05]" />
               <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/10"></div>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">

@@ -35,14 +35,14 @@ const { productSlugs, currentProduct, class: className } = Astro.props;
 // Get all products and filter by slugs
 const allProducts = await getCollection("products");
 const relatedProducts = productSlugs
-  .map((slug) => allProducts.find((p) => p.slug === slug))
+  .map((slug) => allProducts.find((p) => p.id === slug))
   .filter((p): p is NonNullable<typeof p> => !!p)
   .slice(0, 4); // Max 4 products
 
 // Transform for BuySetButton
 const productsForButton = [
   // Include the MAIN product
-  ...(currentProduct ? [allProducts.find(p => p.slug === currentProduct.id)].filter(Boolean) : []),
+  ...(currentProduct ? [allProducts.find(p => p.id === currentProduct.id)].filter(Boolean) : []),
   // Then the related products
   ...relatedProducts
 ] as CollectionEntry<"products">[];

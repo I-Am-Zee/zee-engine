@@ -37,10 +37,10 @@ export interface ZeliaProduct {
  * This is the ONLY place where field names are mapped.
  */
 export const mapProduct = (input: any): ZeliaProduct => {
-  // If it's a raw Astro Collection Entry
-  if (input.data && input.slug) {
+  // If it's a raw Astro Content Layer Entry (Astro 5: uses .id, not .slug)
+  if (input.data && input.id) {
     return {
-      id: input.slug,
+      id: input.id,
       sku: input.data.sku,
       title: input.data.title,
       price: input.data.price,

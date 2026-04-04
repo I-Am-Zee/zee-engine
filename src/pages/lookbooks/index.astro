@@ -34,7 +34,7 @@ const description = 'Explore our curated jewelry collections. From Diwali party 
         {lookbooks.map((lookbook) => (
           <CollectionCard
             title={lookbook.data.title}
-            href={`/lookbooks/${lookbook.slug}`}
+            href={`/lookbooks/${lookbook.id}`}
             image={lookbook.data.hero_image}
             description={lookbook.data.description}
             itemCount={lookbook.data.products?.length}
