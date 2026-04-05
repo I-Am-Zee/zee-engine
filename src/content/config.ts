@@ -141,7 +141,7 @@ const lookbooks = defineCollection({
 // ═══════════════════════════════════════════════════════════════════════════
 const blog = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
+    pattern: "**/*.{md,mdx}",
     base: `./src/content/${brandId}/blog`,
   }),
   schema: z.object({

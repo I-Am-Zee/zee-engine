@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 import alpinejs from '@astrojs/alpinejs';
+import mdx from '@astrojs/mdx';
 
 import cloudflare from '@astrojs/cloudflare';
 
@@ -43,7 +44,8 @@ export default defineConfig({
   integrations: [
     alpinejs({
       entrypoint: '/src/scripts/behaviors/alpine-entrypoint.ts'
-    })
+    }),
+    mdx()
   ],
 
   // Cloudflare adapter for deployment (supports hybrid mode)
