@@ -1,39 +1,21 @@
 {
-  "context": "This is a Multi-Brand E-Commerce Engine built with Astro 5 on Cloudflare Pages. We have FULLY migrated away from Netlify. All Netlify references must be purged. We are also renaming an env var from PUBLIC_STORE_MODE to PUBLIC_AFFILIATE (boolean). Read .plans/CONCERNS-LOG.md for full context on these issues. Do NOT touch any Snipcart, Razorpay, or checkout logic. Do NOT modify any .astro component templates or layouts beyond what is explicitly listed below.",
   "tasks": [
     {
-      "title": "P-002a: Rewrite site-url.ts — Remove Netlify DEPLOY_PRIME_URL",
-      "file": "src/lib/utils/site-url.ts",
-      "instruction": "Replace the entire file content with the following. The new version removes all Netlify references (DEPLOY_PRIME_URL) and instead uses PUBLIC_SITE_URL as the primary source, with request origin as dev fallback:\n\n```ts\n/**\n * Site URL Utility\n *\n * Returns the correct site URL for the current environment.\n * Priority:\n * 1. PUBLIC_SITE_URL — Set in .env for all deployments (required in production)\n * 2. requestUrl.origin — Used during local development (Astro dev server)\n * 3. localhost:4321 — Hard fallback for edge cases\n *\n * NOTE: PUBLIC_SITE_URL is required for Snipcart product price validation.\n * Set it in your .env file and in Cloudflare Pages environment variables.\n */\nexport function getSiteUrl(requestUrl?: URL): string {\n  // Primary: explicit env var (set in Cloudflare Pages for all deployments)\n  const publicSiteUrl = import.meta.env.PUBLIC_SITE_URL;\n  if (publicSiteUrl) {\n    return publicSiteUrl;\n  }\n\n  // Dev fallback: use the actual request origin (handles tunnels like dev.zeliavance.com)\n  if (requestUrl) {\n    return requestUrl.origin;\n  }\n\n  // Last resort: local dev default\n  return 'http://localhost:4321';\n}\n```"
+      "id": "M2.5-EngineLayout",
+      "description": "Add pageType prop to EngineLayout.astro and base layouts, then wrap conditional features."
     },
     {
-      "title": "P-002b: Update astro.config.mjs — Remove hardcoded Netlify URL",
-      "file": "astro.config.mjs",
-      "instruction": "Find the line `const siteUrl = 'https://zaviona-dev.netlify.app';` and replace it with `const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';`. Also update the comment above it to say: `// Site URL — set PUBLIC_SITE_URL in .env and Cloudflare Pages dashboard`. Also remove or update any other comment referencing Netlify in this file."
+      "id": "M2.5-Pages",
+      "description": "Apply pageType prop to all pages depending on folder (transactional, immersive, content, catalog)."
     },
     {
-      "title": "P-002c: Update site.config.ts — Remove Netlify URL reference",
-      "file": "src/lib/site.config.ts",
-      "instruction": "Find the line: `url: import.meta.env.PUBLIC_SITE_URL || \"https://zeliavance-dev.netlify.app\"`. Replace with: `url: import.meta.env.PUBLIC_SITE_URL || \"https://zeliavance.com\"`. Also find and remove or update any comment referencing Netlify in this file (e.g. 'DO NOT CHANGE unless you change your Netlify site name' — replace with 'Set PUBLIC_SITE_URL in your .env file')."
+      "id": "M3-Astro-Config",
+      "description": "Install @keystatic/core and @keystatic/astro and integrate."
     },
     {
-      "title": "P-002d: Clean Netlify comments in payment-methods.ts",
-      "file": "src/pages/api/checkout/payment-methods.ts",
-      "instruction": "Find all comments referencing Netlify (e.g. 'DEPLOY_PRIME_URL is provided by Netlify...' and 'prefer x-forwarded-host for Netlify'). Update these comments to reference Cloudflare Pages instead. Do NOT change any logic — only update the comment text. Replace 'Netlify' with 'Cloudflare Pages' in comments only."
-    },
-    {
-      "title": "P-006: Rename PUBLIC_STORE_MODE to PUBLIC_AFFILIATE in .env.example",
-      "file": ".env.example",
-      "instruction": "Find the line `PUBLIC_STORE_MODE=\"brand\"` and replace it with `PUBLIC_AFFILIATE=false`. This is a boolean flag, not a string."
-    },
-    {
-      "title": "P-007: Document .env.example with proper inline comments",
-      "file": ".env.example",
-      "instruction": "Rewrite the .env.example file to include inline comments explaining each variable and which ones are required per mode. Use this structure:\n\n```\n# ══════════════════════════════════════════════════════\n# MULTI-BRAND ENGINE — Environment Variables\n# See .plans/BRAND-SETUP-GUIDE.md for full instructions\n# ══════════════════════════════════════════════════════\n\n# ── REQUIRED FOR ALL BRANDS ────────────────────────────\n# The unique identifier for this brand deployment.\n# Must exactly match the folder name in src/content/{brand-id}/\n# NO DEFAULT — engine will fail to start if missing.\nPUBLIC_BRAND_ID=\"\"\n\n# The production URL for this brand (used by Snipcart for price validation)\n# Must match the domain in your Cloudflare Pages deployment.\nPUBLIC_SITE_URL=\"\"\n\n# Is this an affiliate brand? true = affiliate, false = D2C\n# Affiliate mode: disables Snipcart/Razorpay, enables affiliate link buttons\nPUBLIC_AFFILIATE=false\n\n# ── REQUIRED ONLY FOR D2C BRANDS (PUBLIC_AFFILIATE=false) ─\nPUBLIC_SNIPCART_API_KEY=\"\"\nPUBLIC_RAZORPAY_KEY_ID=\"\"\nSNIPCART_SECRET_API_KEY=\"\"\nRAZORPAY_KEY_ID=\"\"\nRAZORPAY_KEY_SECRET=\"\"\nSHIPROCKET_EMAIL=\"\"\nSHIPROCKET_PASSWORD=\"\"\nSHIPROCKET_WEBHOOK_TOKEN=\"\"\nMAILERLITE_API_KEY=\"\"\nMAILERLITE_GROUP_ID=\"\"\n\n# ── IMAGE ENGINE ────────────────────────────────────────\n# Cloudflare Worker URL for R2 image delivery\nIMAGE_GATEWAY_URL=\"\"\n\n# The brand folder path prefix in your R2 bucket (e.g., \"zelia-vance\")\nPUBLIC_BRAND_ID=\"\"\n```\n\nNote: Preserve any existing values that are already filled in. Only add comments where they are missing."
-    },
-    {
-      "title": "Verify Build",
-      "instruction": "Run `npx astro check` to ensure TypeScript types are clean after all changes. The build must succeed with no new errors. Pre-existing warnings about image-engine test module are acceptable."
+      "id": "M3-Keystatic-Config",
+      "description": "Create keystatic.config.ts leveraging process.env.PUBLIC_BRAND_ID."
     }
-  ]
+  ],
+  "instructions": "Execute the following exactly:\n\n=== MILESTONE 2.5 ===\n1. Modify `src/layouts/EngineLayout.astro`:\n- Add `interface Props { title?: string; description?: string; pageType?: 'standard' | 'transactional' | 'immersive' | 'content' | 'catalog'; }`\n- Destructure `pageType = 'standard'` and pass it to `<BaseLayout>`.\n2. Modify `src/layouts/BaseLayout.astro`:\n- Add the same `pageType` prop interface.\n- Wrap `<PopupModal />` with `{pageType !== 'transactional' && pageType !== 'catalog' && <PopupModal />}`\n- Wrap `<AnnouncementBar />` with `{pageType !== 'transactional' && <AnnouncementBar />}`\n3. Apply `pageType` to all `src/pages/**/*.astro` files:\n- `/checkout/razorpay.astro` -> `pageType=\"transactional\"`\n- `/index.astro`, `/about.astro`, `/contact.astro` -> `pageType=\"immersive\"`\n- `/blog.astro`, `/blog/[slug].astro` -> `pageType=\"content\"`\n- `/shop/`, `/collections/`, `/lookbooks/`, `/products/` pages -> `pageType=\"catalog\"`\n\n=== MILESTONE 3 ===\n1. Run `npm install @keystatic/core @keystatic/astro`\n2. In `astro.config.mjs`, import `keystatic` and add `keystatic()` to `integrations` BEFORE `alpinejs()`. Add `output: 'hybrid'` in config if not already set, needed for Keystatic.\n3. Create `keystatic.config.ts`:\n```typescript\nimport { config, fields, collection, singleton } from '@keystatic/core';\n\nconst brandId = process.env.PUBLIC_BRAND_ID || 'zelia-vance';\n\nexport default config({\n  storage: { kind: 'local' },\n  collections: {\n    products: collection({\n      label: 'Products',\n      slugField: 'title',\n      path: `src/content/${brandId}/products/*`,\n      format: { data: 'frontmatter', content: 'none' },\n      schema: {\n        title: fields.slug({ name: { label: 'Title' } }),\n        sku: fields.text({ label: 'SKU' }),\n        price: fields.number({ label: 'Price' }),\n        image: fields.text({ label: 'Image URL' })\n      }\n    }),\n    blog: collection({\n      label: 'Blog',\n      slugField: 'title',\n      path: `src/content/${brandId}/blog/*`,\n      format: { contentField: 'content' },\n      schema: {\n        title: fields.slug({ name: { label: 'Title' } }),\n        excerpt: fields.text({ label: 'Excerpt', multiline: true }),\n        publishDate: fields.date({ label: 'Publish Date' }),\n        content: fields.mdx({ label: 'Content' })\n      }\n    })\n  },\n  singletons: {\n    settings: singleton({\n      label: 'Site Settings',\n      path: `src/content/${brandId}/settings/site`,\n      format: { data: 'yaml' },\n      schema: {\n        name: fields.text({ label: 'Brand Name' }),\n        tagline: fields.text({ label: 'Tagline' }),\n        monetization: fields.object({\n          show_ads: fields.checkbox({ label: 'Show Ads on Blog' })\n        })\n      }\n    })\n  }\n});\n```\n(Note: Keystatic schema keeps basic scaffold, missing fields act as standard markdown)."
 }
