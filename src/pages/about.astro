@@ -11,7 +11,7 @@ const page = await getEntry("pages", "about");
 const { Content } = page ? await render(page) : { Content: null };
 ---
 
-<EngineLayout title={page?.data.title || "About Us"} description={page?.data.description}>
+<EngineLayout title={page?.data.title || "About Us"} description={page?.data.description} pageType="immersive">
   <main class="mx-auto max-w-4xl px-4 py-16 md:py-24">
     <header class="mb-12 text-center">
       <Heading as="h1" class="mb-4">{page?.data.title || "About Zelia Vance"}</Heading>

@@ -7,9 +7,8 @@
  */
 
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import EngineLayout from '../../layouts/EngineLayout.astro';
 import SectionHeader from '../../components/ui/SectionHeader.astro';
-import Heading from '../../components/primitives/Heading.astro';
 import CollectionCard from '../../components/ui/CollectionCard.astro';
 
 // Get all lookbooks
@@ -19,7 +18,7 @@ const title = 'Shop the Look | Curated Jewelry Collections | Zelia Vance';
 const description = 'Explore our curated jewelry collections. From Diwali party glam to wedding elegance, find the perfect set to complete your look.';
 ---
 
-<EngineLayout title={title} description={description}>
+<EngineLayout title={title} description={description} pageType="catalog">
   <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
     <!-- Header -->
     <SectionHeader 

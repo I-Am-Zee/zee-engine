@@ -17,11 +17,13 @@ const popup_modal = siteSettings?.data?.popup_modal;
 interface Props {
   title?: string;
   description?: string;
+  pageType?: 'standard' | 'transactional' | 'immersive' | 'content' | 'catalog';
 }
 
 const {
   title = `${siteSettings?.data?.name} | ${siteSettings?.data?.tagline}`,
   description = siteSettings?.data?.description,
+  pageType = 'standard',
 } = Astro.props;
 ---
 
@@ -52,7 +54,7 @@ const {
     </script>
   </head>
   <body class="flex flex-col min-h-screen">
-    <AnnouncementBar data={announcement_bar} />
+    {pageType !== 'transactional' && <AnnouncementBar data={announcement_bar} />}
     <Navbar />
 
     <main class="grow">
@@ -64,7 +66,7 @@ const {
 
     {/* Universal Interactivity Components */}
     <SideDrawer />
-    <PopupModal data={popup_modal} />
+    {pageType !== 'transactional' && pageType !== 'catalog' && <PopupModal data={popup_modal} />}
     <Lightbox />
   </body>
 </html>

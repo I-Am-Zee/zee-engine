@@ -47,7 +47,7 @@ const allProducts = await getCollection("products");
       <ProductGrid>
         {
           allProducts.map((product) => (
-            <div x-show={`$store.wishlist.has('${product.slug}')`} x-cloak>
+            <div x-show={`$store.wishlist.has('${product.id}')`} x-cloak>
               <GlassProductCard product={product} />
             </div>
           ))

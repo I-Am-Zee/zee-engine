@@ -15,6 +15,13 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import CompleteTheLook from "../../components/ui/CompleteTheLook.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
+
+// Extend global namespace for TS checks on Alpine
+declare global {
+  interface Window {
+    Alpine: any;
+  }
+}
 import WishlistButton from "../../components/features/WishlistButton.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
@@ -59,7 +66,7 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
 const sortedBadges = sortBadgesByHierarchy(badges);
 ---
 
-<EngineLayout title={`${product.data.title} | Zelia Vance`}>
+<EngineLayout title={`${product.data.title} | Zelia Vance`} pageType="catalog">
   <div x-data={`{ 
     showStickyCart: false,
     error: '',
@@ -240,7 +247,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             </AddToCartButton>
 
             {/* Wishlist Button - Uses global store */}
-            <WishlistButton productId={product.slug} variant="with-label" size="lg" class="h-13" />
+            <WishlistButton productId={product.id} variant="with-label" size="lg" class="h-13" />
           </div>
         </div>
 
@@ -260,7 +267,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         <CompleteTheLook
           productSlugs={product.data.related_products}
           currentProduct={{
-            id: product.slug,
+            id: product.id,
             title: product.data.title,
             price: product.data.price,
             salePrice: product.data.salePrice,

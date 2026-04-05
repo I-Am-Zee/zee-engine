@@ -17,11 +17,13 @@ interface Props {
   description?: string;
   /** Extra <head> content injected per page */
   headScripts?: string;
+  pageType?: 'standard' | 'transactional' | 'immersive' | 'content' | 'catalog';
 }
 
 const {
   title = "Secure Checkout — Zelia Vance",
   description = "Complete your purchase securely with Zelia Vance.",
+  pageType = "transactional"
 } = Astro.props;
 ---
 
@@ -39,7 +41,7 @@ const {
     <slot name="head" />
   </head>
 
-  <body class="checkout-shell">
+  <body class="checkout-shell" data-page-type={pageType}>
     <header class="checkout-header">
       <Logo variant="full" />
       <span class="checkout-secure-label" aria-label="This page is secure">

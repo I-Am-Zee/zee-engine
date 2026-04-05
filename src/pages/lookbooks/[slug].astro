@@ -1,21 +1,17 @@
 ---
-import { getCollection, render, type CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 import { mapProduct } from "../../config/ecommerce";
 import type { GetStaticPaths } from 'astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import EngineLayout from '../../layouts/EngineLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
 import Icon from '../../components/primitives/Icon.astro';
 import Button from '../../components/primitives/Button.astro';
-import GlassProductCard from '../../components/ui/GlassProductCard.astro';
-import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
 import Image from '../../components/primitives/Image.astro';
-import CompleteTheLook from '../../components/ui/CompleteTheLook.astro';
 import Carousel from '../../components/ui/Carousel.astro';
 import ProductCarousel from '../../components/features/ProductCarousel.astro';
-import CollectionCard from '../../components/ui/CollectionCard.astro';
 import SectionHeader from '../../components/ui/SectionHeader.astro';
 
 export const getStaticPaths = (async () => {
@@ -50,7 +46,7 @@ const pageTitle = `${title} | Shop the Look | Zelia Vance`;
 const pageDescription = description || 'Discover our curated jewelry collection';
 ---
 
-<EngineLayout title={pageTitle} description={pageDescription}>
+<EngineLayout title={pageTitle} description={pageDescription} pageType="catalog">
   <!-- Breadcrumbs -->
   <nav class="bg-surface border-b border-border-subtle py-3">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">

@@ -18,7 +18,7 @@ const searchableProducts = allProducts.map(p => ({
   description: p.data.description,
   tags: p.data.tags || [],
   category: p.data.category,
-  slug: p.slug,
+  slug: p.id,
   image: p.data.image,
   price: p.data.price,
   salePrice: p.data.salePrice,

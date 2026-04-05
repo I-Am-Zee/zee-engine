@@ -47,7 +47,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 const currentPage = 1; // For now, handle as single page or implement full pagination if needed
 ---
 
-<EngineLayout title={`${formattedTagName} Collection | Zelia Vance`}>
+<EngineLayout title={`${formattedTagName} Collection | Zelia Vance`} pageType="catalog">
 
   <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8" x-data="productSorter">
     <Breadcrumbs items={breadcrumbItems} />
@@ -70,7 +70,7 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
                 <div
                   class="product-item"
                   data-index={index}
-                  data-slug={product.slug}
+                  data-slug={product.id}
                   data-price={product.data.salePrice || product.data.price}
                   data-original-price={product.data.price}
                   data-sale-price={product.data.salePrice || ""}
@@ -141,12 +141,12 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
 
       // Retaining the original sort method logic for compatibility with FilterSortBar
       sortBy: "default",
-      sort(criteria) {
+      sort(criteria: string) {
         this.sortBy = criteria;
         const grid = document.querySelector("#product-grid"); // Use ID selector
         if (!grid) return;
 
-        const items = Array.from(grid.querySelectorAll(".product-item"));
+        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
 
         items.sort((a, b) => {
           const aPrice = parseFloat(a.dataset.price || "0");
