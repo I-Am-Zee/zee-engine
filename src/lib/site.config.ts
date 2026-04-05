@@ -17,8 +17,8 @@ export const siteConfig = {
   description: "Zelia Vance is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship.",
   
   // Production URL (required for Snipcart product validation)
-  // DO NOT CHANGE unless you change your Netlify site name
-  url: import.meta.env.PUBLIC_SITE_URL || "https://zeliavance-dev.netlify.app",
+  // Set PUBLIC_SITE_URL in your .env file
+  url: import.meta.env.PUBLIC_SITE_URL || "https://zeliavance.com",
   
   // Email Addresses
   // Add more as needed: orders, legal, press, etc.

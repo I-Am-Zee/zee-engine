@@ -7,10 +7,10 @@ import mdx from '@astrojs/mdx';
 
 import cloudflare from '@astrojs/cloudflare';
 
-// Site URL for Snipcart product URL validation
+// Site URL — set PUBLIC_SITE_URL in .env and Cloudflare Pages dashboard
 // Using production URL because Snipcart crawls product pages to verify prices.
-// For Draft deploys: Add "*.netlify.app" to Snipcart Dashboard > Domains & URLs
-const siteUrl = 'https://zaviona-dev.netlify.app';
+// For Draft deploys: Add "*.pages.dev" to Snipcart Dashboard > Domains & URLs
+const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 
 // https://astro.build/config
 export default defineConfig({

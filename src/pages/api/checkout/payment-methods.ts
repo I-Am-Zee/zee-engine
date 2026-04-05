@@ -69,7 +69,7 @@ export const POST: APIRoute = async ({ request }) => {
     console.log('[payment-methods] Selected country:', customerCountry);
 
     // Get the base URL for the checkout page
-    // DEPLOY_PRIME_URL is provided by Netlify for both preview and production
+    // CF_PAGES_URL is provided by Cloudflare Pages for both preview and production
     // This enables free, unlimited Deploy Previews
     // Cleanly construct the public-facing URL using proxy headers
     // Cloudflare Named Tunnels set the `host` header, NOT `x-forwarded-host`
@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request }) => {
     const forwardedProto = request.headers.get("x-forwarded-proto");
     const forwardedHost = request.headers.get("x-forwarded-host");
     
-    // Use whichever host header is present (prefer x-forwarded-host for Netlify, fall back to host for Cloudflare)
+    // Use whichever host header is present (prefer x-forwarded-host for Cloudflare Pages, fall back to host for Cloudflare)
     const effectiveHost = forwardedHost || hostHeader;
     
     let siteUrl: string;
