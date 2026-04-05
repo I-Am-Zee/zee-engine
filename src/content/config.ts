@@ -2,11 +2,21 @@ import { defineCollection, z } from "astro:content";
 import { glob, file } from "astro/loaders";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MULTI-TENANT BRAND RESOLUTION
-// The BRAND_ID env var drives all content paths. This is the "Master Switch."
-// Convention: PUBLIC_BRAND_ID="zelia-vance" → reads from src/content/zelia-vance/
+// MULTI-TENANT BRAND RESOLUTION — FAIL FAST
+// PUBLIC_BRAND_ID drives ALL content paths. No defaults. No guessing.
+// If this is not set, the engine stops immediately with a clear error.
+// Set this in your .env file: PUBLIC_BRAND_ID="zelia-vance"
 // ─────────────────────────────────────────────────────────────────────────────
-const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+if (!brandId) {
+  throw new Error(
+    "\n\n[Engine Error] PUBLIC_BRAND_ID is not set.\n" +
+    "The engine cannot start without knowing which brand to serve.\n" +
+    "Add PUBLIC_BRAND_ID=\"your-brand-id\" to your .env file.\n" +
+    "See .plans/BRAND-SETUP-GUIDE.md for instructions.\n"
+  );
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRODUCTS COLLECTION
