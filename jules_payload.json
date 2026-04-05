@@ -1,33 +1,25 @@
 {
-  "context": "This project has just been migrated to the Astro 5 Content Layer API. The `src/content/config.ts` now uses `glob` loaders that point to brand-specific subdirectories (e.g., `src/content/zelia-vance/products/`). Your task is to physically move the existing content files into that new directory structure so the loaders can find them. Do NOT modify any Astro component files or the config.ts. Only move/create files as described below.",
+  "context": "We are preparing the e-commerce engine for a Two-Mode Multi-Brand system (BRAND and AFFILIATE). We are moving away from the legacy PagesCMS to Keystatic, and we need to graduate the blog system to MDX to support dynamic components like AdSense placeholders. Do NOT touch any existing D2C logic in Snipcart or Razorpay.",
   "tasks": [
     {
-      "title": "Create Brand Directory Structure",
-      "instruction": "Create the following empty directories if they do not already exist: `src/content/zelia-vance/products/`, `src/content/zelia-vance/lookbooks/`, `src/content/zelia-vance/settings/`, `src/content/zelia-vance/newsletter/`, `src/content/zelia-vance/blog/`."
+      "title": "Nuke Legacy PagesCMS",
+      "instruction": "Physically delete the file `.pages.yml` from the root of the project. It is no longer needed."
     },
     {
-      "title": "Migrate Product Files",
-      "instruction": "Move all `.md` files from `src/content/products/` into `src/content/zelia-vance/products/`. After moving, delete the now-empty `src/content/products/` directory."
+      "title": "Install & Configure MDX Integration",
+      "instruction": "Run `npx astro add mdx --yes`. This will install `@astrojs/mdx` and update `astro.config.mjs` automatically. Ensure the integration is placed in the `integrations` array in `astro.config.mjs`."
     },
     {
-      "title": "Migrate Lookbook Files",
-      "instruction": "Move all `.md` files from `src/content/lookbooks/` into `src/content/zelia-vance/lookbooks/`. After moving, delete the now-empty `src/content/lookbooks/` directory."
+      "title": "Migrate Blog to MDX",
+      "instruction": "Rename all `.md` files in `src/content/zelia-vance/blog/` to `.mdx`. Ensure the frontmatter and content remain intact."
     },
     {
-      "title": "Migrate Settings Files",
-      "instruction": "Move all files (`.yml`, `.yaml`, `.json`) from `src/content/settings/` into `src/content/zelia-vance/settings/`. After moving, delete the now-empty `src/content/settings/` directory."
+      "title": "Update Content Config for MDX",
+      "instruction": "In `src/content/config.ts`, update the `blog` collection loader pattern from `**/*.md` to `**/*.{md,mdx}` to support the new file extension."
     },
     {
-      "title": "Migrate Newsletter Files",
-      "instruction": "Check if `src/content/newsletter/` exists. If it does, move all files into `src/content/zelia-vance/newsletter/` and delete the old directory."
-    },
-    {
-      "title": "Keep Legal Pages Shared",
-      "instruction": "Do NOT move `src/content/pages/`. Legal pages (returns.md, terms-of-service.md, privacy-policy.md, shipping.md) are intentionally SHARED across all brands and must remain at `src/content/pages/`. This is by design."
-    },
-    {
-      "title": "Verify Build",
-      "instruction": "After all file moves, run `npm run build` (or `npm run check` if build is not available). The build MUST succeed with no errors. The only acceptable warnings are pre-existing ones about the `image-engine/test` TypeScript module. If there are errors about missing content, double-check that all files were moved to the correct destinations."
+      "title": "Verify Build Integrity",
+      "instruction": "Run `npm run build` or `npx astro check`. The build must succeed. Verify that the blog collection is correctly indexed with the new MDX files."
     }
   ]
 }
