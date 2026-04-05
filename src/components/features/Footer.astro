@@ -9,6 +9,7 @@
  * 4. Giant "Zelia Vance" brand name watermark
  */
 
+import { getEntry } from "astro:content";
 import Logo from "../primitives/Logo.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
@@ -16,7 +17,6 @@ import Link from "../primitives/Link.astro";
 import SocialLinks from "../ui/SocialLinks.astro";
 import NewsletterWidget from "./NewsletterWidget.astro";
 import { navigation, supportLinks } from "../../config/navigation";
-import { siteConfig } from "../../lib/site.config";
 
 interface Props {
   class?: string;
@@ -24,11 +24,17 @@ interface Props {
 
 const { class: className, ...rest } = Astro.props;
 
+// Fetch Global Settings from Content Layer
+const siteSettings = await getEntry("settings", "site");
+const brandName = siteSettings?.data?.name || "Brand";
+const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
+
 const shopNav = navigation.find((item) => item.label === "Shop");
 const shopCategories = shopNav?.items || [];
 
 const exploreLinks = navigation.filter((item) => item.label !== "Shop");
 ---
+
 
 <footer
   class:list={["bg-surface overflow-hidden", className]}
@@ -70,13 +76,13 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
         <div class="w-full lg:w-1/2 flex justify-center lg:justify-end gap-3 sm:gap-6 mb-12 lg:mb-0">
           <img 
             src="/images/products/1515562141207-7a88fb7ce338.jpg" 
-            alt="Zelia Vance Curated Style"
+            alt={`${brandName} Curated Style`}
             class="w-1/2 aspect-square lg:max-w-70 lg:aspect-4/5 object-cover rounded-sm shadow-sm"
             loading="lazy"
           />
           <img 
             src="/images/products/1535632066927-ab7c9ab60908.jpg" 
-            alt="Zelia Vance Authentic Detail"
+            alt={`${brandName} Authentic Detail`}
             class="w-1/2 aspect-square lg:max-w-70 lg:aspect-4/5 object-cover rounded-sm shadow-sm lg:translate-y-12"
             loading="lazy"
           />
@@ -223,7 +229,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
              </div>
              
              <div class="flex flex-row flex-wrap items-center justify-between gap-y-4 gap-x-8 pt-2 2xl:pt-4 w-full">
-                <Text variant="metadata" color="muted">{siteConfig.copyright}</Text>
+                <Text variant="metadata" color="muted">{copyright}</Text>
                 <div class="flex flex-wrap gap-4 sm:gap-5">
                   <Link href="/privacy-policy" variant="plain">
                     <Text variant="metadata" color="muted">Privacy Policy</Text>

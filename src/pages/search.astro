@@ -3,7 +3,7 @@
 export const prerender = true;
 
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import GlassProductCard from "../components/ui/GlassProductCard.astro";
@@ -27,7 +27,7 @@ const searchableProducts = allProducts.map(p => ({
 }));
 ---
 
-<BaseLayout title="Search Our Collection | Zelia Vance">
+<EngineLayout title="Search Our Collection | Zelia Vance">
 
   <main class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data={`searchApp(${JSON.stringify(searchableProducts)})`}>
     <div class="mb-12 text-center">
@@ -90,7 +90,7 @@ const searchableProducts = allProducts.map(p => ({
     </div>
   </main>
 
-</BaseLayout>
+</EngineLayout>
 
 <script>
   import Fuse from "fuse.js";

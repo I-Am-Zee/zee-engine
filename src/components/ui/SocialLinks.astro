@@ -1,12 +1,7 @@
 ---
-/**
- * SocialLinks - Social media icon links
- * Reusable in Footer and Mobile Drawer
- */
-
+import { getEntry } from "astro:content";
 import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
-import { siteConfig } from "../../lib/site.config";
 
 interface Props {
   orientation?: "horizontal" | "vertical";
@@ -15,26 +10,37 @@ interface Props {
 
 const { orientation = "horizontal", class: className, ...rest } = Astro.props;
 
-// Social platform configuration (using Phosphor icon names)
-// Uses siteConfig.social for URLs - add more in site.config.ts
+// Fetch Title from Content Layer
+const site = await getEntry("settings", "site");
+const social = site?.data?.social || {};
+
+// Social platform configuration (mapping settings to icons)
 const socialPlatforms = [
-  {
+  social.instagram && {
     name: "PhInstagramLogo",
-    href: siteConfig.social.instagram,
+    href: social.instagram,
     label: "Follow us on Instagram",
   },
-  {
+  social.pinterest && {
     name: "PhPinterestLogo",
-    href: siteConfig.social.pinterest,
+    href: social.pinterest,
     label: "Follow us on Pinterest",
   },
-  // Uncomment and add to site.config.ts social object to enable:
-  // { name: "PhWhatsappLogo", href: siteConfig.social.whatsapp, label: "Chat on WhatsApp" },
-  // { name: "PhFacebookLogo", href: siteConfig.social.facebook, label: "Follow us on Facebook" },
-] as const;
+  social.facebook && {
+    name: "PhFacebookLogo",
+    href: social.facebook,
+    label: "Follow us on Facebook",
+  },
+  social.twitter && {
+    name: "PhTwitterLogo",
+    href: social.twitter,
+    label: "Follow us on Twitter",
+  }
+].filter(Boolean) as { name: any, href: string, label: string }[];
 
 const layoutClasses = orientation === "horizontal" ? "flex-row gap-4" : "flex-col gap-3";
 ---
+
 
 <div class:list={["flex items-center", layoutClasses, className]} {...rest}>
   {

@@ -197,6 +197,21 @@ const settings = defineCollection({
       support: z.string(),
       orders: z.string(),
     }),
+    phone: z
+      .object({
+        main: z.string().optional(),
+        support: z.string().optional(),
+      })
+      .optional(),
+    address: z
+      .object({
+        street: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        zip: z.string().optional(),
+        country: z.string().optional(),
+      })
+      .optional(),
     social: z.object({
       instagram: z.string().optional(),
       pinterest: z.string().optional(),

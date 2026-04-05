@@ -1,0 +1,49 @@
+---
+/**
+ * Brand Engine Component
+ * 
+ * Contains all D2C-specific integrations:
+ * - Snipcart (Scripts, CSS, Root Container)
+ * - Cart Notifications (CartToast)
+ * 
+ * NEVER import this in Affiliate mode.
+ * EngineLayout.astro handles the conditional injection.
+ */
+import CartToast from "../ui/CartToast.astro";
+import snipcartStyles from "../../styles/snipcart.css?url";
+
+const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY;
+---
+
+<!-- Snipcart v3 Preconnect (performance) -->
+<link rel="preconnect" href="https://cdn.snipcart.com" />
+<link rel="preconnect" href="https://app.snipcart.com" />
+
+<!-- Snipcart Default Theme CSS -->
+<link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.css" />
+
+<!-- Snipcart Custom Palette Override (Royal Conservatory) -->
+<link rel="stylesheet" href={snipcartStyles} />
+
+<!-- Snipcart Configuration — must appear before the CDN script -->
+<script define:vars={{ apiKey: snipcartApiKey }} is:inline>
+  window.SnipcartSettings = {
+    publicApiKey: apiKey,
+    version: "3.7.5",
+    modalStyle: "overlay",
+    addProductBehavior: "none",
+    templatesUrl: "/snipcart-templates.html?v=1.7.3"
+  };
+</script>
+
+<!-- Phone Number Validation (for Snipcart checkout) -->
+<script src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
+
+<!-- Snipcart Root Container (hidden, required by Snipcart SDK) -->
+<div hidden id="snipcart" data-api-key={snipcartApiKey}></div>
+
+<!-- Snipcart Core JS — async, self-initializing via window.SnipcartSettings -->
+<script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
+
+<!-- D2C Notification Toast -->
+<CartToast />

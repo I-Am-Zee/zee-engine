@@ -1,7 +1,7 @@
 # Master Game Plan
-> **Last Updated:** 2026-04-05
+> **Last Updated:** 2026-04-05 (Post Milestone 2 Surgery)
 > **Owner:** I Am Zee (Raunak Singh)
-> **Status:** 🟡 Active — In Development
+> **Status:** 🟡 Active — Milestone 2 Complete, Milestone 3 Ready
 
 ---
 
@@ -57,21 +57,43 @@ An **Affiliate Marketing** brand. We curate products from third-party platforms 
 - `PUBLIC_BRAND_ID` drives all content paths
 - MDX enabled for blog posts
 
-### 🟡 Milestone 1: Engine Room Prep (COMPLETE)
+### ✅ Milestone 1: Engine Room Prep (COMPLETE)
 - PagesCMS removed
-- `@astrojs/mdx` installed
+- `@astrojs/mdx` installed and working
 - Blog migrated to `.mdx`
 - `PUBLIC_AFFILIATE` env var introduced (replacing old `PUBLIC_STORE_MODE`)
+- All Netlify references purged from codebase
+- `PUBLIC_SITE_URL` standardized across all URL resolution logic
 
-### ⏳ Milestone 2: Layout Engine Architecture
+### ✅ Milestone 2: Layout Engine Architecture (COMPLETE)
 - `BaseLayout.astro` stripped to universal-only shell
 - `EngineLayout.astro` created as the mode-aware middle layer
 - `BrandEngine.astro` handles all D2C scripts and Snipcart injection
 - `AffiliateEngine.astro` handles affiliate scripts and link behavior
-- All Netlify references deleted from codebase
-- `site.config.ts` retired — data moves to brand `site.yml`
+- All pages migrated from `BaseLayout` → `EngineLayout`
+- `site.config.ts` **deleted** — data moves to brand `site.yml`
+- `Logo.astro`, `SocialLinks.astro`, `Footer.astro`, `contact.astro` all data-driven
+- `PUBLIC_BRAND_ID` fail-fast guard implemented in `config.ts`
+- `phone` and `address` fields added to `site` schema
 
 ### ⏳ Milestone 3: Keystatic Integration (Local-Dev Only)
+- `@keystatic/astro` installed
+- Dashboard available at `localhost:4321/keystatic` during dev only
+- Dashboard points to active `PUBLIC_BRAND_ID` content folder
+- Not deployed to Cloudflare production (404 in prod by design)
+
+### ⏳ Milestone 4: Brand 2 — Affiliate Site
+- Affiliate product schema defined (with `affiliate_link`, `affiliate_platform`, no `price`, no `sku`)
+- First affiliate brand content folder created
+- `PUBLIC_AFFILIATE=true` tested end-to-end
+- "Buy from Store" button live
+
+### ⏳ Milestone 5: Design Token System
+- `src/styles/base.css` — universal structural CSS
+- `src/styles/{brand-id}/theme.css` — brand-specific CSS variables
+- Greyscale fallback defaults built into base (renders neutral when theme is missing)
+- `BaseLayout` dynamically injects brand theme file
+
 - `@keystatic/astro` installed
 - Dashboard available at `localhost:4321/keystatic` during dev only
 - Dashboard points to active `PUBLIC_BRAND_ID` content folder

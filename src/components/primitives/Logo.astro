@@ -1,8 +1,5 @@
 ---
-/**
- * Logo - Brand identity component
- * Placeholder for actual brand logo/mark
- */
+import { getEntry } from "astro:content";
 
 interface Props {
   variant?: "full" | "mark";
@@ -12,16 +9,21 @@ interface Props {
 
 const { variant = "full", color = "black", class: className, ...rest } = Astro.props;
 
+// Fetch Title from Content Layer (Fail-fast is already in config.ts)
+const site = await getEntry("settings", "site");
+const brandName = site?.data?.name || "Brand";
+const brandMark = brandName.charAt(0).toUpperCase();
+
 const textColor = color === "white" ? "text-white" : "text-(--color-text-main)";
 ---
 
 {variant === "full" ? (
   <a
     href="/"
-    class:list={["inline-flex items-center font-serif text-2xl font-medium tracking-tight", textColor, className]}
+    class:list={["inline-flex items-center font-serif text-2xl font-medium tracking-tight whitespace-nowrap", textColor, className]}
     {...rest}
   >
-    Zelia Vance
+    {brandName}
   </a>
 ) : (
   <a
@@ -29,6 +31,7 @@ const textColor = color === "white" ? "text-white" : "text-(--color-text-main)";
     class:list={["inline-flex items-center justify-center font-serif text-xl font-bold", textColor, className]}
     {...rest}
   >
-    Z
+    {brandMark}
   </a>
 )}
+

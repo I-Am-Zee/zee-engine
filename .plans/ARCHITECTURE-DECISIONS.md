@@ -24,7 +24,7 @@ Migrated from Astro's deprecated `defineCollection` legacy API to the new **Cont
 ---
 
 ## ADR-002: Two-Mode Engine (BRAND vs AFFILIATE)
-**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing
+**Date:** 2026-04-05 | **Status:** ✅ Implemented
 
 ### Decision
 The engine supports exactly **two** operating modes, controlled by `PUBLIC_AFFILIATE` boolean in `.env`.
@@ -48,7 +48,7 @@ The engine supports exactly **two** operating modes, controlled by `PUBLIC_AFFIL
 ---
 
 ## ADR-003: Keystatic is Local-Dev Only
-**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing
+**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing (Milestone 3)
 
 ### Decision
 Keystatic Admin UI (`/keystatic`) will only be mounted when `import.meta.env.DEV === true`. On Cloudflare production, the route returns a 404.
@@ -65,7 +65,7 @@ No remote CMS access from a phone or another computer. For a solo operator, this
 ---
 
 ## ADR-004: Fail-Fast on Missing `PUBLIC_BRAND_ID`
-**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing
+**Date:** 2026-04-05 | **Status:** ✅ Implemented
 
 ### Decision
 If `PUBLIC_BRAND_ID` is not set, the build process **throws an immediate, human-readable error** and stops. There is no fallback, no default value.
@@ -84,7 +84,7 @@ Error: PUBLIC_BRAND_ID is not set. The engine cannot start without knowing which
 ---
 
 ## ADR-005: Layout Wrapping Pattern (BaseLayout → EngineLayout → Page)
-**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing
+**Date:** 2026-04-05 | **Status:** ✅ Implemented
 
 ### Decision
 Three-tier layout hierarchy:
@@ -111,7 +111,7 @@ Inner components:
 ---
 
 ## ADR-006: `site.config.ts` Retirement
-**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing
+**Date:** 2026-04-05 | **Status:** ✅ Implemented
 
 ### Decision
 `src/lib/site.config.ts` (which contains hardcoded Zelia Vance brand identity) will be **deleted**. All brand identity data moves to `src/content/{brand-id}/settings/site.yml`.
@@ -156,3 +156,26 @@ All components that currently `import { siteConfig } from '@/lib/site.config'` w
 
 ### Why
 Jules has no conversation history. He cannot reason about architectural trade-offs or make judgment calls. He is exceptional at executing precise, well-specified instructions. Giving Jules ambiguous architectural tasks produces generic, misaligned output.
+
+---
+
+## ADR-009: `AffiliateEngine` uses a `TrackingScripts` Component
+**Date:** 2026-04-05 | **Status:** ✅ Decided, ⏳ Implementing (P-009)
+
+### Decision
+`AffiliateEngine.astro` will not contain inline script code. Instead it will render a `<TrackingScripts />` feature component that reads a brand's `settings/tracking.json` and emits only the script blocks for IDs that are present.
+
+### Why
+- Hardcoding Cuelinks/Meta Pixel IDs into `AffiliateEngine.astro` would make it brand-specific — defeating the multi-tenant purpose.
+- The `tracking.json` approach mirrors the same Content Layer pattern used for all other brand data.
+- A single component handles all tracking vendors; adding a new vendor is just a new key in `tracking.json`, not a new component.
+
+### What `tracking.json` looks like
+```json
+{
+  "meta_pixel_id": "123456789",
+  "google_analytics_id": "G-XXXXXXX",
+  "cuelinks_id": "XXXXXX"
+}
+```
+Only keys that are present will emit their corresponding `<script>` tag.

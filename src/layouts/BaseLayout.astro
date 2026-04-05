@@ -1,10 +1,7 @@
 ---
 // Import global CSS so Astro bundles it for production
 import "../styles/global.css";
-import "../styles/snipcart.css";
-import { siteConfig } from "../lib/site.config";
 import { getEntry } from "astro:content";
-import CartToast from "../components/ui/CartToast.astro";
 import AnnouncementBar from "../components/ui/AnnouncementBar.astro";
 import PopupModal from "../components/ui/PopupModal.astro";
 import Navbar from "../components/features/Navbar.astro";
@@ -12,7 +9,7 @@ import Footer from "../components/features/Footer.astro";
 import SideDrawer from "../components/ui/SideDrawer.astro";
 import Lightbox from "../components/ui/Lightbox.astro";
 
-// Fetch Global Settings
+// Fetch Global Settings from Content Layer
 const siteSettings = await getEntry("settings", "site");
 const announcement_bar = siteSettings?.data?.announcement_bar;
 const popup_modal = siteSettings?.data?.popup_modal;
@@ -23,8 +20,8 @@ interface Props {
 }
 
 const {
-  title = `${siteConfig.name} | ${siteConfig.tagline}`,
-  description = siteConfig.description,
+  title = `${siteSettings?.data?.name} | ${siteSettings?.data?.tagline}`,
+  description = siteSettings?.data?.description,
 } = Astro.props;
 ---
 
@@ -35,36 +32,19 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href={siteConfig.assets.favicon} />
+    
+    {/* Global Assets - Always sourced from public or R2 */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
     <title>{title}</title>
 
-    <!-- Snipcart v3 Preconnect for performance -->
-    <link rel="preconnect" href="https://cdn.snipcart.com" />
-    <link rel="preconnect" href="https://app.snipcart.com" />
-
-    <!-- Snipcart CSS (v3.7.5) -->
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.css" />
-
-    <script define:vars={{ apiKey: import.meta.env.PUBLIC_SNIPCART_API_KEY }} is:inline>
-      window.SnipcartSettings = {
-        publicApiKey: apiKey,
-        version: "3.7.5",
-        modalStyle: "overlay",
-        addProductBehavior: "none",
-        templatesUrl: "/snipcart-templates.html?v=1.7.2"
-      };
-    </script>
-    <script src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
+    {/* Universal Interactivity: Email Obfuscation Fix for ViewTransitions */}
     <script is:inline>
       document.addEventListener('astro:page-load', () => {
-        // Locate the Cloudflare obfuscation script
         const cloudflareScript = document.querySelector('script[src*="email-decode.min.js"]');
-
         if (cloudflareScript) {
-          // Create a fresh copy of the script to force re-execution
           const newScript = document.createElement('script');
           newScript.src = cloudflareScript.src;
-          // Use Astro's rerun attribute to ensure it executes on every transition
           newScript.dataset.astroRerun = "";
           cloudflareScript.replaceWith(newScript);
         }
@@ -76,30 +56,18 @@ const {
     <Navbar />
 
     <main class="grow">
+      {/* Engine Scripts (BrandEngine or AffiliateEngine) will be injected here by EngineLayout */}
       <slot />
     </main>
 
     <Footer />
 
-    {/* Multi-purpose Side Drawer (Upsell, Quick Shop, Master Set) */}
+    {/* Universal Interactivity Components */}
     <SideDrawer />
-
-    {/* Global Product Addition Notification */}
-    <CartToast />
-
-    <!-- Snipcart Root Container -->
-    <div
-      hidden
-      id="snipcart"
-      data-api-key={import.meta.env.PUBLIC_SNIPCART_API_KEY}>
-    </div>
-
-    <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
-    <script src="../scripts/snipcart-init.ts"></script>
-
     <PopupModal data={popup_modal} />
     <Lightbox />
   </body>
 </html>
+
 
 

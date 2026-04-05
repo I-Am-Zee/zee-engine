@@ -8,7 +8,7 @@
 export const prerender = true;
 
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
@@ -21,7 +21,7 @@ import EmptyState from "../components/ui/EmptyState.astro";
 const allProducts = await getCollection("products");
 ---
 
-<BaseLayout title="My Wishlist | Zelia Vance">
+<EngineLayout title="My Wishlist | Zelia Vance">
 
   <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data>
     {/* Page Header */}
@@ -68,4 +68,4 @@ const allProducts = await getCollection("products");
     </div>
   </div>
 
-</BaseLayout>
+</EngineLayout>

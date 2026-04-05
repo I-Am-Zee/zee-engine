@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
@@ -47,7 +47,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 const currentPage = 1; // For now, handle as single page or implement full pagination if needed
 ---
 
-<BaseLayout title={`${formattedTagName} Collection | Zelia Vance`}>
+<EngineLayout title={`${formattedTagName} Collection | Zelia Vance`}>
 
   <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8" x-data="productSorter">
     <Breadcrumbs items={breadcrumbItems} />
@@ -110,7 +110,7 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
     }
   </div>
 
-</BaseLayout>
+</EngineLayout>
 
 
 <script>

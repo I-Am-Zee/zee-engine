@@ -14,7 +14,6 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getGatewaysForCountry } from '../../../lib/payments/config';
-import { siteConfig } from '../../../lib/site.config';
 
 // Snipcart sends this payload when requesting payment methods
 interface SnipcartPaymentRequest {

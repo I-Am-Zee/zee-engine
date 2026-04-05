@@ -1,34 +1,39 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import { getEntry } from "astro:content";
+import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
-import Button from "../components/primitives/Button.astro";
-import { siteConfig } from "../lib/site.config";
 
 export const prerender = true;
+
+// Fetch Title from Content Layer
+const site = await getEntry("settings", "site");
+const siteData = site?.data;
 ---
 
-<BaseLayout title={`Contact Us | ${siteConfig.name}`}>
+<EngineLayout title={`Contact Us | ${siteData?.name}`}>
   <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
     <Heading as="h1" class="mb-6">Contact Us</Heading>
     <Text variant="lead" color="muted" class="mb-8">
-      Zelia Vance is a luxury jewelry brand dedicated to ethically sourced diamonds and timeless craftsmanship. 
-      Our mission is to bring brilliance and elegance to your most cherished moments.
+      {siteData?.description}
     </Text>
     
     <div class="space-y-6">
       <div>
         <Text variant="eyebrow" class="mb-2">Email</Text>
         <Text variant="lead">
-          <a href={`mailto:${siteConfig.email.support}`} class="hover:underline">{siteConfig.email.support}</a>
+          <a href={`mailto:${siteData?.email.support}`} class="hover:underline">{siteData?.email.support}</a>
         </Text>
       </div>
-      <div>
-        <Text variant="eyebrow" class="mb-2">Phone</Text>
-        <Text variant="lead">
-          <a href={`tel:${siteConfig.phone.main.replace(/\D/g, '')}`} class="hover:underline">{siteConfig.phone.main}</a>
-        </Text>
-      </div>
+      
+      {siteData?.phone?.main && (
+        <div>
+          <Text variant="eyebrow" class="mb-2">Phone</Text>
+          <Text variant="lead">
+            <a href={`tel:${siteData.phone.main.replace(/\D/g, '')}`} class="hover:underline">{siteData.phone.main}</a>
+          </Text>
+        </div>
+      )}
     </div>
   </main>
-</BaseLayout>
+</EngineLayout>

@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Accordion from "../components/ui/Accordion.astro";
@@ -8,7 +8,7 @@ import AccordionItem from "../components/ui/AccordionItem.astro";
 export const prerender = true;
 ---
 
-<BaseLayout title="FAQ | Zelia Vance">
+<EngineLayout title="FAQ | Zelia Vance">
   <main class="mx-auto max-w-4xl px-4 py-16 md:py-24">
     <div class="text-center mb-16">
       <Heading as="h1" class="mb-4 text-4xl md:text-5xl">Client Care & FAQ</Heading>
@@ -61,4 +61,4 @@ export const prerender = true;
       </section>
     </div>
   </main>
-</BaseLayout>
+</EngineLayout>

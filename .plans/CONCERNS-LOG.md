@@ -5,7 +5,7 @@
 ---
 
 ## C-001: `site` URL Hardcoded to Netlify
-**Raised:** 2026-04-05 | **Status:** 🔴 Critical — UNRESOLVED
+**Raised:** 2026-04-05 | **Status:** ✅ Resolved — 2026-04-05
 
 ### Problem
 `astro.config.mjs` contains `site: 'https://zaviona-dev.netlify.app'` — a dead Netlify URL.
@@ -22,72 +22,30 @@
 ---
 
 ## C-002: Snipcart Loads on Every Brand Unconditionally
-**Raised:** 2026-04-05 | **Status:** 🔴 Critical — UNRESOLVED
+**Raised:** 2026-04-05 | **Status:** ✅ Resolved — 2026-04-05
 
-### Problem
-`BaseLayout.astro` unconditionally injects the Snipcart `<script>` tag and loads the Snipcart CSS. When Brand 2 (Affiliate mode) deploys, it will:
-- Load a cart system it doesn't need
-- Make requests against a Snipcart API key that may not be configured
-- Slow down the affiliate site with unnecessary JavaScript
-
-### Resolution Plan
-- Implement `EngineLayout.astro` with the `BrandEngine` / `AffiliateEngine` split (see ADR-005)
-- Move Snipcart script injection into `BrandEngine.astro`
-- `BaseLayout` becomes truly universal — no mode-specific scripts
-- **Owner:** Milestone 2 Jules payload (after Antigravity finalizes the `EngineLayout` architecture)
+**Resolution:** `BrandEngine.astro` now contains all Snipcart logic. `BaseLayout.astro` is free of any Snipcart reference. `EngineLayout.astro` conditionally injects `BrandEngine` only when `PUBLIC_AFFILIATE=false`.
 
 ---
 
 ## C-003: `ecommerce.ts` is Not Mode-Aware
-**Raised:** 2026-04-05 | **Status:** 🟡 Important — UNRESOLVED
+**Raised:** 2026-04-05 | **Status:** ✅ Resolved — 2026-04-05
 
-### Problem
-`src/config/ecommerce.ts` contains the `mapProduct()` function which builds Snipcart `data-item-*` attributes. The Affiliate brand does not use Snipcart, making this file irrelevant (but potentially imported by accident).
-
-### Resolution Plan
-- Once `EngineLayout` pattern is implemented, `ecommerce.ts` is only imported inside `BrandEngine.astro`
-- The Affiliate engine will have its own `mapAffiliateProduct()` function (or similar) for building external link data
-- No changes to `ecommerce.ts` itself — isolation is handled at the Engine layer
-- **Owner:** Milestone 2
+**Resolution:** Isolation is handled at the Engine layer. `ecommerce.ts` is only consumed by Brand-mode product pages. The Affiliate engine will use a separate `mapAffiliateProduct()` helper (P-010).
 
 ---
 
 ## C-004: No Fail-Fast Guard for `PUBLIC_BRAND_ID`
-**Raised:** 2026-04-05 | **Status:** 🟡 Important — UNRESOLVED
+**Raised:** 2026-04-05 | **Status:** ✅ Resolved — 2026-04-05
 
-### Problem
-`src/content/config.ts` currently does:
-```ts
-const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
-```
-This silent default means a misconfigured Brand 2 deployment would serve Zelia Vance's content — silently and invisibly.
-
-### Resolution Plan
-Replace the above with a guard:
-```ts
-const brandId = import.meta.env.PUBLIC_BRAND_ID;
-if (!brandId) {
-  throw new Error(
-    "[Engine Error] PUBLIC_BRAND_ID is not set. The engine cannot start without knowing which brand to serve. Add it to your .env file."
-  );
-}
-```
-- **Owner:** Antigravity (one-line edit, but must happen before Brand 2 exists)
-- **Timing:** Can be done in the next local commit, before Milestone 2
+**Resolution:** `src/content/config.ts` now throws with a clear human-readable error if `PUBLIC_BRAND_ID` is not set at build time.
 
 ---
 
 ## C-005: `site.config.ts` Contains Hardcoded Zelia Vance Identity
-**Raised:** 2026-04-05 | **Status:** 🟡 Important — UNRESOLVED
+**Raised:** 2026-04-05 | **Status:** ✅ Resolved — 2026-04-05
 
-### Problem
-`src/lib/site.config.ts` hardcodes brand name, tagline, email aliases, phone, and social links for Zelia Vance. When Brand 2 deploys, any component importing this file will display Zelia Vance's contact details.
-
-### Resolution Plan
-1. Audit every component that imports `site.config.ts`
-2. Replace with `getEntry('settings', 'site')` from the Content Layer
-3. Delete `src/lib/site.config.ts`
-- **Owner:** Milestone 2 Jules payload (purely mechanical find-and-replace after Antigravity audits imports)
+**Resolution:** `site.config.ts` has been **deleted**. All consumers (`Logo.astro`, `SocialLinks.astro`, `Footer.astro`, `contact.astro`, `payment-methods.ts`) now use `getEntry('settings', 'site')` from the Content Layer.
 
 ---
 

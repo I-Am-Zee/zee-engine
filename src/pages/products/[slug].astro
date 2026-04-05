@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
 import Badge from "../../components/primitives/Badge.astro";
@@ -59,7 +59,7 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
 const sortedBadges = sortBadgesByHierarchy(badges);
 ---
 
-<BaseLayout title={`${product.data.title} | Zelia Vance`}>
+<EngineLayout title={`${product.data.title} | Zelia Vance`}>
   <div x-data={`{ 
     showStickyCart: false,
     error: '',
@@ -303,7 +303,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
       </div>
     </div>
   </div>
-</BaseLayout>
+</EngineLayout>
 
 <style>
   /* Enhanced Prose styling for product story */

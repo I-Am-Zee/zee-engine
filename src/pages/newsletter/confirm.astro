@@ -1,15 +1,15 @@
 ---
 export const prerender = false;
 
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import EngineLayout from "../../layouts/EngineLayout.astro";
 import NewsletterConfirmForm from "../../components/features/NewsletterConfirmForm.astro";
 
 const email = Astro.url.searchParams.get("email") || "";
 ---
 
-<BaseLayout
+<EngineLayout
   title="Stay in the Loop | Zelia Vance"
   description="Join the Zelia Vance inner circle for rare arrivals, seasonal pieces, and the occasional exclusive."
 >
   <NewsletterConfirmForm email={email} />
-</BaseLayout>
+</EngineLayout>
