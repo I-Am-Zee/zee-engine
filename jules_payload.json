@@ -1,14 +1,95 @@
 {
-  "task": "Full Site Audit — Zelia Vance Engine",
-  "context": "This is a multi-brand e-commerce engine built on Astro 5, Tailwind CSS v4, Alpine.js, and Snipcart v3. The engine was recently refactored from a monolithic BaseLayout to a 3-tier layout system (BaseLayout → EngineLayout → BrandEngine/AffiliateEngine). Some regressions may have been introduced. Your job is to audit the ENTIRE codebase and produce a detailed report. Do NOT make any code changes. Report only.",
-  "instructions": [
-    "1. LAYOUT AUDIT: Read src/layouts/BaseLayout.astro, src/layouts/EngineLayout.astro, src/layouts/CheckoutLayout.astro, and src/components/features/BrandEngine.astro. Verify the script loading order is correct (Snipcart config must come BEFORE the CDN JS). Check that snipcart-events.ts and snipcart-init.ts are both imported. Check that snipcart.css is loaded. Report any missing scripts, wrong import paths, or wrong load order.",
-    "2. PAGES AUDIT: Read every file in src/pages/. Check that ALL pages (except pages in src/pages/checkout/ and src/pages/api/) use <EngineLayout> as their layout wrapper, NOT BaseLayout directly. Report which pages are using the wrong layout.",
-    "3. COMPONENT AUDIT: Read src/components/ui/PopupModal.astro and src/scripts/behaviors/popup.ts. Verify the denylist prop is correctly typed, passed from site settings, and handled in the Alpine.js behavior. Verify that src/components/features/BrandEngine.astro correctly passes snipcart-init.ts and snipcart-events.ts scripts.",
-    "4. CONTENT SCHEMA AUDIT: Read src/content/config.ts. Check that the 'settings' collection schema includes: name, tagline, description, url, email, phone (optional), address (optional), social, announcement_bar, popup_modal (with denylist as array of strings), free_shipping_threshold, monetization (with show_ads boolean). Report any missing or mismatched fields versus what is in src/content/zelia-vance/settings/site.yml.",
-    "5. KEYSTATIC CONFIG AUDIT: Read keystatic.config.ts. Check that all collection paths use import.meta.env.PUBLIC_BRAND_ID (NOT process.env). Check that the products, blog, lookbooks collections and the settings singleton are correctly mapped. Report any TypeScript type errors or mismatched field types.",
-    "6. ENV AUDIT: Read .env.example. Verify all required variables are documented. Check that PUBLIC_BRAND_ID, PUBLIC_SITE_URL, PUBLIC_AFFILIATE, PUBLIC_SNIPCART_API_KEY, and IMAGE_GATEWAY_URL are present. Report any missing variable documentation.",
-    "7. AFFILIATE PLACEHOLDER AUDIT: Check that src/content/affiliate_zee/ exists with subfolders: blog/, settings/. Verify settings/site.yml exists and is valid YAML. Report structure.",
-    "8. PRODUCE A REPORT: Create a file called AUDIT-REPORT.md in the .plans/ folder. Structure it with sections for each audit area above. Use checkmarks (✅) for passing items and warnings (⚠️) for issues found. Be specific — include file paths and line numbers where issues exist. Do NOT fix anything. Report only."
+  "task": "Keystatic CMS Schema Expansion + Affiliate Content Structure",
+  "branch": "feature/keystatic-schema-expansion",
+  "context": "This is a multi-tenant white-label e-commerce engine built on Astro 5, Tailwind CSS v4, Alpine.js, and Snipcart v3. The engine uses Astro's Content Layer API (NOT legacy collections — use entry.id NOT entry.slug). A full site audit was recently completed. The critical bugs have already been fixed. Your job now is two things: (1) Expand the Keystatic CMS config to match the full schema defined in src/content/config.ts — many product fields are missing from the CMS dashboard. (2) Create the missing content folder structure for the affiliate_zee brand. Do NOT touch any layout files, page files, component files, or the config.ts schema. Only edit keystatic.config.ts and create new content stub files.",
+
+  "rules": [
+    "NEVER use process.env. Always use import.meta.env for all environment variables.",
+    "NEVER use entry.slug. The Content Layer API uses entry.id.",
+    "NEVER edit src/content/config.ts — the schemas there are the SOURCE OF TRUTH. Your job is to make keystatic.config.ts MATCH them.",
+    "NEVER edit any .astro component files, layout files, or page files.",
+    "All Keystatic field types must loosely match the Zod types in config.ts. Use fields.text() for strings, fields.integer() for numbers, fields.checkbox() for booleans, fields.array() for arrays.",
+    "Preserve all existing Keystatic collections and singletons. Only ADD to them — do not remove or restructure.",
+    "Brand ID for this deployment: zelia-vance. All content paths use this brand ID."
+  ],
+
+  "task_1_keystatic_expansion": {
+    "description": "The keystatic.config.ts file is missing about 80% of the product fields defined in src/content/config.ts. Add all missing fields to the Keystatic collections so content editors can manage them via the CMS dashboard.",
+    "source_of_truth": "src/content/config.ts — read this file FIRST before touching keystatic.config.ts",
+    "target_file": "keystatic.config.ts",
+
+    "products_collection_missing_fields": [
+      "gallery: array of strings (image paths) — maps to z.array(z.string()).optional()",
+      "tags: array of strings — maps to z.array(z.string()).optional()",
+      "badges: array of strings — maps to z.array(z.string()).optional()",
+      "rating: number 0-5 — maps to z.number().min(0).max(5).optional().default(4.5)",
+      "publishDate: date — maps to z.date().optional()",
+      "variant_1: object with fields: name (string), values (string, comma-separated), price_modifiers (string, optional) — maps to z.object({...}).optional()",
+      "variant_2: same shape as variant_1 — maps to z.object({...}).optional()",
+      "variant_3: object with fields: name (string), values (string), is_checkbox (boolean, optional) — maps to z.object({...}).optional()",
+      "release_date: date — maps to z.date().optional()",
+      "urgency_tag: string — maps to z.string().optional()",
+      "related_products: array of strings (product IDs) — maps to z.array(z.string()).optional()",
+      "weight: number (positive) — maps to z.number().positive().optional()",
+      "shipping_slab: string — maps to z.string().optional()",
+      "dimensions: object with fields: length, width, height (all positive numbers) — maps to z.object({...}).optional()"
+    ],
+
+    "lookbooks_collection_missing_fields": [
+      "gallery: array of strings (image paths) — maps to z.array(z.string()).optional()",
+      "products: array of strings (product IDs) — maps to z.array(z.string()) — NOTE: this field is REQUIRED in the schema"
+    ],
+
+    "blog_collection_missing_fields": [
+      "tags: array of strings — maps to z.array(z.string()).optional()"
+    ],
+
+    "settings_singleton_missing_fields": [
+      "phone: object with optional fields: main (string), support (string)",
+      "address: object with optional fields: street, city, state, zip, country (all strings)",
+      "free_shipping_threshold: number — maps to z.number().positive().default(3000)",
+      "monetization: object with field: show_ads (boolean, default false) — maps to z.object({show_ads: z.boolean()}).optional()"
+    ],
+
+    "newsletter_collection_missing": "The newsletter collection exists in src/content/config.ts but is ENTIRELY absent from keystatic.config.ts. Add it as a collection. Path pattern: src/content/{PUBLIC_BRAND_ID}/newsletter/**/*.{yml,yaml,json}. Schema: a record object where each key has fields: heading (string), description (string), success_message (string, optional)."
+  },
+
+  "task_2_affiliate_folder_structure": {
+    "description": "The src/content/affiliate_zee/ directory is missing critical content folders. Create them with placeholder stub files so the affiliate brand is structurally complete.",
+    "target_directory": "src/content/affiliate_zee/",
+
+    "create_these_files": [
+      {
+        "path": "src/content/affiliate_zee/products/.gitkeep",
+        "content": ""
+      },
+      {
+        "path": "src/content/affiliate_zee/lookbooks/.gitkeep",
+        "content": ""
+      }
+    ],
+
+    "note": "The blog/ and settings/ folders already exist. Only products/ and lookbooks/ are missing. Use .gitkeep files — do not create fake product or lookbook content files."
+  },
+
+  "verification_steps": [
+    "1. Read keystatic.config.ts after your changes and verify ALL fields from src/content/config.ts products schema are present.",
+    "2. Verify the newsletter collection is added to keystatic.config.ts with the correct path using import.meta.env.PUBLIC_BRAND_ID.",
+    "3. Verify src/content/affiliate_zee/products/ and src/content/affiliate_zee/lookbooks/ both exist.",
+    "4. Run: grep -n 'process.env' keystatic.config.ts — result must be EMPTY (zero matches). All env vars must use import.meta.env.",
+    "5. Produce a brief COMPLETION-REPORT.md in the .plans/ folder. List every field you added under each collection, and confirm the affiliate folder structure. Mark any fields you could not map cleanly and explain why."
+  ],
+
+  "do_not_touch": [
+    "src/content/config.ts",
+    "src/layouts/",
+    "src/components/",
+    "src/pages/",
+    "src/scripts/",
+    "src/styles/",
+    "Any .astro file",
+    "Any .ts file except keystatic.config.ts",
+    "package.json",
+    "astro.config.mjs"
   ]
 }
