@@ -12,10 +12,9 @@ import AffiliateEngine from "../components/features/AffiliateEngine.astro";
 interface Props {
   title?: string;
   description?: string;
-  pageType?: 'standard' | 'transactional' | 'immersive' | 'content' | 'catalog';
 }
 
-const { title, description, pageType = 'standard' } = Astro.props;
+const { title, description } = Astro.props;
 
 // Determine Engine Mode
 // PUBLIC_AFFILIATE="true" -> Affiliate Mode
@@ -23,7 +22,7 @@ const { title, description, pageType = 'standard' } = Astro.props;
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 ---
 
-<BaseLayout title={title} description={description} pageType={pageType}>
+<BaseLayout title={title} description={description}>
   {/* Inject the correct Engine logic/scripts */}
   {isAffiliate ? <AffiliateEngine /> : <BrandEngine />}
 

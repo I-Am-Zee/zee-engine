@@ -6,6 +6,8 @@
 
 import { getCollection } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import Text from "../../components/primitives/Text.astro";
 import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
@@ -14,11 +16,31 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import SectionHeader from "../../components/ui/SectionHeader.astro";
 
-declare global {
-  interface Window {
-    Alpine: any;
-  }
-}
+// Category display info - add new categories here as needed
+const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
+  rings: {
+    name: "Rings",
+    description:
+      "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
+  },
+  necklaces: {
+    name: "Necklaces",
+    description:
+      "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
+  },
+  earrings: {
+    name: "Earrings",
+    description: "Find the perfect pair of earrings to complement any occasion.",
+  },
+  bracelets: {
+    name: "Bracelets",
+    description: "Adorn your wrist with our stunning bracelet collection.",
+  },
+  gifts: {
+    name: "Gifts",
+    description: "Thoughtfully curated gift sets for life's special moments.",
+  },
+};
 
 // Products per page for pagination
 const PRODUCTS_PER_PAGE = 12;
@@ -93,7 +115,7 @@ const { products, categoryName, categoryDescription } = Astro.props;
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 ---
 
-<EngineLayout title={`${categoryName} | Zelia Vance`} pageType="catalog">
+<EngineLayout title={`${categoryName} | Zelia Vance`}>
 
   <div
     class="mx-auto max-w-7xl px-4 py-12 lg:px-8"
@@ -131,7 +153,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                 <div
                   class="product-item"
                   data-index={index}
-                  data-slug={product.id}
+                  data-slug={product.slug}
                   data-price={product.data.salePrice || product.data.price}
                   data-original-price={product.data.price}
                   data-sale-price={product.data.salePrice || ""}
@@ -175,28 +197,39 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
   // @ts-ignore
   function initSorter() {
     if (!window.Alpine) return;
-    const Alpine = window.Alpine;
-    Alpine.data("productSorter", () => ({
+    window.Alpine.data("productSorter", () => ({
       sortBy: "default",
-      sort(criteria: string) {
+      sort(criteria) {
         this.sortBy = criteria;
         const grid = document.querySelector("#product-grid");
         if (!grid) return;
 
-        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
+        const items = Array.from(grid.querySelectorAll(".product-item"));
 
         items.sort((a, b) => {
+          // @ts-ignore
           const aPrice = parseFloat(a.dataset.price || "0");
+          // @ts-ignore
           const bPrice = parseFloat(b.dataset.price || "0");
+          // @ts-ignore
           const aName = a.dataset.name || "";
+          // @ts-ignore
           const bName = b.dataset.name || "";
+          // @ts-ignore
           const aRating = parseFloat(a.dataset.rating || "0");
+          // @ts-ignore
           const bRating = parseFloat(b.dataset.rating || "0");
+          // @ts-ignore
           const aDate = parseInt(a.dataset.publishDate || "0");
+          // @ts-ignore
           const bDate = parseInt(b.dataset.publishDate || "0");
+          // @ts-ignore
           const aDiscount = parseFloat(a.dataset.discount || "0");
+          // @ts-ignore
           const bDiscount = parseFloat(b.dataset.discount || "0");
+          // @ts-ignore
           const aIndex = parseInt(a.dataset.index || "0");
+          // @ts-ignore
           const bIndex = parseInt(b.dataset.index || "0");
 
           switch (criteria) {
