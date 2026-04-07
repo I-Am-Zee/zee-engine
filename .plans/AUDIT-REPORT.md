@@ -52,3 +52,8 @@
 ⚠️ **MISSING CONTENT FOLDERS:** The `src/content/affiliate_zee/` directory is missing critical content folders required for a fully functional affiliate engine.
 - Missing `products/` folder (for affiliate product links).
 - Missing `lookbooks/` folder.
+
+## 11. PRIMITIVE COMPONENTS AUDIT
+✅ **ATOMIC DESIGN STRUCTURE:** The primitives (`Badge`, `Button`, `Heading`, `Icon`, `Image`, `Input`, `Link`, `Logo`, `Text`) are correctly placed in `src/components/primitives/` and do not import higher-order components, successfully adhering to Atomic Design principles.
+✅ **USAGE & IMPORTS:** Searched across all `src/components/ui/`, `src/components/features/`, and `src/pages/` directories. Primitives are consistently imported using standard relative paths (`../primitives/...` or `../../components/primitives/...`) and their props correctly map to standard variants.
+⚠️ **IMAGE GATEWAY PATH DEPENDENCY:** In `src/components/primitives/Image.astro`, the `IMAGE_GATEWAY_URL` transformation explicitly relies on the `/images/` path prefix to remap assets to Cloudflare R2 (e.g., `/images/` -> `/${brandId}/`). If a CMS upload maps to a different local path structure, the Cloudflare edge image worker fallback will fail for that asset.
