@@ -3,7 +3,7 @@ import { getCollection, render, type CollectionEntry } from "astro:content";
 
 import { mapProduct } from "../../config/ecommerce";
 import type { GetStaticPaths } from 'astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import EngineLayout from '../../layouts/EngineLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
 import Icon from '../../components/primitives/Icon.astro';
@@ -12,7 +12,7 @@ import GlassProductCard from '../../components/ui/GlassProductCard.astro';
 import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
 import Image from '../../components/primitives/Image.astro';
-import CompleteTheLook from '../../components/ui/CompleteTheLook.astro';
+import CompleteTheLook from '../../components/features/CompleteTheLook.astro';
 import Carousel from '../../components/ui/Carousel.astro';
 import ProductCarousel from '../../components/features/ProductCarousel.astro';
 import CollectionCard from '../../components/ui/CollectionCard.astro';
@@ -209,7 +209,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     x-transition:leave="transition ease-in duration-200 transform"
     x-transition:leave-start="translate-y-0"
     x-transition:leave-end="translate-y-full"
-    class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-[50]"
+    class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50"
     x-cloak
   >
     <div class="container mx-auto">

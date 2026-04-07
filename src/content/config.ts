@@ -241,6 +241,12 @@ const settings = defineCollection({
       .optional(),
     // Free Shipping Threshold
     free_shipping_threshold: z.number().positive().default(3000),
+    // Monetization (Affiliate mode: show AdSense banners, etc.)
+    monetization: z
+      .object({
+        show_ads: z.boolean().default(false),
+      })
+      .optional(),
   }),
 });
 
