@@ -63,3 +63,19 @@
 ⚠️ **ATOMIC DESIGN VIOLATIONS (ORGANISMS MASQUERADING AS MOLECULES):**
 - `src/components/ui/CompleteTheLook.astro`: This component explicitly calls `getCollection("products")` in its frontmatter, processes business logic (filtering by slugs), sets a global window variable via an inline script, and imports larger Feature organisms (`ProductGrid`, `ProductCarousel`, `BuySetButton`). According to the `THE ATOMIC DESIGN.md` guidelines, UI components should "never 'know' what the app is doing" and should "receive data via props". This component is actually a Feature (Organism) and must be moved to `src/components/features/`.
 - `src/components/ui/CartToast.astro`: This component sets up direct global event listeners to the Snipcart API (`window.Snipcart.events.on('item.added')`) inside its Alpine setup. While efficient, it slightly borders on Feature-level integration rather than a pure presentation molecule.
+
+## 13. STRATEGIC MASTER PLAN ALIGNMENT
+✅ **Multi-Tenancy Guardrails:** The `PUBLIC_AFFILIATE` switch correctly gates logic between D2C (Snipcart) and Affiliate (External link) modes as specified in the Master Game Plan.
+⚠️ **Milestone Violations:** The codebase violates Milestone 1 & 4 from `.plans/MASTER-GAME-PLAN.md` by including hardcoded product categories (`src/content/config.ts`) instead of reading them dynamically from brand settings. Furthermore, the `affiliate_zee` content structure is incomplete (missing `products/` and `lookbooks/`).
+
+## 14. IMAGE WRAPPER & CORE WEB VITALS AUDIT
+⚠️ **CRITICAL PERFORMANCE FLAW (`src/components/primitives/Image.astro`):**
+- **Missing `sizes` Attribute:** The component dynamically generates a Cloudflare R2 `srcset` (`200w, 400w, 800w, 1200w`), but completely omits the `sizes` attribute. According to MDN and Google Web Vitals standards, omitting `sizes` forces the browser to assume `100vw`. This means mobile devices will unnecessarily download the `1200w` image if the connection allows it, destroying mobile data bandwidth and Largest Contentful Paint (LCP).
+- **Transformation Limits:** The `srcset` includes `200w`. However, `CONTEXT FILES.AGENTS/IMAGE-ENGINE R2 WORKER.md` explicitly dictates using only `400`, `800`, and `1200` widths to prevent exhausting Cloudflare's free-tier 5k/month transformation limit. The `200w` request violates this architectural constraint.
+- **LCP Eager Loading:** The component defaults to `loading="lazy"`. If this component is used for hero images or product images above the fold, lazy loading will artificially delay the LCP metric.
+- **Proposed Solution:** Introduce a required (or smartly defaulted) `sizes` prop. Remove `200w` from the srcset generation. Add logic to ensure LCP hero components explicitly pass `loading="eager"`.
+
+## 15. MODULARITY & VALIDATION ARCHITECTURE
+✅ **Pure Functions:** Form validation (`isGmailAddress`, `isValidEmail`) is correctly isolated into pure functions inside `src/scripts/utils/validation.ts`, successfully adhering to the DRY principle.
+⚠️ **DOM Binding Boilerplate:** The logic in `src/scripts/behaviors/newsletter.ts` relies on repetitive vanilla JavaScript DOM querying (`document.getElementById`, manual `addEventListener` attachments) for each specific widget type.
+- **Industry Standard Opinion:** Since the project already uses Alpine.js (`x-data`) for reactive UI state, managing form validation and submissions through Alpine.js is vastly more efficient. Instead of writing monolithic vanilla JS functions to map DOM elements to pure validation functions, the pure functions should be imported directly into Alpine components. This allows the template to reactively show/hide errors based on data state without manual DOM querying, greatly reducing script size and improving maintainability.
