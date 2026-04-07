@@ -79,3 +79,18 @@
 ✅ **Pure Functions:** Form validation (`isGmailAddress`, `isValidEmail`) is correctly isolated into pure functions inside `src/scripts/utils/validation.ts`, successfully adhering to the DRY principle.
 ⚠️ **DOM Binding Boilerplate:** The logic in `src/scripts/behaviors/newsletter.ts` relies on repetitive vanilla JavaScript DOM querying (`document.getElementById`, manual `addEventListener` attachments) for each specific widget type.
 - **Industry Standard Opinion:** Since the project already uses Alpine.js (`x-data`) for reactive UI state, managing form validation and submissions through Alpine.js is vastly more efficient. Instead of writing monolithic vanilla JS functions to map DOM elements to pure validation functions, the pure functions should be imported directly into Alpine components. This allows the template to reactively show/hide errors based on data state without manual DOM querying, greatly reducing script size and improving maintainability.
+
+## 16. VANILLA CSS & JS AUDIT
+✅ **CSS Hygiene:** The use of vanilla `<style>` tags is minimal and highly specific. Most usages involve `[x-cloak]` visibility enforcement or explicit overrides for external libraries (e.g., `splide.js` pagination dots), which perfectly aligns with the Tailwind-first approach without creating bloated stylesheets.
+⚠️ **JS Refactor Opportunity:** Scripts like `src/scripts/behaviors/options-sync.ts` and `src/scripts/behaviors/newsletter.ts` heavily use `document.querySelector` and manual `addEventListener` attachments.
+- **Proposed Solution:** Because Alpine.js is fundamentally embedded in this project's architecture, this manual DOM-binding logic is redundant and fragile. Form states and option synchronization should be lifted into Alpine `x-data` models, eliminating the need to search the DOM manually.
+
+## 17. FEATURES (ORGANISMS) AUDIT
+✅ **Atomic Design Compliance:** Components inside `src/components/features/` (like `BuySetButton`, `SideDrawer`, `ProductGallery`) correctly act as the "brains" of the UI. They import pure Primitives/Molecules, handle state management using Alpine.js stores or event dispatchers (e.g., `$dispatch('zeliavance:master-set')`), and feed data downward. This strictly adheres to the project's Atomic Design guidelines.
+
+## 18. SCRIPTS ARCHITECTURE AUDIT
+✅ **Clear Domain Separation:** The boundary between `src/scripts/utils/` (pure functions without side-effects, like `formatCurrency` or `isGmailAddress`) and `src/scripts/behaviors/` (complex state, Alpine.js logic, DOM interactions) is pristine.
+✅ **Centralized Alpine Registration:** `src/scripts/behaviors/alpine-entrypoint.ts` serves as an excellent central registry for all stores and components, making the client-side logic highly predictable and modular.
+
+## 19. DOCUMENTATION AUDIT
+✅ **Enterprise-Grade Annotations:** The codebase utilizes comprehensive JSDoc block comments (`/** ... */`) across nearly all Components and Utility scripts. Developers can immediately discern whether a component is a primitive, molecule, or organism, what props it expects, and any side-effects it causes, greatly reducing onboarding friction.
