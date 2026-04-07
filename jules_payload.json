@@ -1,21 +1,14 @@
 {
-  "tasks": [
-    {
-      "id": "M2.5-EngineLayout",
-      "description": "Add pageType prop to EngineLayout.astro and base layouts, then wrap conditional features."
-    },
-    {
-      "id": "M2.5-Pages",
-      "description": "Apply pageType prop to all pages depending on folder (transactional, immersive, content, catalog)."
-    },
-    {
-      "id": "M3-Astro-Config",
-      "description": "Install @keystatic/core and @keystatic/astro and integrate."
-    },
-    {
-      "id": "M3-Keystatic-Config",
-      "description": "Create keystatic.config.ts leveraging process.env.PUBLIC_BRAND_ID."
-    }
-  ],
-  "instructions": "Execute the following exactly:\n\n=== MILESTONE 2.5 ===\n1. Modify `src/layouts/EngineLayout.astro`:\n- Add `interface Props { title?: string; description?: string; pageType?: 'standard' | 'transactional' | 'immersive' | 'content' | 'catalog'; }`\n- Destructure `pageType = 'standard'` and pass it to `<BaseLayout>`.\n2. Modify `src/layouts/BaseLayout.astro`:\n- Add the same `pageType` prop interface.\n- Wrap `<PopupModal />` with `{pageType !== 'transactional' && pageType !== 'catalog' && <PopupModal />}`\n- Wrap `<AnnouncementBar />` with `{pageType !== 'transactional' && <AnnouncementBar />}`\n3. Apply `pageType` to all `src/pages/**/*.astro` files:\n- `/checkout/razorpay.astro` -> `pageType=\"transactional\"`\n- `/index.astro`, `/about.astro`, `/contact.astro` -> `pageType=\"immersive\"`\n- `/blog.astro`, `/blog/[slug].astro` -> `pageType=\"content\"`\n- `/shop/`, `/collections/`, `/lookbooks/`, `/products/` pages -> `pageType=\"catalog\"`\n\n=== MILESTONE 3 ===\n1. Run `npm install @keystatic/core @keystatic/astro`\n2. In `astro.config.mjs`, import `keystatic` and add `keystatic()` to `integrations` BEFORE `alpinejs()`. Add `output: 'hybrid'` in config if not already set, needed for Keystatic.\n3. Create `keystatic.config.ts`:\n```typescript\nimport { config, fields, collection, singleton } from '@keystatic/core';\n\nconst brandId = process.env.PUBLIC_BRAND_ID || 'zelia-vance';\n\nexport default config({\n  storage: { kind: 'local' },\n  collections: {\n    products: collection({\n      label: 'Products',\n      slugField: 'title',\n      path: `src/content/${brandId}/products/*`,\n      format: { data: 'frontmatter', content: 'none' },\n      schema: {\n        title: fields.slug({ name: { label: 'Title' } }),\n        sku: fields.text({ label: 'SKU' }),\n        price: fields.number({ label: 'Price' }),\n        image: fields.text({ label: 'Image URL' })\n      }\n    }),\n    blog: collection({\n      label: 'Blog',\n      slugField: 'title',\n      path: `src/content/${brandId}/blog/*`,\n      format: { contentField: 'content' },\n      schema: {\n        title: fields.slug({ name: { label: 'Title' } }),\n        excerpt: fields.text({ label: 'Excerpt', multiline: true }),\n        publishDate: fields.date({ label: 'Publish Date' }),\n        content: fields.mdx({ label: 'Content' })\n      }\n    })\n  },\n  singletons: {\n    settings: singleton({\n      label: 'Site Settings',\n      path: `src/content/${brandId}/settings/site`,\n      format: { data: 'yaml' },\n      schema: {\n        name: fields.text({ label: 'Brand Name' }),\n        tagline: fields.text({ label: 'Tagline' }),\n        monetization: fields.object({\n          show_ads: fields.checkbox({ label: 'Show Ads on Blog' })\n        })\n      }\n    })\n  }\n});\n```\n(Note: Keystatic schema keeps basic scaffold, missing fields act as standard markdown)."
+  "task": "Full Site Audit — Zelia Vance Engine",
+  "context": "This is a multi-brand e-commerce engine built on Astro 5, Tailwind CSS v4, Alpine.js, and Snipcart v3. The engine was recently refactored from a monolithic BaseLayout to a 3-tier layout system (BaseLayout → EngineLayout → BrandEngine/AffiliateEngine). Some regressions may have been introduced. Your job is to audit the ENTIRE codebase and produce a detailed report. Do NOT make any code changes. Report only.",
+  "instructions": [
+    "1. LAYOUT AUDIT: Read src/layouts/BaseLayout.astro, src/layouts/EngineLayout.astro, src/layouts/CheckoutLayout.astro, and src/components/features/BrandEngine.astro. Verify the script loading order is correct (Snipcart config must come BEFORE the CDN JS). Check that snipcart-events.ts and snipcart-init.ts are both imported. Check that snipcart.css is loaded. Report any missing scripts, wrong import paths, or wrong load order.",
+    "2. PAGES AUDIT: Read every file in src/pages/. Check that ALL pages (except pages in src/pages/checkout/ and src/pages/api/) use <EngineLayout> as their layout wrapper, NOT BaseLayout directly. Report which pages are using the wrong layout.",
+    "3. COMPONENT AUDIT: Read src/components/ui/PopupModal.astro and src/scripts/behaviors/popup.ts. Verify the denylist prop is correctly typed, passed from site settings, and handled in the Alpine.js behavior. Verify that src/components/features/BrandEngine.astro correctly passes snipcart-init.ts and snipcart-events.ts scripts.",
+    "4. CONTENT SCHEMA AUDIT: Read src/content/config.ts. Check that the 'settings' collection schema includes: name, tagline, description, url, email, phone (optional), address (optional), social, announcement_bar, popup_modal (with denylist as array of strings), free_shipping_threshold, monetization (with show_ads boolean). Report any missing or mismatched fields versus what is in src/content/zelia-vance/settings/site.yml.",
+    "5. KEYSTATIC CONFIG AUDIT: Read keystatic.config.ts. Check that all collection paths use import.meta.env.PUBLIC_BRAND_ID (NOT process.env). Check that the products, blog, lookbooks collections and the settings singleton are correctly mapped. Report any TypeScript type errors or mismatched field types.",
+    "6. ENV AUDIT: Read .env.example. Verify all required variables are documented. Check that PUBLIC_BRAND_ID, PUBLIC_SITE_URL, PUBLIC_AFFILIATE, PUBLIC_SNIPCART_API_KEY, and IMAGE_GATEWAY_URL are present. Report any missing variable documentation.",
+    "7. AFFILIATE PLACEHOLDER AUDIT: Check that src/content/affiliate_zee/ exists with subfolders: blog/, settings/. Verify settings/site.yml exists and is valid YAML. Report structure.",
+    "8. PRODUCE A REPORT: Create a file called AUDIT-REPORT.md in the .plans/ folder. Structure it with sections for each audit area above. Use checkmarks (✅) for passing items and warnings (⚠️) for issues found. Be specific — include file paths and line numbers where issues exist. Do NOT fix anything. Report only."
+  ]
 }

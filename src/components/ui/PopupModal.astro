@@ -14,15 +14,18 @@ interface Props {
     image?: string;
     coupon_code?: string;
     cta_text?: string;
+    denylist?: string[];
   };
 }
 
 const { data } = Astro.props;
 if (!data?.active) return null;
+
+const denylist = data.denylist || [];
 ---
 
 <div
-  x-data={`popupBehavior('${data.coupon_code}')`}
+  x-data={`popupBehavior('${data.coupon_code}', ${JSON.stringify(denylist)})`}
   x-show="open"
   style="display: none;"
   class="fixed inset-0 flex items-center justify-center px-4 z-[110]"

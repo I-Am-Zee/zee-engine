@@ -4,6 +4,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import alpinejs from '@astrojs/alpinejs';
 import mdx from '@astrojs/mdx';
+import react from '@astrojs/react';
+import keystatic from '@keystatic/astro';
 
 import cloudflare from '@astrojs/cloudflare';
 
@@ -42,6 +44,10 @@ export default defineConfig({
   },
 
   integrations: [
+    // React renderer — required by Keystatic admin UI (local dev only)
+    react(),
+    // Keystatic CMS — mounts /keystatic dashboard in DEV only
+    ...(import.meta.env.DEV ? [keystatic()] : []),
     alpinejs({
       entrypoint: '/src/scripts/behaviors/alpine-entrypoint.ts'
     }),

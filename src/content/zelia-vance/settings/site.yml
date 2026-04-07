@@ -25,6 +25,12 @@ popup_modal:
   description: "Join our exclusive list and receive a welcome discount plus early access to new arrivals and sales."
   coupon_code: "FIRST10"
   cta_text: "Claim My Discount"
+  # Pages where popup is visually suppressed.
+  # Popup scripts & coupon hydration still run in background.
+  # Managed via Keystatic dashboard.
+  denylist:
+    - "/checkout"
+    - "/checkout/*"
 
 free_shipping_threshold: 3000 # CMS-controlled (₹3,000)
 

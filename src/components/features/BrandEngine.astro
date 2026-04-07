@@ -45,5 +45,11 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY;
 <!-- Snipcart Core JS — async, self-initializing via window.SnipcartSettings -->
 <script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
 
+<!-- Snipcart Event Handlers (coupon hydration, session state) -->
+<script src="../../scripts/snipcart-events.ts"></script>
+
+<!-- Snipcart Init & Validation Hooks (Gmail, phone, upsell bridge, COD, taxes) -->
+<script src="../../scripts/snipcart-init.ts"></script>
+
 <!-- D2C Notification Toast -->
 <CartToast />

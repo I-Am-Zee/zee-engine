@@ -5,34 +5,56 @@
  * The actual application happens in snipcart-events.ts.
  */
 
-export const popupBehavior = (couponCode: string) => ({
+export const popupBehavior = (couponCode: string, denylist: string[] = []) => ({
   open: false,
   
   // Frequency control
   EXPIRY_TIME: 24 * 60 * 60 * 1000, // 24 hours
 
   init() {
-    // Check frequency lockout
+    // 1. Check if current path is on the denylist
+    if (this.isOnDeniedPath()) {
+      console.log('[Popup] Suppressed: Current path is on the denylist.');
+      return;
+    }
+
+    // 2. Check frequency lockout
     if (this.hasSeenPopup()) return;
 
-    // 1. Mobile Timer (8s)
+    // 3. Mobile Timer (8s)
     setTimeout(() => {
-      // GEMINI PRO 3 FIX: Re-check frequency (prevents ghost popup)
-      if (!this.hasSeenPopup() && !this.open) {
+      if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
         this.open = true;
       }
     }, 8000);
 
-    // 2. Desktop Exit Intent
+    // 4. Desktop Exit Intent
     const exitHandler = (e: MouseEvent) => {
       if (e.clientY <= 0) {
-        if (!this.hasSeenPopup() && !this.open) {
+        if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
           this.open = true;
           document.removeEventListener('mouseleave', exitHandler);
         }
       }
     };
     document.addEventListener('mouseleave', exitHandler);
+  },
+
+  isOnDeniedPath() {
+    const currentPath = window.location.pathname;
+    
+    return denylist.some(path => {
+      // Direct match
+      if (currentPath === path) return true;
+      
+      // Wildcard match (e.g., /shop/*)
+      if (path.endsWith('/*')) {
+        const base = path.slice(0, -2);
+        return currentPath.startsWith(base);
+      }
+      
+      return false;
+    });
   },
 
   hasSeenPopup() {
