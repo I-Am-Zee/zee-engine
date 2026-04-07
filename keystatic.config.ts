@@ -26,6 +26,10 @@ export default config({
         price: fields.number({ label: 'Price (₹)', validation: { isRequired: true, min: 0 } }),
         salePrice: fields.number({ label: 'Sale Price (₹)', validation: { isRequired: false, min: 0 } }),
         image: fields.text({ label: 'Featured Image URL', validation: { isRequired: true } }),
+        gallery: fields.array(
+          fields.text({ label: 'Image URL' }),
+          { label: 'Gallery', description: 'Supports max 10 images for performance' }
+        ),
         category: fields.select({
           label: 'Category',
           options: [
@@ -38,7 +42,51 @@ export default config({
           ],
           defaultValue: 'rings',
         }),
+        tags: fields.array(
+          fields.text({ label: 'Tag' }),
+          { label: 'Tags' }
+        ),
+        badges: fields.array(
+          fields.text({ label: 'Badge' }),
+          { label: 'Badges' }
+        ),
+        rating: fields.number({ label: 'Rating (0-5)', defaultValue: 4.5, validation: { isRequired: false, min: 0, max: 5 } }),
         description: fields.text({ label: 'Short Description', multiline: true, validation: { isRequired: true } }),
+        publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: false } }),
+
+        variant_1: fields.object({
+          name: fields.text({ label: 'Name' }),
+          values: fields.text({ label: 'Values (Comma-separated)' }),
+          price_modifiers: fields.text({ label: 'Price Modifiers' })
+        }, { label: 'Variant 1' }),
+
+        variant_2: fields.object({
+          name: fields.text({ label: 'Name' }),
+          values: fields.text({ label: 'Values (Comma-separated)' }),
+          price_modifiers: fields.text({ label: 'Price Modifiers' })
+        }, { label: 'Variant 2' }),
+
+        variant_3: fields.object({
+          name: fields.text({ label: 'Name' }),
+          values: fields.text({ label: 'Values (Comma-separated)' }),
+          is_checkbox: fields.checkbox({ label: 'Is Checkbox', defaultValue: false })
+        }, { label: 'Variant 3' }),
+
+        release_date: fields.date({ label: 'Release Date', validation: { isRequired: false } }),
+        urgency_tag: fields.text({ label: 'Urgency Tag', validation: { isRequired: false } }),
+        related_products: fields.array(
+          fields.text({ label: 'Product ID' }),
+          { label: 'Related Products' }
+        ),
+
+        weight: fields.number({ label: 'Weight', validation: { isRequired: false, min: 0 } }),
+        shipping_slab: fields.text({ label: 'Shipping Slab', validation: { isRequired: false } }),
+        dimensions: fields.object({
+          length: fields.number({ label: 'Length', validation: { isRequired: true, min: 0 } }),
+          width: fields.number({ label: 'Width', validation: { isRequired: true, min: 0 } }),
+          height: fields.number({ label: 'Height', validation: { isRequired: true, min: 0 } })
+        }, { label: 'Dimensions' }),
+
         body: fields.mdx({ label: 'Full Description (optional)' }),
       },
     }),
@@ -52,7 +100,15 @@ export default config({
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         hero_image: fields.text({ label: 'Hero Image URL', validation: { isRequired: true } }),
+        gallery: fields.array(
+          fields.text({ label: 'Image URL' }),
+          { label: 'Gallery' }
+        ),
         description: fields.text({ label: 'Description', multiline: true }),
+        products: fields.array(
+          fields.text({ label: 'Product ID' }),
+          { label: 'Products', description: 'List of product IDs' }
+        ),
         body: fields.mdx({ label: 'Content' }),
       },
     }),
@@ -69,8 +125,25 @@ export default config({
         publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: true } }),
         author: fields.text({ label: 'Author', defaultValue: 'Zelia Vance Team' }),
         image: fields.text({ label: 'Cover Image URL', validation: { isRequired: true } }),
+        tags: fields.array(
+          fields.text({ label: 'Tag' }),
+          { label: 'Tags' }
+        ),
         isDraft: fields.checkbox({ label: 'Save as Draft', defaultValue: false }),
         content: fields.mdx({ label: 'Content' }),
+      },
+    }),
+
+    // ── Newsletter ────────────────────────────────────────────────
+    newsletter: collection({
+      label: 'Newsletter',
+      slugField: 'heading',
+      path: `src/content/${brandId}/newsletter/*`,
+      format: { data: 'json' },
+      schema: {
+        heading: fields.slug({ name: { label: 'Heading' } }),
+        description: fields.text({ label: 'Description', multiline: true, validation: { isRequired: true } }),
+        success_message: fields.text({ label: 'Success Message', validation: { isRequired: false } }),
       },
     }),
   },
@@ -90,6 +163,17 @@ export default config({
           support: fields.text({ label: 'Support Email' }),
           orders: fields.text({ label: 'Orders Email' }),
         }, { label: 'Email Addresses' }),
+        phone: fields.object({
+          main: fields.text({ label: 'Main Phone' }),
+          support: fields.text({ label: 'Support Phone' })
+        }, { label: 'Phone Numbers' }),
+        address: fields.object({
+          street: fields.text({ label: 'Street' }),
+          city: fields.text({ label: 'City' }),
+          state: fields.text({ label: 'State' }),
+          zip: fields.text({ label: 'ZIP' }),
+          country: fields.text({ label: 'Country' })
+        }, { label: 'Address' }),
         social: fields.object({
           instagram: fields.text({ label: 'Instagram URL' }),
           pinterest: fields.text({ label: 'Pinterest URL' }),
