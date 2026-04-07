@@ -12,7 +12,7 @@ import RatingStars from "../../components/ui/RatingStars.astro";
 import OptionSelector from "../../components/ui/OptionSelector.astro";
 import QuantitySelector from "../../components/ui/QuantitySelector.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
-import CompleteTheLook from "../../components/ui/CompleteTheLook.astro";
+import CompleteTheLook from "../../components/features/CompleteTheLook.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
 import WishlistButton from "../../components/features/WishlistButton.astro";
@@ -240,7 +240,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
             </AddToCartButton>
 
             {/* Wishlist Button - Uses global store */}
-            <WishlistButton productId={product.slug} variant="with-label" size="lg" class="h-13" />
+            <WishlistButton productId={product.id} variant="with-label" size="lg" class="h-13" />
           </div>
         </div>
 
@@ -260,7 +260,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         <CompleteTheLook
           productSlugs={product.data.related_products}
           currentProduct={{
-            id: product.slug,
+            id: product.id,
             title: product.data.title,
             price: product.data.price,
             salePrice: product.data.salePrice,
@@ -283,7 +283,7 @@ const sortedBadges = sortBadgesByHierarchy(badges);
       x-transition:leave="transition ease-in duration-200 transform"
       x-transition:leave-start="translate-y-0 opacity-100"
       x-transition:leave-end="translate-y-full opacity-0"
-      class="fixed right-0 bottom-0 left-0 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-[50]"
+      class="fixed right-0 bottom-0 left-0 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50"
       x-cloak
     >
       <div class="mx-auto flex max-w-lg items-center gap-3">

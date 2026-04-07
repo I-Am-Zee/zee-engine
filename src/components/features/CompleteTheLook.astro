@@ -1,22 +1,26 @@
 ---
 /**
- * CompleteTheLook - UI Molecule
+ * CompleteTheLook - Feature Organism
  *
  * Displays CMS-controlled related products as upsells.
- * Uses atomic design components for consistency.
+ * Fetches its own data via getCollection() and orchestrates
+ * ProductCarousel, BuySetButton, and SectionHeader.
  *
- * @component Molecule (ui/)
+ * Moved from ui/ to features/ (Atomic Design: Organism, not Molecule).
+ * A Molecule cannot call getCollection() or import other Organisms.
+ *
+ * @component Organism (features/)
  */
 
 import { getCollection, type CollectionEntry } from "astro:content";
 import { mapProduct } from "../../config/ecommerce";
-import GlassProductCard from "./GlassProductCard.astro";
-import ProductGrid from "../features/ProductGrid.astro";
-import ProductCarousel from "../features/ProductCarousel.astro";
+import GlassProductCard from "../ui/GlassProductCard.astro";
+import ProductGrid from "./ProductGrid.astro";
+import ProductCarousel from "./ProductCarousel.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
-import BuySetButton from "../features/BuySetButton.astro";
-import SectionHeader from "./SectionHeader.astro";
+import BuySetButton from "./BuySetButton.astro";
+import SectionHeader from "../ui/SectionHeader.astro";
 
 interface Props {
   productSlugs: string[];

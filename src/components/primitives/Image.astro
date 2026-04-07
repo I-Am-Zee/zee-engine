@@ -11,6 +11,13 @@ interface Props {
   loading?: "lazy" | "eager";
   decoding?: "async" | "auto" | "sync";
   fetchpriority?: "high" | "low" | "auto";
+  /**
+   * The sizes attribute for responsive srcset.
+   * Tells the browser what size the image will render at each breakpoint.
+   * Defaults to '100vw' (safe baseline). Override for partial-width images.
+   * Example: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+   */
+  sizes?: string;
 }
 
 const { 
@@ -22,7 +29,8 @@ const {
   height, 
   loading = "lazy", 
   decoding = "async", 
-  fetchpriority, 
+  fetchpriority,
+  sizes = "100vw",
   ...rest 
 } = Astro.props;
 
@@ -62,7 +70,9 @@ if (isGatewayImage) {
   const r2Path = src.replace(/^\/images\//, `/${brandId}/`);
   
   gatewaySrc = `${gateway}${r2Path}?w=800`;
-  gatewaySrcset = `${gateway}${r2Path}?w=200 200w, ${gateway}${r2Path}?w=400 400w, ${gateway}${r2Path}?w=800 800w, ${gateway}${r2Path}?w=1200 1200w`;
+  // 3 widths only: 400, 800, 1200 — keeps unique transformations under the 5k/mo free tier limit.
+  // 200w is intentionally excluded per IMAGE-ENGINE R2 WORKER.md architecture rules.
+  gatewaySrcset = `${gateway}${r2Path}?w=400 400w, ${gateway}${r2Path}?w=800 800w, ${gateway}${r2Path}?w=1200 1200w`;
 }
 ---
 
@@ -71,6 +81,7 @@ if (isGatewayImage) {
     <img
       src={gatewaySrc}
       srcset={gatewaySrcset}
+      sizes={sizes}
       alt={alt}
       class={combinedClasses}
       width={width}
