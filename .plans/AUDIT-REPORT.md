@@ -94,3 +94,11 @@
 
 ## 19. DOCUMENTATION AUDIT
 ✅ **Enterprise-Grade Annotations:** The codebase utilizes comprehensive JSDoc block comments (`/** ... */`) across nearly all Components and Utility scripts. Developers can immediately discern whether a component is a primitive, molecule, or organism, what props it expects, and any side-effects it causes, greatly reducing onboarding friction.
+
+## 20. THIRD-PARTY SCRIPTS & VALIDATION (SNIPCART)
+✅ **Vanilla JS Justification:** The files `src/scripts/snipcart-init.ts` and `src/scripts/snipcart-events.ts` utilize Vanilla JS (`MutationObserver`, `document.addEventListener`, manual DOM queries). Unlike the internal Astro UI (which should use Alpine.js), Snipcart injects its own proprietary app/Shadow DOM into the page. Alpine.js cannot reliably control or bind to external third-party rendered DOM elements. Therefore, utilizing Vanilla JS is the correct, industry-standard approach for external SDK lifecycle hooks and deep-DOM overrides.
+⚠️ **DRY Principle Violation:** While Vanilla JS is correct for Snipcart, `src/scripts/snipcart-init.ts` (Lines 87-91, 194-199) contains hardcoded string-matching logic for Gmail and Phone validation. This violates the DRY principle.
+- **Proposed Solution:** The Snipcart validation hooks must import and utilize the pure functions (`isGmailAddress`, etc.) already established in `src/scripts/utils/validation.ts`. This ensures validation logic is centralized and consistent whether it's triggered by an Astro/Alpine form or the Snipcart checkout SDK.
+
+---
+**CONCLUSION:** The "Zelia Vance Engine" possesses a highly scalable, enterprise-grade architecture. However, to fully realize its Multi-Tenant White-Label potential and meet strict Web Vitals standards, the codebase must resolve the mapped Keystatic schema discrepancies, remove hardcoded vertical-specific values, implement proper `sizes` attributes for responsive R2 Images, and centralize all duplicate DOM-binding/validation logic.
