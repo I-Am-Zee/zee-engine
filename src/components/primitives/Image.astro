@@ -70,9 +70,9 @@ if (isGatewayImage) {
   const r2Path = src.replace(/^\/images\//, `/${brandId}/`);
   
   gatewaySrc = `${gateway}${r2Path}?w=800`;
-  // 3 widths only: 400, 800, 1200 — keeps unique transformations under the 5k/mo free tier limit.
-  // 200w is intentionally excluded per IMAGE-ENGINE R2 WORKER.md architecture rules.
-  gatewaySrcset = `${gateway}${r2Path}?w=400 400w, ${gateway}${r2Path}?w=800 800w, ${gateway}${r2Path}?w=1200 1200w`;
+  // 4 widths: 200, 400, 800, 1200 — preserves LCP/CWV on mobile for thumbnails.
+  // 200w re-introduced per Analysis-Report-Keystatic_Schema_Expansion-and-more.md.
+  gatewaySrcset = `${gateway}${r2Path}?w=200 200w, ${gateway}${r2Path}?w=400 400w, ${gateway}${r2Path}?w=800 800w, ${gateway}${r2Path}?w=1200 1200w`;
 }
 ---
 

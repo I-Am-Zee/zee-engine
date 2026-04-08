@@ -54,6 +54,13 @@ const {
     >
       Enter valid Gmail address
     </p>
+    <p 
+      class="text-xs text-red-500 font-medium"
+      x-show="formError"
+      x-cloak
+    >
+      Failed to subscribe. Try again.
+    </p>
   </div>
   <Button type="primary" class="h-11" :disabled="isSubmitting">
     <Text variant="label" color="inverse" x-text="submitLabel">{buttonText}</Text>

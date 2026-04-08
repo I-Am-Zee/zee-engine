@@ -37,7 +37,7 @@ const hasEmail = email.length > 0;
 >
   <form
     id="newsletter-confirm-form"
-    x-data="newsletterConfirm({ locked: true, email: '{email}' })"
+    x-data={`newsletterConfirm({ locked: ${hasEmail ? 'true' : 'false'}, email: '${email}' })`}
     @submit.prevent="submitForm"
     class="flex flex-col gap-3"
 

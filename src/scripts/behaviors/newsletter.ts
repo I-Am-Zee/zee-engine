@@ -64,6 +64,7 @@ export function newsletterWidget() {
   return {
     email: '',
     emailError: false,
+    formError: false,
     isSubmitting: false,
     submitLabel: 'Subscribe',
 
@@ -81,6 +82,7 @@ export function newsletterWidget() {
 
     async submitForm() {
       const email = this.email.trim();
+      this.formError = false;
 
       if (!isGmailAddress(email)) {
         this.emailError = true;
@@ -108,7 +110,7 @@ export function newsletterWidget() {
         console.error('[Newsletter] Subscription failed:', err);
         this.submitLabel = originalLabel;
         this.isSubmitting = false;
-        alert('Subscription failed. Please try again later.');
+        this.formError = true;
       }
     }
   };
