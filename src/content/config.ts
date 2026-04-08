@@ -1,5 +1,7 @@
 import { defineCollection, z } from "astro:content";
 import { glob, file } from "astro/loaders";
+import fs from "node:fs";
+import yaml from "yaml";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MULTI-TENANT BRAND RESOLUTION — FAIL FAST
@@ -17,6 +19,22 @@ if (!brandId) {
   );
 }
 
+
+
+// Dynamically load categories from brand settings
+const settingsPath = `./src/content/${brandId}/settings/site.yml`;
+var brandCategories: [string, ...string[]] = ["rings", "necklaces", "earrings", "bracelets", "gifts", "sets"];
+try {
+  if (fs.existsSync(settingsPath)) {
+    const fileContents = fs.readFileSync(settingsPath, 'utf8');
+    const parsed = yaml.parse(fileContents);
+    if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
+      brandCategories = parsed.categories;
+    }
+  }
+} catch (e) {
+  console.warn("Could not load categories from settings, using defaults.");
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRODUCTS COLLECTION
@@ -54,11 +72,11 @@ const products = defineCollection({
 
     // MOLECULE: Classification
     category: z.enum(
-      ["rings", "necklaces", "earrings", "bracelets", "gifts", "sets"],
+      [brandCategories[0], ...brandCategories.slice(1)],
       {
         errorMap: () => ({
           message:
-            "Category must be one of: rings, necklaces, earrings, bracelets, gifts, sets",
+            "Category must be one of the brand-defined categories",
         }),
       }
     ),
@@ -242,6 +260,7 @@ const settings = defineCollection({
     // Free Shipping Threshold
     free_shipping_threshold: z.number().positive().default(3000),
     // Monetization (Affiliate mode: show AdSense banners, etc.)
+    categories: z.array(z.string()).default([brandCategories[0], ...brandCategories.slice(1)]),
     monetization: z
       .object({
         show_ads: z.boolean().default(false),

@@ -1,33 +1,34 @@
-name: "Affiliate Brand Name"
-tagline: "Your tagline here"
-description: "Your brand description here."
-url: "https://yourdomain.com"
+name: Affiliate Brand Name
+tagline: Your tagline here
+description: Your brand description here.
+url: https://yourdomain.com
 email:
-  support: "support@yourdomain.com"
-  orders: "orders@yourdomain.com"
+  support: support@yourdomain.com
+  orders: orders@yourdomain.com
 social:
-  instagram: ""
-  pinterest: ""
-  facebook: ""
-
-# Marketing Command Center
+  instagram: ''
+  pinterest: ''
+  facebook: ''
 announcement_bar:
   enabled: false
-  text: ""
-  link: ""
-
+  text: ''
+  link: ''
 popup_modal:
   active: false
-  title: ""
-  description: ""
-  coupon_code: ""
-  cta_text: "Claim My Discount"
+  title: ''
+  description: ''
+  coupon_code: ''
+  cta_text: Claim My Discount
   denylist:
-    - "/checkout"
-    - "/checkout/*"
-
+  - /checkout
+  - /checkout/*
 free_shipping_threshold: 999999
-
-# Monetization — Affiliate mode
 monetization:
   show_ads: true
+categories:
+- rings
+- necklaces
+- earrings
+- bracelets
+- gifts
+- sets

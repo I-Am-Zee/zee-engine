@@ -1,36 +1,38 @@
-name: "Zelia Vance"
-tagline: "Luxury Jewelry & Timeless Elegance"
-description: "Discover exquisite handcrafted jewelry pieces that blend traditional artistry with modern design. Each piece tells a story of elegance and timeless beauty."
-url: "https://zeliavance.com"
+name: Zelia Vance
+tagline: Luxury Jewelry & Timeless Elegance
+description: Discover exquisite handcrafted jewelry pieces that blend traditional
+  artistry with modern design. Each piece tells a story of elegance and timeless beauty.
+url: https://zeliavance.com
 email:
-  support: "support@zeliavance.com"
-  orders: "orders@zeliavance.com"
+  support: support@zeliavance.com
+  orders: orders@zeliavance.com
 social:
-  instagram: "https://instagram.com/zeliavance"
-  pinterest: "https://pinterest.com/zeliavance"
-  facebook: "https://facebook.com/zeliavance"
-  twitter: "https://twitter.com/zeliavance"
-
-# Marketing Command Center
+  instagram: https://instagram.com/zeliavance
+  pinterest: https://pinterest.com/zeliavance
+  facebook: https://facebook.com/zeliavance
+  twitter: https://twitter.com/zeliavance
 announcement_bar:
   enabled: true
-  text: "✨ Free Shipping on Orders Above ₹{{threshold}} | Use Code: FIRST10 for 10% Off"
-  link: "/shop"
-  bg_color: "bg-surface border-b border-border-subtle"
-  text_color: "text-text-main"
-
+  text: "\u2728 Free Shipping on Orders Above \u20B9{{threshold}} | Use Code: FIRST10\
+    \ for 10% Off"
+  link: /shop
+  bg_color: bg-surface border-b border-border-subtle
+  text_color: text-text-main
 popup_modal:
-  active: true # ENABLED for testing
-  title: "Get 10% Off Your First Order"
-  description: "Join our exclusive list and receive a welcome discount plus early access to new arrivals and sales."
-  coupon_code: "FIRST10"
-  cta_text: "Claim My Discount"
-  # Pages where popup is visually suppressed.
-  # Popup scripts & coupon hydration still run in background.
-  # Managed via Keystatic dashboard.
+  active: true
+  title: Get 10% Off Your First Order
+  description: Join our exclusive list and receive a welcome discount plus early access
+    to new arrivals and sales.
+  coupon_code: FIRST10
+  cta_text: Claim My Discount
   denylist:
-    - "/checkout"
-    - "/checkout/*"
-
-free_shipping_threshold: 3000 # CMS-controlled (₹3,000)
-
+  - /checkout
+  - /checkout/*
+free_shipping_threshold: 3000
+categories:
+- rings
+- necklaces
+- earrings
+- bracelets
+- gifts
+- sets

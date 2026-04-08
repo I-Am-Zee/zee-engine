@@ -30,17 +30,10 @@ export default config({
           fields.text({ label: 'Image URL' }),
           { label: 'Gallery', description: 'Supports max 10 images for performance' }
         ),
-        category: fields.select({
+        category: fields.text({
           label: 'Category',
-          options: [
-            { label: 'Rings', value: 'rings' },
-            { label: 'Necklaces', value: 'necklaces' },
-            { label: 'Earrings', value: 'earrings' },
-            { label: 'Bracelets', value: 'bracelets' },
-            { label: 'Gifts', value: 'gifts' },
-            { label: 'Sets', value: 'sets' },
-          ],
-          defaultValue: 'rings',
+          description: 'Enter the category for this product (e.g., rings, necklaces). Must match a category defined in Site Settings.',
+          validation: { isRequired: true }
         }),
         tags: fields.array(
           fields.text({ label: 'Tag' }),

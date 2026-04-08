@@ -40,4 +40,6 @@ public/favicon.svg
 cloudflared.exe
 
 # Local Billing Icons (to be moved to R2)
-public/images/billing/
+public/images/billing/.wrangler/
+*.py
+.env

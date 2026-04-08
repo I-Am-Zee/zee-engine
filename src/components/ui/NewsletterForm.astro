@@ -26,6 +26,8 @@ const {
 ---
 
 <form
+  x-data="newsletterWidget()"
+  @submit.prevent="submitForm"
   class:list={[
     "flex gap-3",
     layout === 'row' ? "flex-col sm:flex-row items-stretch sm:items-start" : "flex-col",
@@ -39,17 +41,22 @@ const {
       type="email"
       name="email"
       placeholder={placeholder}
+      x-model="email"
+      @input="hideEmailError"
+      @blur="validateEmail"
       class="w-full h-11"
     />
     <p 
       data-email-error 
-      class="hidden text-xs text-red-500 font-medium"
+      class="text-xs text-red-500 font-medium"
+      x-show="emailError"
+      x-cloak
     >
       Enter valid Gmail address
     </p>
   </div>
-  <Button type="primary" class="h-11">
-    <Text variant="label" color="inverse">{buttonText}</Text>
+  <Button type="primary" class="h-11" :disabled="isSubmitting">
+    <Text variant="label" color="inverse" x-text="submitLabel">{buttonText}</Text>
   </Button>
 </form>
 

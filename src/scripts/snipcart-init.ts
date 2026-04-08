@@ -1,3 +1,4 @@
+import { isGmailAddress } from './utils/validation';
 /**
  * Snipcart Initialization & Validation Hooks
  * 
@@ -130,7 +131,7 @@ function initSnipcartLogic() {
     const isIndia = countryCode === 'IN';
 
     // 3a. GMAIL ENFORCEMENT
-    if (email && !email.endsWith('@gmail.com')) {
+    if (email && !isGmailAddress(email)) {
       const msg = 'Please use a Gmail address (@gmail.com).';
       if (typeof ev.addError === 'function') ev.addError('email', msg);
       else if (ev.reject) ev.reject(msg);
@@ -235,7 +236,7 @@ function initSnipcartLogic() {
 
       if ((name === 'email' || target.type === 'email')) {
         const emailVal = target.value.trim().toLowerCase();
-        if (emailVal.length > 0 && !emailVal.endsWith('@gmail.com')) {
+        if (emailVal.length > 0 && !isGmailAddress(emailVal)) {
           target.setCustomValidity('Please use a Gmail address (@gmail.com).');
         } else {
           target.setCustomValidity(''); 

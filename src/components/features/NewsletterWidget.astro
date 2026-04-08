@@ -121,17 +121,6 @@ const isSidebar = variant === 'sidebar';
     
   </div>
 
-  <script>
-    import { initNewsletterWidget } from '../../scripts/behaviors/newsletter';
-    
-    // Target all newsletter widgets on the page
-    const widgets = document.querySelectorAll('section[id^="newsletter-"]');
-    widgets.forEach(widget => {
-      const form = widget.querySelector('form');
-      if (form && form.id) {
-        initNewsletterWidget(form.id);
-      }
-    });
-  </script>
+
 </section>
 

@@ -1,3 +1,4 @@
+import { newsletterConfirm, newsletterWidget } from './newsletter';
 import type { Alpine } from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 import { wishlistStore } from './wishlist';
@@ -16,4 +17,6 @@ export default (Alpine: Alpine) => {
   Alpine.data('popupBehavior', popupBehavior as any);
   Alpine.data('sideDrawer', sideDrawer as any);
   Alpine.data('carousel', carousel as any);
+  Alpine.data('newsletterConfirm', newsletterConfirm as any);
+  Alpine.data('newsletterWidget', newsletterWidget as any);
 };

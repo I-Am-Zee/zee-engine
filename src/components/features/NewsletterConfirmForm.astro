@@ -37,8 +37,10 @@ const hasEmail = email.length > 0;
 >
   <form
     id="newsletter-confirm-form"
+    x-data="newsletterConfirm({ locked: true, email: '{email}' })"
+    @submit.prevent="submitForm"
     class="flex flex-col gap-3"
-    data-locked={hasEmail ? "true" : "false"}
+
     novalidate
   >
     {hasEmail ? (
@@ -50,6 +52,7 @@ const hasEmail = email.length > 0;
             Styled with text-center; cursor-default removes the text cursor. */}
         <Input
           id="newsletter-email-display"
+          :value="email"
           type="email"
           name="_display"
           value={email}
@@ -64,8 +67,11 @@ const hasEmail = email.length > 0;
           type="email"
           name="email"
           placeholder="Enter your Gmail address"
+          x-model="email"
+          @input="hideEmailError"
+          @blur="validateEmail"
         />
-        <p id="newsletter-email-error" class="hidden px-1 font-sans text-xs text-accent-coral">
+        <p id="newsletter-email-error" class="px-1 font-sans text-xs text-accent-coral" x-show="emailError" x-cloak>
           Please enter a valid Gmail address.
         </p>
       </div>
@@ -76,11 +82,12 @@ const hasEmail = email.length > 0;
       type="primary"
       size="lg"
       class="w-full uppercase tracking-widest text-xs!"
+      :disabled="isSubmitting"
     >
-      <span id="newsletter-submit-label">Yes, stay in the loop</span>
+      <span x-text="submitLabel">Yes, stay in the loop</span>
     </Button>
 
-    <p id="newsletter-form-error" class="hidden text-center font-sans text-xs text-accent-coral">
+    <p id="newsletter-form-error" class="text-center font-sans text-xs text-accent-coral" x-show="formError" x-cloak>
       Something went wrong. Please try again in a moment.
     </p>
   </form>
@@ -91,7 +98,3 @@ const hasEmail = email.length > 0;
   </Text>
 </NewsletterPageCard>
 
-<script>
-  import { initNewsletterConfirm } from '../../scripts/behaviors/newsletter';
-  initNewsletterConfirm();
-</script>

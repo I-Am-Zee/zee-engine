@@ -153,7 +153,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
                 <div
                   class="product-item"
                   data-index={index}
-                  data-slug={product.slug}
+                  data-id={product.id}
                   data-price={product.data.salePrice || product.data.price}
                   data-original-price={product.data.price}
                   data-sale-price={product.data.salePrice || ""}
