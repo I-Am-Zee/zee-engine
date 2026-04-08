@@ -41,7 +41,7 @@ try {
 // ═══════════════════════════════════════════════════════════════════════════
 const products = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
+    pattern: "**/*.{md,mdx}",
     base: `./src/content/${brandId}/products`,
   }),
   schema: z.object({
@@ -109,28 +109,18 @@ const products = defineCollection({
     variant_3: z
       .object({
         name: z.string(),
-        values: z.string(),
-        is_checkbox: z.boolean().optional(),
+        values: z.string(), // Comma-separated (e.g. "None, Gift Wrap (+₹99)")
+        price_modifiers: z.string().optional(),
       })
       .optional(),
 
-    // ORGANISM: Urgency & Scarcity
-    release_date: z.date().optional(),
-    urgency_tag: z.string().optional(),
+    // ORGANISM: Urgency & Scarcity — REMOVED (no component usage)
 
     // MOLECULE: Cross-Selling
     related_products: z.array(z.string()).optional(),
 
     // MOLECULE: Shipping Logistics
-    weight: z.number().positive().optional(),
     shipping_slab: z.string().optional(),
-    dimensions: z
-      .object({
-        length: z.number().positive(),
-        width: z.number().positive(),
-        height: z.number().positive(),
-      })
-      .optional(),
   })
     // ✅ CRITICAL VALIDATION: Ensures sale price is less than regular price
     .refine(
@@ -152,7 +142,7 @@ const products = defineCollection({
 // ═══════════════════════════════════════════════════════════════════════════
 const lookbooks = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
+    pattern: "**/*.{md,mdx}",
     base: `./src/content/${brandId}/lookbooks`,
   }),
   schema: z.object({
@@ -188,8 +178,8 @@ const blog = defineCollection({
 // ═══════════════════════════════════════════════════════════════════════════
 const pages = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
-    base: `./src/content/pages`,
+    pattern: "**/*.{md,mdx}",
+    base: `./src/content/${brandId}/pages`,
   }),
   schema: z.object({
     title: z.string(),
@@ -274,14 +264,11 @@ const newsletter = defineCollection({
     pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/newsletter`,
   }),
-  schema: z.record(
-    z.string(),
-    z.object({
-      heading: z.string(),
-      description: z.string(),
-      success_message: z.string().optional(),
-    })
-  ),
+  schema: z.object({
+    heading: z.string(),
+    description: z.string(),
+    success_message: z.string().optional(),
+  }),
 });
 
 export const collections = {

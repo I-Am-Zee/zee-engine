@@ -38,9 +38,10 @@ const {
 // Generate a unique ID for targeting the behavior
 const uid = customId || `newsletter-${variant}-${Math.random().toString(36).substring(2, 7)}`;
 
-// Fetch the brand-specific copy
-const entry = await getEntry('newsletter', brand);
-const copy = entry?.data?.[variant] || {
+// Each variant is its own file: footer.json, modal.json, section.json, sidebar.json
+// getEntry('newsletter', variant) fetches the right file directly.
+const entry = await getEntry('newsletter', variant);
+const copy = entry?.data || {
   heading: "Subscribe to our newsletter",
   description: "Stay updated with our latest news and offers.",
   success_message: "Thank you for subscribing!"
@@ -75,7 +76,7 @@ const isSidebar = variant === 'sidebar';
         isFooter && "mb-4"
       ]}>
         <Heading 
-          as={isSection ? "h2" : "h4"}
+          as={isSection || isFooter ? "h2" : "h4"}
           class="mb-3"
         >
           {copy.heading}

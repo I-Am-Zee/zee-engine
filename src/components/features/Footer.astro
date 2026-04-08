@@ -46,12 +46,7 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
     <div class="mx-auto max-w-7xl px-6 lg:px-12 py-16 lg:py-20">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
         <div class="w-full lg:flex-1 lg:pr-10 max-w-2xl">
-          <Heading as="h2">
-            Get drop alerts & Zee's style notes straight to your inbox.
-          </Heading>
-        </div>
-        <div class="w-full lg:max-w-md flex flex-col">
-          <NewsletterWidget variant="footer" hideHeading hideDisclaimer />
+          <NewsletterWidget variant="footer" hideDisclaimer />
         </div>
       </div>
       
@@ -224,13 +219,13 @@ const exploreLinks = navigation.filter((item) => item.label !== "Shop");
 
           {/* Bottom Half: Watermark Area & Copyright Anchored strict left */}
           <div class="flex flex-col gap-6 items-start justify-end w-full">
-             <div class="pointer-events-none select-none opacity-20 transform -translate-x-1 lg:-translate-x-3 w-full overflow-hidden">
+             <div class="pointer-events-none select-none opacity-20 transform -translate-x-1 lg:-translate-x-0 w-full overflow-hidden">
                <Logo variant="full" class="text-[17vw]! min-[400px]:text-[4rem]! md:text-[6rem]! lg:text-[5.5rem]! xl:text-[6.5rem]! leading-[0.8]! tracking-tighter whitespace-nowrap" />
              </div>
              
              <div class="flex flex-row flex-wrap items-center justify-between gap-y-4 gap-x-8 pt-2 2xl:pt-4 w-full">
                 <Text variant="metadata" color="muted">{copyright}</Text>
-                <div class="flex flex-wrap gap-4 sm:gap-5">
+                <div class="flex flex-wrap gap-4 sm:gap-5 lg:pr-10">
                   <Link href="/privacy-policy" variant="plain">
                     <Text variant="metadata" color="muted">Privacy Policy</Text>
                   </Link>
