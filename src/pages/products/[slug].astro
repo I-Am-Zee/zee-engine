@@ -44,7 +44,16 @@ const galleryImages =
     ? product.data.gallery
     : [product.data.image];
 
+// Check if product is "Coming Soon" (publishDate in future)
+const now = new Date();
+const publishDate = product.data.publishDate ? new Date(product.data.publishDate) : null;
+const isComingSoon = publishDate && publishDate > now;
+
+// Auto-add "Coming Soon" badge if publish date is in future
 const badges = [...(product.data.badges || [])];
+if (isComingSoon && !badges.includes("Coming Soon")) {
+  badges.unshift("Coming Soon");
+}
 
 // Sort badges by hierarchy (Urgency → Prestige → Attributes → State)
 const sortedBadges = sortBadgesByHierarchy(badges);
@@ -177,14 +186,40 @@ const sortedBadges = sortBadgesByHierarchy(badges);
 
         {/* Action Zone: Quantity + Add to Cart */}
         <div class="mt-10 space-y-6">
+          {/* Coming Soon Countdown */}
+          {
+            isComingSoon && publishDate && (
+              <div class="rounded-lg border border-(--color-accent-amber)/20 bg-(--color-accent-amber)/10 p-4 text-center">
+                <Text variant="label" class="mb-1 text-amber-600">
+                  Dropping Soon
+                </Text>
+                <div
+                  class="text-lg font-semibold text-amber-700"
+                  id="countdown"
+                  data-release={publishDate.toISOString()}
+                >
+                  {publishDate.toLocaleDateString("en-IN", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
+              </div>
+            )
+          }
+
           {/* Quantity Selector */}
-          <div class="flex items-center gap-3">
-            <Text variant="label">
-              {" "}
-              Quantity:{" "}
-            </Text>
-            <QuantitySelector initial={1} min={1} max={10} />
-          </div>
+          {
+            !isComingSoon && (
+              <div class="flex items-center gap-3">
+                <Text variant="label">
+                  {" "}
+                  Quantity:{" "}
+                </Text>
+                <QuantitySelector initial={1} min={1} max={10} />
+              </div>
+            )
+          }
 
           <template x-if="error">
             <div x-show="error" x-transition x-cloak class="mt-6 bg-accent-coral/10 border border-accent-coral/20 text-accent-coral px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-sm">
@@ -198,10 +233,10 @@ const sortedBadges = sortBadgesByHierarchy(badges);
               product={product}
               size="lg"
               class="w-full sm:flex-1 whitespace-nowrap h-13"
-              disabled={false}
+              disabled={isComingSoon ?? false}
               @click="validateAdd($event)"
             >
-              Add to Cart
+              {isComingSoon ? "Coming Soon" : "Add to Cart"}
             </AddToCartButton>
 
             {/* Wishlist Button - Uses global store */}
@@ -259,11 +294,11 @@ const sortedBadges = sortBadgesByHierarchy(badges);
         <AddToCartButton
           product={product}
           size="md"
-          disabled={false}
+          disabled={isComingSoon ?? false}
           class="shrink-0"
           @click="validateAdd($event)"
         >
-          Add
+          {isComingSoon ? "Soon" : "Add"}
         </AddToCartButton>
       </div>
     </div>
