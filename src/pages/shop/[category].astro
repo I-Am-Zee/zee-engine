@@ -15,6 +15,7 @@ import EmptyState from "../../components/ui/EmptyState.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import SectionHeader from "../../components/ui/SectionHeader.astro";
+import RelatedProducts from "../../components/features/RelatedProducts.astro";
 
 // Category display info - add new categories here as needed
 const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
@@ -188,7 +189,11 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
         />
       )
     }
-  </div>
+
+    {/* Algorithmic Cross-Sell */}
+    <div class="-mx-4 sm:mx-0 lg:-mx-8 mt-16">
+      <RelatedProducts category={category} />
+    </div>
 
   </div>
 </EngineLayout>

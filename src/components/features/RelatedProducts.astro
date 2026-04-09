@@ -13,32 +13,39 @@ import SectionHeader from "../ui/SectionHeader.astro";
 interface Props {
   currentProduct?: CollectionEntry<"products">;
   collectionTags?: string[];
+  category?: string;
 }
 
-const { currentProduct, collectionTags = [] } = Astro.props;
+const { currentProduct, collectionTags = [], category } = Astro.props;
 const allProducts = await getCollection("products");
 
-// 1. If in a collection context, gather all "other" tags from products matching this collection.
+// 1. Contextually gather "other" tags based on where this component is placed
 let expandedTags: string[] = [];
-if (!currentProduct && collectionTags.length > 0) {
-  // Find all products IN the collection
-  const productsInCollection = allProducts.filter(p => 
-    p.data.tags?.some(tag => collectionTags.includes(tag))
-  );
+if (!currentProduct) {
+  let productsInContext: CollectionEntry<"products">[] = [];
   
-  // Extract all THEIR other tags (flatten, dedupe, and remove the explicit collectionTags)
-  const allOtherTags = productsInCollection.flatMap(p => p.data.tags || []);
-  expandedTags = [...new Set(allOtherTags)].filter(tag => !collectionTags.includes(tag));
+  if (collectionTags.length > 0) {
+    productsInContext = allProducts.filter(p => p.data.tags?.some(tag => collectionTags.includes(tag)));
+  } else if (category) {
+    productsInContext = allProducts.filter(p => p.data.category === category);
+  }
+  
+  // Extract all tags from the context products, then dedupe
+  const allContextTags = productsInContext.flatMap(p => p.data.tags || []);
+  expandedTags = [...new Set(allContextTags)].filter(tag => !collectionTags.includes(tag));
 }
 
-// 2. Score products and block exactly as required
+// 2. Score products and block the current context correctly
 const displayProducts = allProducts
   .filter((p) => {
-    if (currentProduct) return p.id !== currentProduct.id;
+    if (currentProduct) return p.id !== currentProduct.id; // Block same product
     if (collectionTags.length > 0) {
-       // BLOCK products that are ALREADY in the collection
-       const hasCollectionTag = p.data.tags?.some(tag => collectionTags.includes(tag));
-       return !hasCollectionTag;
+       // BLOCK products already in the tag collection
+       return !(p.data.tags?.some(tag => collectionTags.includes(tag)));
+    }
+    if (category) {
+       // BLOCK products already in the category
+       return p.data.category !== category;
     }
     return true;
   })
@@ -49,7 +56,7 @@ const displayProducts = allProducts
     if (currentProduct) {
       const currentTags = currentProduct.data.tags || [];
       sharedTags = targetTags.filter((tag) => currentTags.includes(tag));
-    } else if (collectionTags.length > 0) {
+    } else if (collectionTags.length > 0 || category) {
       // Score based on how many of the "Expanded Pool" tags they hit
       sharedTags = targetTags.filter((tag) => expandedTags.includes(tag));
     }
@@ -60,8 +67,16 @@ const displayProducts = allProducts
   .slice(0, 8) // Limit to 8 items
   .map((p) => p.product);
 
-const sectionTitle = currentProduct ? "You May Also Like" : "Expand Your Look";
-const sectionSubtitle = currentProduct ? "Complement your look with these handpicked pieces" : "Discover complementary styles curated just for you";
+// Smart UI Copy
+let sectionTitle = "Expand Your Look";
+let sectionSubtitle = "Discover complementary styles curated just for you";
+if (currentProduct) {
+  sectionTitle = "You May Also Like";
+  sectionSubtitle = "Complement your look with these handpicked pieces";
+} else if (category) {
+  sectionTitle = "Pair With Your Selection";
+  sectionSubtitle = "Discover stunning pieces that elevate these styles";
+}
 ---
 
 {
