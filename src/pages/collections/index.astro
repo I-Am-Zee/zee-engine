@@ -21,7 +21,7 @@ const collections = ((gridData?.data as any)?.cards || []).map((card: any) => {
     title: card.title,
     description: card.description,
     image: card.image,
-    href: card.href,
+    href: card.type === "category" ? `/shop/${card.slug}` : `/collections/${card.slug}`,
     type: card.type,
     slug: card.slug
   };

@@ -306,18 +306,17 @@ export default config({
         cards: fields.array(
           fields.object({
             title: fields.text({ label: 'Title', validation: { isRequired: true } }),
+            slug: fields.text({ label: 'Target Slug', description: 'The exact category name or tag slug (e.g. rings, waterproof)', validation: { isRequired: true } }),
             description: fields.text({ label: 'Description', validation: { isRequired: true } }),
-            image: fields.text({ label: 'Image URL', description: 'R2 URL or Unsplash strictly for hero.', validation: { isRequired: true } }),
-            href: fields.text({ label: 'Link URL', description: 'e.g. /shop/rings or /collections/waterproof', validation: { isRequired: true } }),
+            image: fields.text({ label: 'Image URL', description: 'e.g. /images/collections/filename.webp', validation: { isRequired: true } }),
             type: fields.select({
               label: 'Filter Type',
               options: [
                 { label: 'Category Filter', value: 'category' },
-                { label: 'Tag Filter', value: 'tag' },
+                { label: 'Collection (Tag) Filter', value: 'tag' },
               ],
               defaultValue: 'category',
             }),
-            slug: fields.text({ label: 'Target Slug', description: 'The exact category name or tag slug (e.g. rings, waterproof)', validation: { isRequired: true } })
           }),
           {
             label: 'Grid Cards',
