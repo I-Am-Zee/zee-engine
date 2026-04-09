@@ -271,6 +271,16 @@ const newsletter = defineCollection({
   }),
 });
 
+const collections_grid = defineCollection({
+  loader: glob({
+    pattern: "**/*.{yml,yaml,json}",
+    base: `./src/content/${brandId}/collections_grid`,
+  }),
+  schema: z.object({
+    cards: z.array(z.any()).default([]),
+  }),
+});
+
 export const collections = {
   products,
   lookbooks,
@@ -278,4 +288,5 @@ export const collections = {
   pages,
   settings,
   newsletter,
+  collections_grid,
 };

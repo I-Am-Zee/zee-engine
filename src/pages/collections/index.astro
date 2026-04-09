@@ -12,9 +12,10 @@ const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
 // Use proper error handling in case the singleton hasn't been created yet
 let gridData;
 try {
-  gridData = await getEntry("settings", "collections-grid");
+  gridData = await getEntry("collections_grid", "data");
 } catch (e) {
   console.warn("Collections grid data not found, please configure it in Keystatic.");
+}
 const collections = ((gridData?.data as any)?.cards || []).map((card: any) => {
   return {
     title: card.title,
@@ -52,7 +53,7 @@ const collections = ((gridData?.data as any)?.cards || []).map((card: any) => {
     </div>
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
-      {collections.map((collection) => (
+      {collections.map((collection: any) => (
         <CollectionCard 
           title={collection.title}
           href={collection.href}
