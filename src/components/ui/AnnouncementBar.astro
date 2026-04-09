@@ -13,9 +13,11 @@ import Icon from "../primitives/Icon.astro";
 import Text from "../primitives/Text.astro";
 
 // Get settings from CMS
-const settings = await getEntry("settings", "site");
-const threshold = settings?.data?.free_shipping_threshold || 3000;
-const announcement = settings?.data?.announcement_bar;
+const marketingSettings = await getEntry("settings", "marketing");
+const shippingSettings = await getEntry("settings", "shipping");
+
+const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
+const announcement = marketingSettings?.data?.announcement_bar;
 
 // Dynamic text: Replace {{threshold}} placeholder
 let displayText = announcement?.text || "";

@@ -11,32 +11,15 @@ interface Props {
 const { orientation = "horizontal", class: className, ...rest } = Astro.props;
 
 // Fetch Title from Content Layer
-const site = await getEntry("settings", "site");
-const social = site?.data?.social || {};
+const site = await getEntry("settings", "brand");
+const social = site?.data?.social || [];
 
-// Social platform configuration (mapping settings to icons)
-const socialPlatforms = [
-  social.instagram && {
-    name: "PhInstagramLogo",
-    href: social.instagram,
-    label: "Follow us on Instagram",
-  },
-  social.pinterest && {
-    name: "PhPinterestLogo",
-    href: social.pinterest,
-    label: "Follow us on Pinterest",
-  },
-  social.facebook && {
-    name: "PhFacebookLogo",
-    href: social.facebook,
-    label: "Follow us on Facebook",
-  },
-  social.twitter && {
-    name: "PhTwitterLogo",
-    href: social.twitter,
-    label: "Follow us on Twitter",
-  }
-].filter(Boolean) as { name: any, href: string, label: string }[];
+// Social platform configuration (mapping array to elements)
+const socialPlatforms = social.map((link: any) => ({
+  name: link.platform,
+  href: link.url,
+  label: `Follow us on ${link.platform.replace('Ph', '').replace('Logo', '')}`,
+}));
 
 const layoutClasses = orientation === "horizontal" ? "flex-row gap-4" : "flex-col gap-3";
 ---

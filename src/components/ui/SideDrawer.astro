@@ -15,8 +15,8 @@ import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
 import FreeShippingNudge from "../features/FreeShippingNudge.astro";
 
-// Get Global Settings
-const settings = await getEntry("settings", "site");
+// Get Shipping Settings
+const settings = await getEntry("settings", "shipping");
 const threshold = settings?.data?.free_shipping_threshold || 3000;
 ---
 
@@ -27,7 +27,7 @@ const threshold = settings?.data?.free_shipping_threshold || 3000;
   x-effect="document.body.style.overflow = isOpen ? 'hidden' : ''"
   x-cloak
   @keydown.escape.window="close()"
-  class="fixed inset-0 flex items-center justify-end overflow-hidden z-[200]"
+  class="fixed inset-0 flex items-center justify-end overflow-hidden z-200"
   aria-labelledby="side-drawer-title"
   role="dialog"
   aria-modal="true"

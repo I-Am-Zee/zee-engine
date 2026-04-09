@@ -25,7 +25,7 @@ interface Props {
 const { class: className, ...rest } = Astro.props;
 
 // Fetch Global Settings from Content Layer
-const siteSettings = await getEntry("settings", "site");
+const siteSettings = await getEntry("settings", "brand");
 const brandName = siteSettings?.data?.name || "Brand";
 const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
 

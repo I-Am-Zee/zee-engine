@@ -9,10 +9,12 @@ import Footer from "../components/features/Footer.astro";
 import SideDrawer from "../components/ui/SideDrawer.astro";
 import Lightbox from "../components/ui/Lightbox.astro";
 
-// Fetch Global Settings from Content Layer
-const siteSettings = await getEntry("settings", "site");
-const announcement_bar = siteSettings?.data?.announcement_bar;
-const popup_modal = siteSettings?.data?.popup_modal;
+// Fetch Modular Settings from Content Layer
+const brandSettings = await getEntry("settings", "brand");
+const marketingSettings = await getEntry("settings", "marketing");
+
+const announcement_bar = marketingSettings?.data?.announcement_bar;
+const popup_modal = marketingSettings?.data?.popup_modal;
 
 interface Props {
   title?: string;
@@ -20,8 +22,8 @@ interface Props {
 }
 
 const {
-  title = `${siteSettings?.data?.name} | ${siteSettings?.data?.tagline}`,
-  description = siteSettings?.data?.description,
+  title = `${brandSettings?.data?.name || 'Zelia Vance'} | ${brandSettings?.data?.tagline || 'Luxury Jewelry'}`,
+  description = brandSettings?.data?.description,
 } = Astro.props;
 ---
 

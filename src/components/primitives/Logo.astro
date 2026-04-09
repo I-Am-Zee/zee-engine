@@ -10,7 +10,7 @@ interface Props {
 const { variant = "full", color = "black", class: className, ...rest } = Astro.props;
 
 // Fetch Title from Content Layer (Fail-fast is already in config.ts)
-const site = await getEntry("settings", "site");
+const site = await getEntry("settings", "brand");
 const brandName = site?.data?.name || "Brand";
 const brandMark = brandName.charAt(0).toUpperCase();
 
