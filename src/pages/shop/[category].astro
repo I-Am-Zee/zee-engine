@@ -61,7 +61,7 @@ const { products, categoryLabel, categoryDescription } = Astro.props;
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 ---
 
-<EngineLayout title={`${categoryName} | Zelia Vance`}>
+<EngineLayout title={`${categoryLabel} | Zelia Vance`}>
 
   <div
     class="mx-auto max-w-7xl px-4 py-12 lg:px-8"
