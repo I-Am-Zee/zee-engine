@@ -1,0 +1,51 @@
+---
+/**
+ * ComingSoon - Elegant placeholder for intentional but empty categories.
+ * Replaces the "Sad path" EmptyState with a more positive "Zee" brand voice.
+ */
+
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  categoryName: string;
+  class?: string;
+}
+
+const { categoryName, class: className, ...rest } = Astro.props;
+---
+
+<div
+  class:list={[
+    "flex flex-col items-center justify-center text-center py-20 px-6 bg-surface/30 rounded-3xl border border-border-subtle",
+    className,
+  ]}
+  {...rest}
+>
+  {/* Large muted icon */}
+  <div class="mb-10 text-accent-brass opacity-60">
+    <Icon name="PhSparkle" class="h-16 w-16" />
+  </div>
+
+  {/* Heading */}
+  <Heading as="h3" class="mb-4">
+    Our {categoryName} is on the way
+  </Heading>
+
+  {/* Description */}
+  <Text variant="lead" color="muted" class="mb-10 max-w-lg italic font-serif">
+    We’re putting the final polish on some exquisite new {categoryName.toLowerCase()} pieces. They’re worth the wait—stay tuned for the drop.
+  </Text>
+
+  {/* CTA button to keep them browsing */}
+  <div class="flex flex-wrap items-center justify-center gap-4">
+    <Button as="a" href="/shop" type="primary">
+      Continue Exploring Shop
+    </Button>
+    <Button as="a" href="/newsletter/confirm" type="ghost">
+      Get Notified of Drops
+    </Button>
+  </div>
+</div>

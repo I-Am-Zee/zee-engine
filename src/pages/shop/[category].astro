@@ -11,37 +11,15 @@ import Text from "../../components/primitives/Text.astro";
 import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
-import EmptyState from "../../components/ui/EmptyState.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import SectionHeader from "../../components/ui/SectionHeader.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
+import ComingSoon from "../../components/ui/ComingSoon.astro";
 
-// Category display info - add new categories here as needed
-const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
-  rings: {
-    name: "Rings",
-    description:
-      "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
-  },
-  necklaces: {
-    name: "Necklaces",
-    description:
-      "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
-  },
-  earrings: {
-    name: "Earrings",
-    description: "Find the perfect pair of earrings to complement any occasion.",
-  },
-  bracelets: {
-    name: "Bracelets",
-    description: "Adorn your wrist with our stunning bracelet collection.",
-  },
-  gifts: {
-    name: "Gifts",
-    description: "Thoughtfully curated gift sets for life's special moments.",
-  },
-};
+// Data Source
+import taxonomyJson from "../../content/zelia-vance/settings/taxonomy.json";
+import { slugify } from "../../scripts/utils/slugify";
 
 // Products per page for pagination
 const PRODUCTS_PER_PAGE = 12;
@@ -52,52 +30,19 @@ export const prerender = true;
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
 
-  // Auto-detect categories from products - no hardcoded list needed!
-  const categoriesSet = new Set<string>();
-  allProducts.forEach((product) => {
-    categoriesSet.add(product.data.category);
-  });
-  const categories = Array.from(categoriesSet);
-
-  // Category display info fallback for auto-detected categories
-  const categoryInfo: Record<string, { name: string; description: string }> = {
-    rings: {
-      name: "Rings",
-      description:
-        "Discover our collection of exquisite rings, from engagement diamonds to everyday elegance.",
-    },
-    necklaces: {
-      name: "Necklaces",
-      description:
-        "Explore our curated selection of necklaces, from delicate pendants to statement pieces.",
-    },
-    earrings: {
-      name: "Earrings",
-      description: "Find the perfect pair of earrings to complement any occasion.",
-    },
-    bracelets: {
-      name: "Bracelets",
-      description: "Adorn your wrist with our stunning bracelet collection.",
-    },
-    gifts: {
-      name: "Gifts",
-      description: "Thoughtfully curated gift sets for life's special moments.",
-    },
-  };
-
-  return categories.map((category) => {
-    const categoryProducts = allProducts.filter((product) => product.data.category === category);
-    // Default fallback for new categories
-    const info = categoryInfo[category] || {
-      name: category.charAt(0).toUpperCase() + category.slice(1),
-      description: `Browse our ${category} collection.`,
-    };
+  // We build paths for EVERY category in our taxonomy to allow for "Coming Soon" states.
+  return taxonomyJson.categories.map((categoryLabel: string) => {
+    const categorySlug = slugify(categoryLabel);
+    // Find products that match this category label (using the strict label for data matching)
+    const categoryProducts = allProducts.filter((product) => product.data.category === categoryLabel);
+    
     return {
-      params: { category },
+      params: { category: categorySlug },
       props: {
         products: categoryProducts,
-        categoryName: info.name,
-        categoryDescription: info.description,
+        categoryLabel,
+        // Generic description generated from category name
+        categoryDescription: `Discover our collection of exquisite ${categoryLabel.toLowerCase()}, curated for the modern woman who values timeless elegance.`
       },
     };
   });
@@ -105,12 +50,12 @@ export async function getStaticPaths() {
 
 interface Props {
   products: Awaited<ReturnType<typeof getCollection<"products">>>;
-  categoryName: string;
+  categoryLabel: string;
   categoryDescription: string;
 }
 
 const { category } = Astro.params;
-const { products, categoryName, categoryDescription } = Astro.props;
+const { products, categoryLabel, categoryDescription } = Astro.props;
 
 // Pagination info (client-side pagination handled by Alpine.js)
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
@@ -128,14 +73,14 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
         items={[
           { label: "Home", href: "/" },
           { label: "Shop", href: "/shop" },
-          { label: categoryName },
+          { label: categoryLabel },
         ]}
       />
     </div>
 
     {/* Page Header */}
     <SectionHeader 
-      title={categoryName} 
+      title={categoryLabel} 
       subtitle={categoryDescription} 
       align="left"
       class="mb-8"
@@ -145,7 +90,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
       products.length > 0 ? (
         <>
           {/* Filter/Sort Bar */}
-          <FilterSortBar productCount={products.length} categoryName={categoryName.toLowerCase()} />
+          <FilterSortBar productCount={products.length} categoryName={categoryLabel.toLowerCase()} />
 
           {/* Product Grid with Alpine.js sorting */}
           <div id="product-grid">
@@ -181,12 +126,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
           )}
         </>
       ) : (
-        <EmptyState
-          icon="PhMagnifyingGlass"
-          heading={`No ${categoryName} Found`}
-          description={`We don't have any ${categoryName.toLowerCase()} in our collection yet. Check back soon!`}
-          action={{ label: "View All Products", href: "/shop" }}
-        />
+        <ComingSoon categoryName={categoryLabel} />
       )
     }
 
