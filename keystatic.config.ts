@@ -7,31 +7,38 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
-import shippingJson from './src/config/shipping.json';
-
 const brandId = import.meta.env.PUBLIC_BRAND_ID || 'zelia-vance';
 
 // ── Tags, Badges & Categories (Predefined via JSON) ─────────────────────────
 import taxonomyJson from './src/content/zelia-vance/settings/taxonomy.json';
 
-const brandCategories = taxonomyJson.categories.map(c => ({
+const brandCategories = taxonomyJson.categories.map((c: string) => ({
   label: c.charAt(0).toUpperCase() + c.slice(1),
   value: c
 }));
 
-const brandTags = taxonomyJson.tags.map(t => ({ label: t, value: t }));
-const brandBadges = taxonomyJson.badges.map(b => ({ label: b, value: b }));
+const brandTags = taxonomyJson.tags.map((t: string) => ({ label: t, value: t }));
+const brandBadges = taxonomyJson.badges.map((b: string) => ({ label: b, value: b }));
 
-// ── Shipping Slabs (from shipping.json) ────────────────────────────────────────
-const shippingSlabOptions = Object.entries(
-  shippingJson.slabs as Record<string, { name: string; weight_kg: number; dimensions: { length: number; breadth: number; height: number } }>
-).map(([key, slab]) => ({
+// ── Shipping Slabs (Predefined via JSON) ───────────────────
+import shippingJson from './src/content/zelia-vance/settings/shipping.json';
+
+const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, slab]: [string, any]) => ({
   label: `${slab.name} (${slab.dimensions.length}×${slab.dimensions.breadth}×${slab.dimensions.height}cm, ${slab.weight_kg}kg)`,
   value: key,
 }));
 
+
 export default config({
   storage: { kind: 'local' },
+
+  ui: {
+    brand: { name: 'Zelia Vance CMS' },
+    navigation: {
+      'Content': ['products', 'lookbooks', 'blog', 'pages', 'newsletter', 'collections_grid'],
+      'Settings': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
+    }
+  },
 
   collections: {
     // ── Products ──────────────────────────────────────────────────
@@ -142,9 +149,9 @@ export default config({
         // ── Logistics ──
         shipping_slab: fields.select({
           label: 'Shipping Slab',
-          description: 'Determines the package size and base weight sent to Shiprocket. Dimensions and weight are defined per slab in shipping.json.',
+          description: 'Refer the Shipping Settings for your brand.',
           options: shippingSlabOptions,
-          defaultValue: shippingJson.default_slab ?? 'small-jewelry',
+          defaultValue: shippingSlabOptions.length > 0 ? shippingSlabOptions[0]!.value : 'small-packaging',
         }),
 
         // ── Full Description (rich text / MDX) ──
@@ -233,36 +240,49 @@ export default config({
   },
 
   singletons: {
-    // ── Site Settings ─────────────────────────────────────────────
-    settings: singleton({
-      label: 'Site Settings',
-      path: `src/content/${brandId}/settings/site`,
-      format: { data: 'yaml' },
+    // ── Brand Identity ─────────────────────────────────────────────
+    settings_brand: singleton({
+      label: 'Brand Identity',
+      path: `src/content/${brandId}/settings/brand`,
+      format: { data: 'json' },
       schema: {
         name: fields.text({ label: 'Brand Name', validation: { isRequired: true } }),
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
         description: fields.text({ label: 'SEO Description', multiline: true, validation: { isRequired: true } }),
-        url: fields.url({ label: 'Site URL', validation: { isRequired: true } }),
-        email: fields.object({
-          support: fields.text({ label: 'Support Email' }),
-          orders: fields.text({ label: 'Orders Email' }),
-        }, { label: 'Email Addresses' }),
-        phone: fields.object({
-          main: fields.text({ label: 'Main Phone' }),
-          support: fields.text({ label: 'Support Phone' })
-        }, { label: 'Phone Numbers' }),
-        address: fields.object({
-          street: fields.text({ label: 'Street' }),
-          city: fields.text({ label: 'City' }),
-          state: fields.text({ label: 'State' }),
-          zip: fields.text({ label: 'ZIP' }),
-          country: fields.text({ label: 'Country' })
-        }, { label: 'Address' }),
-        social: fields.object({
-          instagram: fields.text({ label: 'Instagram URL' }),
-          pinterest: fields.text({ label: 'Pinterest URL' }),
-          facebook: fields.text({ label: 'Facebook URL' }),
-        }, { label: 'Social Links' }),
+        social: fields.array(
+          fields.object({
+            platform: fields.select({
+              label: 'Platform Icon',
+              options: [
+                { label: 'Instagram', value: 'PhInstagramLogo' },
+                { label: 'Facebook', value: 'PhFacebookLogo' },
+                { label: 'Twitter/X', value: 'PhXLogo' },
+                { label: 'Pinterest', value: 'PhPinterestLogo' },
+                { label: 'TikTok', value: 'PhTiktokLogo' },
+                { label: 'YouTube', value: 'PhYoutubeLogo' },
+                { label: 'LinkedIn', value: 'PhLinkedinLogo' },
+                { label: 'WhatsApp', value: 'PhWhatsappLogo' },
+              ],
+              defaultValue: 'PhInstagramLogo'
+            }),
+            url: fields.url({ label: 'Profile URL', validation: { isRequired: true } })
+          }),
+          {
+            label: 'Social Links',
+            itemLabel: props => props.fields.platform.value 
+              ? props.fields.platform.value.replace('Ph', '').replace('Logo', '').replace('X', 'Twitter/X') 
+              : 'New link' 
+          }
+        ),
+      },
+    }),
+
+    // ── Marketing & Conversion ─────────────────────────────────────
+    settings_marketing: singleton({
+      label: 'Marketing & Conversion',
+      path: `src/content/${brandId}/settings/marketing`,
+      format: { data: 'json' },
+      schema: {
         announcement_bar: fields.object({
           enabled: fields.checkbox({ label: 'Enable Announcement Bar', defaultValue: false }),
           text: fields.text({ label: 'Announcement Text' }),
@@ -274,7 +294,6 @@ export default config({
           description: fields.text({ label: 'Popup Description', multiline: true }),
           coupon_code: fields.text({ label: 'Coupon Code' }),
           cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
-          // ── Denylist: Brand-specific, Engine logic ──────────────
           denylist: fields.array(
             fields.text({ label: 'Path', description: 'Use /shop for exact, /shop/* for all sub-paths' }),
             {
@@ -284,10 +303,58 @@ export default config({
             }
           ),
         }, { label: 'Popup Modal' }),
+      },
+    }),
+
+    // ── Shipping Logistics ─────────────────────────────────────────
+    settings_shipping: singleton({
+      label: 'Shipping Logistics',
+      path: `src/content/${brandId}/settings/shipping`,
+      format: { data: 'json' },
+      schema: {
         free_shipping_threshold: fields.number({ label: 'Free Shipping Threshold (₹)', defaultValue: 3000 }),
-        monetization: fields.object({
-          show_ads: fields.checkbox({ label: 'Show Ads on Blog Pages', defaultValue: false }),
-        }, { label: 'Monetization' }),
+        default_slab: fields.text({ label: 'Default Slab Key', defaultValue: 'small-packaging' }),
+        slabs: fields.object({
+          'small-packaging': fields.object({
+            name: fields.text({ label: 'Slab Name', defaultValue: 'Small Packaging' }),
+            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 0.5 }),
+            dimensions: fields.object({
+              length: fields.number({ label: 'Length (cm)', defaultValue: 15 }),
+              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 15 }),
+              height: fields.number({ label: 'Height (cm)', defaultValue: 10 }),
+            })
+          }),
+          'medium-packaging': fields.object({
+            name: fields.text({ label: 'Slab Name', defaultValue: 'Medium Packaging' }),
+            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 1.0 }),
+            dimensions: fields.object({
+              length: fields.number({ label: 'Length (cm)', defaultValue: 20 }),
+              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 20 }),
+              height: fields.number({ label: 'Height (cm)', defaultValue: 15 }),
+            })
+          }),
+          'large-packaging': fields.object({
+            name: fields.text({ label: 'Slab Name', defaultValue: 'Large Packaging' }),
+            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 2.0 }),
+            dimensions: fields.object({
+              length: fields.number({ label: 'Length (cm)', defaultValue: 25 }),
+              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 25 }),
+              height: fields.number({ label: 'Height (cm)', defaultValue: 20 }),
+            })
+          }),
+        }, { label: 'Shipping Slabs' })
+      },
+    }),
+
+    // ── Analytics & Monetization ───────────────────────────────────
+    settings_tracking: singleton({
+      label: 'Analytics & Tracking',
+      path: `src/content/${brandId}/settings/tracking`,
+      format: { data: 'json' },
+      schema: {
+        show_ads: fields.checkbox({ label: 'Show Ads on Blog Pages', defaultValue: false }),
+        google_analytics_id: fields.text({ label: 'Google Analytics ID (G-XXXXX)', validation: {isRequired: false} }),
+        meta_pixel_id: fields.text({ label: 'Meta Pixel ID', validation: {isRequired: false} })
       },
     }),
 

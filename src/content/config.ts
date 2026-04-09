@@ -196,67 +196,6 @@ const settings = defineCollection({
     pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/settings`,
   }),
-  schema: z.object({
-    name: z.string(),
-    tagline: z.string(),
-    description: z.string(),
-    url: z.string(),
-    email: z.object({
-      support: z.string(),
-      orders: z.string(),
-    }),
-    phone: z
-      .object({
-        main: z.string().optional(),
-        support: z.string().optional(),
-      })
-      .optional(),
-    address: z
-      .object({
-        street: z.string().optional(),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zip: z.string().optional(),
-        country: z.string().optional(),
-      })
-      .optional(),
-    social: z.object({
-      instagram: z.string().optional(),
-      pinterest: z.string().optional(),
-      facebook: z.string().optional(),
-      twitter: z.string().optional(),
-    }),
-    // Announcement Bar
-    announcement_bar: z
-      .object({
-        enabled: z.boolean().default(false),
-        text: z.string().optional(),
-        link: z.string().optional(),
-        bg_color: z.string().default("bg-black"),
-        text_color: z.string().default("text-white"),
-      })
-      .optional(),
-    // Popup Modal
-    popup_modal: z
-      .object({
-        active: z.boolean().default(false),
-        title: z.string().optional(),
-        description: z.string().optional(),
-        coupon_code: z.string().optional(),
-        image: z.string().optional(),
-        cta_text: z.string().default("Claim Discount"),
-      })
-      .optional(),
-    // Free Shipping Threshold
-    free_shipping_threshold: z.number().positive().default(3000),
-    // Monetization (Affiliate mode: show AdSense banners, etc.)
-    categories: z.array(z.string()).default([brandCategories[0], ...brandCategories.slice(1)]),
-    monetization: z
-      .object({
-        show_ads: z.boolean().default(false),
-      })
-      .optional(),
-  }),
 });
 
 const newsletter = defineCollection({

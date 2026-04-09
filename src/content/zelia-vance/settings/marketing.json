@@ -1,0 +1,17 @@
+{
+  "announcement_bar": {
+    "enabled": true,
+    "text": "Free Shipping on orders above ₹{{threshold}}",
+    "link": ""
+  },
+  "popup_modal": {
+    "active": false,
+    "title": "Unlock 10% Off",
+    "description": "Sign up for our newsletter.",
+    "coupon_code": "WELCOME10",
+    "cta_text": "Claim My Discount",
+    "denylist": [
+      "/checkout"
+    ]
+  }
+}
