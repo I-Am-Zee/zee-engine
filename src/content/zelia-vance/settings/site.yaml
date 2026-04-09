@@ -10,14 +10,11 @@ social:
   instagram: https://instagram.com/zeliavance
   pinterest: https://pinterest.com/zeliavance
   facebook: https://facebook.com/zeliavance
-  twitter: https://twitter.com/zeliavance
 announcement_bar:
   enabled: true
   text: "\u2728 Free Shipping on Orders Above \u20B9{{threshold}} | Use Code: FIRST10\
     \ for 10% Off"
   link: /shop
-  bg_color: bg-surface border-b border-border-subtle
-  text_color: text-text-main
 popup_modal:
   active: true
   title: Get 10% Off Your First Order
@@ -29,10 +26,4 @@ popup_modal:
   - /checkout
   - /checkout/*
 free_shipping_threshold: 3000
-categories:
-- rings
-- necklaces
-- earrings
-- bracelets
-- gifts
-- sets
+
