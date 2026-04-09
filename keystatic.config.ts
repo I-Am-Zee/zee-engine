@@ -166,12 +166,15 @@ export default config({
       format: { contentField: 'body' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        hero_image: fields.text({ label: 'Hero Image URL', validation: { isRequired: true } }),
-        gallery: fields.array(
-          fields.text({ label: 'Image URL' }),
-          { label: 'Gallery' }
-        ),
+        hero_image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/lookbooks/filename.webp or R2 URL', validation: { isRequired: true } }),
         description: fields.text({ label: 'Description', multiline: true }),
+        gallery: fields.array(
+          fields.text({ label: 'Image URL', description: 'e.g. /images/lookbooks/filename.webp' }),
+          { 
+            label: 'Gallery',
+            itemLabel: (props) => props.value || 'New Image'
+          }
+        ),
         products: fields.array(
           fields.relationship({ label: 'Product', collection: 'products' }),
           {
