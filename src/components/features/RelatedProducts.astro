@@ -7,24 +7,31 @@ import Carousel from "../ui/Carousel.astro";
 import GlassProductCard from "../ui/GlassProductCard.astro";
 import Heading from "../primitives/Heading.astro";
 
-import GlassProductCard from "../ui/GlassProductCard.astro";
-import Heading from "../primitives/Heading.astro";
+
 import SectionHeader from "../ui/SectionHeader.astro";
 
 interface Props {
-  currentProduct: CollectionEntry<"products">;
+  currentProduct?: CollectionEntry<"products">;
+  collectionTags?: string[];
 }
 
-const { currentProduct } = Astro.props;
+const { currentProduct, collectionTags = [] } = Astro.props;
 const allProducts = await getCollection("products");
 
 // 1. Score products based on shared tags
 const displayProducts = allProducts
-  .filter((p) => p.id !== currentProduct.id)
+  .filter((p) => currentProduct ? p.id !== currentProduct.id : true)
   .map((p) => {
-    const currentTags = currentProduct.data.tags || [];
     const targetTags = p.data.tags || [];
-    const sharedTags = targetTags.filter((tag) => currentTags.includes(tag));
+    let sharedTags: string[] = [];
+    
+    if (currentProduct) {
+      const currentTags = currentProduct.data.tags || [];
+      sharedTags = targetTags.filter((tag) => currentTags.includes(tag));
+    } else if (collectionTags.length > 0) {
+      sharedTags = targetTags.filter((tag) => collectionTags.includes(tag));
+    }
+
     return { product: p, score: sharedTags.length };
   })
   .sort((a, b) => b.score - a.score || Math.random() - 0.5) // Sort by score (tags), then shuffle

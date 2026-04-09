@@ -1,49 +1,41 @@
 cards:
   - title: Rings
+    slug: rings
     description: Explore our stunning collection of rings.
     image: https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80
-    href: /shop/rings
     type: category
-    slug: rings
   - title: Earrings
+    slug: earrings
     description: Perfect for any occasion.
     image: https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80
-    href: /shop/earrings
     type: category
-    slug: earrings
   - title: Necklaces
+    slug: necklaces
     description: Timeless pieces to complete your look.
     image: https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80
-    href: /shop/necklaces
     type: category
-    slug: necklaces
   - title: Bracelets
+    slug: bracelets
     description: Elegant wristwear for every style.
     image: https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80
-    href: /shop/bracelets
     type: category
-    slug: bracelets
   - title: Waterproof Collection
+    slug: waterproof
     description: Shower-proof, swim-proof jewelry that never tarnishes.
     image: https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80
-    href: /collections/waterproof
     type: tag
-    slug: waterproof
   - title: Luxury Statement
+    slug: luxury
     description: Make an impression with our premium, high-end pieces.
     image: https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&q=80
-    href: /collections/luxury
     type: tag
-    slug: luxury
   - title: Everyday Essentials
+    slug: everyday
     description: The foundations of your jewelry box, designed for daily wear.
     image: https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80
-    href: /collections/everyday
     type: tag
-    slug: everyday
   - title: Gift Sets
+    slug: gifts
     description: Curated sets for your loved ones, ready for any celebration.
     image: https://images.unsplash.com/photo-1549492423-400259a2e574?w=800&q=80
-    href: /shop/gifts
     type: category
-    slug: gifts
