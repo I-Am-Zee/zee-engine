@@ -34,7 +34,7 @@ export async function getStaticPaths() {
   return taxonomyJson.categories.map((categoryLabel: string) => {
     const categorySlug = slugify(categoryLabel);
     // Find products that match this category label (using the strict label for data matching)
-    const categoryProducts = allProducts.filter((product) => product.data.category === categoryLabel);
+    const categoryProducts = allProducts.filter((product) => product.data.category?.toLowerCase() === categoryLabel.toLowerCase());
     
     return {
       params: { category: categorySlug },
