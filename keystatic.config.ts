@@ -304,10 +304,10 @@ export default config({
             description: fields.text({ label: 'Description', validation: { isRequired: true } }),
             image: fields.text({ label: 'Image URL', description: 'e.g. /images/collections/filename.webp', validation: { isRequired: true } }),
             type: fields.select({
-              label: 'Filter Type',
+              label: 'Collection Type',
               options: [
-                { label: 'Category Filter', value: 'category' },
-                { label: 'Collection (Tag) Filter', value: 'tag' },
+                { label: 'Category Based', value: 'category' },
+                { label: 'Tag Based', value: 'tag' },
               ],
               defaultValue: 'category',
             }),

@@ -8,6 +8,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 import Pagination from "../../components/ui/Pagination.astro";
+import RelatedProducts from "../../components/features/RelatedProducts.astro";
 
 // Pre-render at build time (required in server mode)
 export const prerender = true;
@@ -108,10 +109,14 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
         />
       )
     }
+    
+    {/* Expand Your Look Algorithm */}
+    <div class="-mx-4 sm:mx-0 lg:-mx-8">
+      <RelatedProducts collectionTags={[tag]} />
+    </div>
   </div>
 
 </EngineLayout>
-
 
 <script>
   // @ts-ignore

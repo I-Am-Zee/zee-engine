@@ -18,9 +18,30 @@ interface Props {
 const { currentProduct, collectionTags = [] } = Astro.props;
 const allProducts = await getCollection("products");
 
-// 1. Score products based on shared tags
+// 1. If in a collection context, gather all "other" tags from products matching this collection.
+let expandedTags: string[] = [];
+if (!currentProduct && collectionTags.length > 0) {
+  // Find all products IN the collection
+  const productsInCollection = allProducts.filter(p => 
+    p.data.tags?.some(tag => collectionTags.includes(tag))
+  );
+  
+  // Extract all THEIR other tags (flatten, dedupe, and remove the explicit collectionTags)
+  const allOtherTags = productsInCollection.flatMap(p => p.data.tags || []);
+  expandedTags = [...new Set(allOtherTags)].filter(tag => !collectionTags.includes(tag));
+}
+
+// 2. Score products and block exactly as required
 const displayProducts = allProducts
-  .filter((p) => currentProduct ? p.id !== currentProduct.id : true)
+  .filter((p) => {
+    if (currentProduct) return p.id !== currentProduct.id;
+    if (collectionTags.length > 0) {
+       // BLOCK products that are ALREADY in the collection
+       const hasCollectionTag = p.data.tags?.some(tag => collectionTags.includes(tag));
+       return !hasCollectionTag;
+    }
+    return true;
+  })
   .map((p) => {
     const targetTags = p.data.tags || [];
     let sharedTags: string[] = [];
@@ -29,22 +50,26 @@ const displayProducts = allProducts
       const currentTags = currentProduct.data.tags || [];
       sharedTags = targetTags.filter((tag) => currentTags.includes(tag));
     } else if (collectionTags.length > 0) {
-      sharedTags = targetTags.filter((tag) => collectionTags.includes(tag));
+      // Score based on how many of the "Expanded Pool" tags they hit
+      sharedTags = targetTags.filter((tag) => expandedTags.includes(tag));
     }
 
     return { product: p, score: sharedTags.length };
   })
-  .sort((a, b) => b.score - a.score || Math.random() - 0.5) // Sort by score (tags), then shuffle
-  .slice(0, 4)
+  .sort((a, b) => b.score - a.score || Math.random() - 0.5) // Sort by score, then shuffle
+  .slice(0, 8) // Limit to 8 items
   .map((p) => p.product);
+
+const sectionTitle = currentProduct ? "You May Also Like" : "Expand Your Look";
+const sectionSubtitle = currentProduct ? "Complement your look with these handpicked pieces" : "Discover complementary styles curated just for you";
 ---
 
 {
   displayProducts.length > 0 && (
     <section class="mt-12 md:mt-16 border-t border-(--color-border-subtle) pt-12 md:pt-16 pb-8 md:pb-12 px-4 lg:px-8 max-w-7xl mx-auto">
       <SectionHeader 
-        title="You May Also Like" 
-        subtitle="Complement your look with these handpicked pieces" 
+        title={sectionTitle} 
+        subtitle={sectionSubtitle} 
         align="left"
       />
 
