@@ -306,6 +306,20 @@ export default config({
       },
     }),
 
+    settings_shop: singleton({
+      label: 'Shop Settings',
+      path: `src/content/${brandId}/settings/shop`,
+      format: { data: 'json' },
+      schema: {
+        category_description_template: fields.text({ 
+          label: 'Category Description Template', 
+          description: 'Use {{category}} as a placeholder (e.g. "Exquisite {{category}}").',
+          multiline: true,
+          validation: { isRequired: true }
+        }),
+      },
+    }),
+
     // ── Shipping Logistics ─────────────────────────────────────────
     settings_shipping: singleton({
       label: 'Shipping Logistics',
