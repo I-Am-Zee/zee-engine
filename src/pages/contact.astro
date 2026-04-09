@@ -7,11 +7,11 @@ import Text from "../components/primitives/Text.astro";
 export const prerender = true;
 
 // Fetch Title from Content Layer
-const site = await getEntry("settings", "site");
+const site = await getEntry("settings", "brand");
 const siteData = site?.data;
 ---
 
-<EngineLayout title={`Contact Us | ${siteData?.name}`}>
+<EngineLayout title={`Contact Us | ${siteData?.name || 'Zelia Vance'}`}>
   <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
     <Heading as="h1" class="mb-6">Contact Us</Heading>
     <Text variant="lead" color="muted" class="mb-8">
@@ -22,18 +22,9 @@ const siteData = site?.data;
       <div>
         <Text variant="eyebrow" class="mb-2">Email</Text>
         <Text variant="lead">
-          <a href={`mailto:${siteData?.email.support}`} class="hover:underline">{siteData?.email.support}</a>
+          <a href="mailto:hello@zeliavance.com" class="hover:underline">hello@zeliavance.com</a>
         </Text>
       </div>
-      
-      {siteData?.phone?.main && (
-        <div>
-          <Text variant="eyebrow" class="mb-2">Phone</Text>
-          <Text variant="lead">
-            <a href={`tel:${siteData.phone.main.replace(/\D/g, '')}`} class="hover:underline">{siteData.phone.main}</a>
-          </Text>
-        </div>
-      )}
     </div>
   </main>
 </EngineLayout>

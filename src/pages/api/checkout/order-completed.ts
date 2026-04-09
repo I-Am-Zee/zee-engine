@@ -3,7 +3,6 @@ export const prerender = false;
 
 import type { APIRoute } from "astro";
 import { getEntry } from "astro:content";
-import shippingConfig from "../../../config/shipping.json";
 
 // Global cache for Shiprocket Auth Token to avoid logging in on every request under high load
 let cachedToken: string | null = null;
@@ -34,7 +33,7 @@ async function getShiprocketToken(): Promise<string> {
     throw new Error("Failed to authenticate with Shiprocket");
   }
 
-  const data = await response.json();
+  const data = await response.json() as any;
   cachedToken = data.token;
   tokenExpiryTime = Date.now() + 9 * 24 * 60 * 60 * 1000;
   
@@ -128,6 +127,9 @@ export const POST: APIRoute = async ({ request }) => {
     const pickupLocation = import.meta.env.SHIPROCKET_PICKUP_LOCATION || "Home";
 
     // 2. Map Items & Slabs
+    const shippingSettings = await getEntry("settings", "shipping");
+    const shippingConfig = shippingSettings?.data || { default_slab: 'small-jewelry', slabs: {} };
+    
     let totalWeightSumKg = 0;
     let selectedSlabId = shippingConfig.default_slab;
     let maxSlabWeight = 0;
@@ -137,7 +139,7 @@ export const POST: APIRoute = async ({ request }) => {
       // Use the technical slug from metadata if available (added in ecommerce.ts refactor)
       // Otherwise fallback to item.id (which might be the SKU or Slug)
       const lookupId = item.metadata?.slug || item.id;
-      const productEntry = await getEntry("products", lookupId);
+      const productEntry = await getEntry("products", lookupId) as any;
       
       const weightFromData = productEntry?.data?.weight || item.weight || 0;
       const productSlabId = productEntry?.data?.shipping_slab;
@@ -267,7 +269,7 @@ export const POST: APIRoute = async ({ request }) => {
       body: JSON.stringify(shiprocketPayload)
     });
 
-    const srData = await srResponse.json();
+    const srData = await srResponse.json() as any;
     console.log("[Shiprocket API Raw Response]:", JSON.stringify(srData, null, 2));
 
     if (!srResponse.ok) {

@@ -2,6 +2,7 @@
 import { getEntry, render } from "astro:content";
 import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
+import Text from "../components/primitives/Text.astro";
 
 // Pre-render at build time
 export const prerender = true;
@@ -14,7 +15,12 @@ const { Content } = page ? await render(page) : { Content: null };
 <EngineLayout title={page?.data.title || "About Us"} description={page?.data.description}>
   <main class="mx-auto max-w-4xl px-4 py-16 md:py-24">
     <header class="mb-12 text-center">
-      <Heading as="h1" class="mb-4">{page?.data.title || "About Zelia Vance"}</Heading>
+      <Heading as="h1" class="mb-6">{page?.data.title || "About Zelia Vance"}</Heading>
+      {page?.data.description && (
+        <Text variant="lead" color="muted" class="max-w-2xl mx-auto">
+          {page.data.description}
+        </Text>
+      )}
     </header>
 
     <div class="prose prose-zelia mx-auto max-w-none">
