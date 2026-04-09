@@ -21,19 +21,19 @@ if (!brandId) {
 
 
 
-// Dynamically load categories from brand settings
-const settingsPath = `./src/content/${brandId}/settings/site.yml`;
+// Dynamically load categories from taxonomy
+const taxonomyPath = `./src/content/${brandId}/settings/taxonomy.json`;
 var brandCategories: [string, ...string[]] = ["rings", "necklaces", "earrings", "bracelets", "gifts", "sets"];
 try {
-  if (fs.existsSync(settingsPath)) {
-    const fileContents = fs.readFileSync(settingsPath, 'utf8');
-    const parsed = yaml.parse(fileContents);
+  if (fs.existsSync(taxonomyPath)) {
+    const fileContents = fs.readFileSync(taxonomyPath, 'utf8');
+    const parsed = JSON.parse(fileContents);
     if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
-      brandCategories = parsed.categories;
+      brandCategories = parsed.categories as [string, ...string[]];
     }
   }
 } catch (e) {
-  console.warn("Could not load categories from settings, using defaults.");
+  console.warn("Could not load categories from taxonomy, using defaults.");
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

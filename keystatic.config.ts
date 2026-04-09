@@ -11,19 +11,13 @@ import shippingJson from './src/config/shipping.json';
 
 const brandId = import.meta.env.PUBLIC_BRAND_ID || 'zelia-vance';
 
-// ── Brand Categories ──────────────────────────────────────────────────────────
-// Hardcoded fallback since we cannot use node:fs in the browser-rendered CMS.
-const brandCategories = [
-  { label: 'Rings', value: 'rings' },
-  { label: 'Necklaces', value: 'necklaces' },
-  { label: 'Earrings', value: 'earrings' },
-  { label: 'Bracelets', value: 'bracelets' },
-  { label: 'Gifts', value: 'gifts' },
-  { label: 'Sets', value: 'sets' },
-];
-
-// ── Tags & Badges (Predefined) ────────────────────────────────────────────────
+// ── Tags, Badges & Categories (Predefined via JSON) ─────────────────────────
 import taxonomyJson from './src/content/zelia-vance/settings/taxonomy.json';
+
+const brandCategories = taxonomyJson.categories.map(c => ({
+  label: c.charAt(0).toUpperCase() + c.slice(1),
+  value: c
+}));
 
 const brandTags = taxonomyJson.tags.map(t => ({ label: t, value: t }));
 const brandBadges = taxonomyJson.badges.map(b => ({ label: b, value: b }));
