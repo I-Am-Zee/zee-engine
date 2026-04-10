@@ -18,7 +18,7 @@ import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
 
 import taxonomyJson from "../../content/zelia-vance/settings/taxonomy.json";
-import shopSettings from "../../content/zelia-vance/settings/shop.json";
+import shopContent from "../../content/zelia-vance/pages_content/shop.json";
 import { slugify } from "../../scripts/utils/slugify";
 
 // Products per page for pagination
@@ -29,7 +29,7 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
-  const template = shopSettings.category_description_template;
+  const template = shopContent.category_description_template;
 
   // We build paths for EVERY category in our taxonomy to allow for "Coming Soon" states.
   return taxonomyJson.categories.map((categoryLabel: string) => {

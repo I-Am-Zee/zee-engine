@@ -19,7 +19,7 @@ const { title, subtitle, align = "center", class: className = "" } = Astro.props
         {title}
       </Heading>
       {subtitle && (
-        <Text class:list={["max-w-2xl italic text-text-muted text-sm md:text-base balance", align === "center" ? "mx-auto" : ""]}>
+        <Text class:list={["max-w-2xl italic text-text-muted text-sm md:text-base text-pretty", align === "center" ? "mx-auto" : ""]}>
           {subtitle}
         </Text>
       )}

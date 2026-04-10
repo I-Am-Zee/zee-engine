@@ -305,14 +305,29 @@ export default config({
         }, { label: 'Popup Modal' }),
       },
     }),
-
-    settings_shop: singleton({
-      label: 'Shop Settings',
-      path: `src/content/${brandId}/settings/shop`,
+    // ── Page Content ──────────────────────────────────────────────
+    page_home: singleton({
+      label: 'Home Page Content',
+      path: `src/content/${brandId}/pages_content/home`,
       format: { data: 'json' },
       schema: {
+        hero: fields.object({
+          title: fields.text({ label: 'Hero Title', validation: { isRequired: true } }),
+          subtitle: fields.text({ label: 'Hero Subtitle', multiline: true, validation: { isRequired: true } }),
+          cta_label: fields.text({ label: 'Button Label', defaultValue: 'Shop Now' }),
+          image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/hero/filename.webp' }),
+        }, { label: 'Hero Section' })
+      }
+    }),
+
+    page_shop: singleton({
+      label: 'Shop Category Pages',
+      path: `src/content/${brandId}/pages_content/shop`,
+      format: { data: 'json' },
+      schema: {
+        seo_title: fields.text({ label: 'SEO Title Template', description: 'Use {{category}} as placeholder', defaultValue: '{{category}} | Zelia Vance' }),
         category_description_template: fields.text({ 
-          label: 'Category Description Template', 
+          label: 'Category Subtitle Template', 
           description: 'Use {{category}} as a placeholder (e.g. "Exquisite {{category}}").',
           multiline: true,
           validation: { isRequired: true }
