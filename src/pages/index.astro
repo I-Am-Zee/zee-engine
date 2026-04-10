@@ -15,9 +15,10 @@ import Carousel from "../components/ui/Carousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
 import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 
+import homeContent from "../content/zelia-vance/pages_content/home.json";
+
 // Pre-render at build time
 export const prerender = true;
-
 
 const allProducts = await getCollection("products");
 const featuredProducts = allProducts.slice(0, 8);
@@ -42,7 +43,7 @@ const categories = [
     <section class="relative h-[90vh] overflow-hidden bg-white">
       <div class="absolute inset-0 z-0 opacity-40">
         <Image 
-          src="/images/products/1617038220319-276d3cfab638.jpg" 
+          src={homeContent.hero.image} 
           alt="Luxury Jewelry Hero" 
           class="h-full w-full object-cover object-center brightness-110 opacity-90"
           loading="eager"
@@ -52,18 +53,16 @@ const categories = [
       <div class="absolute inset-0 z-0 bg-linear-to-b from-white/70 via-white/30 to-white/90"></div>
       
       <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 text-center">
-        <Heading as="h1" color="main" class="mb-6">
-          Timeless Elegance, <br /> Forged in Brilliance
-        </Heading>
+        <Heading as="h1" color="main" class="mb-6" set:html={homeContent.hero.title} />
         <Text variant="lead" color="main" class="mb-10 max-w-2xl opacity-90">
-          Discover our curated collection of ethically sourced diamond jewelry, crafted to celebrate your most precious moments.
+          {homeContent.hero.subtitle}
         </Text>
         <div class="flex flex-col sm:flex-row justify-center gap-4 w-full px-8 md:px-0">
-          <Button as="a" href="/shop" size="lg" type="primary" class="w-full sm:w-auto text-center justify-center">
-            Shop Collection
+          <Button as="a" href={homeContent.hero.cta_link_primary} size="lg" type="primary" class="w-full sm:w-auto text-center justify-center">
+            {homeContent.hero.cta_label_primary}
           </Button>
-          <Button as="a" href="/lookbooks" size="lg" type="ghost" class="w-full sm:w-auto text-center justify-center text-black! bg-white/40! hover:bg-white/60!">
-            View Collections
+          <Button as="a" href={homeContent.hero.cta_link_secondary} size="lg" type="ghost" class="w-full sm:w-auto text-center justify-center text-black! bg-white/40! hover:bg-white/60!">
+            {homeContent.hero.cta_label_secondary}
           </Button>
         </div>
       </div>
