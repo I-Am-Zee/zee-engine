@@ -25,10 +25,7 @@ interface Props {
 
 const { page } = Astro.props;
 const products = page.data;
-import shopContent from "../../content/zelia-vance/pages_content/shop.json";
 import SectionHeader from "../../components/ui/SectionHeader.astro";
-
-const categoryDescription = shopContent.category_description_template.replace("{{category}}", "pieces");
 ---
 
 <EngineLayout title="Shop All Jewelry | Zelia Vance">
@@ -38,7 +35,7 @@ const categoryDescription = shopContent.category_description_template.replace("{
     <div class="mb-8">
       <SectionHeader 
         title="All Jewelry" 
-        subtitle={categoryDescription} 
+        subtitle="Discover our curated collection of handcrafted pieces"
         align="center"
       />
     </div>

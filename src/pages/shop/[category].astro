@@ -4,7 +4,7 @@
  * Displays products filtered by category with sorting options
  */
 
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
@@ -18,7 +18,6 @@ import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
 
 import taxonomyJson from "../../content/zelia-vance/settings/taxonomy.json";
-import shopContent from "../../content/zelia-vance/pages_content/shop.json";
 import { slugify } from "../../scripts/utils/slugify";
 
 // Products per page for pagination
@@ -29,15 +28,24 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
-  const template = shopContent.category_description_template;
+  
+  let gridData;
+  try {
+    gridData = await getEntry("collections_grid", "data");
+  } catch (e) {
+    console.warn("Collections grid data not found.");
+  }
+  const cards = (gridData?.data as any)?.cards || [];
 
-  // We build paths for EVERY category in our taxonomy to allow for "Coming Soon" states.
   return taxonomyJson.categories.map((categoryLabel: string) => {
     const categorySlug = slugify(categoryLabel);
     
-    // Find products that match this category label (using the strict label for data matching)
-    // Robust case-insensitive filtering
-    const categoryProducts = allProducts.filter(
+    // Find matching CMS record
+    const match = cards.find((c: any) => c.slug === categorySlug && (c.type === 'category' || c.type === 'coming_soon'));
+    const isComingSoon = match?.type === 'coming_soon';
+    
+    // Find products, OR force empty if coming soon
+    const categoryProducts = isComingSoon ? [] : allProducts.filter(
       (product) => product.data.category?.toLowerCase() === categoryLabel.toLowerCase()
     );
 
@@ -46,8 +54,8 @@ export async function getStaticPaths() {
       props: {
         products: categoryProducts,
         categoryLabel,
-        // Replace placeholder with actual label
-        categoryDescription: template.replace("{{category}}", categoryLabel.toLowerCase())
+        categoryDescription: match?.description || "",
+        isComingSoon
       },
     };
   });
@@ -57,10 +65,11 @@ interface Props {
   products: Awaited<ReturnType<typeof getCollection<"products">>>;
   categoryLabel: string;
   categoryDescription: string;
+  isComingSoon: boolean;
 }
 
 const { category } = Astro.params;
-const { products, categoryLabel, categoryDescription } = Astro.props;
+const { products, categoryLabel, categoryDescription, isComingSoon } = Astro.props;
 
 // Pagination info (client-side pagination handled by Alpine.js)
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);

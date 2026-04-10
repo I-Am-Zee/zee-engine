@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import GlassProductCard from "../../components/ui/GlassProductCard.astro";
@@ -9,6 +9,8 @@ import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
+import SectionHeader from "../../components/ui/SectionHeader.astro";
+import ComingSoon from "../../components/ui/ComingSoon.astro";
 
 // Pre-render at build time (required in server mode)
 export const prerender = true;
@@ -16,20 +18,39 @@ export const prerender = true;
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
 
+  let gridData;
+  try {
+    gridData = await getEntry("collections_grid", "data");
+  } catch (e) {
+    console.warn("Collections grid data not found.");
+  }
+  const cards = (gridData?.data as any)?.cards || [];
+
   // Extract all unique tags
   const tags = [...new Set(allProducts.flatMap((p) => p.data.tags || []))];
 
   return tags.map((tag) => {
-    const filteredProducts = allProducts.filter((p) => p.data.tags?.includes(tag));
+    // Find matching CMS record
+    const match = cards.find((c: any) => c.slug === tag && (c.type === 'tag' || c.type === 'coming_soon'));
+    const isComingSoon = match?.type === 'coming_soon';
+
+    // Find products or force empty
+    const filteredProducts = isComingSoon ? [] : allProducts.filter((p) => p.data.tags?.includes(tag));
+    
     return {
       params: { tag },
-      props: { products: filteredProducts, tagName: tag },
+      props: { 
+        products: filteredProducts, 
+        tagName: tag,
+        categoryDescription: match?.description || "",
+        isComingSoon
+      },
     };
   });
 }
 
 const { tag } = Astro.params;
-const { products, tagName } = Astro.props;
+const { products, tagName, categoryDescription, isComingSoon } = Astro.props;
 
 // Formatting tag for display (e.g., "pvd-coated" -> "PVD Coated")
 const formattedTagName = tagName
@@ -43,14 +64,9 @@ const breadcrumbItems = [
   { label: formattedTagName, active: true },
 ];
 
-import shopContent from "../../content/zelia-vance/pages_content/shop.json";
-import SectionHeader from "../../components/ui/SectionHeader.astro";
-
 const PRODUCTS_PER_PAGE = 12;
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 const currentPage = 1; // For now, handle as single page or implement full pagination if needed
-
-const categoryDescription = shopContent.category_description_template.replace("{{category}}", formattedTagName.toLowerCase() + " jewelry");
 ---
 
 <EngineLayout title={`${formattedTagName} Collection | Zelia Vance`}>
@@ -67,7 +83,9 @@ const categoryDescription = shopContent.category_description_template.replace("{
     </div>
 
     {
-      products.length > 0 ? (
+      isComingSoon ? (
+        <ComingSoon categoryName={formattedTagName} />
+      ) : products.length > 0 ? (
         <>
           <FilterSortBar productCount={products.length} categoryName={formattedTagName} />
 

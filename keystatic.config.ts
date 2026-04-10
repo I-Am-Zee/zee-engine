@@ -36,7 +36,7 @@ export default config({
     brand: { name: 'Zelia Vance CMS' },
     navigation: {
       'Content': ['products', 'lookbooks', 'blog', 'pages', 'newsletter', 'collections_grid'],
-      'Page Content': ['page_home', 'page_shop'],
+      'Page Content': ['page_home'],
       'Settings': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
     }
   },
@@ -324,21 +324,6 @@ export default config({
       }
     }),
 
-    page_shop: singleton({
-      label: 'Shop Category Pages',
-      path: `src/content/${brandId}/pages_content/shop`,
-      format: { data: 'json' },
-      schema: {
-        seo_title: fields.text({ label: 'SEO Title Template', description: 'Use {{category}} as placeholder', defaultValue: '{{category}} | Zelia Vance' }),
-        category_description_template: fields.text({ 
-          label: 'Category Subtitle Template', 
-          description: 'Use {{category}} as a placeholder (e.g. "Exquisite {{category}}").',
-          multiline: true,
-          validation: { isRequired: true }
-        }),
-      },
-    }),
-
     // ── Shipping Logistics ─────────────────────────────────────────
     settings_shipping: singleton({
       label: 'Shipping Logistics',
@@ -408,6 +393,7 @@ export default config({
               options: [
                 { label: 'Category Based', value: 'category' },
                 { label: 'Tag Based', value: 'tag' },
+                { label: 'Coming Soon (No Products)', value: 'coming_soon' }
               ],
               defaultValue: 'category',
             }),

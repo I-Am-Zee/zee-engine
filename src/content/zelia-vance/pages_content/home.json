@@ -1,11 +1,11 @@
 {
   "hero": {
-    "title": "Timeless Elegance, Modern Edge",
-    "subtitle": "Discover 'Old Money' aesthetics without the old money bank account. Premium costume jewellery crafted for the everyday woman.",
-    "cta_label_primary": "Shop the Collection",
+    "title": "Timeless Elegance, <br /> Forged in Brilliance",
+    "subtitle": "Discover our curated collection of ethically sourced diamond jewelry, crafted to celebrate your most precious moments.",
+    "cta_label_primary": "Shop Collection",
     "cta_link_primary": "/shop",
-    "cta_label_secondary": "View Lookbooks",
+    "cta_label_secondary": "View Collections",
     "cta_link_secondary": "/lookbooks",
-    "image": "/images/hero/hero-zelia.webp"
+    "image": "/images/products/1617038220319-276d3cfab638.jpg"
   }
 }
