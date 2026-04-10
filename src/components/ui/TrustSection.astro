@@ -1,47 +1,70 @@
 ---
-/**
- * TrustSection - Brand value propositions
- * 
- * Displays key trust markers like Ethical Sourcing, Luxury Packaging, etc.
- * 
- * @component UI (ui/)
- */
-
+import { getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
+import Image from "../primitives/Image.astro";
 
-const trustMarkers = [
-  {
-    title: "Ethically Sourced",
-    description: "Every diamond is conflict-free and responsibly sourced.",
-    icon: "PhGlobeHemisphereWest"
-  },
-  {
-    title: "Luxury Packaging",
-    description: "Our signature gift wrap is included with every order.",
-    icon: "PhGift"
-  },
-  {
-    title: "Lifetime Warranty",
-    description: "We stand behind our craftsmanship for a lifetime.",
-    icon: "PhSealCheck"
-  }
-];
+/**
+ * Editorial Trust Section
+ * 
+ * A high-end brand storytelling section featuring a centered master title,
+ * followed by a split-layout editorial image and storytelling markers.
+ * 
+ * Data source: src/content/{brand}/settings/ui_trust_section.json
+ */
+
+const trustEntry = await getEntry("settings", "ui_trust_section");
+if (!trustEntry) return null;
+
+const { hero_image, main_heading, markers } = trustEntry.data;
 ---
 
-<section class="border-y border-border-subtle bg-background py-16">
+<section class="border-y border-border-subtle bg-surface/50 py-20 lg:py-32">
   <div class="mx-auto max-w-7xl px-4 lg:px-8">
-    <div class="grid grid-cols-1 gap-8 sm:gap-12 text-center sm:grid-cols-3">
-      {trustMarkers.map((marker) => (
-        <div class="flex flex-col items-center">
-          <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Icon name={marker.icon as any} size={32} />
-          </div>
-          <Heading as="h4" class="mb-2">{marker.title}</Heading>
-          <Text variant="caption" color="muted">{marker.description}</Text>
+    
+    {/* Master Heading - Pure System h2 (Consistent Scale) */}
+    <Heading 
+      as="h2" 
+      class="mb-8 md:mb-14 text-center max-w-4xl mx-auto"
+    >
+      {main_heading || "Heading Level 2"}
+    </Heading>
+
+    <div class="grid grid-cols-1 items-stretch gap-12 lg:grid-cols-2 lg:gap-24">
+      
+      {/* Left: Editorial Image - Guaranteed Centered Focal Point */}
+      <div class="relative overflow-hidden rounded-3xl shadow-lg h-[450px] sm:h-[600px] lg:h-auto lg:min-h-full">
+        <Image 
+          src={hero_image} 
+          alt={main_heading}
+          class="h-full w-full object-cover object-center transition-transform duration-1000 hover:scale-105"
+        />
+        <div class="absolute inset-0 bg-linear-to-t from-black/10 to-transparent"></div>
+      </div>
+
+      {/* Right: Vertical Content */}
+      <div class="flex flex-col justify-center py-4">
+        <div class="space-y-8 md:space-y-12">
+          {markers.map((marker: any) => (
+            <div class="flex flex-col sm:flex-row items-start gap-6 pt-10 first:pt-0 border-t border-border-subtle first:border-0">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/5 text-primary shadow-sm border border-primary/10">
+                <Icon name={marker.icon as any} size={24} />
+              </div>
+              
+              <div class="flex-1">
+                <Heading as="h4" class="mb-3 text-xl font-semibold tracking-tight">
+                  {marker.title}
+                </Heading>
+                <Text variant="paragraph" color="muted" class="leading-relaxed italic opacity-90">
+                  {marker.description}
+                </Text>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
     </div>
   </div>
 </section>

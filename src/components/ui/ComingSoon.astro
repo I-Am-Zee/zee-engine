@@ -1,9 +1,5 @@
 ---
-/**
- * ComingSoon - Elegant placeholder for intentional but empty categories.
- * Replaces the "Sad path" EmptyState with a more positive "Zee" brand voice.
- */
-
+import { getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
@@ -15,6 +11,12 @@ interface Props {
 }
 
 const { categoryName, class: className, ...rest } = Astro.props;
+
+const uiCopy = await getEntry("settings", "ui_global_copy");
+const { 
+  coming_soon_heading = `Our ${categoryName} is on the way`, 
+  coming_soon_subtitle = "We’re putting the final polish on some exquisite new pieces. They’re worth the wait—stay tuned for the drop." 
+} = uiCopy?.data || {};
 ---
 
 <div
@@ -31,12 +33,12 @@ const { categoryName, class: className, ...rest } = Astro.props;
 
   {/* Heading */}
   <Heading as="h3" class="mb-4">
-    Our {categoryName} is on the way
+    {coming_soon_heading.replace('{category}', categoryName)}
   </Heading>
 
   {/* Description */}
   <Text variant="lead" color="muted" class="mb-10 max-w-lg italic font-serif">
-    We’re putting the final polish on some exquisite new {categoryName.toLowerCase()} pieces. They’re worth the wait—stay tuned for the drop.
+    {coming_soon_subtitle.replace('{category}', categoryName)}
   </Text>
 
   {/* CTA button to keep them browsing */}

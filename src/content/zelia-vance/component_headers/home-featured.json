@@ -1,0 +1,8 @@
+{
+  "id": "home-featured",
+  "title": "Featured Selection",
+  "subtitle": "Hand-selected items from our latest arrivals.",
+  "button_mode": "link",
+  "action_label": "View All Products",
+  "link_url": "/shop"
+}

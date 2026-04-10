@@ -1,12 +1,4 @@
----
-/**
- * Lookbooks Index Page
- * 
- * Gallery view of all lookbooks for SEO and lifestyle storytelling.
- * Target keywords: "Diwali jewelry ideas", "wedding necklace sets", etc.
- */
-
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import EngineLayout from '../../layouts/EngineLayout.astro';
 import SectionHeader from '../../components/ui/SectionHeader.astro';
 import Heading from '../../components/primitives/Heading.astro';
@@ -15,16 +7,23 @@ import CollectionCard from '../../components/ui/CollectionCard.astro';
 // Get all lookbooks
 const lookbooks = await getCollection('lookbooks');
 
-const title = 'Shop the Look | Curated Jewelry Collections | Zelia Vance';
-const description = 'Explore our curated jewelry collections. From Diwali party glam to wedding elegance, find the perfect set to complete your look.';
+// Load Component Header (Hub Strategy)
+const header = await getEntry('component_headers', 'lookbook-index');
+const hubData = header?.data || {
+  title: "Shop the Look",
+  subtitle: "Curated jewelry collections for every occasion. From intimate gatherings to grand celebrations, find your perfect ensemble."
+};
+
+const title = `${hubData.title} | Curated Jewelry Collections | Zelia Vance`;
+const description = hubData.subtitle;
 ---
 
 <EngineLayout title={title} description={description}>
   <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
     <!-- Header -->
     <SectionHeader 
-      title="Shop the Look" 
-      subtitle="Curated jewelry collections for every occasion. From intimate gatherings to grand celebrations, find your perfect ensemble." 
+      title={hubData.title} 
+      subtitle={hubData.subtitle} 
       align="center"
     />
 

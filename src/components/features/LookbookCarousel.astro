@@ -8,7 +8,7 @@
  * @component Feature (features/)
  */
 
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
@@ -17,6 +17,13 @@ import Carousel from "../ui/Carousel.astro";
 import Image from "../primitives/Image.astro";
 
 const lookbooks = await getCollection("lookbooks");
+
+// Load Component Header (Hub Strategy)
+const header = await getEntry("component_headers", "lookbook-home");
+const hubData = header?.data || {
+  title: "Section Heading",
+  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+};
 ---
 
 <section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">
@@ -46,14 +53,14 @@ const lookbooks = await getCollection("lookbooks");
             <div 
               class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
             >
-              <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Editorial Series</Text>
+              <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Tagline Level 2</Text>
               
               <Heading as="h2" class="mb-8 font-serif italic text-4xl md:text-6xl tracking-tight leading-tight text-text-main">
                 {lookbook.data.title}
               </Heading>
               
               <Text variant="paragraph" color="muted" class="mb-12 text-lg md:text-xl italic leading-relaxed font-serif max-w-lg">
-                "{lookbook.data.description}"
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </Text>
               
               <Button 
@@ -63,7 +70,7 @@ const lookbooks = await getCollection("lookbooks");
                 size="lg" 
                 class="px-14 py-4 uppercase tracking-[0.2em] text-xs font-bold shadow-xl shadow-primary/20"
               >
-                Discover Collection
+                Primary Action
               </Button>
             </div>
           </div>

@@ -12,7 +12,7 @@
  * @component Organism (features/)
  */
 
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 import { mapProduct } from "../../config/ecommerce";
 import GlassProductCard from "../ui/GlassProductCard.astro";
 import ProductGrid from "./ProductGrid.astro";
@@ -35,6 +35,14 @@ interface Props {
 }
 
 const { productSlugs, currentProduct, class: className } = Astro.props;
+
+// Load Component Header (Hub Strategy)
+const header = await getEntry("component_headers", "pdp-upsell");
+const data = header?.data || {
+  title: "Heading Level 3",
+  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  action_label: "Action Button"
+};
 
 // Get all products and filter by slugs
 const allProducts = await getCollection("products");
@@ -70,8 +78,8 @@ const productsForButton = [
       </script>
 
       <SectionHeader 
-        title="Perfect Pairings" 
-        subtitle="Curated pieces to elevate your ensemble"
+        title={data.title} 
+        subtitle={data.subtitle}
         align="left"
         class="mb-10 lg:mb-14"
       >
@@ -79,7 +87,12 @@ const productsForButton = [
           {productsForButton.length} Items Total
         </span>
         <Fragment slot="action">
-          <BuySetButton products={productsForButton} class="w-full" hideSavingsText={true} />
+          <BuySetButton 
+            products={productsForButton} 
+            label={data.action_label}
+            class="w-full" 
+            hideSavingsText={true} 
+          />
         </Fragment>
       </SectionHeader>
 

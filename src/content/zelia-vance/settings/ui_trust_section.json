@@ -1,0 +1,22 @@
+{
+  "main_heading": "The Art Energy of Jewelry",
+  "hero_image": "/images/products/1617038220319-276d3cfab638.jpg",
+  "section_title": "Why Choose Zelia Vance",
+  "markers": [
+    {
+      "title": "Ethically Sourced",
+      "description": "Rooted in Italian artistry, Zelia Vance blends traditional techniques with the finest materials. Every piece is conflict-free and responsibly sourced.",
+      "icon": "PhGlobeHemisphereWest"
+    },
+    {
+      "title": "Jewelry's Meaning",
+      "description": "More than adornment, jewelry carries deep symbolism, influencing energy points and aura. Each design is infused with intention and balance.",
+      "icon": "PhGift"
+    },
+    {
+      "title": "Spiritual Connection",
+      "description": "Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.",
+      "icon": "PhSealCheck"
+    }
+  ]
+}

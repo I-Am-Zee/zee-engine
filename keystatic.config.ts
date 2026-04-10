@@ -35,13 +35,56 @@ export default config({
   ui: {
     brand: { name: 'Zelia Vance CMS' },
     navigation: {
-      'Content': ['products', 'lookbooks', 'blog', 'pages', 'newsletter', 'collections_grid'],
+      'Content': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
+      'Component Content': ['component_headers', 'newsletter_content'],
       'Page Content': ['page_home'],
+      'General UI': ['ui_trust_section', 'ui_global_copy'],
       'Settings': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
     }
   },
 
   collections: {
+    // ── Component Headers (Hub Strategy) ──────────────────────────
+    component_headers: collection({
+      label: 'Component Headers',
+      slugField: 'id',
+      path: `src/content/${brandId}/component_headers/*`,
+      format: { data: 'json' },
+      schema: {
+        id: fields.slug({ name: { label: 'Location ID', description: 'e.g. home-categories, pdp-upsell' } }),
+        title: fields.text({ label: 'Heading / Title' }),
+        subtitle: fields.text({ label: 'Subtitle / Description', multiline: true }),
+        button_mode: fields.select({
+          label: 'Action Button Mode',
+          options: [
+            { label: 'None', value: 'none' },
+            { label: 'Standard Link', value: 'link' },
+            { label: 'Feature Action (Complex)', value: 'feature' }
+          ],
+          defaultValue: 'none'
+        }),
+        action_label: fields.text({ 
+          label: 'Button Label', 
+          description: 'Visible if mode is Link or Feature Action'
+        }),
+        link_url: fields.text({ 
+          label: 'Link URL',
+          description: 'Only used if mode is Standard Link'
+        }),
+      }
+    }),
+
+    // ── Newsletter Content ────────────────────────────────────────
+    newsletter_content: collection({
+      label: 'Newsletter Variants',
+      path: `src/content/${brandId}/newsletter/*`,
+      format: { data: 'json' },
+      schema: {
+        heading: fields.text({ label: 'Heading' }),
+        description: fields.text({ label: 'Description', multiline: true }),
+        success_message: fields.text({ label: 'Success Message' }),
+      }
+    }),
     // ── Products ──────────────────────────────────────────────────
     products: collection({
       label: 'Products',
@@ -377,6 +420,41 @@ export default config({
     }),
 
     // ── Collections Grid ──────────────────────────────────────────
+    // ── Trust Section (Editorial Split) ──────────────────────────
+    ui_trust_section: singleton({
+      label: 'Global Trust Section',
+      path: `src/content/${brandId}/settings/ui_trust_section`,
+      format: { data: 'json' },
+      schema: {
+        main_heading: fields.text({ label: 'Main Section Heading (Above columns)' }),
+        hero_image: fields.text({ label: 'Editorial Hero Image', description: 'R2 path: /images/identity/filename.webp' }),
+        section_title: fields.text({ label: 'Vertical Content Title' }),
+        markers: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Title' }),
+            description: fields.text({ label: 'Detailed Description', multiline: true }),
+            icon: fields.text({ label: 'Icon Name (Phosphor)', description: 'e.g. PhCheck, PhGift' }),
+          }),
+          {
+            label: 'Trust Markers',
+            itemLabel: (props) => props.fields.title.value || 'New Marker'
+          }
+        )
+      }
+    }),
+
+    // ── Global UI Copy ──────────────────────────────────────────
+    ui_global_copy: singleton({
+      label: 'Global UI Copy',
+      path: `src/content/${brandId}/settings/ui_global_copy`,
+      format: { data: 'json' },
+      schema: {
+        coming_soon_heading: fields.text({ label: 'Coming Soon Heading' }),
+        coming_soon_subtitle: fields.text({ label: 'Coming Soon Subtitle' }),
+        empty_wishlist_text: fields.text({ label: 'Empty Wishlist Message' }),
+      }
+    }),
+
     collections_grid: singleton({
       label: 'Featured Collections Grid',
       path: `src/content/${brandId}/collections_grid/data`,

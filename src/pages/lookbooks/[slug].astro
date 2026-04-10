@@ -1,5 +1,5 @@
 ---
-import { getCollection, render, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, render, type CollectionEntry } from "astro:content";
 
 import { mapProduct } from "../../config/ecommerce";
 import type { GetStaticPaths } from 'astro';
@@ -48,6 +48,19 @@ const productsForButton = products.map(p => mapProduct(p));
 // SEO
 const pageTitle = `${title} | Shop the Look | Zelia Vance`;
 const pageDescription = description || 'Discover our curated jewelry collection';
+
+// Load Component Headers (Hub Strategy) - Unified top-level await
+const galleryHub = await getEntry('component_headers', 'lookbook-gallery');
+const productsHub = await getEntry('component_headers', 'lookbook-products');
+const storyHub = await getEntry('component_headers', 'lookbook-story');
+
+const galleryData = galleryHub?.data || { title: "Editorial Gallery", subtitle: "A closer look at the intricate details and design language." };
+const productsData = productsHub?.data || { 
+  title: "Shop the Ensemble", 
+  subtitle: "Our senior stylists have curated these pieces specifically for their complementary silhouettes and materials.",
+  action_label: "Acquire Set"
+};
+const storyData = storyHub?.data || { title: "The Narrative" };
 ---
 
 <EngineLayout title={pageTitle} description={pageDescription}>
@@ -95,7 +108,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   {lookbook.data.gallery && lookbook.data.gallery.length > 0 && (
     <section class="bg-surface py-12 md:py-16 px-4">
       <div class="mx-auto max-w-7xl px-4 lg:px-8">
-        <SectionHeader title="Editorial Gallery" subtitle="A closer look at the intricate details and design language." />
+        <SectionHeader title={galleryData.title} subtitle={galleryData.subtitle} />
         <Carousel 
           options={{ perPage: 3, gap: 24, type: lookbook.data.gallery.length > 3 ? 'loop' : 'slide', pagination: true, autoplay: lookbook.data.gallery.length > 3, interval: 4000, pauseOnHover: true, breakpoints: { 1024: { perPage: 2 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' } }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }} 
           class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-8"
@@ -123,8 +136,8 @@ const pageDescription = description || 'Discover our curated jewelry collection'
   {products.length > 0 && (
     <section class="mx-auto max-w-7xl px-4 lg:px-8 py-12 md:py-16" id="products">
       <SectionHeader 
-        title="Shop the Ensemble" 
-        subtitle="Our senior stylists have curated these pieces specifically for their complementary silhouettes and materials." 
+        title={productsData.title} 
+        subtitle={productsData.subtitle} 
       />
 
       <ProductCarousel products={products} columns={3} class="mb-16" />
@@ -142,7 +155,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
         <div class="flex justify-center flex-col items-center gap-4 md:gap-6">
           <BuySetButton 
             products={productsForButton} 
-            label="Acquire Set"
+            label={productsData.action_label}
             class="w-full max-w-md"
           />
           <Text variant="caption" class="text-accent-brass font-bold animate-pulse text-[10px] md:text-xs">✨ Exclusive Bundle Pricing Applied</Text>
@@ -156,7 +169,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
     <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/silk-weave.png');"></div>
     <div class="container mx-auto px-4 relative z-10">
       <div class="max-w-4xl mx-auto">
-        <SectionHeader title="The Narrative" />
+        <SectionHeader title={storyData.title} subtitle={storyData.subtitle} />
         <div class="prose prose-zelia max-w-3xl mx-auto">
           <Content />
         </div>

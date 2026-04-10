@@ -198,7 +198,7 @@ const settings = defineCollection({
   }),
 });
 
-const newsletter = defineCollection({
+const newsletter_content = defineCollection({
   loader: glob({
     pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/newsletter`,
@@ -220,12 +220,29 @@ const collections_grid = defineCollection({
   }),
 });
 
+const component_headers = defineCollection({
+  loader: glob({
+    pattern: "**/*.json",
+    base: `./src/content/${brandId}/component_headers`,
+  }),
+});
+
+const pages_content = defineCollection({
+  loader: glob({
+    pattern: "**/*.json",
+    base: `./src/content/${brandId}/pages_content`,
+  }),
+});
+
 export const collections = {
   products,
   lookbooks,
   blog,
   pages,
   settings,
-  newsletter,
+  newsletter: newsletter_content, // Map to the new name if needed
+  newsletter_content,
   collections_grid,
+  component_headers,
+  pages_content,
 };

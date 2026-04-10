@@ -17,6 +17,26 @@ import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 
 import homeContent from "../content/zelia-vance/pages_content/home.json";
 
+// Load Component Headers (Hub Strategy)
+const categoriesHeader = await getEntry("component_headers", "home-categories");
+const featuredHeader = await getEntry("component_headers", "home-featured");
+
+const catData = categoriesHeader?.data || { 
+  title: "Heading Level 2", 
+  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  button_mode: "link",
+  action_label: "Action Link",
+  link_url: "/collections"
+};
+
+const featData = featuredHeader?.data || { 
+  title: "Heading Level 2", 
+  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  button_mode: "link",
+  action_label: "Action Link",
+  link_url: "/shop"
+};
+
 // Pre-render at build time
 export const prerender = true;
 
@@ -72,14 +92,16 @@ const categories = [
     <section class="bg-background py-16 md:py-24 px-4 lg:px-8">
       <div class="mx-auto max-w-7xl">
         <SectionHeader 
-          title="Shop by Category" 
-          subtitle="Explore our diverse ranges of jewelry, designed with luxury and sophistication in mind."
+          title={catData.title} 
+          subtitle={catData.subtitle}
           align="left"
         >
           <Fragment slot="action">
-            <Button as="a" href="/collections" type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
-              Explore All Categories &rarr;
-            </Button>
+            {catData.button_mode === 'link' && (
+              <Button as="a" href={catData.link_url} type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
+                {catData.action_label} &rarr;
+              </Button>
+            )}
           </Fragment>
         </SectionHeader>
         
@@ -106,14 +128,16 @@ const categories = [
     <section class="bg-surface py-16 md:py-24 px-4 lg:px-8">
       <div class="mx-auto max-w-7xl">
         <SectionHeader 
-          title="Featured Pieces" 
-          subtitle="Hand-selected favorites from our latest season."
+          title={featData.title} 
+          subtitle={featData.subtitle}
           align="left"
         >
           <Fragment slot="action">
-            <Button as="a" href="/shop" type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
-              View All Products &rarr;
-            </Button>
+            {featData.button_mode === 'link' && (
+              <Button as="a" href={featData.link_url} type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
+                {featData.action_label} &rarr;
+              </Button>
+            )}
           </Fragment>
         </SectionHeader>
         

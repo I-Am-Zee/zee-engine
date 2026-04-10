@@ -26,6 +26,13 @@ interface Props {
 const { page } = Astro.props;
 const products = page.data;
 import SectionHeader from "../../components/ui/SectionHeader.astro";
+import { getEntry } from "astro:content";
+
+const shopHeader = await getEntry('component_headers', 'shop-all');
+const data = shopHeader?.data || { 
+  title: "All Jewelry", 
+  subtitle: "Discover our curated collection of handcrafted pieces" 
+};
 ---
 
 <EngineLayout title="Shop All Jewelry | Zelia Vance">
@@ -34,8 +41,8 @@ import SectionHeader from "../../components/ui/SectionHeader.astro";
     {/* Page Header */}
     <div class="mb-8">
       <SectionHeader 
-        title="All Jewelry" 
-        subtitle="Discover our curated collection of handcrafted pieces"
+        title={data.title} 
+        subtitle={data.subtitle}
         align="center"
       />
     </div>
