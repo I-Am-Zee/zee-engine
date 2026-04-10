@@ -16,6 +16,7 @@ import Pagination from "../../components/ui/Pagination.astro";
 import SectionHeader from "../../components/ui/SectionHeader.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
+import EmptyState from "../../components/ui/EmptyState.astro";
 
 import taxonomyJson from "../../content/zelia-vance/settings/taxonomy.json";
 import { slugify } from "../../scripts/utils/slugify";
@@ -41,8 +42,8 @@ export async function getStaticPaths() {
     const categorySlug = slugify(categoryLabel);
     
     // Find matching CMS record
-    const match = cards.find((c: any) => c.slug === categorySlug && (c.type === 'category' || c.type === 'coming_soon'));
-    const isComingSoon = match?.type === 'coming_soon';
+    const match = cards.find((c: any) => c.slug === categorySlug && c.type === 'category');
+    const isComingSoon = match?.is_coming_soon === true;
     
     // Find products, OR force empty if coming soon
     const categoryProducts = isComingSoon ? [] : allProducts.filter(
@@ -100,8 +101,11 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
       class="mb-8"
     />
 
+
     {
-      products.length > 0 ? (
+      isComingSoon ? (
+        <ComingSoon categoryName={categoryLabel} />
+      ) : products.length > 0 ? (
         <>
           {/* Filter/Sort Bar */}
           <FilterSortBar productCount={products.length} categoryName={categoryLabel.toLowerCase()} />
@@ -140,7 +144,12 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
           )}
         </>
       ) : (
-        <ComingSoon categoryName={categoryLabel} />
+        <EmptyState
+          icon="shopping-bag"
+          heading="No products found"
+          description={`We couldn't find any products in the ${categoryLabel} category.`}
+          action={{ label: "Back to Shop", href: "/shop" }}
+        />
       )
     }
 

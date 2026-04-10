@@ -393,9 +393,13 @@ export default config({
               options: [
                 { label: 'Category Based', value: 'category' },
                 { label: 'Tag Based', value: 'tag' },
-                { label: 'Coming Soon (No Products)', value: 'coming_soon' }
               ],
               defaultValue: 'category',
+            }),
+            is_coming_soon: fields.checkbox({
+              label: 'Coming Soon (No Products)',
+              defaultValue: false,
+              description: 'Overrides products. Shows the Coming Soon UI on the category/tag page.'
             }),
           }),
           {

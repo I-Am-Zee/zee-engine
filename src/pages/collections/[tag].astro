@@ -31,8 +31,8 @@ export async function getStaticPaths() {
 
   return tags.map((tag) => {
     // Find matching CMS record
-    const match = cards.find((c: any) => c.slug === tag && (c.type === 'tag' || c.type === 'coming_soon'));
-    const isComingSoon = match?.type === 'coming_soon';
+    const match = cards.find((c: any) => c.slug === tag && c.type === 'tag');
+    const isComingSoon = match?.is_coming_soon === true;
 
     // Find products or force empty
     const filteredProducts = isComingSoon ? [] : allProducts.filter((p) => p.data.tags?.includes(tag));
