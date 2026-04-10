@@ -43,9 +43,14 @@ const breadcrumbItems = [
   { label: formattedTagName, active: true },
 ];
 
+import shopContent from "../../content/zelia-vance/pages_content/shop.json";
+import SectionHeader from "../../components/ui/SectionHeader.astro";
+
 const PRODUCTS_PER_PAGE = 12;
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 const currentPage = 1; // For now, handle as single page or implement full pagination if needed
+
+const categoryDescription = shopContent.category_description_template.replace("{{category}}", formattedTagName.toLowerCase() + " jewelry");
 ---
 
 <EngineLayout title={`${formattedTagName} Collection | Zelia Vance`}>
@@ -54,10 +59,11 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
     <Breadcrumbs items={breadcrumbItems} />
 
     <div class="mt-6 mb-8">
-      <Heading as="h1" class="mb-2">{formattedTagName} Collection</Heading>
-      <p class="text-text-muted">
-        Showing all {products.length} products in the {formattedTagName} collection.
-      </p>
+      <SectionHeader 
+        title={`${formattedTagName} Collection`}
+        subtitle={categoryDescription} 
+        align="left"
+      />
     </div>
 
     {

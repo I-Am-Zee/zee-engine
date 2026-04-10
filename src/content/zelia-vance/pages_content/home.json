@@ -2,7 +2,10 @@
   "hero": {
     "title": "Timeless Elegance, Modern Edge",
     "subtitle": "Discover 'Old Money' aesthetics without the old money bank account. Premium costume jewellery crafted for the everyday woman.",
-    "cta_label": "Shop the Collection",
+    "cta_label_primary": "Shop the Collection",
+    "cta_link_primary": "/shop",
+    "cta_label_secondary": "View Lookbooks",
+    "cta_link_secondary": "/lookbooks",
     "image": "/images/hero/hero-zelia.webp"
   }
 }

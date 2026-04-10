@@ -36,6 +36,7 @@ export default config({
     brand: { name: 'Zelia Vance CMS' },
     navigation: {
       'Content': ['products', 'lookbooks', 'blog', 'pages', 'newsletter', 'collections_grid'],
+      'Page Content': ['page_home', 'page_shop'],
       'Settings': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
     }
   },
@@ -314,7 +315,10 @@ export default config({
         hero: fields.object({
           title: fields.text({ label: 'Hero Title', validation: { isRequired: true } }),
           subtitle: fields.text({ label: 'Hero Subtitle', multiline: true, validation: { isRequired: true } }),
-          cta_label: fields.text({ label: 'Button Label', defaultValue: 'Shop Now' }),
+          cta_label_primary: fields.text({ label: 'Primary Button Label', defaultValue: 'Shop Now' }),
+          cta_link_primary: fields.text({ label: 'Primary Button Link', defaultValue: '/shop' }),
+          cta_label_secondary: fields.text({ label: 'Secondary Button Label', defaultValue: 'View Lookbooks' }),
+          cta_link_secondary: fields.text({ label: 'Secondary Button Link', defaultValue: '/lookbooks' }),
           image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/hero/filename.webp' }),
         }, { label: 'Hero Section' })
       }
