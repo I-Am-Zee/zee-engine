@@ -12,11 +12,15 @@ interface Props {
 
 const { categoryName, class: className, ...rest } = Astro.props;
 
-const uiCopy = await getEntry("settings", "ui_global_copy");
+const uiEntry = await getEntry("component_hub", "coming_soon");
 const { 
-  coming_soon_heading = `Our ${categoryName} is on the way`, 
-  coming_soon_subtitle = "We’re putting the final polish on some exquisite new pieces. They’re worth the wait—stay tuned for the drop." 
-} = uiCopy?.data || {};
+  heading = `Our {category} is on the way`, 
+  description = "We’re putting the final polish on some exquisite new pieces. They’re worth the wait—stay tuned for the drop.",
+  cta_primary_label = "Continue Exploring Shop",
+  cta_primary_link = "/shop",
+  cta_secondary_label = "Get Notified of Drops",
+  cta_secondary_link = "/newsletter/confirm"
+} = uiEntry?.data || {};
 ---
 
 <div
@@ -33,21 +37,21 @@ const {
 
   {/* Heading */}
   <Heading as="h3" class="mb-4">
-    {coming_soon_heading.replace('{category}', categoryName)}
+    {heading.replace('{category}', categoryName)}
   </Heading>
 
   {/* Description */}
   <Text variant="lead" color="muted" class="mb-10 max-w-lg italic font-serif">
-    {coming_soon_subtitle.replace('{category}', categoryName)}
+    {description.replace('{category}', categoryName)}
   </Text>
 
   {/* CTA button to keep them browsing */}
   <div class="flex flex-wrap items-center justify-center gap-4">
-    <Button as="a" href="/shop" type="primary">
-      Continue Exploring Shop
+    <Button as="a" href={cta_primary_link} type="primary">
+      {cta_primary_label}
     </Button>
-    <Button as="a" href="/newsletter/confirm" type="ghost">
-      Get Notified of Drops
+    <Button as="a" href={cta_secondary_link} type="ghost">
+      {cta_secondary_label}
     </Button>
   </div>
 </div>

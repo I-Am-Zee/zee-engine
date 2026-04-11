@@ -16,7 +16,8 @@ import Text from "../primitives/Text.astro";
 import Link from "../primitives/Link.astro";
 import SocialLinks from "../ui/SocialLinks.astro";
 import NewsletterWidget from "./NewsletterWidget.astro";
-import { navigation, supportLinks } from "../../config/navigation";
+import { staticNavigation, supportLinks, type NavItem } from "../../config/navigation";
+import { slugify } from "../../scripts/utils/slugify";
 
 interface Props {
   class?: string;
@@ -29,10 +30,21 @@ const siteSettings = await getEntry("settings", "brand");
 const brandName = siteSettings?.data?.name || "Brand";
 const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
 
-const shopNav = navigation.find((item) => item.label === "Shop");
-const shopCategories = shopNav?.items || [];
+// ── Smart Logic: Build Dynamic Navigation ───────────────────
+const taxonomy = await getEntry("settings", "taxonomy");
+const categories = (taxonomy?.data as any)?.categories || [];
 
-const exploreLinks = navigation.filter((item) => item.label !== "Shop");
+const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
+  label: cat.charAt(0).toUpperCase() + cat.slice(1),
+  href: `/shop/${slugify(cat)}`,
+}));
+
+const shopCategories: NavItem[] = [
+  { label: "All Jewelry", href: "/shop" },
+  ...shopCategoryItems
+];
+
+const exploreLinks = staticNavigation;
 ---
 
 

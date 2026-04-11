@@ -15,7 +15,17 @@ import Carousel from "../components/ui/Carousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
 import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 
-import homeContent from "../content/zelia-vance/pages_content/home.json";
+// Load Hero Content (Brand Aware)
+const homeHeroEntry = await getEntry("pages_content", "home");
+const homeHero = homeHeroEntry?.data || {
+  title: "The Permanent Glow.",
+  subtitle: "Designed for the woman who lives without borders.",
+  cta_label_primary: "Shop Now",
+  cta_link_primary: "/shop",
+  cta_label_secondary: "View Lookbooks",
+  cta_link_secondary: "/lookbooks",
+  image: "/images/brand-shots/HeroCheck.jpg"
+};
 
 // Load Section Headers (Hub Strategy)
 const categoriesHeader = await getEntry("section_headers", "home-categories");
@@ -37,13 +47,6 @@ const featData = featuredHeader?.data || {
   link_url: "/shop"
 };
 
-// Pre-fetch global UI data
-const trustEntry = await getEntry("settings", "ui_trust_section");
-const trustData = trustEntry?.data;
-
-// Fetch Lookbooks for Carousel
-const lookbooks = await getCollection("lookbooks");
-const lookbookHeader = await getEntry("section_headers", "lookbook-home");
 
 // Pre-render at build time
 export const prerender = true;
@@ -71,7 +74,7 @@ const categories = [
     <section class="relative h-[90vh] overflow-hidden bg-white">
       <div class="absolute inset-0 z-0 opacity-60">
         <Image 
-          src={homeContent.hero.image} 
+          src={homeHero.image} 
           alt="Luxury Jewelry Hero" 
           class="h-full w-full object-cover object-center brightness-110 opacity-90"
           loading="eager"
@@ -81,16 +84,16 @@ const categories = [
       <div class="absolute inset-0 z-0 bg-linear-to-b from-white/70 via-white/30 to-white/90"></div>
       
       <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 text-center">
-        <Heading as="h1" color="main" class="mb-6" set:html={homeContent.hero.title} />
+        <Heading as="h1" color="main" class="mb-6" set:html={homeHero.title} />
         <Text variant="lead" color="main" class="mb-10 max-w-2xl opacity-90">
-          {homeContent.hero.subtitle}
+          {homeHero.subtitle}
         </Text>
         <div class="flex flex-col sm:flex-row justify-center gap-4 w-full px-8 md:px-0">
-          <Button as="a" href={homeContent.hero.cta_link_primary} size="lg" type="primary" class="w-full sm:w-auto text-center justify-center">
-            {homeContent.hero.cta_label_primary}
+          <Button as="a" href={homeHero.cta_link_primary} size="lg" type="primary" class="w-full sm:w-auto text-center justify-center">
+            {homeHero.cta_label_primary}
           </Button>
-          <Button as="a" href={homeContent.hero.cta_link_secondary} size="lg" type="ghost" class="w-full sm:w-auto text-center justify-center text-black! bg-white/40! hover:bg-white/60!">
-            {homeContent.hero.cta_label_secondary}
+          <Button as="a" href={homeHero.cta_link_secondary} size="lg" type="ghost" class="w-full sm:w-auto text-center justify-center text-black! bg-white/40! hover:bg-white/60!">
+            {homeHero.cta_label_secondary}
           </Button>
         </div>
       </div>
@@ -154,22 +157,10 @@ const categories = [
     </section>
 
     {/* Lookbook Carousel Feature */}
-    <LookbookCarousel 
-      lookbooks={lookbooks} 
-      header={{
-        title: lookbookHeader?.data?.title || "Editorial Showcase",
-        subtitle: lookbookHeader?.data?.subtitle || "Explore our latest stories"
-      }}
-    />
+    <LookbookCarousel />
 
     {/* Trust Section */}
-    {trustData && (
-      <TrustSection 
-        main_heading={trustData.main_heading}
-        hero_image={trustData.hero_image}
-        markers={trustData.markers}
-      />
-    )}
+    <TrustSection />
 
   </main>
 </EngineLayout>

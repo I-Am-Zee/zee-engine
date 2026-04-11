@@ -35,10 +35,9 @@ export default config({
   ui: {
     brand: { name: 'Zelia Vance CMS' },
     navigation: {
-      'CONTENT': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
-      'PAGE CONTENT': ['page_home'],
-      'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants'],
-      'GENERAL UI': ['ui_trust_section', 'ui_global_copy'],
+      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_wishlist_empty'],
+      'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
+      'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
     }
   },
@@ -376,20 +375,18 @@ export default config({
       },
     }),
     // ── Page Content ──────────────────────────────────────────────
-    page_home: singleton({
-      label: 'Home Page Content',
+    page_home_hero: singleton({
+      label: 'Home-Hero Section',
       path: `src/content/${brandId}/pages_content/home`,
       format: { data: 'json' },
       schema: {
-        hero: fields.object({
-          title: fields.text({ label: 'Hero Title', validation: { isRequired: true } }),
-          subtitle: fields.text({ label: 'Hero Subtitle', multiline: true, validation: { isRequired: true } }),
-          cta_label_primary: fields.text({ label: 'Primary Button Label', defaultValue: 'Shop Now' }),
-          cta_link_primary: fields.text({ label: 'Primary Button Link', defaultValue: '/shop' }),
-          cta_label_secondary: fields.text({ label: 'Secondary Button Label', defaultValue: 'View Lookbooks' }),
-          cta_link_secondary: fields.text({ label: 'Secondary Button Link', defaultValue: '/lookbooks' }),
-          image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/hero/filename.webp' }),
-        }, { label: 'Hero Section' })
+        title: fields.text({ label: 'Hero Title', validation: { isRequired: true } }),
+        subtitle: fields.text({ label: 'Hero Subtitle', multiline: true, validation: { isRequired: true } }),
+        cta_label_primary: fields.text({ label: 'Primary Button Label', defaultValue: 'Shop Now' }),
+        cta_link_primary: fields.text({ label: 'Primary Button Link', defaultValue: '/shop' }),
+        cta_label_secondary: fields.text({ label: 'Secondary Button Label', defaultValue: 'View Lookbooks' }),
+        cta_link_secondary: fields.text({ label: 'Secondary Button Link', defaultValue: '/lookbooks' }),
+        image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/hero/filename.webp' }),
       }
     }),
 
@@ -447,14 +444,13 @@ export default config({
 
     // ── Collections Grid ──────────────────────────────────────────
     // ── Trust Section (Editorial Split) ──────────────────────────
-    ui_trust_section: singleton({
-      label: 'Global Trust Section',
-      path: `src/content/${brandId}/settings/ui_trust_section`,
+    page_trust_section: singleton({
+      label: 'Trust Section',
+      path: `src/content/${brandId}/pages_content/trust_section`,
       format: { data: 'json' },
       schema: {
         main_heading: fields.text({ label: 'Main Section Heading (Above columns)' }),
         hero_image: fields.text({ label: 'Editorial Hero Image', description: 'R2 path: /images/identity/filename.webp' }),
-        section_title: fields.text({ label: 'Vertical Content Title' }),
         markers: fields.array(
           fields.object({
             title: fields.text({ label: 'Title' }),
@@ -469,15 +465,41 @@ export default config({
       }
     }),
 
-    ui_global_copy: singleton({
-      label: 'Global UI Copy',
-      path: `src/content/${brandId}/settings/ui_global_copy`,
+    // ── General UI Labels (Outcasts/Standalone) ─────────────────
+    lookbook_settings: singleton({
+      label: 'Lookbook Page Settings',
+      path: `src/content/${brandId}/settings/lookbook_settings`,
       format: { data: 'json' },
       schema: {
-        coming_soon_heading: fields.text({ label: 'Coming Soon Heading' }),
-        coming_soon_subtitle: fields.text({ label: 'Coming Soon Subtitle' }),
-        empty_wishlist_text: fields.text({ label: 'Empty Wishlist Message' }),
-        lookbook_narrative_label: fields.text({ label: 'Lookbook Story Heading (The Narrative)' }),
+        narrative_heading: fields.text({ label: 'Lookbook Narrative Title', description: 'e.g. The Narrative' }),
+        carousel_eyebrow: fields.text({ label: 'Homepage Carousel Eyebrow', description: 'e.g. Curated Story' }),
+        carousel_cta_label: fields.text({ label: 'Homepage Carousel Button Label', description: 'e.g. Explore Look' }),
+      }
+    }),
+
+    component_coming_soon: singleton({
+      label: 'Component: Coming Soon',
+      path: `src/content/${brandId}/component_hub/coming_soon`,
+      format: { data: 'json' },
+      schema: {
+        heading: fields.text({ label: 'Heading', description: 'Use {category} for dynamic injection.' }),
+        description: fields.text({ label: 'Description', multiline: true, description: 'Use {category} for dynamic injection.' }),
+        cta_primary_label: fields.text({ label: 'Primary Button Label' }),
+        cta_primary_link: fields.text({ label: 'Primary Button Link' }),
+        cta_secondary_label: fields.text({ label: 'Secondary Button Label' }),
+        cta_secondary_link: fields.text({ label: 'Secondary Button Link' }),
+      }
+    }),
+
+    page_wishlist_empty: singleton({
+      label: 'Wishlist Page (Empty)',
+      path: `src/content/${brandId}/pages_content/wishlist_empty`,
+      format: { data: 'json' },
+      schema: {
+        heading: fields.text({ label: 'Heading' }),
+        description: fields.text({ label: 'Description', multiline: true }),
+        cta_label: fields.text({ label: 'Button Label' }),
+        cta_link: fields.text({ label: 'Button Link' }),
       }
     }),
 

@@ -11,13 +11,36 @@ import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
 import Text from "../primitives/Text.astro";
 import NavDropdown from "../ui/NavDropdown.astro";
-import { navigation } from "../../config/navigation";
+import { staticNavigation, type NavItem } from "../../config/navigation";
+import { getEntry } from "astro:content";
+import { slugify } from "../../scripts/utils/slugify";
 
 interface Props {
   class?: string;
 }
 
 const { class: className, ...rest } = Astro.props;
+
+// ── Smart Logic: Build Dynamic Navigation ───────────────────
+const taxonomy = await getEntry("settings", "taxonomy");
+const categories = (taxonomy?.data as any)?.categories || [];
+
+const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
+  label: cat.charAt(0).toUpperCase() + cat.slice(1),
+  href: `/shop/${slugify(cat)}`,
+}));
+
+const dynamicNavigation: NavItem[] = [
+  {
+    label: "Shop",
+    href: "/shop",
+    items: [
+      { label: "All Jewelry", href: "/shop" },
+      ...shopCategoryItems
+    ],
+  },
+  ...staticNavigation,
+];
 ---
 
 <header
@@ -34,13 +57,13 @@ const { class: className, ...rest } = Astro.props;
     {/* Desktop Navigation - Hidden on mobile */}
     <nav class="hidden items-center gap-1 md:flex">
       {
-        navigation.map((item) =>
+        dynamicNavigation.map((item) =>
           item.items && item.items.length > 0 ? (
             <NavDropdown trigger={item.label} items={item.items} />
           ) : (
             <a
               href={item.href}
-              class="inline-flex items-center justify-center px-3 py-2 transition-colors duration-200 hover:text-text-muted"
+              class="inline-flex items-center justify-center px-3 py-2 transition-colors duration-200 hover:text-text-muted transition-all hover:scale-105 active:scale-95"
             >
               <Text as="span" variant="label" class="normal-case tracking-normal">
                 {item.label}
@@ -147,7 +170,7 @@ const { class: className, ...rest } = Astro.props;
               <nav class="flex-1 px-4 py-6">
                 <ul class="space-y-1">
                   {
-                    navigation.map((item) => (
+                    dynamicNavigation.map((item) => (
                       <li>
                         {item.items && item.items.length > 0 ? (
                           <div>

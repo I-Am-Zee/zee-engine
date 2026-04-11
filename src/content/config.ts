@@ -234,9 +234,16 @@ const page_headers = defineCollection({
   }),
 });
 
+const component_hub = defineCollection({
+  loader: glob({
+    pattern: "**/*.json",
+    base: `./src/content/${brandId}/component_hub`,
+  }),
+});
+
 const pages_content = defineCollection({
   loader: glob({
-    pattern: "home.json", // Isolate Home singleton
+    pattern: "**/*.json",
     base: `./src/content/${brandId}/pages_content`,
   }),
 });
@@ -253,4 +260,5 @@ export const collections = {
   section_headers,
   page_headers,
   pages_content,
+  component_hub,
 };

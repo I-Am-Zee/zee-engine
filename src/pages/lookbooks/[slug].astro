@@ -49,10 +49,10 @@ const productsForButton = products.map(p => mapProduct(p));
 const pageTitle = `${title} | Shop the Look | Zelia Vance`;
 const pageDescription = description || 'Discover our curated jewelry collection';
 
-// Load Section Headers (Hub Strategy) - Unified top-level await
+// Load Section Headers & Global Messaging (Hub Strategy)
 const galleryHub = await getEntry('section_headers', 'lookbook-gallery');
 const productsHub = await getEntry('section_headers', 'lookbook-products');
-const storyHub = await getEntry('section_headers', 'lookbook-story');
+const lookbookSettings = await getEntry('settings', 'lookbook_settings');
 
 const galleryData = galleryHub?.data || { title: "Editorial Gallery", subtitle: "A closer look at the intricate details and design language." };
 const productsData = productsHub?.data || { 
@@ -60,7 +60,7 @@ const productsData = productsHub?.data || {
   subtitle: "Our senior stylists have curated these pieces specifically for their complementary silhouettes and materials.",
   action_label: "Acquire Set"
 };
-const storyData = storyHub?.data || { title: "The Narrative" };
+const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
 ---
 
 <EngineLayout title={pageTitle} description={pageDescription}>
@@ -169,7 +169,7 @@ const storyData = storyHub?.data || { title: "The Narrative" };
     <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/silk-weave.png');"></div>
     <div class="container mx-auto px-4 relative z-10">
       <div class="max-w-4xl mx-auto">
-        <SectionHeader title={storyData.title} subtitle={storyData.subtitle} />
+        <SectionHeader title={storyTitle} />
         <div class="prose prose-zelia max-w-3xl mx-auto">
           <Content />
         </div>

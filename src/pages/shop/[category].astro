@@ -18,7 +18,7 @@ import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 
-import taxonomyJson from "../../content/zelia-vance/settings/taxonomy.json";
+
 import { slugify } from "../../scripts/utils/slugify";
 
 // Products per page for pagination
@@ -29,6 +29,8 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
+  const taxonomy = await getEntry("settings", "taxonomy");
+  const categories = (taxonomy?.data as any)?.categories || [];
   
   let gridData;
   try {
@@ -38,7 +40,7 @@ export async function getStaticPaths() {
   }
   const cards = (gridData?.data as any)?.cards || [];
 
-  return taxonomyJson.categories.map((categoryLabel: string) => {
+  return categories.map((categoryLabel: string) => {
     const categorySlug = slugify(categoryLabel);
     
     // Find matching CMS record

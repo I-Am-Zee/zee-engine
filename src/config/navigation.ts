@@ -1,9 +1,8 @@
-import taxonomyJson from "../content/zelia-vance/settings/taxonomy.json";
-import { slugify } from "../scripts/utils/slugify";
-
 /**
- * Navigation Configuration
- * Single source of truth for site navigation structure
+ * Navigation Configuration (Legacy / Static Parts)
+ * 
+ * DEPRECATED: Use the dynamic navigation builder in Navbar.astro 
+ * to ensure brand-aware multi-tenant safety.
  */
 
 export interface NavItem {
@@ -12,20 +11,7 @@ export interface NavItem {
   items?: NavItem[];
 }
 
-const shopCategoryItems: NavItem[] = taxonomyJson.categories.map((cat: string) => ({
-  label: cat.charAt(0).toUpperCase() + cat.slice(1),
-  href: `/shop/${slugify(cat)}`,
-}));
-
-export const navigation: NavItem[] = [
-  {
-    label: "Shop",
-    href: "/shop",
-    items: [
-      { label: "All Jewelry", href: "/shop" },
-      ...shopCategoryItems
-    ],
-  },
+export const staticNavigation: NavItem[] = [
   {
     label: "Collections",
     href: "/collections",

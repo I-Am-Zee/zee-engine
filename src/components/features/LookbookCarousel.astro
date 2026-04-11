@@ -1,25 +1,33 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
-import Icon from "../primitives/Icon.astro";
 import Carousel from "../ui/Carousel.astro";
 import Image from "../primitives/Image.astro";
 
 interface Props {
-  lookbooks: CollectionEntry<"lookbooks">[];
-  header: {
-    title: string;
-    subtitle: string;
-  };
+  class?: string;
 }
 
-const { lookbooks, header } = Astro.props;
+const { class: className, ...rest } = Astro.props;
+
+// ── Smart Logic: Self-Fetching (Component Hub Strategy) ──
+const lookbooks = await getCollection("lookbooks");
+const lookbookHeader = await getEntry("section_headers", "lookbook-home");
+const lookbookLabels = await getEntry("settings", "lookbook_settings");
+
+const header = {
+  title: lookbookHeader?.data?.title || "Editorial Showcase",
+  subtitle: lookbookHeader?.data?.subtitle || "Explore our latest stories"
+};
+
+const eyebrowLabel = lookbookLabels?.data?.carousel_eyebrow || "Curated Story";
+const ctaLabel = lookbookLabels?.data?.carousel_cta_label || "Explore Look";
 ---
 
 <section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">
-  <div class="relative mx-auto max-w-7xl h-140 sm:h-150 md:h-175">
+  <div class="relative mx-auto max-w-7xl h-150 sm:h-140 md:h-175">
     <Carousel 
       options={{}}
       class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-border-subtle/50"
@@ -43,26 +51,27 @@ const { lookbooks, header } = Astro.props;
           {/* Luxury Glassmorphic Content Card */}
           <div class="absolute inset-0 z-10 flex items-center justify-center p-4 pb-14 md:p-12">
             <div 
-              class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-10 md:p-16 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
+              class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-8 md:p-16 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center"
             >
-              <Text variant="eyebrow" class="text-accent-brass tracking-[0.4em] mb-6 inline-block border-b border-accent-brass/30 pb-2">Tagline Level 2</Text>
+              <Text variant="eyebrow" class="mb-6 inline-block border-b border-accent-brass/40 pb-2 [text-shadow:0.5px_0.5px_0px_rgba(5,43,34,0.3)] [box-shadow:0_0.5px_0_0_rgba(5,43,34,0.2)]">
+                {eyebrowLabel}
+              </Text>
               
-              <Heading as="h2" class="mb-8 font-serif italic text-4xl md:text-6xl tracking-tight leading-tight text-text-main">
+              <Heading as="h2" class="mb-4">
                 {lookbook.data.title}
               </Heading>
               
-              <Text variant="paragraph" color="muted" class="mb-12 text-lg md:text-xl italic leading-relaxed font-serif max-w-lg">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              <Text variant="lead" color="muted" class="mb-10 max-w-lg opacity-90">
+                {lookbook.data.description}
               </Text>
               
               <Button 
                 as="a" 
                 href={`/lookbooks/${lookbook.id}`}
                 type="primary"
-                size="lg" 
-                class="px-14 py-4 uppercase tracking-[0.2em] text-xs font-bold shadow-xl shadow-primary/20"
+                size="md"
               >
-                Primary Action
+                {ctaLabel}
               </Button>
             </div>
           </div>
@@ -109,7 +118,3 @@ const { lookbooks, header } = Astro.props;
     pointer-events: auto;
   }
 </style>
-
-
-
-
