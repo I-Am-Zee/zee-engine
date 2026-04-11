@@ -1,17 +1,20 @@
+---
 import { getCollection, getEntry } from 'astro:content';
 import EngineLayout from '../../layouts/EngineLayout.astro';
 import SectionHeader from '../../components/ui/SectionHeader.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import CollectionCard from '../../components/ui/CollectionCard.astro';
 
 // Get all lookbooks
 const lookbooks = await getCollection('lookbooks');
 
-// Load Component Header (Hub Strategy)
-const header = await getEntry('component_headers', 'lookbook-index');
+// Load Page Header (Hub Strategy)
+const header = await getEntry('page_headers', 'lookbook-index');
 const hubData = header?.data || {
   title: "Shop the Look",
-  subtitle: "Curated jewelry collections for every occasion. From intimate gatherings to grand celebrations, find your perfect ensemble."
+  subtitle: "Curated jewelry collections for every occasion. From intimate gatherings to grand celebrations, find your perfect ensemble.",
+  align: "center"
 };
 
 const title = `${hubData.title} | Curated Jewelry Collections | Zelia Vance`;
@@ -21,10 +24,10 @@ const description = hubData.subtitle;
 <EngineLayout title={title} description={description}>
   <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
     <!-- Header -->
-    <SectionHeader 
+    <PageHeader 
       title={hubData.title} 
       subtitle={hubData.subtitle} 
-      align="center"
+      align={hubData.align || "center"}
     />
 
     <!-- Lookbooks Grid -->

@@ -1,0 +1,40 @@
+---
+/**
+ * PageHeader - UI Molecule
+ * 
+ * Standardized H1 header for top-level pages (Shop, Collections, Lookbooks).
+ * Minimalist, lightweight, and SEO-optimized.
+ */
+
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  align?: "left" | "center";
+  class?: string;
+}
+
+const { title, subtitle, align = "left", class: className = "" } = Astro.props;
+---
+
+<div class:list={["mb-8 md:mb-12", className]}>
+  <div class:list={[
+    "flex flex-col gap-4",
+    align === "center" ? "items-center text-center" : "items-start text-left"
+  ]}>
+    <Heading as="h1" class="font-serif tracking-tight">
+      {title}
+    </Heading>
+    
+    {subtitle && (
+      <Text class:list={[
+        "max-w-2xl text-text-muted text-sm md:text-base leading-relaxed",
+        align === "center" ? "mx-auto" : ""
+      ]}>
+        {subtitle}
+      </Text>
+    )}
+  </div>
+</div>

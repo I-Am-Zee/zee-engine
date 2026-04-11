@@ -1,0 +1,8 @@
+{
+  "id": "home-featured",
+  "title": "The Curator’s Choice",
+  "subtitle": "The definitive selection. A focused look at the most-coveted silhouettes from our complete collection.",
+  "button_mode": "link",
+  "action_label": "Shop All Pieces",
+  "link_url": "/shop"
+}

@@ -5,19 +5,17 @@ import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 import Image from "../primitives/Image.astro";
 
-/**
- * Editorial Trust Section
- * 
- * A high-end brand storytelling section featuring a centered master title,
- * followed by a split-layout editorial image and storytelling markers.
- * 
- * Data source: src/content/{brand}/settings/ui_trust_section.json
- */
+interface Props {
+  main_heading: string;
+  hero_image: string;
+  markers: Array<{
+    icon: string;
+    title: string;
+    description: string;
+  }>;
+}
 
-const trustEntry = await getEntry("settings", "ui_trust_section");
-if (!trustEntry) return null;
-
-const { hero_image, main_heading, markers } = trustEntry.data;
+const { main_heading, hero_image, markers } = Astro.props;
 ---
 
 <section class="border-y border-border-subtle bg-surface/50 py-20 lg:py-32">

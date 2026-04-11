@@ -5,61 +5,24 @@ import SectionHeader from "../ui/SectionHeader.astro";
 import ProductCarousel from "./ProductCarousel.astro";
 
 interface Props {
-  currentProduct?: CollectionEntry<"products">;
-  category?: string;
-  limit?: number;
+  title: string;
+  subtitle?: string;
+  products: CollectionEntry<"products">[];
 }
 
-const { currentProduct, category, limit = 4 } = Astro.props;
-
-// Load Component Header (Hub Strategy)
-const header = await getEntry("component_headers", "pdp-related");
-const hubData = header?.data || {
-  title: "Heading Level 2",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-};
-
-// Smart UI Copy Fallbacks
-let sectionTitle = hubData.title;
-let sectionSubtitle = hubData.subtitle;
-
-// 1. Fetch all products
-const allProducts = await getCollection("products");
-
-let displayProducts: CollectionEntry<"products">[] = [];
-
-if (currentProduct) {
-  // Scenario A: Product Page (upsell within same category)
-  sectionTitle = hubData.title !== "Heading Level 2" ? hubData.title : "Heading Level 2";
-  sectionSubtitle = hubData.subtitle !== "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." ? hubData.subtitle : "This is a paragraph description placeholder. It should be replaced by CMS content.";
-  
-  displayProducts = allProducts
-    .filter((p) => p.id !== currentProduct.id) // Exclude current
-    .filter((p) => p.data.category === currentProduct.data.category) // Same category
-    .slice(0, limit);
-    
-} else if (category) {
-  // Scenario B: Category/Shop Page (Cross-sell from DIFFERENT categories)
-  sectionTitle = "Pair With Your Selection";
-  sectionSubtitle = "Discover stunning pieces that elevate these styles";
-  
-  displayProducts = allProducts
-    .filter((p) => p.data.category?.toLowerCase() !== category.toLowerCase()) // Different category
-    .sort(() => 0.5 - Math.random()) // Randomize cross-sell
-    .slice(0, limit);
-}
+const { title, subtitle, products } = Astro.props;
 ---
 
 {
-  displayProducts.length > 0 && (
+  products.length > 0 && (
     <section class="mt-12 md:mt-16 border-t border-border-subtle pt-12 md:pt-16 pb-8 md:pb-12 px-4 lg:px-8 max-w-7xl mx-auto">
       <SectionHeader 
-        title={sectionTitle} 
-        subtitle={sectionSubtitle} 
+        title={title} 
+        subtitle={subtitle} 
         align="left"
       />
 
-      <ProductCarousel products={displayProducts} columns={4} />
+      <ProductCarousel products={products} columns={4} />
     </section>
   )
 }

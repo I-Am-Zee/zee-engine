@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 import EngineLayout from "../../layouts/EngineLayout.astro";
@@ -57,6 +57,18 @@ if (isComingSoon && !badges.includes("Coming Soon")) {
 
 // Sort badges by hierarchy (Urgency → Prestige → Attributes → State)
 const sortedBadges = sortBadgesByHierarchy(badges);
+
+// ── Smart Page Controller Logic (Cross-Sell) ──────────────────────
+const allProductsForCrossSell = await getCollection("products");
+const crossSellHeader = await getEntry("section_headers", "pdp-related");
+
+const crossSellProducts = allProductsForCrossSell
+  .filter((p) => p.id !== product.id)
+  .filter((p) => p.data.category === product.data.category)
+  .slice(0, 4);
+
+const crossSellTitle = crossSellHeader?.data?.title || "You May Also Like";
+const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifically to complement your style";
 ---
 
 <EngineLayout title={`${product.data.title} | Zelia Vance`}>
@@ -271,7 +283,11 @@ const sortedBadges = sortBadgesByHierarchy(badges);
     }
 
     {/* You May Also Like (Algorithmic Recommendations) */}
-    <RelatedProducts currentProduct={product} />
+    <RelatedProducts 
+      title={crossSellTitle}
+      subtitle={crossSellSubtitle}
+      products={crossSellProducts}
+    />
   </div>
 
     {/* Sticky Mobile Add to Cart Bar */}

@@ -1,22 +1,21 @@
 ---
 import EngineLayout from "../../layouts/EngineLayout.astro";
-import Heading from "../../components/primitives/Heading.astro";
-import Text from "../../components/primitives/Text.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
 import CollectionCard from "../../components/ui/CollectionCard.astro";
 import { getCollection, getEntry } from "astro:content";
 
 const allProducts = await getCollection("products");
 
-const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
+const gridEntry = await getEntry("collections_grid", "data");
+const hubEntry = await getEntry("page_headers", "collection-index");
 
-// Use proper error handling in case the singleton hasn't been created yet
-let gridData;
-try {
-  gridData = await getEntry("collections_grid", "data");
-} catch (e) {
-  console.warn("Collections grid data not found, please configure it in Keystatic.");
-}
-const collections = ((gridData?.data as any)?.cards || []).map((card: any) => {
+const hubData = hubEntry?.data || {
+  title: "Our Collections",
+  subtitle: "Explore our curated ranges, each with its own story.",
+  align: "center"
+};
+
+const collections = ((gridEntry?.data as any)?.cards || []).map((card: any) => {
   return {
     title: card.title,
     description: card.description,
@@ -27,10 +26,14 @@ const collections = ((gridData?.data as any)?.cards || []).map((card: any) => {
   };
 }).map((collection: any) => {
   const count = allProducts.filter(p => {
+    // Robust normalization: Strip all spaces and hyphens for comparison
+    const normalize = (s: string) => s?.toLowerCase().replace(/[\s-]/g, "") || "";
+    const targetSlug = normalize(collection.slug);
+
     if (collection.type === "category") {
-      return p.data.category === collection.slug;
+      return normalize(p.data.category) === targetSlug;
     } else {
-      return p.data.tags?.includes(collection.slug);
+      return p.data.tags?.some(tag => normalize(tag) === targetSlug);
     }
   }).length;
   
@@ -44,13 +47,12 @@ const collections = ((gridData?.data as any)?.cards || []).map((card: any) => {
 <EngineLayout title="Explore Collections | Zelia Vance">
 
   <main class="mx-auto max-w-7xl px-4 py-16 md:py-24 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <Heading as="h1" class="mb-4">Our Collections</Heading>
-      <Text class="mx-auto max-w-2xl text-text-muted">
-        Discover our curated selections of jewelry, from daily essentials to luxury statement pieces.
-        Each collection is crafted with precision and passion.
-      </Text>
-    </div>
+    <PageHeader 
+      title={hubData.title}
+      subtitle={hubData.subtitle}
+      align={hubData.align || "center"}
+      class="mb-16"
+    />
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
       {collections.map((collection: any) => (

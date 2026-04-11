@@ -13,7 +13,7 @@ import ProductGrid from "../../components/features/ProductGrid.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
-import SectionHeader from "../../components/ui/SectionHeader.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
@@ -74,6 +74,18 @@ const { products, categoryLabel, categoryDescription, isComingSoon } = Astro.pro
 
 // Pagination info (client-side pagination handled by Alpine.js)
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+
+// ── Smart Page Controller Logic (Cross-Sell) ──────────────────────
+const allProducts = await getCollection("products");
+const crossSellHeader = await getEntry("section_headers", "category-related");
+
+const crossSellProducts = allProducts
+  .filter((p) => p.data.category?.toLowerCase() !== categoryLabel.toLowerCase())
+  .sort(() => 0.5 - Math.random())
+  .slice(0, 4);
+
+const crossSellTitle = crossSellHeader?.data?.title || "Pair With Your Selection";
+const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning pieces that elevate these styles";
 ---
 
 <EngineLayout title={`${categoryLabel} | Zelia Vance`}>
@@ -94,7 +106,7 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
     </div>
 
     {/* Page Header */}
-    <SectionHeader 
+    <PageHeader 
       title={categoryLabel} 
       subtitle={categoryDescription} 
       align="left"
@@ -155,7 +167,11 @@ const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
     {/* Algorithmic Cross-Sell */}
     <div class="-mx-4 sm:mx-0 lg:-mx-8 mt-16">
-      <RelatedProducts category={category} />
+      <RelatedProducts 
+        title={crossSellTitle}
+        subtitle={crossSellSubtitle}
+        products={crossSellProducts}
+      />
     </div>
 
   </div>

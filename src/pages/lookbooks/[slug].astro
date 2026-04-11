@@ -49,10 +49,10 @@ const productsForButton = products.map(p => mapProduct(p));
 const pageTitle = `${title} | Shop the Look | Zelia Vance`;
 const pageDescription = description || 'Discover our curated jewelry collection';
 
-// Load Component Headers (Hub Strategy) - Unified top-level await
-const galleryHub = await getEntry('component_headers', 'lookbook-gallery');
-const productsHub = await getEntry('component_headers', 'lookbook-products');
-const storyHub = await getEntry('component_headers', 'lookbook-story');
+// Load Section Headers (Hub Strategy) - Unified top-level await
+const galleryHub = await getEntry('section_headers', 'lookbook-gallery');
+const productsHub = await getEntry('section_headers', 'lookbook-products');
+const storyHub = await getEntry('section_headers', 'lookbook-story');
 
 const galleryData = galleryHub?.data || { title: "Editorial Gallery", subtitle: "A closer look at the intricate details and design language." };
 const productsData = productsHub?.data || { 

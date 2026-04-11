@@ -1,11 +1,11 @@
 {
   "hero": {
-    "title": "Timeless Elegance, <br /> Forged in Brilliance",
-    "subtitle": "Discover our curated collection of ethically sourced diamond jewelry, crafted to celebrate your most precious moments.",
-    "cta_label_primary": "Shop Collection",
+    "title": "The Permanent Glow.",
+    "subtitle": "Designed for the woman who lives without borders. Our 18K PVD-coated silhouettes transition effortlessly from sun-drenched shores to the city’s sharpest galas. Waterproof. Tarnish-free. Unapologetically you.",
+    "cta_label_primary": "Shop The Icons",
     "cta_link_primary": "/shop",
-    "cta_label_secondary": "View Collections",
+    "cta_label_secondary": "See It In Motion",
     "cta_link_secondary": "/lookbooks",
-    "image": "/images/products/1617038220319-276d3cfab638.jpg"
+    "image": "/images/brand-shots/HeroCheck.jpg"
   }
 }

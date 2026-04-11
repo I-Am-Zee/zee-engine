@@ -35,23 +35,28 @@ export default config({
   ui: {
     brand: { name: 'Zelia Vance CMS' },
     navigation: {
-      'Content': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
-      'Component Content': ['component_headers', 'newsletter_content'],
-      'Page Content': ['page_home'],
-      'General UI': ['ui_trust_section', 'ui_global_copy'],
-      'Settings': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
+      'CONTENT': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
+      'PAGE CONTENT': ['page_home'],
+      'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants'],
+      'GENERAL UI': ['ui_trust_section', 'ui_global_copy'],
+      'SETTINGS': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
     }
   },
 
   collections: {
-    // ── Component Headers (Hub Strategy) ──────────────────────────
-    component_headers: collection({
-      label: 'Component Headers',
+    // ── Section Headers (H2 Strategy) ──────────────────────────────
+    section_headers: collection({
+      label: 'Section Headers',
       slugField: 'id',
-      path: `src/content/${brandId}/component_headers/*`,
+      path: `src/content/${brandId}/section_headers/*`,
       format: { data: 'json' },
       schema: {
-        id: fields.slug({ name: { label: 'Location ID', description: 'e.g. home-categories, pdp-upsell' } }),
+        id: fields.slug({ 
+          name: { 
+            label: 'Section Identifier', 
+            description: 'INTERNAL ONLY: Changing this will break the connection to the layout.' 
+          } 
+        }),
         title: fields.text({ label: 'Heading / Title' }),
         subtitle: fields.text({ label: 'Subtitle / Description', multiline: true }),
         button_mode: fields.select({
@@ -74,8 +79,8 @@ export default config({
       }
     }),
 
-    // ── Newsletter Content ────────────────────────────────────────
-    newsletter_content: collection({
+    // ── Newsletter Variants ───────────────────────────────────────
+    newsletter_variants: collection({
       label: 'Newsletter Variants',
       path: `src/content/${brandId}/newsletter/*`,
       format: { data: 'json' },
@@ -281,6 +286,27 @@ export default config({
         success_message: fields.text({ label: 'Success Message', defaultValue: 'Thank you for subscribing!', validation: { isRequired: false } }),
       },
     }),
+
+    // ── Page Headers (H1 Strategy) ────────────────────────────────
+    page_headers: collection({
+      label: 'Page Headers',
+      slugField: 'id',
+      path: `src/content/${brandId}/page_headers/*`,
+      format: { data: 'json' },
+      schema: {
+        id: fields.slug({ name: { label: 'Page Identifier', description: 'Internal slug used to map this content to a page.' } }),
+        title: fields.text({ label: 'Page Title (H1)' }),
+        subtitle: fields.text({ label: 'Page Subtitle / Intro', multiline: true }),
+        align: fields.select({
+          label: 'Header Alignment',
+          options: [
+            { label: 'Left (Standard)', value: 'left' },
+            { label: 'Center (Editorial)', value: 'center' }
+          ],
+          defaultValue: 'left'
+        })
+      }
+    }),
   },
 
   singletons: {
@@ -443,7 +469,6 @@ export default config({
       }
     }),
 
-    // ── Global UI Copy ──────────────────────────────────────────
     ui_global_copy: singleton({
       label: 'Global UI Copy',
       path: `src/content/${brandId}/settings/ui_global_copy`,
@@ -452,6 +477,7 @@ export default config({
         coming_soon_heading: fields.text({ label: 'Coming Soon Heading' }),
         coming_soon_subtitle: fields.text({ label: 'Coming Soon Subtitle' }),
         empty_wishlist_text: fields.text({ label: 'Empty Wishlist Message' }),
+        lookbook_narrative_label: fields.text({ label: 'Lookbook Story Heading (The Narrative)' }),
       }
     }),
 

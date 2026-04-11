@@ -220,16 +220,23 @@ const collections_grid = defineCollection({
   }),
 });
 
-const component_headers = defineCollection({
+const section_headers = defineCollection({
   loader: glob({
     pattern: "**/*.json",
-    base: `./src/content/${brandId}/component_headers`,
+    base: `./src/content/${brandId}/section_headers`,
+  }),
+});
+
+const page_headers = defineCollection({
+  loader: glob({
+    pattern: "**/*.json",
+    base: `./src/content/${brandId}/page_headers`,
   }),
 });
 
 const pages_content = defineCollection({
   loader: glob({
-    pattern: "**/*.json",
+    pattern: "home.json", // Isolate Home singleton
     base: `./src/content/${brandId}/pages_content`,
   }),
 });
@@ -240,9 +247,10 @@ export const collections = {
   blog,
   pages,
   settings,
-  newsletter: newsletter_content, // Map to the new name if needed
+  newsletter: newsletter_content,
   newsletter_content,
   collections_grid,
-  component_headers,
+  section_headers,
+  page_headers,
   pages_content,
 };

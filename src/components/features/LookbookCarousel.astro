@@ -1,14 +1,5 @@
 ---
-/**
- * LookbookCarousel - Editorial Showcase
- * 
- * Displays multiple lookbooks in a horizontal carousel with 
- * smooth transitions and navigation controls.
- * 
- * @component Feature (features/)
- */
-
-import { getCollection, getEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
@@ -16,14 +7,15 @@ import Icon from "../primitives/Icon.astro";
 import Carousel from "../ui/Carousel.astro";
 import Image from "../primitives/Image.astro";
 
-const lookbooks = await getCollection("lookbooks");
+interface Props {
+  lookbooks: CollectionEntry<"lookbooks">[];
+  header: {
+    title: string;
+    subtitle: string;
+  };
+}
 
-// Load Component Header (Hub Strategy)
-const header = await getEntry("component_headers", "lookbook-home");
-const hubData = header?.data || {
-  title: "Section Heading",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-};
+const { lookbooks, header } = Astro.props;
 ---
 
 <section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">

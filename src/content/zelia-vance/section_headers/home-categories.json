@@ -1,0 +1,8 @@
+{
+  "id": "home-categories",
+  "title": "The Style Archives",
+  "subtitle": "A curated map of our world. Explore dedicated collections categorized by silhouette, mood, and occasion.",
+  "button_mode": "link",
+  "action_label": "Browse All Collections",
+  "link_url": "/collections"
+}

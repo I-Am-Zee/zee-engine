@@ -1,8 +1,8 @@
 {
   "announcement_bar": {
     "enabled": true,
-    "text": "Free Shipping on orders above ₹{{threshold}}",
-    "link": ""
+    "text": "✨ Free Shipping on orders above ₹{{threshold}} | Use Code: FIRST10 for 10% Off",
+    "link": "/shop"
   },
   "popup_modal": {
     "active": false,

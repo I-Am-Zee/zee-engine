@@ -25,25 +25,25 @@ interface Props {
 
 const { page } = Astro.props;
 const products = page.data;
-import SectionHeader from "../../components/ui/SectionHeader.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
 import { getEntry } from "astro:content";
 
-const shopHeader = await getEntry('component_headers', 'shop-all');
+const shopHeader = await getEntry('page_headers', 'shop-all');
 const data = shopHeader?.data || { 
   title: "All Jewelry", 
-  subtitle: "Discover our curated collection of handcrafted pieces" 
+  subtitle: "Discover our curated collection of handcrafted pieces",
+  align: "left"
 };
 ---
 
 <EngineLayout title="Shop All Jewelry | Zelia Vance">
 
   <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8" x-data="productSorter">
-    {/* Page Header */}
     <div class="mb-8">
-      <SectionHeader 
+      <PageHeader 
         title={data.title} 
         subtitle={data.subtitle}
-        align="center"
+        align={data.align || "left"}
       />
     </div>
 

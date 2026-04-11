@@ -9,7 +9,7 @@ import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
-import SectionHeader from "../../components/ui/SectionHeader.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
 
 // Pre-render at build time (required in server mode)
@@ -66,7 +66,19 @@ const breadcrumbItems = [
 
 const PRODUCTS_PER_PAGE = 12;
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
-const currentPage = 1; // For now, handle as single page or implement full pagination if needed
+const currentPage = 1;
+
+// ── Smart Page Controller Logic (Cross-Sell) ──────────────────────
+const allProductsForCrossSell = await getCollection("products");
+const crossSellHeader = await getEntry("section_headers", "collection-related");
+
+const crossSellProducts = allProductsForCrossSell
+  .filter((p) => !p.data.tags?.includes(tagName))
+  .sort(() => 0.5 - Math.random())
+  .slice(0, 4);
+
+const crossSellTitle = crossSellHeader?.data?.title || "Style Pairings";
+const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated pieces that complement this collection";
 ---
 
 <EngineLayout title={`${formattedTagName} Collection | Zelia Vance`}>
@@ -75,7 +87,7 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
     <Breadcrumbs items={breadcrumbItems} />
 
     <div class="mt-6 mb-8">
-      <SectionHeader 
+      <PageHeader 
         title={`${formattedTagName} Collection`}
         subtitle={categoryDescription} 
         align="left"
@@ -135,8 +147,12 @@ const currentPage = 1; // For now, handle as single page or implement full pagin
     }
     
     {/* Expand Your Look Algorithm */}
-    <div class="-mx-4 sm:mx-0 lg:-mx-8">
-      <RelatedProducts collectionTags={[tag]} />
+    <div class="-mx-4 sm:mx-0 lg:-mx-8 mt-16">
+      <RelatedProducts 
+        title={crossSellTitle}
+        subtitle={crossSellSubtitle}
+        products={crossSellProducts}
+      />
     </div>
   </div>
 

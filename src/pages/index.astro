@@ -17,9 +17,9 @@ import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 
 import homeContent from "../content/zelia-vance/pages_content/home.json";
 
-// Load Component Headers (Hub Strategy)
-const categoriesHeader = await getEntry("component_headers", "home-categories");
-const featuredHeader = await getEntry("component_headers", "home-featured");
+// Load Section Headers (Hub Strategy)
+const categoriesHeader = await getEntry("section_headers", "home-categories");
+const featuredHeader = await getEntry("section_headers", "home-featured");
 
 const catData = categoriesHeader?.data || { 
   title: "Heading Level 2", 
@@ -36,6 +36,14 @@ const featData = featuredHeader?.data || {
   action_label: "Action Link",
   link_url: "/shop"
 };
+
+// Pre-fetch global UI data
+const trustEntry = await getEntry("settings", "ui_trust_section");
+const trustData = trustEntry?.data;
+
+// Fetch Lookbooks for Carousel
+const lookbooks = await getCollection("lookbooks");
+const lookbookHeader = await getEntry("section_headers", "lookbook-home");
 
 // Pre-render at build time
 export const prerender = true;
@@ -61,7 +69,7 @@ const categories = [
   <main>
     {/* Hero Section */}
     <section class="relative h-[90vh] overflow-hidden bg-white">
-      <div class="absolute inset-0 z-0 opacity-40">
+      <div class="absolute inset-0 z-0 opacity-60">
         <Image 
           src={homeContent.hero.image} 
           alt="Luxury Jewelry Hero" 
@@ -146,10 +154,22 @@ const categories = [
     </section>
 
     {/* Lookbook Carousel Feature */}
-    <LookbookCarousel />
+    <LookbookCarousel 
+      lookbooks={lookbooks} 
+      header={{
+        title: lookbookHeader?.data?.title || "Editorial Showcase",
+        subtitle: lookbookHeader?.data?.subtitle || "Explore our latest stories"
+      }}
+    />
 
     {/* Trust Section */}
-    <TrustSection />
+    {trustData && (
+      <TrustSection 
+        main_heading={trustData.main_heading}
+        hero_image={trustData.hero_image}
+        markers={trustData.markers}
+      />
+    )}
 
   </main>
 </EngineLayout>
