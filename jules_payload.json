@@ -1,55 +1,16 @@
 {
-  "task": "BRUTAL PURE ENGINE AUDIT — Multi-Tenant Integrity & Brand Neutrality",
-  "branch": "feature/jules-audit-prep",
-  "context": "The project has transitioned to a 'Pure Engine' architecture. We have successfully decentralized most editorial content into CMS-managed singletons. Your mission is to perform an exhaustive, unforgiving line-by-line audit to find any traces of the legacy 'Zelia Vance' brand or 'Jewellery' specific defaults that remain in the code. You MUST research all component logic to ensure total brand-neutrality. This is a deep-dive mission that should take you all night.",
-  "target_output": ".plans/Audit_Preload_Result.md",
+  "task": "PURE ENGINE PHASE 3 — Implementation & Refactor",
+  "branch": "feature/pure-engine-phase-3-refactor",
+  "context": "The audit is complete. We have identified all brand contamination and atomic violations. Your mission is to execute the Master Implementation Plan documented in .plans/execute_by_jules.md. This is the single source of truth for all changes.",
+  "master_plan": ".plans/execute_by_jules.md",
   
-  "brutal_audit_focus": [
-    {
-      "area": "Hardcoded Brand Artifacts",
-      "strategy": "Grep and manually inspect all .astro and .ts files for: 'Zelia', 'Vance', 'Jewellery', 'Jewelry', 'Diamond', 'Gold', 'Silver', 'Antique'. Even in defaults or comments.",
-      "goal": "Identify variables that should be moved to brand-specific JSON settings."
-    },
-    {
-      "area": "Smart Feature Fallbacks",
-      "strategy": "Audit all getEntry() calls in features (LookbookCarousel, TrustSection, ComingSoon, NewsletterWidget). Check the '|| { ... }' fallback objects.",
-      "goal": "Ensure fallback text is generic (e.g., 'Headline' instead of 'The Collection') so the engine remains neutral if JSON is missing."
-    },
-    {
-      "area": "Atomic Consistency",
-      "strategy": "Check primitives (src/components/primitives/) for any business logic or brand-specific styling overrides. Primitives must be PURE atoms.",
-      "goal": "Migrate any discovered logic to Feature/Organism layer."
-    },
-    {
-      "area": "Keystatic Singleton Schema",
-      "strategy": "Verify that all singletons in keystatic.config.ts correctly use import.meta.env.PUBLIC_BRAND_ID in their paths. Ensure NO hardcoded 'zelia-vance' strings exist for other brands.",
-      "goal": "Correct any hardcoded path segments."
-    },
-    {
-      "area": "CSS Design Token Dependencies",
-      "strategy": "Audit src/styles/global.css for colors that are named too specifically (e.g., accent-brass).",
-      "goal": "Decide if we should move to more generic naming like accent-primary/secondary to support diverse brand palettes."
-    }
+  "execution_rules": [
+    "You MUST follow the sequence of Chunks 1 through 13 as outlined in the plan.",
+    "Verify development server stability after EVERY chunk.",
+    "Commit each chunk individually with a descriptive message.",
+    "Do NOT deviate from the architectural decisions (Section 3 and 9 of the plan).",
+    "If you encounter a blocker, document it and stop."
   ],
 
-  "audit_rules": [
-    "You MUST read every file in src/components/ and src/pages/ systematically.",
-    "For every finding, you MUST explain WHY it is a violation of the Pure Engine principle.",
-    "You MUST research the existing architecture (read .plans/Audit_Preload.md and AGENTS.md first).",
-    "Include 'Brutal Opinions' on contrast and UX if a design choice seems too anchored to a single aesthetic.",
-    "Do NOT fix anything yet. Document everything in .plans/Audit_Preload_Result.md."
-  ],
-
-  "output_format": {
-    "file": ".plans/Audit_Preload_Result.md",
-    "structure": [
-      "# Audit_Preload_Result",
-      "## 1. Executive Summary (Overall Pure Engine Status)",
-      "## 2. Hardcoded/Brand-Specific Trace Log (Table: File | Line | Finding | Reason)",
-      "## 3. Fallback Logic Audit (Table: Feature | Current Fallback | Proposed Neutral Fallback)",
-      "## 4. Keystatic Path Integrity Verification",
-      "## 5. Brutal Opinions & UX Research",
-      "## 6. Recommended Action Plan for Phase 3"
-    ]
-  }
+  "expected_outcome": "A 100% brand-neutral, atomic-compliant e-commerce engine ready for multi-tenant deployment."
 }
