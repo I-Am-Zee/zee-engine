@@ -241,6 +241,10 @@ const component_hub = defineCollection({
   }),
 });
 
+const faq_page = defineCollection({
+  loader: file(`src/content/${brandId}/pages_content/faq.json`),
+});
+
 const pages_content = defineCollection({
   loader: glob({
     pattern: "**/*.json",

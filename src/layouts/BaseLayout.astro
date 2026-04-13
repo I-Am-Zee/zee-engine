@@ -12,19 +12,26 @@ import Lightbox from "../components/ui/Lightbox.astro";
 // Fetch Modular Settings from Content Layer
 const brandSettings = await getEntry("settings", "brand");
 const marketingSettings = await getEntry("settings", "marketing");
+const shippingSettings = await getEntry("settings", "shipping");
+const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
 
 const announcement_bar = marketingSettings?.data?.announcement_bar;
 const popup_modal = marketingSettings?.data?.popup_modal;
 
 interface Props {
+  pageTitle?: string;
   title?: string;
   description?: string;
 }
 
 const {
-  title = `${brandSettings?.data?.name || 'Zelia Vance'} | ${brandSettings?.data?.tagline || 'Luxury Jewelry'}`,
+  pageTitle,
+  title,
   description = brandSettings?.data?.description,
 } = Astro.props;
+
+const brandName = brandSettings?.data?.name;
+const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandName);
 ---
 
 <!doctype html>
@@ -38,7 +45,7 @@ const {
     {/* Global Assets - Always sourced from public or R2 */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
-    <title>{title}</title>
+    <title>{fullTitle}</title>
 
     {/* Universal Interactivity: Email Obfuscation Fix for ViewTransitions */}
     <script is:inline>
@@ -54,7 +61,7 @@ const {
     </script>
   </head>
   <body class="flex flex-col min-h-screen">
-    <AnnouncementBar data={announcement_bar} />
+    <AnnouncementBar data={announcement_bar} threshold={threshold} />
     <Navbar />
 
     <main class="grow">
@@ -65,7 +72,7 @@ const {
     <Footer />
 
     {/* Universal Interactivity Components */}
-    <SideDrawer />
+    <SideDrawer threshold={threshold} />
     <PopupModal data={popup_modal} />
     <Lightbox />
   </body>

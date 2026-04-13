@@ -36,7 +36,7 @@ const data = shopHeader?.data || {
 };
 ---
 
-<EngineLayout title="Shop All Jewelry | Zelia Vance">
+<EngineLayout pageTitle="Shop All Jewelry">
 
   <div class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8" x-data="productSorter">
     <div class="mb-8">
@@ -93,10 +93,10 @@ const data = shopHeader?.data || {
 <script>
   // @ts-ignore
   function initSorter() {
-    if (!window.Alpine) return;
+    if (!(window as any).Alpine) return;
     
     // @ts-ignore
-    const Alpine = window.Alpine;
+    const Alpine = (window as any).Alpine;
 
     Alpine.data("productSorter", () => ({
       sortBy: "default",

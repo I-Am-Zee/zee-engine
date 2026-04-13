@@ -1,17 +1,14 @@
 ---
-import { getEntry } from "astro:content";
 
 interface Props {
+  brandName: string;
   variant?: "full" | "mark";
   color?: "black" | "white";
   class?: string;
 }
 
-const { variant = "full", color = "black", class: className, ...rest } = Astro.props;
+const { brandName, variant = "full", color = "black", class: className, ...rest } = Astro.props;
 
-// Fetch Title from Content Layer (Fail-fast is already in config.ts)
-const site = await getEntry("settings", "brand");
-const brandName = site?.data?.name || "Brand";
 const brandMark = brandName.charAt(0).toUpperCase();
 
 const textColor = color === "white" ? "text-white" : "text-(--color-text-main)";

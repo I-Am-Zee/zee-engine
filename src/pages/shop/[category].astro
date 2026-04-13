@@ -16,6 +16,8 @@ import Pagination from "../../components/ui/Pagination.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
+const comingSoonEntry = await getEntry("component_hub", "coming_soon");
+const comingSoonData = comingSoonEntry?.data || {};
 import EmptyState from "../../components/ui/EmptyState.astro";
 
 
@@ -90,7 +92,7 @@ const crossSellTitle = crossSellHeader?.data?.title || "Pair With Your Selection
 const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning pieces that elevate these styles";
 ---
 
-<EngineLayout title={`${categoryLabel} | Zelia Vance`}>
+<EngineLayout pageTitle={`${categoryLabel}`}>
 
   <div
     class="mx-auto max-w-7xl px-4 py-12 lg:px-8"
@@ -118,7 +120,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 
     {
       isComingSoon ? (
-        <ComingSoon categoryName={categoryLabel} />
+        <ComingSoon categoryName={categoryLabel} {...comingSoonData} />
       ) : products.length > 0 ? (
         <>
           {/* Filter/Sort Bar */}
@@ -182,10 +184,10 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 <script>
   // @ts-ignore
   function initSorter() {
-    if (!window.Alpine) return;
-    window.Alpine.data("productSorter", () => ({
+    if (!(window as any).Alpine) return;
+    (window as any).Alpine.data("productSorter", () => ({
       sortBy: "default",
-      sort(criteria) {
+      sort(criteria: string) {
         this.sortBy = criteria;
         const grid = document.querySelector("#product-grid");
         if (!grid) return;

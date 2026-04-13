@@ -27,7 +27,7 @@ const searchableProducts = allProducts.map(p => ({
 }));
 ---
 
-<EngineLayout title="Search Our Collection | Zelia Vance">
+<EngineLayout pageTitle="Search Our Collection">
 
   <main class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data={`searchApp(${JSON.stringify(searchableProducts)})`}>
     <div class="mb-12 text-center">
@@ -96,7 +96,7 @@ const searchableProducts = allProducts.map(p => ({
   import Fuse from "fuse.js";
 
   function initSearchApp() {
-    if (!window.Alpine) return;
+    if (!(window as any).Alpine) return;
     
     // @ts-ignore
     const Alpine = window.Alpine;

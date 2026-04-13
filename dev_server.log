@@ -1,0 +1,225 @@
+
+> zaviona-ecommerce-astro@0.0.1 dev
+> astro dev
+
+(node:1865904) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+03:37:36 [@astrojs/cloudflare] Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+03:37:36 [@astrojs/cloudflare] If you see the error "Invalid binding `SESSION`" in your build output, you need to add the binding to your wrangler config file.
+03:37:36 [WARN] [adapter] Cloudflare does not support sharp at runtime. However, you can configure `imageService: "compile"` to optimize images with sharp on prerendered pages during build time.
+03:37:38 [types] Generated 1ms
+03:37:39 [content] Syncing content
+03:37:39 [content] Synced content
+
+ astro  v5.16.11 ready in 6711 ms
+
+┃ Local    http://127.0.0.1:4321/
+
+03:37:39 watching for file changes...
+03:37:43 [vite] ✨ optimized dependencies changed. reloading
+03:40:52 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: / (UA: No UA)
+Entry section_headers → lookbook-home was not found.
+03:40:54 [200] / 2821ms
+03:40:55 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/brand-shots/HeroCheck.jpg (UA: No UA)
+03:40:57 [404] /"https://assets.zeliavance.com"/zelia-vance/brand-shots/HeroCheck.jpg 2044ms
+03:44:24 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: / (UA: No UA)
+Entry section_headers → lookbook-home was not found.
+03:44:26 [200] / 2109ms
+03:44:26 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/brand-shots/HeroCheck.jpg (UA: No UA)
+03:44:28 [404] /"https://assets.zeliavance.com"/zelia-vance/brand-shots/HeroCheck.jpg 2001ms
+03:44:28 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /images/brand-shots/HeroCheck.jpg (UA: No UA)
+03:44:30 [404] /images/brand-shots/HeroCheck.jpg 1951ms
+03:44:30 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:44:32 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1940ms
+03:44:32 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:44:34 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 1978ms
+03:44:34 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:44:36 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1948ms
+03:44:36 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:44:38 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1973ms
+03:44:38 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:44:40 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1980ms
+03:44:40 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:44:42 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1935ms
+03:44:42 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:44:44 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1926ms
+03:44:44 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:44:46 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1943ms
+03:44:46 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:44:48 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1949ms
+03:44:48 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:44:50 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1912ms
+03:44:50 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1515562141207-7a88fb7ce338.jpg (UA: No UA)
+03:44:52 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1515562141207-7a88fb7ce338.jpg 1937ms
+03:44:52 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1515562141207-7a88fb7ce338.jpg (UA: No UA)
+03:44:54 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1515562141207-7a88fb7ce338.jpg 1931ms
+03:44:54 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1629224316810-9d8805b95e76.jpg (UA: No UA)
+03:44:56 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1629224316810-9d8805b95e76.jpg 1964ms
+03:44:56 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1629224316810-9d8805b95e76.jpg (UA: No UA)
+03:44:58 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1629224316810-9d8805b95e76.jpg 1975ms
+03:44:58 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:45:00 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 1935ms
+03:45:00 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:45:02 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 1938ms
+03:49:00 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: / (UA: No UA)
+Entry section_headers → lookbook-home was not found.
+03:49:02 [200] / 2134ms
+03:49:02 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/brand-shots/HeroCheck.jpg (UA: No UA)
+03:49:05 [404] /"https://assets.zeliavance.com"/zelia-vance/brand-shots/HeroCheck.jpg 2091ms
+03:49:05 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /images/brand-shots/HeroCheck.jpg (UA: No UA)
+03:49:07 [404] /images/brand-shots/HeroCheck.jpg 1972ms
+03:49:07 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:49:09 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1973ms
+03:49:09 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:49:11 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 2002ms
+03:49:11 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:49:13 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 2008ms
+03:49:13 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:49:15 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1984ms
+03:49:15 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:49:17 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 2039ms
+03:49:17 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:49:19 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1919ms
+03:49:19 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:49:20 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1934ms
+03:49:20 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:49:22 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1928ms
+03:49:22 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1515562141207-7a88fb7ce338.jpg (UA: No UA)
+03:49:24 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1515562141207-7a88fb7ce338.jpg 1956ms
+03:49:24 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1515562141207-7a88fb7ce338.jpg (UA: No UA)
+03:49:26 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1515562141207-7a88fb7ce338.jpg 1959ms
+03:49:26 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1629224316810-9d8805b95e76.jpg (UA: No UA)
+03:49:28 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1629224316810-9d8805b95e76.jpg 1919ms
+03:49:28 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:49:30 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1946ms
+03:49:30 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:49:32 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1990ms
+03:49:32 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1629224316810-9d8805b95e76.jpg (UA: No UA)
+03:49:34 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1629224316810-9d8805b95e76.jpg 1930ms
+03:49:34 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:49:36 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 2133ms
+03:51:18 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: / (UA: No UA)
+Entry section_headers → lookbook-home was not found.
+03:51:20 [200] / 2158ms
+03:51:20 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/brand-shots/HeroCheck.jpg (UA: No UA)
+03:51:23 [404] /"https://assets.zeliavance.com"/zelia-vance/brand-shots/HeroCheck.jpg 2023ms
+03:51:23 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /images/brand-shots/HeroCheck.jpg (UA: No UA)
+03:51:25 [404] /images/brand-shots/HeroCheck.jpg 2012ms
+03:51:25 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:51:27 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 2023ms
+03:51:27 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:51:29 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 1924ms
+03:51:29 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:51:30 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1933ms
+03:51:30 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:51:32 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1919ms
+03:54:25 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: / (UA: No UA)
+Entry section_headers → lookbook-home was not found.
+03:54:27 [200] / 2089ms
+03:54:28 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/brand-shots/HeroCheck.jpg (UA: No UA)
+03:54:30 [404] /"https://assets.zeliavance.com"/zelia-vance/brand-shots/HeroCheck.jpg 2015ms
+03:54:30 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:54:32 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1976ms
+03:54:32 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:54:34 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 1961ms
+03:54:34 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:54:35 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1977ms
+03:54:36 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:54:37 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1929ms
+03:54:37 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:54:39 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1958ms
+03:54:39 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /images/brand-shots/HeroCheck.jpg (UA: No UA)
+03:54:41 [404] /images/brand-shots/HeroCheck.jpg 1986ms
+03:54:41 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:54:43 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1917ms
+03:54:43 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1535632066927-ab7c9ab60908.jpg (UA: No UA)
+03:54:45 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1535632066927-ab7c9ab60908.jpg 1953ms
+03:54:45 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1605100804763-247f67b3557e.jpg (UA: No UA)
+03:54:47 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1605100804763-247f67b3557e.jpg 1969ms
+03:54:47 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:54:49 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 2032ms
+03:54:49 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1602173574767-37ac01994b2a.jpg (UA: No UA)
+03:54:51 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1602173574767-37ac01994b2a.jpg 1947ms
+03:54:51 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1515562141207-7a88fb7ce338.jpg (UA: No UA)
+03:54:53 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1515562141207-7a88fb7ce338.jpg 1935ms
+03:54:53 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1515562141207-7a88fb7ce338.jpg (UA: No UA)
+03:54:55 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1515562141207-7a88fb7ce338.jpg 1941ms
+03:54:55 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1629224316810-9d8805b95e76.jpg (UA: No UA)
+03:54:57 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1629224316810-9d8805b95e76.jpg 1933ms
+03:54:57 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:54:59 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 2170ms
+03:54:59 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1549492423-400259a2e574.jpg (UA: No UA)
+03:55:01 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1549492423-400259a2e574.jpg 1942ms
+03:55:01 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1629224316810-9d8805b95e76.jpg (UA: No UA)
+03:55:03 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1629224316810-9d8805b95e76.jpg 1961ms
+03:55:03 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/404.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /%22https://assets.zeliavance.com%22/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg (UA: No UA)
+03:55:05 [404] /"https://assets.zeliavance.com"/zelia-vance/products/1599643478518-a784e5dc4c8f.jpg 1957ms
+03:55:05 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/lookbooks/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: /lookbooks (UA: No UA)
+03:55:07 [200] /lookbooks 2056ms

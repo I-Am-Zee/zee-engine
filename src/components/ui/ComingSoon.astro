@@ -1,5 +1,4 @@
 ---
-import { getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
@@ -7,20 +6,26 @@ import Icon from "../primitives/Icon.astro";
 
 interface Props {
   categoryName: string;
+  heading?: string;
+  description?: string;
+  cta_primary_label?: string;
+  cta_primary_link?: string;
+  cta_secondary_label?: string;
+  cta_secondary_link?: string;
   class?: string;
 }
 
-const { categoryName, class: className, ...rest } = Astro.props;
-
-const uiEntry = await getEntry("component_hub", "coming_soon");
 const { 
+  categoryName,
   heading = `Our {category} is on the way`, 
-  description = "We’re putting the final polish on some exquisite new pieces. They’re worth the wait—stay tuned for the drop.",
+  description = "New items will be available shortly.",
   cta_primary_label = "Continue Exploring Shop",
   cta_primary_link = "/shop",
   cta_secondary_label = "Get Notified of Drops",
-  cta_secondary_link = "/newsletter/confirm"
-} = uiEntry?.data || {};
+  cta_secondary_link = "/newsletter/confirm",
+  class: className,
+  ...rest
+} = Astro.props;
 ---
 
 <div
