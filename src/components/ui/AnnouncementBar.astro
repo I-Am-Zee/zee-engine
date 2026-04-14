@@ -8,16 +8,15 @@
  * @component Molecule (ui/)
  */
 
-import { getEntry } from "astro:content";
 import Icon from "../primitives/Icon.astro";
 import Text from "../primitives/Text.astro";
 
-// Get settings from CMS
-const marketingSettings = await getEntry("settings", "marketing");
-const shippingSettings = await getEntry("settings", "shipping");
+interface Props {
+  announcement: any;
+  threshold: number;
+}
 
-const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
-const announcement = marketingSettings?.data?.announcement_bar;
+const { announcement, threshold = 3000 } = Astro.props;
 
 // Dynamic text: Replace {{threshold}} placeholder
 let displayText = announcement?.text || "";

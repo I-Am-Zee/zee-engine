@@ -8,16 +8,17 @@
  * 3. Multi-item Lookbook Bundles (master-set mode)
  */
 
-import { getEntry } from "astro:content";
+interface Props {
+  threshold: number;
+}
+
+const { threshold = 3000 } = Astro.props;
+
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
 import FreeShippingNudge from "../features/FreeShippingNudge.astro";
-
-// Get Shipping Settings
-const settings = await getEntry("settings", "shipping");
-const threshold = settings?.data?.free_shipping_threshold || 3000;
 ---
 
 <div
