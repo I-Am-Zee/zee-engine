@@ -71,7 +71,7 @@ const productsForButton = [
       }}>
         // Expose related products for the Upsell Drawer with relative URLs
         // This ensures Snipcart's crawler resolves them against the CURRENT origin (tunnel, dev, or production)
-        window.ZELIA_UPSELL_CONTEXT = relatedItems.map(item => ({
+        window.ENGINE_UPSELL_CONTEXT = relatedItems.map(item => ({
           ...item,
           url: `/products/${item.id}`
         }));

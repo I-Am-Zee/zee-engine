@@ -22,16 +22,16 @@ export const sideDrawer = () => ({
 
   init() {
     // Listen for all entry points
-    document.addEventListener("zeliavance:item-added", (e: any) => this.openUpsell(e.detail));
-    document.addEventListener("zeliavance:quick-shop", (e: any) => this.openQuickShop(e.detail));
-    document.addEventListener("zeliavance:master-set", (e: any) => this.openMasterSet(e.detail));
+    document.addEventListener("engine:item-added", (e: any) => this.openUpsell(e.detail));
+    document.addEventListener("engine:quick-shop", (e: any) => this.openQuickShop(e.detail));
+    document.addEventListener("engine:master-set", (e: any) => this.openMasterSet(e.detail));
   },
 
   openUpsell(item: any) {
     console.log("[SideDrawer] Mode: Upsell", item);
     this.mode = "upsell";
     this.mainItem = item;
-    this.products = (window as any).ZELIA_UPSELL_CONTEXT || [];
+    this.products = (window as any).ENGINE_UPSELL_CONTEXT || [];
     this.resetInternalState();
     this.isOpen = true;
   },
@@ -140,7 +140,7 @@ export const sideDrawer = () => ({
       for (const item of payload) {
         await Snipcart.api.cart.items.add(item);
         if (this.mode === "quick-shop" || this.mode === "master-set") {
-          document.dispatchEvent(new CustomEvent("zeliavance:show-toast", { detail: item }));
+          document.dispatchEvent(new CustomEvent("engine:show-toast", { detail: item }));
         }
       }
 

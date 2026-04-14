@@ -64,7 +64,7 @@ const { autoDismissMs = 4000 } = Astro.props;
         }
         
         // Listen for internal dispatch from custom flows (like SideDrawer Quick Shop)
-        document.addEventListener('zeliavance:show-toast', (e) => {
+        document.addEventListener('engine:show-toast', (e) => {
           if (e.detail) showToast(e.detail);
         });
       }

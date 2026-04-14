@@ -248,7 +248,7 @@ function initSnipcartLogic() {
   // Upsell Bridge
   window.Snipcart.events.on('item.added', (item: any) => {
     console.log('[Upsell Bridge] Item added:', item.name);
-    const event = new CustomEvent('zeliavance:item-added', {
+    const event = new CustomEvent('engine:item-added', {
       detail: {
         id: item.id,
         name: item.name,

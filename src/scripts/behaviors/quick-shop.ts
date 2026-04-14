@@ -5,7 +5,7 @@
 
 export function handleQuickShop(productData: any) {
   window.dispatchEvent(
-    new CustomEvent("zeliavance:quick-shop", {
+    new CustomEvent("engine:quick-shop", {
       detail: productData,
       bubbles: true,
     })

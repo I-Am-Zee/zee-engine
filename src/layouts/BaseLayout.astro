@@ -17,14 +17,19 @@ const announcement_bar = marketingSettings?.data?.announcement_bar;
 const popup_modal = marketingSettings?.data?.popup_modal;
 
 interface Props {
-  title?: string;
+  pageTitle?: string;
+  title?: string; // Legacy support
   description?: string;
 }
 
 const {
-  title = `${brandSettings?.data?.name || 'Zelia Vance'} | ${brandSettings?.data?.tagline || 'Luxury Jewelry'}`,
+  pageTitle,
+  title,
   description = brandSettings?.data?.description,
 } = Astro.props;
+
+const brandName = brandSettings?.data?.name;
+const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandName);
 ---
 
 <!doctype html>
@@ -38,7 +43,7 @@ const {
     {/* Global Assets - Always sourced from public or R2 */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
-    <title>{title}</title>
+    <title>{fullTitle}</title>
 
     {/* Universal Interactivity: Email Obfuscation Fix for ViewTransitions */}
     <script is:inline>

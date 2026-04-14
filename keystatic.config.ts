@@ -7,10 +7,11 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
-const brandId = import.meta.env.PUBLIC_BRAND_ID || 'zelia-vance';
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environment.');
 
-// ── Tags, Badges & Categories (Predefined via JSON) ─────────────────────────
-import taxonomyJson from './src/content/zelia-vance/settings/taxonomy.json';
+// ── Tags, Badges & Categories (Dynamic via require) ─────────────────────────
+const taxonomyJson = require(`./src/content/${brandId}/settings/taxonomy.json`);
 
 const brandCategories = taxonomyJson.categories.map((c: string) => ({
   label: c.charAt(0).toUpperCase() + c.slice(1),
@@ -20,8 +21,8 @@ const brandCategories = taxonomyJson.categories.map((c: string) => ({
 const brandTags = taxonomyJson.tags.map((t: string) => ({ label: t, value: t }));
 const brandBadges = taxonomyJson.badges.map((b: string) => ({ label: b, value: b }));
 
-// ── Shipping Slabs (Predefined via JSON) ───────────────────
-import shippingJson from './src/content/zelia-vance/settings/shipping.json';
+// ── Shipping Slabs (Dynamic via require) ───────────────────
+const shippingJson = require(`./src/content/${brandId}/settings/shipping.json`);
 
 const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, slab]: [string, any]) => ({
   label: `${slab.name} (${slab.dimensions.length}×${slab.dimensions.breadth}×${slab.dimensions.height}cm, ${slab.weight_kg}kg)`,
@@ -33,7 +34,7 @@ export default config({
   storage: { kind: 'local' },
 
   ui: {
-    brand: { name: 'Zelia Vance CMS' },
+    brand: { name: `${brandId.toUpperCase()} Content Studio` },
     navigation: {
       'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
@@ -246,7 +247,7 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         excerpt: fields.text({ label: 'Excerpt', multiline: true, validation: { isRequired: true } }),
         publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: true } }),
-        author: fields.text({ label: 'Author', defaultValue: 'Zelia Vance Team' }),
+        author: fields.text({ label: 'Author', defaultValue: 'Content Team' }),
         image: fields.text({ label: 'Cover Image URL', validation: { isRequired: true } }),
         tags: fields.array(
           fields.text({ label: 'Tag' }),
