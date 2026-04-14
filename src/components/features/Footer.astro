@@ -28,6 +28,7 @@ const { class: className, ...rest } = Astro.props;
 // Fetch Global Settings from Content Layer
 const siteSettings = await getEntry("settings", "brand");
 const brandName = siteSettings?.data?.name || "Brand";
+const socialLinks = siteSettings?.data?.social || [];
 const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
 
 // ── Smart Logic: Build Dynamic Navigation ───────────────────
@@ -68,7 +69,7 @@ const exploreLinks = staticNavigation;
           <Text variant="metadata" class="block font-medium uppercase tracking-wider text-text-main">
             Follow Us
           </Text>
-          <SocialLinks orientation="horizontal" />
+          <SocialLinks links={socialLinks} orientation="horizontal" />
         </div>
       </div>
     </div>
