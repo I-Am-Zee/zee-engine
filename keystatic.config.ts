@@ -36,7 +36,7 @@ export default config({
   ui: {
     brand: { name: `${brandId.toUpperCase()} Content Studio` },
     navigation: {
-      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_wishlist_empty'],
+      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
@@ -489,6 +489,36 @@ export default config({
         cta_primary_link: fields.text({ label: 'Primary Button Link' }),
         cta_secondary_label: fields.text({ label: 'Secondary Button Label' }),
         cta_secondary_link: fields.text({ label: 'Secondary Button Link' }),
+      }
+    }),
+
+    page_faq: singleton({
+      label: 'FAQ Page',
+      path: `src/content/${brandId}/pages_content/faq`,
+      format: { data: 'json' },
+      schema: {
+        heading: fields.text({ label: 'Main Heading' }),
+        subtitle: fields.text({ label: 'Subtitle', multiline: true }),
+        categories: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Category Title' }),
+            icon: fields.text({ label: 'Icon Name (Phosphor)', description: 'e.g. PhInfo, PhTruck' }),
+            questions: fields.array(
+              fields.object({
+                question: fields.text({ label: 'Question' }),
+                answer: fields.text({ label: 'Answer', multiline: true }),
+              }),
+              {
+                label: 'Questions',
+                itemLabel: (props) => props.fields.question.value || 'New Question'
+              }
+            )
+          }),
+          {
+            label: 'FAQ Categories',
+            itemLabel: (props) => props.fields.title.value || 'New Category'
+          }
+        )
       }
     }),
 
