@@ -1,19 +1,27 @@
----
+import { getEntry } from "astro:content";
 import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 
+// Load Page content (Hub Strategy)
+const blogPage = await getEntry('page_blog', 'blog');
+const hubData = blogPage?.data || {
+  title: "The Journal",
+  subtitle: "Style notes, care guides, and the stories behind our collections.",
+  empty_state: "Our stories are being penned. Coming soon."
+};
+
 export const prerender = true;
 ---
 
-<EngineLayout pageTitle="Journal">
+<EngineLayout pageTitle={hubData.title}>
   <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
-    <Heading as="h1" class="mb-6">Zelia Vance Journal</Heading>
+    <Heading as="h1" class="mb-6">{hubData.title}</Heading>
     <Text variant="lead" color="muted" class="mb-8">
-      Insights into the world of luxury jewelry, ethical sourcing, and timeless style.
+      {hubData.subtitle}
     </Text>
     <Text variant="paragraph" color="muted">
-      Journal entries are being drafted. Coming soon.
+      {hubData.empty_state}
     </Text>
   </main>
 </EngineLayout>

@@ -36,7 +36,7 @@ export default config({
   ui: {
     brand: { name: `${brandId.toUpperCase()} Content Studio` },
     navigation: {
-      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_wishlist_empty'],
+      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
@@ -596,6 +596,24 @@ export default config({
           }
         )
       }
+    }),
+
+    page_blog: singleton({
+      label: 'Blog Page',
+      path: `src/content/${brandId}/pages_content/blog`,
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({ label: 'Page Title', defaultValue: 'The Journal' }),
+        subtitle: fields.text({ 
+          label: 'Subtitle', 
+          defaultValue: 'Style notes, care guides, and the stories behind our collections.',
+          multiline: true 
+        }),
+        empty_state: fields.text({ 
+          label: 'Empty State Message', 
+          defaultValue: 'Our stories are being penned. Coming soon.' 
+        }),
+      },
     }),
   },
 });
