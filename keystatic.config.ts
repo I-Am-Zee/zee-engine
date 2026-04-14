@@ -36,7 +36,7 @@ export default config({
   ui: {
     brand: { name: `${brandId.toUpperCase()} Content Studio` },
     navigation: {
-      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_wishlist_empty'],
+      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_newsletter_confirm', 'page_newsletter_success', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
@@ -613,6 +613,68 @@ export default config({
           label: 'Empty State Message', 
           defaultValue: 'Our stories are being penned. Coming soon.' 
         }),
+      },
+    }),
+
+    page_newsletter_confirm: singleton({
+      label: 'Newsletter: Confirm Page',
+      path: `src/content/${brandId}/pages_content/newsletter_confirm`,
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({ label: 'Page Title', defaultValue: 'Stay in the Loop' }),
+        description: fields.text({ 
+          label: 'SEO Description', 
+          defaultValue: 'Join our inner circle for rare arrivals, seasonal pieces, and occasional exclusives.',
+          multiline: true 
+        }),
+        heading_locked: fields.text({ label: 'Heading (Locked)', defaultValue: 'One quiet step to join our inner circle.' }),
+        heading_open: fields.text({ label: 'Heading (Open)', defaultValue: 'Stay in the loop.' }),
+        description_locked: fields.text({ 
+          label: 'Description (Locked)', 
+          defaultValue: "We share rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning. Nothing more.",
+          multiline: true 
+        }),
+        description_open: fields.text({ 
+          label: 'Description (Open)', 
+          defaultValue: "Enter your Gmail below to receive rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning.",
+          multiline: true 
+        }),
+        email_placeholder: fields.text({ label: 'Email Placeholder', defaultValue: 'Enter your Gmail address' }),
+        email_error: fields.text({ label: 'Email Error Message', defaultValue: 'Please enter a valid Gmail address.' }),
+        submit_label: fields.text({ label: 'Submit Button Label', defaultValue: 'Yes, stay in the loop' }),
+        footer_note: fields.text({ 
+          label: 'Footer Note', 
+          defaultValue: "Your email stays private. No spam, no exceptions.\nYou can leave any time via the unsubscribe link in any email.",
+          multiline: true 
+        }),
+      },
+    }),
+
+    page_newsletter_success: singleton({
+      label: 'Newsletter: Success Page',
+      path: `src/content/${brandId}/pages_content/newsletter_success`,
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({ label: 'Page Title', defaultValue: "You're in the Loop" }),
+        description: fields.text({ 
+          label: 'SEO Description', 
+          defaultValue: 'Welcome to our inner circle.',
+          multiline: true 
+        }),
+        heading: fields.text({ label: 'Success Heading', defaultValue: "You're in the loop." }),
+        message_primary: fields.text({ 
+          label: 'Primary Message', 
+          defaultValue: "From this moment forward, you'll be among the first to hear about new arrivals, seasonal pieces, and things we quietly reserve for people who've been here since the beginning.",
+          multiline: true 
+        }),
+        message_secondary: fields.text({ 
+          label: 'Secondary Message', 
+          defaultValue: "We write rarely. When we do, it means something.",
+          multiline: true 
+        }),
+        cta_label: fields.text({ label: 'Button Label', defaultValue: 'Continue Exploring' }),
+        cta_link: fields.text({ label: 'Button Link', defaultValue: '/collections' }),
+        unsubscribe_note: fields.text({ label: 'Unsubscribe Note', defaultValue: 'You can unsubscribe at any time from any email we send.' }),
       },
     }),
   },

@@ -1,34 +1,46 @@
 ---
+import { getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import NewsletterPageCard from "../../components/ui/NewsletterPageCard.astro";
 import Button from "../../components/primitives/Button.astro";
 import Text from "../../components/primitives/Text.astro";
+
+// Load Page content (Hub Strategy)
+const successPage = await getEntry('page_newsletter_success', 'newsletter_success');
+const hubData = successPage?.data || {
+  title: "You're in the Loop",
+  description: "Welcome to our inner circle.",
+  heading: "You're in the loop.",
+  message_primary: "From this moment forward, you'll be among the first to hear about new arrivals, seasonal pieces, and things we quietly reserve for people who've been here since the beginning.",
+  message_secondary: "We write rarely. When we do, it means something.",
+  cta_label: "Continue Exploring",
+  cta_link: "/collections",
+  unsubscribe_note: "You can unsubscribe at any time from any email we send."
+};
 ---
 
 <EngineLayout
-  pageTitle="You're in the Loop"
-  description="Welcome to the Zelia Vance inner circle."
+  pageTitle={hubData.title}
+  description={hubData.description}
 >
   <NewsletterPageCard
-    heading="You're in the loop."
+    heading={hubData.heading}
     emblem
   >
     <Text variant="caption" color="muted" class="mb-3 block leading-relaxed">
-      From this moment forward, you'll be among the first to hear about
-      new arrivals, seasonal pieces, and things we quietly reserve for
-      people who've been here since the beginning.
+      {hubData.message_primary}
     </Text>
 
     <Text variant="caption" color="muted" italic class="mb-10 block opacity-80">
-      We write rarely. When we do, it means something.
+      {hubData.message_secondary}
     </Text>
 
-    <Button as="a" href="/collections" type="primary" size="lg" class="w-full uppercase tracking-widest text-xs!">
-      Continue Exploring
+    <Button as="a" href={hubData.cta_link} type="primary" size="lg" class="w-full uppercase tracking-widest text-xs!">
+      {hubData.cta_label}
     </Button>
 
     <Text variant="metadata" class="mt-8 block opacity-60">
-      You can unsubscribe at any time from any email we send.
+      {hubData.unsubscribe_note}
     </Text>
   </NewsletterPageCard>
 </EngineLayout>

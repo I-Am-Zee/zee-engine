@@ -1,15 +1,32 @@
----
-export const prerender = false;
-
+import { getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import NewsletterConfirmForm from "../../components/features/NewsletterConfirmForm.astro";
+
+export const prerender = false;
+
+// Load Page content (Hub Strategy)
+const confirmPage = await getEntry('page_newsletter_confirm', 'newsletter_confirm');
+const hubData = confirmPage?.data || {
+  title: "Stay in the Loop",
+  description: "Join our inner circle for rare arrivals, seasonal pieces, and the occasional exclusives."
+};
 
 const email = Astro.url.searchParams.get("email") || "";
 ---
 
 <EngineLayout
-  pageTitle="Stay in the Loop"
-  description="Join the Zelia Vance inner circle for rare arrivals, seasonal pieces, and the occasional exclusive."
+  pageTitle={hubData.title}
+  description={hubData.description}
 >
-  <NewsletterConfirmForm email={email} />
+  <NewsletterConfirmForm 
+    email={email} 
+    headingLocked={hubData.heading_locked}
+    headingOpen={hubData.heading_open}
+    descriptionLocked={hubData.description_locked}
+    descriptionOpen={hubData.description_open}
+    emailPlaceholder={hubData.email_placeholder}
+    emailError={hubData.email_error}
+    submitLabel={hubData.submit_label}
+    footerNote={hubData.footer_note}
+  />
 </EngineLayout>
