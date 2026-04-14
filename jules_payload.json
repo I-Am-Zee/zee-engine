@@ -1,16 +1,23 @@
 {
-  "task": "PURE ENGINE PHASE 3 — Implementation & Refactor",
+  "task": "PURE ENGINE PHASE 3 — Implementation [Bite 1: Chunks 1-4]",
   "branch": "feature/pure-engine-phase-3-refactor",
-  "context": "The audit is complete. We have identified all brand contamination and atomic violations. Your mission is to execute the Master Implementation Plan documented in .plans/execute_by_jules.md. This is the single source of truth for all changes.",
+  "context": "The Phase 3 audit identified critical brand contamination and architectural flaws. We are executing the Master Implementation Plan in highly focused batches to ensure quality. Your task in this session is ONLY the first 4 chunks.",
   "master_plan": ".plans/execute_by_jules.md",
   
-  "execution_rules": [
-    "You MUST follow the sequence of Chunks 1 through 13 as outlined in the plan.",
-    "Verify development server stability after EVERY chunk.",
-    "Commit each chunk individually with a descriptive message.",
-    "Do NOT deviate from the architectural decisions (Section 3 and 9 of the plan).",
-    "If you encounter a blocker, document it and stop."
+  "scope_of_work": [
+    "CHUNK 1: Event Namespace Rename (zeliavance:* to engine:*)",
+    "CHUNK 2: Keystatic Multi-Tenancy Fix (Static imports to dynamic require())",
+    "CHUNK 3: BaseLayout Title System (pageTitle prop + auto-append brand name)",
+    "CHUNK 4: Page Title Sweep (Update all pages to use the new system)"
   ],
 
-  "expected_outcome": "A 100% brand-neutral, atomic-compliant e-commerce engine ready for multi-tenant deployment."
+  "execution_rules": [
+    "Do NOT attempt Chunks 5-13 in this session.",
+    "Verify dev server stability after EVERY single chunk.",
+    "Commit each chunk individually with a descriptive message.",
+    "Follow the architectural decisions in Section 3 of the plan strictly.",
+    "If Chunk 2 (Keystatic) fails, stop immediately."
+  ],
+
+  "expected_outcome": "A clean, brand-neutral core with a working multi-tenant CMS and a smart title system."
 }
