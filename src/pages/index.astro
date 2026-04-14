@@ -27,6 +27,10 @@ const homeHero = homeHeroEntry?.data || {
   image: "/images/brand-shots/HeroCheck.jpg"
 };
 
+// Fetch Trust Section Data
+const trustEntry = await getEntry("pages_content", "trust_section");
+const trustData = trustEntry?.data;
+
 // Load Section Headers (Hub Strategy)
 const categoriesHeader = await getEntry("section_headers", "home-categories");
 const featuredHeader = await getEntry("section_headers", "home-featured");
@@ -160,7 +164,7 @@ const categories = [
     <LookbookCarousel />
 
     {/* Trust Section */}
-    <TrustSection />
+    <TrustSection {...trustData} />
 
   </main>
 </EngineLayout>

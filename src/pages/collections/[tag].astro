@@ -17,6 +17,8 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const allProducts = await getCollection("products");
+  const comingSoonEntry = await getEntry("component_hub", "coming_soon");
+  const comingSoonData = comingSoonEntry?.data;
 
   let gridData;
   try {
@@ -43,14 +45,15 @@ export async function getStaticPaths() {
         products: filteredProducts, 
         tagName: tag,
         categoryDescription: match?.description || "",
-        isComingSoon
+        isComingSoon,
+        comingSoonData
       },
     };
   });
 }
 
 const { tag } = Astro.params;
-const { products, tagName, categoryDescription, isComingSoon } = Astro.props;
+const { products, tagName, categoryDescription, isComingSoon, comingSoonData } = Astro.props;
 
 // Formatting tag for display (e.g., "pvd-coated" -> "PVD Coated")
 const formattedTagName = tagName
@@ -96,7 +99,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
 
     {
       isComingSoon ? (
-        <ComingSoon categoryName={formattedTagName} />
+        <ComingSoon categoryName={formattedTagName} {...comingSoonData} />
       ) : products.length > 0 ? (
         <>
           <FilterSortBar productCount={products.length} categoryName={formattedTagName} />

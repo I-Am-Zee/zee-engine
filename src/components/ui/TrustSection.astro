@@ -1,29 +1,24 @@
 ---
-import { getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 import Image from "../primitives/Image.astro";
 
 interface Props {
-  main_heading: string;
-  hero_image: string;
-  markers: Array<{
+  main_heading?: string;
+  hero_image?: string;
+  markers?: Array<{
     icon: string;
     title: string;
     description: string;
   }>;
 }
 
-const { class: className, ...rest } = Astro.props;
-
-// ── Smart Logic: Self-Fetching (Component Hub Strategy) ──
-const trustEntry = await getEntry("pages_content", "trust_section");
 const { 
   main_heading = "Quality Assured", 
   hero_image = "/images/identity/trust-hero.webp", 
   markers = [] 
-} = trustEntry?.data || {};
+} = Astro.props;
 ---
 
 <section class="border-y border-border-subtle bg-surface/50 py-20 lg:py-32">
