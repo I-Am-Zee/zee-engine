@@ -36,10 +36,10 @@ export default config({
   ui: {
     brand: { name: `${brandId.toUpperCase()} Content Studio` },
     navigation: {
-      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_newsletter_confirm', 'page_newsletter_success', 'page_wishlist_empty'],
+      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_newsletter_confirm', 'page_newsletter_success', 'page_checkout_razorpay', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],
-      'SETTINGS': ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
+      'SETTINGS': ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_ecommerce', 'settings_shipping', 'settings_tracking'],
     }
   },
 
@@ -344,6 +344,7 @@ export default config({
               : 'New link' 
           }
         ),
+        primary_color: fields.text({ label: 'Primary Brand Color (Hex)', defaultValue: '#052b22' }),
       },
     }),
 
@@ -675,6 +676,38 @@ export default config({
         cta_label: fields.text({ label: 'Button Label', defaultValue: 'Continue Exploring' }),
         cta_link: fields.text({ label: 'Button Link', defaultValue: '/collections' }),
         unsubscribe_note: fields.text({ label: 'Unsubscribe Note', defaultValue: 'You can unsubscribe at any time from any email we send.' }),
+      },
+    }),
+
+    page_checkout_razorpay: singleton({
+      label: 'Checkout: Razorpay Bridge',
+      path: `src/content/${brandId}/pages_content/checkout_razorpay`,
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
+        subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
+        amount_label: fields.text({ label: 'Amount Label', defaultValue: 'Order Total' }),
+        button_loading: fields.text({ label: 'Button (Loading)', defaultValue: 'Loading…' }),
+        button_ready: fields.text({ label: 'Button (Ready)', defaultValue: 'Pay Now' }),
+        status_opening: fields.text({ label: 'Status (Opening)', defaultValue: 'Opening secure payment window…' }),
+        status_verifying: fields.text({ label: 'Status (Verifying)', defaultValue: 'Confirming your payment…' }),
+        status_confirmed: fields.text({ label: 'Status (Confirmed)', defaultValue: '✓ Payment confirmed! Redirecting…' }),
+        error_expired: fields.text({ label: 'Error (Expired)', defaultValue: 'Unable to load your order. The session may have expired.' }),
+        error_config: fields.text({ label: 'Error (Config)', defaultValue: 'Configuration error — contact support' }),
+        trust_badge_ssl: fields.text({ label: 'Trust: SSL', defaultValue: '256-bit SSL Encryption' }),
+        trust_badge_razorpay: fields.text({ label: 'Trust: Razorpay', defaultValue: 'Powered by Razorpay' }),
+        trust_badge_pci: fields.text({ label: 'Trust: PCI', defaultValue: 'PCI DSS Compliant' }),
+      },
+    }),
+
+    settings_ecommerce: singleton({
+      label: 'Ecommerce Settings',
+      path: `src/content/${brandId}/settings/ecommerce`,
+      format: { data: 'json' },
+      schema: {
+        currency_code: fields.text({ label: 'Currency Code (e.g. INR)', defaultValue: 'INR' }),
+        currency_symbol: fields.text({ label: 'Currency Symbol', defaultValue: '₹' }),
+        locale: fields.text({ label: 'Format Locale (e.g. en-IN)', defaultValue: 'en-IN' }),
       },
     }),
   },

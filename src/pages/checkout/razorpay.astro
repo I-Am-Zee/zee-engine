@@ -12,10 +12,35 @@ if (!publicToken) {
 const razorpayKeyId = import.meta.env.PUBLIC_RAZORPAY_KEY_ID;
 const siteUrl = Astro.url.origin;
 const brandSettings = await getEntry("settings", "brand");
+const ecommerceSettings = await getEntry("settings", "ecommerce");
+const checkoutPage = await getEntry("page_checkout_razorpay", "checkout_razorpay");
+
+// Hub Strategy: Fallbacks
 const brandName = brandSettings?.data?.name || "Our Boutique";
+const brandColor = brandSettings?.data?.primary_color || "#052b22";
+
+const currencyCode = ecommerceSettings?.data?.currency_code || "INR";
+const currencySymbol = ecommerceSettings?.data?.currency_symbol || "₹";
+const locale = ecommerceSettings?.data?.locale || "en-IN";
+
+const hubData = checkoutPage?.data || {
+  title: "Payment",
+  subtitle_loading: "Connecting securely…",
+  amount_label: "Order Total",
+  button_loading: "Loading…",
+  button_ready: "Pay Now",
+  status_opening: "Opening secure payment window…",
+  status_verifying: "Confirming your payment…",
+  status_confirmed: "✓ Payment confirmed! Redirecting…",
+  error_expired: "Unable to load your order. The session may have expired.",
+  error_config: "Configuration error — contact support",
+  trust_badge_ssl: "256-bit SSL Encryption",
+  trust_badge_razorpay: "Powered by Razorpay",
+  trust_badge_pci: "PCI DSS Compliant",
+};
 ---
 
-<CheckoutLayout pageTitle="Secure Checkout">
+<CheckoutLayout pageTitle={hubData.title}>
   <!-- Razorpay SDK injected into <head> via named slot -->
   <script slot="head" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -25,15 +50,15 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
 
     <div class="card-body">
       <p class="step-label">Step 3 of 3</p>
-      <h1 class="card-title">Payment</h1>
-      <p class="card-subtitle" id="email-display">Connecting securely&hellip;</p>
+      <h1 class="card-title">{hubData.title}</h1>
+      <p class="card-subtitle" id="email-display">{hubData.subtitle_loading}</p>
 
       <!-- Amount — populated after session load -->
       <div id="amount-section" class="amount-block hidden" aria-live="polite">
         <div class="amount-meta">
-          <span class="amount-label">Order Total</span>
+          <span class="amount-label">{hubData.amount_label}</span>
         </div>
-        <div class="amount-value" id="amount-display" aria-label="Order total">&#8377;0</div>
+        <div class="amount-value" id="amount-display" aria-label="Order total">{currencySymbol}0</div>
       </div>
 
       <!-- Pay CTA -->
@@ -45,7 +70,7 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
       >
         <span class="loader" aria-hidden="true">
           <span class="spinner"></span>
-          Loading&hellip;
+          {hubData.button_loading}
         </span>
       </button>
 
@@ -58,16 +83,25 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
       <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
       </svg>
-      256-bit SSL Encryption
+      {hubData.trust_badge_ssl}
       <span class="trust-dot" aria-hidden="true"></span>
-      Powered by Razorpay
+      {hubData.trust_badge_razorpay}
       <span class="trust-dot" aria-hidden="true"></span>
-      PCI DSS Compliant
+      {hubData.trust_badge_pci}
     </div>
   </div>
 
   <!-- ── Payment Logic ── -->
-  <script define:vars={{ publicToken, razorpayKeyId, siteUrl }} is:inline>
+  <script define:vars={{ 
+    publicToken, 
+    razorpayKeyId, 
+    siteUrl, 
+    brandName, 
+    brandColor,
+    currencyCode,
+    locale,
+    hubData
+  }} is:inline>
     /** @type {object|null} */
     let paymentSession = null;
 
@@ -89,10 +123,10 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
       statusEl.textContent = message;
     }
 
-    function formatINR(amount) {
-      return new Intl.NumberFormat("en-IN", {
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat(locale, {
         style: "currency",
-        currency: "INR",
+        currency: currencyCode,
         minimumFractionDigits: 0,
       }).format(amount);
     }
@@ -111,34 +145,33 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
 
     // ── Step 1: Fetch Snipcart payment session ──
     async function fetchPaymentSession() {
-      setStatus("Fetching your order…");
+      setStatus("Loading order details...");
       const params = new URLSearchParams({ publicToken });
       const url = `https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?${params}`;
 
       const response = await fetch(url);
       if (!response.ok) {
-        const body = await response.text().catch(() => "");
-        throw new Error(`Session fetch failed (${response.status})${body ? `: ${body}` : ""}`);
+        throw new Error(`Session fetch failed (${response.status})`);
       }
 
       paymentSession = await response.json();
 
       // Populate UI
       emailDisplay.textContent = paymentSession.invoice.email || "Verified customer";
-      amountDisplay.textContent = formatINR(paymentSession.invoice.amount);
+      amountDisplay.textContent = formatCurrency(paymentSession.invoice.amount);
       amountSection.classList.remove("hidden");
     }
 
     // ── Step 2: Open Razorpay Standard Checkout ──
     function openRazorpay() {
-      setStatus("Opening secure payment window…");
+      setStatus(hubData.status_opening);
 
       const amountInPaise = Math.round(paymentSession.invoice.amount * 100);
 
       const options = {
         key: razorpayKeyId,
         amount: amountInPaise,
-        currency: "INR",
+        currency: currencyCode,
         name: brandName,
         description: `Order #${String(paymentSession.id).substring(0, 8).toUpperCase()}`,
         image: `${siteUrl}/favicon.svg`,
@@ -147,11 +180,11 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
           email:   paymentSession.invoice.email               || "",
           contact: "",
         },
-        theme: { color: "#052b22" },
+        theme: { color: brandColor },
         modal: {
           ondismiss() {
-            setStatus("Payment cancelled. Click below to try again.");
-            setButtonReady("Pay Now");
+            setStatus("Payment cancelled.");
+            setButtonReady(hubData.button_ready);
           },
         },
         handler: async (response) => {
@@ -169,8 +202,8 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
 
     // ── Step 3: Verify & confirm with Snipcart ──
     async function verifyPayment(razorpayResponse) {
-      setButtonBusy("Verifying…");
-      setStatus("Confirming your payment…");
+      setButtonBusy("Verifying...");
+      setStatus(hubData.status_verifying);
 
       const payload = {
         razorpay_payment_id: razorpayResponse.razorpay_payment_id,
@@ -189,8 +222,8 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
       const result = await res.json();
 
       if (result.success) {
-        setStatus("✓ Payment confirmed! Redirecting…");
-        payButton.textContent = "✓ Payment Complete";
+        setStatus(hubData.status_confirmed);
+        setButtonBusy("Redirecting...");
         const redirect = result.redirectUrl
           || paymentSession.paymentAuthorizationRedirectUrl
           || "/";
@@ -203,19 +236,19 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
     // ── Boot ──
     async function init() {
       if (!razorpayKeyId) {
-        showError("Configuration error — contact support");
+        showError(hubData.error_config);
         return;
       }
       try {
         await fetchPaymentSession();
-        setButtonReady("Pay Now");
+        setButtonReady(hubData.button_ready);
         setStatus("");
         payButton.onclick = () => {
-          setButtonBusy("Opening…");
+          setButtonBusy("Opening...");
           openRazorpay();
         };
       } catch (err) {
-        showError("Unable to load your order. The session may have expired.", err?.message);
+        showError(hubData.error_expired, err?.message);
         payButton.disabled = true;
         payButton.textContent = "Session Expired";
       }
