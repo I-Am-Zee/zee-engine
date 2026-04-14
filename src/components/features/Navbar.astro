@@ -23,7 +23,10 @@ const { class: className, ...rest } = Astro.props;
 
 // ── Smart Logic: Build Dynamic Navigation ───────────────────
 const taxonomy = await getEntry("settings", "taxonomy");
+const brandSettings = await getEntry("settings", "brand");
+
 const categories = (taxonomy?.data as any)?.categories || [];
+const brandName = brandSettings?.data?.name;
 
 const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
   label: cat.charAt(0).toUpperCase() + cat.slice(1),
@@ -52,7 +55,7 @@ const dynamicNavigation: NavItem[] = [
 >
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
     {/* Logo */}
-    <Logo variant="full" />
+    <Logo variant="full" brandName={brandName} />
 
     {/* Desktop Navigation - Hidden on mobile */}
     <nav class="hidden items-center gap-1 md:flex">
@@ -160,7 +163,7 @@ const dynamicNavigation: NavItem[] = [
             <div class="flex h-full flex-col" x-data="{ activeAccordion: null }">
               {/* Drawer Header */}
               <div class="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-                <Logo variant="full" />
+                <Logo variant="full" brandName={brandName} />
                 <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false">
                   <Icon name="PhX" />
                 </Button>
