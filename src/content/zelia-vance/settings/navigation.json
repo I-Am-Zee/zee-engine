@@ -1,0 +1,38 @@
+{
+  "main_menus": [
+    {
+      "label": "Collections",
+      "href": "/collections"
+    },
+    {
+      "label": "Lookbooks",
+      "href": "/lookbooks"
+    },
+    {
+      "label": "Journal",
+      "href": "/blog"
+    }
+  ],
+  "support_links": [
+    {
+      "label": "About Us",
+      "href": "/about"
+    },
+    {
+      "label": "Shipping",
+      "href": "/shipping"
+    },
+    {
+      "label": "Returns",
+      "href": "/returns"
+    },
+    {
+      "label": "FAQ",
+      "href": "/faq"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact"
+    }
+  ]
+}

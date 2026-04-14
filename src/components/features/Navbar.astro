@@ -11,7 +11,7 @@ import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
 import Text from "../primitives/Text.astro";
 import NavDropdown from "../ui/NavDropdown.astro";
-import { staticNavigation, type NavItem } from "../../config/navigation";
+import { type NavItem } from "../../config/navigation";
 import { getEntry } from "astro:content";
 import { slugify } from "../../scripts/utils/slugify";
 
@@ -24,9 +24,11 @@ const { class: className, ...rest } = Astro.props;
 // ── Smart Logic: Build Dynamic Navigation ───────────────────
 const taxonomy = await getEntry("settings", "taxonomy");
 const brandSettings = await getEntry("settings", "brand");
+const navigationEntry = await getEntry("settings", "navigation");
 
 const categories = (taxonomy?.data as any)?.categories || [];
 const brandName = brandSettings?.data?.name;
+const navigationData = navigationEntry?.data || { main_menus: [], support_links: [] };
 
 const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
   label: cat.charAt(0).toUpperCase() + cat.slice(1),
@@ -42,7 +44,7 @@ const dynamicNavigation: NavItem[] = [
       ...shopCategoryItems
     ],
   },
-  ...staticNavigation,
+  ...(navigationData.main_menus || []),
 ];
 ---
 

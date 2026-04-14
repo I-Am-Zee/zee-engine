@@ -39,7 +39,7 @@ export default config({
       'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],
-      'SETTINGS': ['settings_brand', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
+      'SETTINGS': ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_shipping', 'settings_tracking'],
     }
   },
 
@@ -345,6 +345,36 @@ export default config({
           }
         ),
       },
+    }),
+
+    settings_navigation: singleton({
+      label: 'Navigation Menus',
+      path: `src/content/${brandId}/settings/navigation`,
+      format: { data: 'json' },
+      schema: {
+        main_menus: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label' }),
+            href: fields.text({ label: 'Link / URL' }),
+          }),
+          {
+            label: 'Main Navigation (after Shop)',
+            description: 'Static links like Collections, Lookbooks, etc.',
+            itemLabel: (props) => props.fields.label.value || 'New link'
+          }
+        ),
+        support_links: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label' }),
+            href: fields.text({ label: 'Link / URL' }),
+          }),
+          {
+            label: 'Support Links (Footer)',
+            description: 'Customer care links like FAQ, Shipping, Returns.',
+            itemLabel: (props) => props.fields.label.value || 'New link'
+          }
+        ),
+      }
     }),
 
     // ── Marketing & Conversion ─────────────────────────────────────
