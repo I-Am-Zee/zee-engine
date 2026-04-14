@@ -68,7 +68,7 @@ const exploreLinks = staticNavigation;
           <Text variant="metadata" class="block font-medium uppercase tracking-wider text-text-main">
             Follow Us
           </Text>
-          <SocialLinks orientation="horizontal" />
+          <SocialLinks social={siteSettings?.data?.social || []} orientation="horizontal" />
         </div>
       </div>
     </div>

@@ -93,10 +93,10 @@ const data = shopHeader?.data || {
 <script>
   // @ts-ignore
   function initSorter() {
-    if (!window.Alpine) return;
+    if (!(window as any).Alpine) return;
     
     // @ts-ignore
-    const Alpine = window.Alpine;
+    const Alpine = (window as any).Alpine;
 
     Alpine.data("productSorter", () => ({
       sortBy: "default",

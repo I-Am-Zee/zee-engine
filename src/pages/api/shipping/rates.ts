@@ -5,7 +5,7 @@ import type { APIRoute } from "astro";
 export const POST: APIRoute = async ({ request }) => {
     try {
         const body = await request.json();
-        const cart = body.content;
+        const cart = (body as any).content;
         
         // Define shipping threshold and flat rates
         const FREE_SHIPPING_THRESHOLD = 3000;

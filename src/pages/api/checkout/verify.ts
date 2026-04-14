@@ -193,7 +193,7 @@ async function notifySnipcartPayment(
     
     return { 
       success: true, 
-      redirectUrl: result.returnUrl || result.paymentAuthorizationRedirectUrl 
+      redirectUrl: (result as any).returnUrl || (result as any).paymentAuthorizationRedirectUrl
     };
 
   } catch (error: any) {

@@ -182,10 +182,10 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 <script>
   // @ts-ignore
   function initSorter() {
-    if (!window.Alpine) return;
-    window.Alpine.data("productSorter", () => ({
+    if (!(window as any).Alpine) return;
+    (window as any).Alpine.data("productSorter", () => ({
       sortBy: "default",
-      sort(criteria) {
+      sort(criteria: string) {
         this.sortBy = criteria;
         const grid = document.querySelector("#product-grid");
         if (!grid) return;
@@ -194,21 +194,21 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 
         items.sort((a, b) => {
           // @ts-ignore
-          const aPrice = parseFloat(a.dataset.price || "0");
+          const aPrice = parseFloat((a as HTMLElement).dataset.price || "0");
           // @ts-ignore
-          const bPrice = parseFloat(b.dataset.price || "0");
+          const bPrice = parseFloat((b as HTMLElement).dataset.price || "0");
           // @ts-ignore
-          const aName = a.dataset.name || "";
+          const aName = (a as HTMLElement).dataset.name || "";
           // @ts-ignore
-          const bName = b.dataset.name || "";
+          const bName = (b as HTMLElement).dataset.name || "";
           // @ts-ignore
-          const aRating = parseFloat(a.dataset.rating || "0");
+          const aRating = parseFloat((a as HTMLElement).dataset.rating || "0");
           // @ts-ignore
-          const bRating = parseFloat(b.dataset.rating || "0");
+          const bRating = parseFloat((b as HTMLElement).dataset.rating || "0");
           // @ts-ignore
-          const aDate = parseInt(a.dataset.publishDate || "0");
+          const aDate = parseInt((a as HTMLElement).dataset.publishDate || "0");
           // @ts-ignore
-          const bDate = parseInt(b.dataset.publishDate || "0");
+          const bDate = parseInt((b as HTMLElement).dataset.publishDate || "0");
           // @ts-ignore
           const aDiscount = parseFloat(a.dataset.discount || "0");
           // @ts-ignore

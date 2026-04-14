@@ -1,18 +1,15 @@
 ---
-import { getEntry } from "astro:content";
 import Icon from "../primitives/Icon.astro";
 import Link from "../primitives/Link.astro";
 
 interface Props {
+  social?: any[];
   orientation?: "horizontal" | "vertical";
   class?: string;
 }
 
-const { orientation = "horizontal", class: className, ...rest } = Astro.props;
+const { orientation = "horizontal", social = [], class: className, ...rest } = Astro.props;
 
-// Fetch Title from Content Layer
-const site = await getEntry("settings", "brand");
-const social = site?.data?.social || [];
 
 // Social platform configuration (mapping array to elements)
 const socialPlatforms = social.map((link: any) => ({

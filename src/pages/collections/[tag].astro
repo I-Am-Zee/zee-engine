@@ -107,7 +107,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
                 <div
                   class="product-item"
                   data-index={index}
-                  data-slug={product.slug}
+                  data-slug={product.id}
                   data-price={product.data.salePrice || product.data.price}
                   data-original-price={product.data.price}
                   data-sale-price={product.data.salePrice || ""}
@@ -161,8 +161,8 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
 <script>
   // @ts-ignore
   function initSorter() {
-    if (!window.Alpine) return;
-    window.Alpine.data("productSorter", () => ({
+    if (!(window as any).Alpine) return;
+    (window as any).Alpine.data("productSorter", () => ({
       sortOrder: "featured",
       get sortedProducts() {
         const products = Array.from(document.querySelectorAll('.product-item')); // Changed from .product-card to .product-item
@@ -186,7 +186,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
 
       // Retaining the original sort method logic for compatibility with FilterSortBar
       sortBy: "default",
-      sort(criteria) {
+      sort(criteria: string) {
         this.sortBy = criteria;
         const grid = document.querySelector("#product-grid"); // Use ID selector
         if (!grid) return;
@@ -194,18 +194,18 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
         const items = Array.from(grid.querySelectorAll(".product-item"));
 
         items.sort((a, b) => {
-          const aPrice = parseFloat(a.dataset.price || "0");
-          const bPrice = parseFloat(b.dataset.price || "0");
-          const aName = a.dataset.name || "";
-          const bName = b.dataset.name || "";
-          const aRating = parseFloat(a.dataset.rating || "0");
-          const bRating = parseFloat(b.dataset.rating || "0");
-          const aDate = parseInt(a.dataset.publishDate || "0");
-          const bDate = parseInt(b.dataset.publishDate || "0");
-          const aDiscount = parseFloat(a.dataset.discount || "0");
-          const bDiscount = parseFloat(b.dataset.discount || "0");
-          const aIndex = parseInt(a.dataset.index || "0");
-          const bIndex = parseInt(b.dataset.index || "0");
+          const aPrice = parseFloat((a as HTMLElement).dataset.price || "0");
+          const bPrice = parseFloat((b as HTMLElement).dataset.price || "0");
+          const aName = (a as HTMLElement).dataset.name || "";
+          const bName = (b as HTMLElement).dataset.name || "";
+          const aRating = parseFloat((a as HTMLElement).dataset.rating || "0");
+          const bRating = parseFloat((b as HTMLElement).dataset.rating || "0");
+          const aDate = parseInt((a as HTMLElement).dataset.publishDate || "0");
+          const bDate = parseInt((b as HTMLElement).dataset.publishDate || "0");
+          const aDiscount = parseFloat((a as HTMLElement).dataset.discount || "0");
+          const bDiscount = parseFloat((b as HTMLElement).dataset.discount || "0");
+          const aIndex = parseInt((a as HTMLElement).dataset.index || "0");
+          const bIndex = parseInt((b as HTMLElement).dataset.index || "0");
 
           switch (criteria) {
             case "price-asc":

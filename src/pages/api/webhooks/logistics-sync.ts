@@ -95,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const searchData = await searchResponse.json();
-    const order = searchData.items?.[0];
+    const order = (searchData as any).items?.[0];
 
     if (!order || !order.token) {
       console.warn(`[Logistics Webhook] Order ${invoiceNumber} not found.`);

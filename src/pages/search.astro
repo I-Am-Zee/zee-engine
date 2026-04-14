@@ -18,7 +18,7 @@ const searchableProducts = allProducts.map(p => ({
   description: p.data.description,
   tags: p.data.tags || [],
   category: p.data.category,
-  slug: p.slug,
+  id: p.id,
   image: p.data.image,
   price: p.data.price,
   salePrice: p.data.salePrice,
@@ -48,7 +48,7 @@ const searchableProducts = allProducts.map(p => ({
       </div>
       <template x-if="query.length > 0">
         <Text variant="muted" class="mt-4">
-          Found <span x-text="matchingSlugs.length" class="font-bold text-text-main"></span> results for "<span x-text="query" class="font-bold text-text-main"></span>"
+          Found <span x-text="matchingIds.length" class="font-bold text-text-main"></span> results for "<span x-text="query" class="font-bold text-text-main"></span>"
         </Text>
       </template>
     </div>
@@ -59,8 +59,8 @@ const searchableProducts = allProducts.map(p => ({
         {allProducts.map((product) => (
           <div 
             class="search-item" 
-            x-show="matchingSlugs.includes($el.dataset.slug)"
-            data-slug={product.slug}
+            x-show="matchingIds.includes($el.dataset.id)"
+            data-id={product.id}
             x-cloak
           >
             <GlassProductCard product={product} />
@@ -70,7 +70,7 @@ const searchableProducts = allProducts.map(p => ({
     </div>
 
     {/* Empty State */}
-    <div x-show="query.length >= 2 && matchingSlugs.length === 0" x-cloak>
+    <div x-show="query.length >= 2 && matchingIds.length === 0" x-cloak>
       <EmptyState
         icon="shopping-bag"
         heading="No results found"
@@ -96,7 +96,7 @@ const searchableProducts = allProducts.map(p => ({
   import Fuse from "fuse.js";
 
   function initSearchApp() {
-    if (!window.Alpine) return;
+    if (!(window as any).Alpine) return;
     
     // @ts-ignore
     const Alpine = window.Alpine;
@@ -104,7 +104,7 @@ const searchableProducts = allProducts.map(p => ({
     Alpine.data("searchApp", (products: any[]) => ({
       query: "",
       allProducts: products,
-      matchingSlugs: [],
+      matchingIds: [],
       fuse: null as any,
 
       init() {
@@ -125,13 +125,13 @@ const searchableProducts = allProducts.map(p => ({
 
       performSearch() {
         if (this.query.length < 2) {
-          this.matchingSlugs = [];
+          this.matchingIds = [];
           return;
         }
         
         // @ts-ignore
         const searchResults = this.fuse.search(this.query);
-        this.matchingSlugs = searchResults.map((r: any) => r.item.slug);
+        this.matchingIds = searchResults.map((r: any) => r.item.id);
       }
     }));
   }

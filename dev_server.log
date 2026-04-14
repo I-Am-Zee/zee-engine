@@ -1,0 +1,23 @@
+
+> zaviona-ecommerce-astro@0.0.1 dev
+> astro dev
+
+(node:58822) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+10:33:51 [@astrojs/cloudflare] Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+10:33:51 [@astrojs/cloudflare] If you see the error "Invalid binding `SESSION`" in your build output, you need to add the binding to your wrangler config file.
+10:33:51 [WARN] [adapter] Cloudflare does not support sharp at runtime. However, you can configure `imageService: "compile"` to optimize images with sharp on prerendered pages during build time.
+10:33:52 [types] Generated 1ms
+10:33:53 [content] Syncing content
+10:33:53 [content] Synced content
+
+ astro  v5.16.11 ready in 5086 ms
+
+┃ Local    http://127.0.0.1:4321/
+
+10:33:53 watching for file changes...
+10:33:57 [vite] ✨ optimized dependencies changed. reloading
+10:34:34 [WARN] `Astro.request.headers` was used when rendering the route `src/pages/index.astro'`. `Astro.request.headers` is not available on prerendered pages. If you need access to request headers, make sure that the page is server-rendered using `export const prerender = false;` or by setting `output` to `"server"` in your Astro config to make all your pages server-rendered by default.
+[middleware] Processing request: / (UA: No UA)
+Entry section_headers → lookbook-home was not found.
+10:34:37 [200] / 2709ms
