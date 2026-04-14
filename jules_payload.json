@@ -1,23 +1,23 @@
 {
-  "task": "PURE ENGINE PHASE 3 — Implementation [Bite 1: Chunks 1-4]",
+  "task": "PURE ENGINE PHASE 3 — Implementation [Bite 2: Chunks 4-7]",
   "branch": "feature/pure-engine-phase-3-refactor",
-  "context": "The Phase 3 audit identified critical brand contamination and architectural flaws. We are executing the Master Implementation Plan in highly focused batches to ensure quality. Your task in this session is ONLY the first 4 chunks.",
+  "context": "The Foundation (Chunks 1-3) is complete. Antigravity has renamed event namespaces, fixed high-level Keystatic multi-tenancy, and implemented the BaseLayout title composition logic. Your task is to perform the wide-scale cleanup sweep.",
   "master_plan": ".plans/execute_by_jules.md",
   
   "scope_of_work": [
-    "CHUNK 1: Event Namespace Rename (zeliavance:* to engine:*)",
-    "CHUNK 2: Keystatic Multi-Tenancy Fix (Static imports to dynamic require())",
-    "CHUNK 3: BaseLayout Title System (pageTitle prop + auto-append brand name)",
-    "CHUNK 4: Page Title Sweep (Update all pages to use the new system)"
+    "CHUNK 4: Site-wide Page Title Sweep (Replace title prop with pageTitle on all pages)",
+    "CHUNK 5: Atomic Design — BaseLayout as Data Hub (De-fetch AnnouncementBar & SideDrawer)",
+    "CHUNK 6: Atomic Design — Navbar as Logo Provider (De-fetch Logo)",
+    "CHUNK 7: Atomic Design — Footer as Social Provider (De-fetch SocialLinks)"
   ],
 
   "execution_rules": [
-    "Do NOT attempt Chunks 5-13 in this session.",
-    "Verify dev server stability after EVERY single chunk.",
+    "Execute ONLY Chunks 4, 5, 6, and 7 in this session.",
+    "Verify dev server stability after EVERY single commit.",
     "Commit each chunk individually with a descriptive message.",
     "Follow the architectural decisions in Section 3 of the plan strictly.",
-    "If Chunk 2 (Keystatic) fails, stop immediately."
+    "Do NOT attempt the FAQ or Navigation migrations (Chunks 10-11) yet."
   ],
 
-  "expected_outcome": "A clean, brand-neutral core with a working multi-tenant CMS and a smart title system."
+  "expected_outcome": "A consistent site-wide metadata title system and 4 key components converted to pure atomic design via prop-driving."
 }
