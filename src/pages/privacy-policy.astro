@@ -12,7 +12,7 @@ const { Content } = await render(entry);
 export const prerender = true;
 ---
 
-<EngineLayout title={`${entry.data.title} | Zelia Vance`}>
+<EngineLayout pageTitle={entry.data.title}>
   <main class="mx-auto max-w-4xl px-4 py-16 md:py-32">
     <div class="text-center mb-16 md:mb-24">
       <Text variant="eyebrow" class="text-accent-brass mb-4 block">Legal Center</Text>

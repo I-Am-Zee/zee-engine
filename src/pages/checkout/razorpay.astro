@@ -1,20 +1,6 @@
 ---
-/**
- * Razorpay Payment Page
- *
- * Custom payment bridge page for Snipcart's Custom Payment Gateway.
- * Flow:
- * 1. Receives `publicToken` from Snipcart redirect
- * 2. Fetches payment session from Snipcart's API
- * 3. Presents order summary in brand UI
- * 4. Opens Razorpay Standard Checkout
- * 5. On success, POSTs to /api/checkout/verify → Snipcart confirmation
- */
-
-// Server-rendered: reads URL params and env at request time
 export const prerender = false;
-
-import CheckoutLayout from "../../layouts/CheckoutLayout.astro";
+import { getEntry } from "astro:content";
 
 const publicToken = Astro.url.searchParams.get("publicToken");
 
@@ -25,9 +11,11 @@ if (!publicToken) {
 
 const razorpayKeyId = import.meta.env.PUBLIC_RAZORPAY_KEY_ID;
 const siteUrl = Astro.url.origin;
+const brandSettings = await getEntry("settings", "brand");
+const brandName = brandSettings?.data?.name || "Our Boutique";
 ---
 
-<CheckoutLayout title="Secure Checkout — Zelia Vance">
+<CheckoutLayout pageTitle="Secure Checkout">
   <!-- Razorpay SDK injected into <head> via named slot -->
   <script slot="head" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -151,7 +139,7 @@ const siteUrl = Astro.url.origin;
         key: razorpayKeyId,
         amount: amountInPaise,
         currency: "INR",
-        name: "Zelia Vance",
+        name: brandName,
         description: `Order #${String(paymentSession.id).substring(0, 8).toUpperCase()}`,
         image: `${siteUrl}/favicon.svg`,
         prefill: {

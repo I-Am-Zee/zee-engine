@@ -11,8 +11,13 @@
 
 import "../styles/global.css";
 import Logo from "../components/primitives/Logo.astro";
+import { getEntry } from "astro:content";
+
+const brandSettings = await getEntry("settings", "brand");
+const brandName = brandSettings?.data?.name;
 
 interface Props {
+  pageTitle?: string;
   title?: string;
   description?: string;
   /** Extra <head> content injected per page */
@@ -20,9 +25,12 @@ interface Props {
 }
 
 const {
-  title = "Secure Checkout — Zelia Vance",
-  description = "Complete your purchase securely with Zelia Vance.",
+  pageTitle,
+  title,
+  description = brandSettings?.data?.description,
 } = Astro.props;
+
+const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandName);
 ---
 
 <!doctype html>
@@ -33,7 +41,7 @@ const {
     <meta name="robots" content="noindex, nofollow" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
 
     <!-- Additional per-page head content (e.g. payment SDK scripts) -->
     <slot name="head" />
@@ -61,7 +69,7 @@ const {
     </main>
 
     <footer class="checkout-footer">
-      <p>&copy; {new Date().getFullYear()} Zelia Vance &mdash; All rights reserved.</p>
+      <p>&copy; {new Date().getFullYear()} {brandName} &mdash; All rights reserved.</p>
     </footer>
 
     <style>

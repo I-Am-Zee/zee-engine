@@ -71,7 +71,7 @@ const crossSellTitle = crossSellHeader?.data?.title || "You May Also Like";
 const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifically to complement your style";
 ---
 
-<EngineLayout title={`${product.data.title} | Zelia Vance`}>
+<EngineLayout pageTitle={product.data.title}>
   <div x-data={`{ 
     showStickyCart: false,
     error: '',
