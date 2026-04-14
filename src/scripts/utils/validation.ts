@@ -21,3 +21,14 @@ export function isGmailAddress(email: string): boolean {
 export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
+/**
+ * Validates that a string is a 10-digit Indian phone number (after stripping non-digits).
+ * Used as a zero-dependency fallback for India-only validation.
+ *
+ * @param phone - The phone string to test.
+ * @returns true if the string is exactly 10 digits.
+ */
+export function isValidIndianPhone(phone: string): boolean {
+  const digits = phone.replace(/\D/g, "");
+  return digits.length === 10;
+}

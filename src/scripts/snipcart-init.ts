@@ -1,4 +1,4 @@
-import { isGmailAddress } from './utils/validation';
+import { isGmailAddress, isValidIndianPhone } from './utils/validation';
 /**
  * Snipcart Initialization & Validation Hooks
  * 
@@ -153,14 +153,10 @@ function initSnipcartLogic() {
           if (typeof ev.addError === 'function') ev.addError('phone', msg);
           else if (ev.reject) ev.reject(msg);
         }
-      } else if (isIndia) {
-        // Strict 10-digit Fallback for India if library isn't available
-        const digits = phone.replace(/\D/g, '');
-        if (digits.length !== 10) {
-          const msg = 'India deliveries require a 10-digit mobile number.';
-          if (typeof ev.addError === 'function') ev.addError('phone', msg);
-          else if (ev.reject) ev.reject(msg);
-        }
+      } else if (isIndia && !isValidIndianPhone(phone)) {
+        const msg = 'India deliveries require a 10-digit mobile number.';
+        if (typeof ev.addError === 'function') ev.addError('phone', msg);
+        else if (ev.reject) ev.reject(msg);
       }
     }
   });
@@ -208,9 +204,8 @@ function initSnipcartLogic() {
             }
           } else {
             // Strict Fallback for India if library is still loading
-            const digits = val.replace(/\D/g, '');
             if (countryCode === 'IN' || countryCode === 'India') {
-              if (digits.length !== 10) {
+              if (!isValidIndianPhone(val)) {
                 target.setCustomValidity('Please enter a valid 10-digit mobile number.');
               } else {
                 target.setCustomValidity('');
