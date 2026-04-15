@@ -347,7 +347,6 @@ export default config({
               : 'New link' 
           }
         ),
-        primary_color: fields.text({ label: 'Primary Brand Color (Hex)', defaultValue: '#052b22' }),
       },
     }),
 
