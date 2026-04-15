@@ -10,20 +10,23 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 const brandId = import.meta.env.PUBLIC_BRAND_ID;
 if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environment.');
 
-// ── Tags, Badges & Categories (Dynamic via require) ─────────────────────────
-const taxonomyJson = require(`./src/content/${brandId}/settings/taxonomy.json`);
+// ── Tags, Badges & Categories (Dynamic via Vite Glob) ─────────────────────────
+// Using import.meta.glob for browser-safe dynamic imports in Vite/ESM
+const taxonomyFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/taxonomy.json', { eager: true });
+const shippingFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/shipping.json', { eager: true });
 
-const brandCategories = taxonomyJson.categories.map((c: string) => ({
+const taxonomyJson = taxonomyFiles[`./src/content/${brandId}/settings/taxonomy.json`]?.default || { categories: [], tags: [], badges: [] };
+const shippingJson = shippingFiles[`./src/content/${brandId}/settings/shipping.json`]?.default || { slabs: {} };
+
+const brandCategories = (taxonomyJson.categories || []).map((c: string) => ({
   label: c.charAt(0).toUpperCase() + c.slice(1),
   value: c
 }));
 
-const brandTags = taxonomyJson.tags.map((t: string) => ({ label: t, value: t }));
-const brandBadges = taxonomyJson.badges.map((b: string) => ({ label: b, value: b }));
+const brandTags = (taxonomyJson.tags || []).map((t: string) => ({ label: t, value: t }));
+const brandBadges = (taxonomyJson.badges || []).map((b: string) => ({ label: b, value: b }));
 
-// ── Shipping Slabs (Dynamic via require) ───────────────────
-const shippingJson = require(`./src/content/${brandId}/settings/shipping.json`);
-
+// ── Shipping Slabs (Dynamic via Glob) ───────────────────
 const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, slab]: [string, any]) => ({
   label: `${slab.name} (${slab.dimensions.length}×${slab.dimensions.breadth}×${slab.dimensions.height}cm, ${slab.weight_kg}kg)`,
   value: key,
