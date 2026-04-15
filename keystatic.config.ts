@@ -707,6 +707,9 @@ export default config({
       path: `src/content/${brandId}/settings/ecommerce`,
       format: { data: 'json' },
       schema: {
+        note: fields.emptyContent({
+          description: "### Future Implementation Note\n\n**Ecommerce Settings — Technically Orphaned, But Has a Future.**\n\nRight now, `currency_code`, `currency_symbol`, and `locale` exist in Keystatic but nothing in the code reads from this singleton yet. Snipcart handles currency in its own dashboard.\n\n**The Vision:**\n1. Store base prices in INR (in MDX product files).\n2. Use a free exchange rate API (e.g. Open Exchange Rates) to fetch live rates.\n3. Convert prices visually using Alpine.js on the client side.\n4. Use `availability` in product frontmatter (['IN', 'US', 'GLOBAL']) for geo-filtering via Cloudflare's `request.cf.country`.\n\nThis keeps the engine lean while allowing global scale from a single Indian-market catalog.",
+        }),
         currency_code: fields.text({ label: 'Currency Code (e.g. INR)', defaultValue: 'INR' }),
         currency_symbol: fields.text({ label: 'Currency Symbol', defaultValue: '₹' }),
         locale: fields.text({ label: 'Format Locale (e.g. en-IN)', defaultValue: 'en-IN' }),

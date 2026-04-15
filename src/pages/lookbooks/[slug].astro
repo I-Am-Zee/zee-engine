@@ -52,6 +52,7 @@ const pageDescription = description || 'Discover our curated jewelry collection'
 // Load Section Headers & Global Messaging (Hub Strategy)
 const galleryHub = await getEntry('section_headers', 'lookbook-gallery');
 const productsHub = await getEntry('section_headers', 'lookbook-products');
+const exploreHub = await getEntry('section_headers', 'lookbook-explore');
 const lookbookSettings = await getEntry('settings', 'lookbook_settings');
 
 const galleryData = galleryHub?.data || { title: "Editorial Gallery", subtitle: "A closer look at the intricate details and design language." };
@@ -60,6 +61,7 @@ const productsData = productsHub?.data || {
   subtitle: "Our senior stylists have curated these pieces specifically for their complementary silhouettes and materials.",
   action_label: "Acquire Set"
 };
+const exploreData = exploreHub?.data || { title: "Continue Exploring", subtitle: "More Editorial Stories" };
 const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
 ---
 
@@ -181,8 +183,8 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
   <section class="mx-auto max-w-7xl px-4 lg:px-8 py-12 md:py-16">
      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-8 md:mb-12 max-[425px]:items-center max-[425px]:text-center">
        <div>
-         <Heading as="h2">Continue Exploring</Heading>
-         <Text variant="caption" class="mt-2 block uppercase tracking-widest text-accent-brass font-bold">More Editorial Stories</Text>
+         <Heading as="h2">{exploreData.title}</Heading>
+         <Text variant="caption" class="mt-2 block uppercase tracking-widest text-accent-brass font-bold">{exploreData.subtitle}</Text>
        </div>
        <a href="/lookbooks" class="group flex items-center gap-2 text-xs uppercase tracking-widest font-black hover:text-accent-brass transition-all">
          All Stories <span class="group-hover:translate-x-2 transition-transform">&rarr;</span>
