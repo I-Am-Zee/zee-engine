@@ -16,7 +16,7 @@ import Text from "../primitives/Text.astro";
 import Link from "../primitives/Link.astro";
 import SocialLinks from "../ui/SocialLinks.astro";
 import NewsletterWidget from "./NewsletterWidget.astro";
-import { staticNavigation, supportLinks, type NavItem } from "../../config/navigation";
+import type { NavItem } from "../../types/navigation";
 import { slugify } from "../../scripts/utils/slugify";
 
 interface Props {
@@ -27,9 +27,13 @@ const { class: className, ...rest } = Astro.props;
 
 // Fetch Global Settings from Content Layer
 const siteSettings = await getEntry("settings", "brand");
+const navigationEntry = await getEntry("settings", "navigation");
+
 const brandName = siteSettings?.data?.name || "Brand";
 const socialLinks = siteSettings?.data?.social || [];
 const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
+
+const navigationData = navigationEntry?.data || { main_menus: [], support_links: [] };
 
 // ── Smart Logic: Build Dynamic Navigation ───────────────────
 const taxonomy = await getEntry("settings", "taxonomy");
@@ -45,7 +49,8 @@ const shopCategories: NavItem[] = [
   ...shopCategoryItems
 ];
 
-const exploreLinks = staticNavigation;
+const exploreLinks = navigationData.main_menus || [];
+const supportLinks = navigationData.support_links || [];
 ---
 
 
