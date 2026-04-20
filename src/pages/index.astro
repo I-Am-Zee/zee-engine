@@ -110,15 +110,9 @@ const categories = [
           title={catData.title} 
           subtitle={catData.subtitle}
           align="left"
-        >
-          <Fragment slot="action">
-            {catData.button_mode === 'link' && (
-              <Button as="a" href={catData.link_url} type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
-                {catData.action_label} &rarr;
-              </Button>
-            )}
-          </Fragment>
-        </SectionHeader>
+          actionLabel={catData.button_mode === 'link' ? catData.action_label : undefined}
+          linkUrl={catData.button_mode === 'link' ? catData.link_url : undefined}
+        />
         
         <Carousel 
           options={{ perPage: 4, perMove: 1, gap: 24, type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3, gap: 24 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' }, gap: 16 }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }}
@@ -146,15 +140,9 @@ const categories = [
           title={featData.title} 
           subtitle={featData.subtitle}
           align="left"
-        >
-          <Fragment slot="action">
-            {featData.button_mode === 'link' && (
-              <Button as="a" href={featData.link_url} type="ghost" class="font-bold uppercase tracking-[0.2em] text-[10px]">
-                {featData.action_label} &rarr;
-              </Button>
-            )}
-          </Fragment>
-        </SectionHeader>
+          actionLabel={featData.button_mode === 'link' ? featData.action_label : undefined}
+          linkUrl={featData.button_mode === 'link' ? featData.link_url : undefined}
+        />
         
         <ProductCarousel products={featuredProducts} columns={4} />
       </div>

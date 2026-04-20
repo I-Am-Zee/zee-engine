@@ -181,15 +181,13 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
 
   <!-- Related Lookbooks (Recommendation) -->
   <section class="mx-auto max-w-7xl px-4 lg:px-8 py-12 md:py-16">
-     <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-8 md:mb-12 max-[425px]:items-center max-[425px]:text-center">
-       <div>
-         <Heading as="h2">{exploreData.title}</Heading>
-         <Text variant="caption" class="mt-2 block uppercase tracking-widest text-accent-brass font-bold">{exploreData.subtitle}</Text>
-       </div>
-       <a href="/lookbooks" class="group flex items-center gap-2 text-xs uppercase tracking-widest font-black hover:text-accent-brass transition-all">
-         All Stories <span class="group-hover:translate-x-2 transition-transform">&rarr;</span>
-       </a>
-     </div>
+     <SectionHeader 
+       title={exploreData.title} 
+       subtitle={exploreData.subtitle}
+       align="left"
+       actionLabel={exploreData.button_mode === 'link' ? exploreData.action_label : undefined}
+       linkUrl={exploreData.button_mode === 'link' ? exploreData.link_url : undefined}
+     />
      
      <Carousel 
         options={{ perPage: 3, gap: 32, type: relatedLookbooks.length > 3 ? 'loop' : 'slide', pagination: true, breakpoints: { 1024: { perPage: 2 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' } }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }} 
