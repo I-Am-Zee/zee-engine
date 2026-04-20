@@ -707,8 +707,11 @@ export default config({
       path: `src/content/${brandId}/settings/ecommerce`,
       format: { data: 'json' },
       schema: {
-        note: fields.emptyContent({
-          description: "### Ecommerce Settings: Future Feature\n\nThis tab is reserved for future global ecommerce configurations (e.g., forced manual currency overrides). \n\nFor the architectural plan regarding Multi-Currency Snipcart processing and automatic Geo-Detection, please refer to the technical blueprint located at:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**"
+        roadmap_status: fields.text({
+          label: 'Roadmap & Future Blueprint',
+          description: "### Ecommerce Settings: Future Feature\n\nThis tab is reserved for future global ecommerce configurations (e.g., forced manual currency overrides).\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
+          defaultValue: 'Planned / Not Active',
+          validation: { isRequired: true }
         })
       },
     }),
