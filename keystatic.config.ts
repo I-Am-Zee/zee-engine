@@ -42,10 +42,25 @@ export default config({
     brand: { name: `${brandId.toUpperCase()}` },
     navigation: {
       'CONTENT': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
-      'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_newsletter_confirm', 'page_newsletter_success', 'page_checkout_razorpay', 'page_wishlist_empty'],
+      'PAGE CONTENT': [
+        'page_home_hero', 
+        'page_trust_section', 
+        'page_faq', 
+        'page_blog', 
+        'page_newsletter_confirm', 
+        'page_newsletter_success', 
+        ...(!isAffiliate ? ['page_checkout_razorpay'] : []),
+        'page_wishlist_empty'
+      ],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],
-      'SETTINGS': ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_ecommerce', 'settings_shipping', 'settings_tracking'],
+      'SETTINGS': [
+        'settings_brand', 
+        'settings_navigation', 
+        'settings_marketing', 
+        ...(!isAffiliate ? ['settings_store_checkout', 'settings_shipping'] : ['settings_affiliate']),
+        'settings_tracking'
+      ],
     }
   },
 
