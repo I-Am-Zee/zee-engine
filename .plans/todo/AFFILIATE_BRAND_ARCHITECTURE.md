@@ -236,15 +236,16 @@ This utility should live in `src/scripts/utils/shuffle.ts` (pure function, no DO
 ## 9. Implementation Chunks (When Ready)
 
 ```
-CHUNK A  → Create AffiliateQuickView.astro (new component)
-CHUNK B  → Gate BaseLayout.astro: conditional SideDrawer vs AffiliateQuickView import
-CHUNK C  → Gate Snipcart script load (only when PUBLIC_AFFILIATE=false)
-CHUNK D  → Add affiliate_url field to product schema in Keystatic + content/config.ts
+✅ CHUNK G  → Migrate Related Products to Tag Jaccard Similarity (PDP) + Fisher-Yates (Category)
+✅ CHUNK H  → Add shuffle.ts utility to scripts/utils/
+✅ CHUNK J  → Atomic Modal Refactor (BaseModal, Popup Hub in Keystatic, Popup Logic refactor)
+✅ CHUNK A  → Create AffiliateQuickView.astro (new component)
+✅ CHUNK B  → Gate BaseLayout.astro: conditional SideDrawer vs AffiliateQuickView import
+✅ CHUNK C  → Gate Snipcart script load (only when PUBLIC_AFFILIATE=false)
+✅ CHUNK D  → Add affiliate_url field to product schema in Keystatic + content/config.ts
 CHUNK E  → Update PDP CTA: conditionally render Snipcart AddToCart OR affiliate link
 CHUNK F  → Update GlassProductCard: conditionally render quick-shop trigger OR quick-view trigger
-CHUNK G  → Migrate Related Products to Tag Jaccard Similarity (PDP) + Fisher-Yates (Category)
-CHUNK H  → Add shuffle.ts utility to scripts/utils/
-CHUNK I  → Keystatic CONTENT nav group restore (products, lookbooks, blog, pages, collections_grid)
+✅ CHUNK I  → Keystatic CONTENT nav group restore (products, lookbooks, blog, pages, collections_grid)
 ```
 
 Dependencies:

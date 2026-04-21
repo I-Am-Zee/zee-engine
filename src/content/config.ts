@@ -114,6 +114,10 @@ const products = defineCollection({
       })
       .optional(),
 
+    // ORGANISM: Affiliate Mode CTAs
+    affiliate_url: z.string().url().optional(),
+    platform: z.string().optional(),
+
     // ORGANISM: Urgency & Scarcity — REMOVED (no component usage)
 
     // MOLECULE: Cross-Selling

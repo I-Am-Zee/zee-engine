@@ -8,7 +8,10 @@ import PopupNewsletter from "../components/ui/PopupNewsletter.astro";
 import Navbar from "../components/features/Navbar.astro";
 import Footer from "../components/features/Footer.astro";
 import SideDrawer from "../components/ui/SideDrawer.astro";
+import AffiliateQuickView from "../components/features/AffiliateQuickView.astro";
 import Lightbox from "../components/ui/Lightbox.astro";
+
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 
 // Fetch Modular Settings from Content Layer
 const brandSettings = await getEntry("settings", "brand");
@@ -74,7 +77,11 @@ const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandNam
     <Footer />
 
     {/* Universal Interactivity Components */}
-    <SideDrawer threshold={threshold} />
+    {isAffiliate ? (
+      <AffiliateQuickView />
+    ) : (
+      <SideDrawer threshold={threshold} />
+    )}
     <PopupCoupon data={discount_popup} />
     <PopupNewsletter data={newsletter_popup} />
     <Lightbox />

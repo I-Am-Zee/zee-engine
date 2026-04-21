@@ -177,24 +177,36 @@ export default config({
         }),
         publishDate: fields.date({ label: 'Publish Date', description: 'Controls when the product appears on the site.', validation: { isRequired: false } }),
 
-        // ── Variants (Snipcart custom fields) ──
-        variant_1: fields.object({
-          name: fields.text({ label: 'Option Name', description: 'e.g. Ring Size' }),
-          values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. 6, 7, 8, 9, 10' }),
-          price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, 0, +200 — matches option order. Prefix with + or -.' }),
-        }, { label: 'Variant 1' }),
+        // ── Variants (Snipcart custom fields) — ONLY in D2C Mode ──
+        ...(!isAffiliate ? {
+          variant_1: fields.object({
+            name: fields.text({ label: 'Option Name', description: 'e.g. Ring Size' }),
+            values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. 6, 7, 8, 9, 10' }),
+            price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, 0, +200 — matches option order. Prefix with + or -.' }),
+          }, { label: 'Variant 1' }),
 
-        variant_2: fields.object({
-          name: fields.text({ label: 'Option Name', description: 'e.g. Metal Finish' }),
-          values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. Silver, Gold Plated, Rose Gold' }),
-          price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, +150, +200' }),
-        }, { label: 'Variant 2' }),
+          variant_2: fields.object({
+            name: fields.text({ label: 'Option Name', description: 'e.g. Metal Finish' }),
+            values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. Silver, Gold Plated, Rose Gold' }),
+            price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, +150, +200' }),
+          }, { label: 'Variant 2' }),
 
-        variant_3: fields.object({
-          name: fields.text({ label: 'Option Name', description: 'e.g. Add-ons' }),
-          values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. None, Gift Wrap (+₹99)' }),
-          price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, +99' }),
-        }, { label: 'Variant 3 (Add-ons / Gift Options)' }),
+          variant_3: fields.object({
+            name: fields.text({ label: 'Option Name', description: 'e.g. Add-ons' }),
+            values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. None, Gift Wrap (+₹99)' }),
+            price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, +99' }),
+          }, { label: 'Variant 3 (Add-ons / Gift Options)' }),
+        } : {
+          // ── Affiliate Specifics ──
+          affiliate_url: fields.url({ 
+            label: 'Affiliate Link', 
+            description: 'The tracked outbound URL (Cuelinks, Admitad, etc.).' 
+          }),
+          platform: fields.text({ 
+            label: 'Partner Store Name', 
+            description: 'e.g. Myntra, Nykaa. (Optional, we auto-detect if blank)' 
+          }),
+        }),
 
         // ── Cross-sells ──
         related_products: fields.array(
