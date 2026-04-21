@@ -86,9 +86,16 @@ export default config({
     // ── Newsletter Variants ───────────────────────────────────────
     newsletter_variants: collection({
       label: 'Newsletter Variants',
+      slugField: 'id',
       path: `src/content/${brandId}/newsletter/*`,
       format: { data: 'json' },
       schema: {
+        id: fields.slug({ 
+          name: { 
+            label: 'Variant ID', 
+            description: 'Internal identifier (footer, modal, section, sidebar). DO NOT CHANGE unless you know what you are doing.' 
+          } 
+        }),
         heading: fields.text({ label: 'Heading' }),
         description: fields.text({ label: 'Description', multiline: true }),
         success_message: fields.text({ label: 'Success Message' }),
