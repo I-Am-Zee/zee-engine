@@ -7,8 +7,8 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
-const brandId = process.env.PUBLIC_BRAND_ID;
-const isAffiliate = process.env.PUBLIC_AFFILIATE === 'true';
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 
 if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environment.');
 
