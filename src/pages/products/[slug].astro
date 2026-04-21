@@ -149,8 +149,17 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           </Heading>
 
           {/* Price + Urgency Row */}
-          <div class="mb-4 flex items-center gap-4">
-            <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
+          <div class="mb-4" x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`}>
+            {isAffiliate ? (
+               <div class="flex flex-col">
+                 <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-bold text-text-main" x-text="$store.region.format($store.region.getActiveLink(links)?.price || 0)"></span>
+                 </div>
+                 <span class="text-xs text-text-muted uppercase" x-text="$store.region.currency"></span>
+               </div>
+            ) : (
+              <PriceTag price={product.data.price} salePrice={product.data.salePrice} size="lg" />
+            )}
           </div>
 
           {/* Rating */}
@@ -322,9 +331,13 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
       x-cloak
     >
       <div class="mx-auto flex max-w-lg items-center gap-3">
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0" x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`}>
           <Text variant="paragraph" weight="semibold" class="truncate block">{product.data.title}</Text>
-          <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
+          {isAffiliate ? (
+            <span class="text-sm font-bold text-text-main" x-text="$store.region.format($store.region.getActiveLink(links)?.price || 0)"></span>
+          ) : (
+            <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
+          )}
         </div>
         {isAffiliate ? (
           <div x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`} class="shrink-0 flex items-center">

@@ -1,4 +1,5 @@
 import type { Alpine } from 'alpinejs';
+import { formatCurrency } from '../utils/currency';
 
 export const regionStore = {
   active: 'india', // fallback
@@ -17,16 +18,30 @@ export const regionStore = {
       return;
     }
 
-    // Auto-detect using simple heuristics
-    const lang = navigator.language || (navigator.languages && navigator.languages[0]) || 'en-US';
+    // Auto-detect using TimeZone (most reliable client-side)
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const lang = navigator.language || 'en-US';
     
-    if (lang.toLowerCase().includes('in') || lang.toLowerCase().includes('hi')) {
+    // Check if timezone is Indian or language is en-IN
+    if (
+      timezone.toLowerCase().includes('kolkata') || 
+      timezone.toLowerCase().includes('calcutta') || 
+      lang.toLowerCase().includes('-in')
+    ) {
       this.active = 'india';
     } else {
       this.active = 'global';
     }
 
     this.save(this.active);
+  },
+
+  get locale() {
+    return this.active === 'india' ? 'en-IN' : 'en-US';
+  },
+
+  get currency() {
+    return this.active === 'india' ? 'INR' : 'USD';
   },
 
   set(region: string) {
@@ -39,6 +54,10 @@ export const regionStore = {
     const expiryDate = new Date().getTime() + 86400000;
     localStorage.setItem('zeliavance_region', region);
     localStorage.setItem('zeliavance_region_expiry', expiryDate.toString());
+  },
+
+  format(price: number) {
+    return formatCurrency(price, this.currency, this.locale);
   },
   
   // Helper to safely extract the correct link for any product array

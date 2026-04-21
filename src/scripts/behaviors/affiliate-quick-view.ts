@@ -36,8 +36,8 @@ export const affiliateQuickView = () => ({
     this.isOpen = false;
   },
 
-  formatCurrency(value: number) {
-    return formatCurrency(value);
+  formatCurrency(value: number, currency?: string, locale?: string) {
+    return formatCurrency(value, currency, locale);
   },
 
   detectPlatform(url: string) {

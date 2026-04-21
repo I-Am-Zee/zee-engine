@@ -93,8 +93,8 @@ import Button from "../primitives/Button.astro";
                    <!-- Only standard price supported currently in affiliate schema -->
                    <template x-if="product.affiliate_links">
                       <div class="flex flex-col items-end">
-                        <span class="text-text text-xl font-bold" x-text="formatCurrency($store.region.getActiveLink(product.affiliate_links)?.price || product.price)"></span>
-                        <span class="text-text-muted text-xs uppercase" x-text="$store.region.getActiveLink(product.affiliate_links)?.currency || 'INR'"></span>
+                        <span class="text-text text-xl font-bold" x-text="formatCurrency($store.region.getActiveLink(product.affiliate_links)?.price || product.price, $store.region.currency, $store.region.locale)"></span>
+                        <span class="text-text-muted text-xs uppercase" x-text="$store.region.getActiveLink(product.affiliate_links)?.currency || $store.region.currency"></span>
                       </div>
                    </template>
                 </div>
