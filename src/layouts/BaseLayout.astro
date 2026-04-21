@@ -17,6 +17,7 @@ const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 const brandSettings = await getEntry("settings", "brand");
 const marketingSettings = await getEntry("settings", "marketing");
 const shippingSettings = await getEntry("settings", "shipping");
+const affiliateSettings = isAffiliate ? await getEntry("settings", "affiliate_settings") : null;
 
 const announcement_bar = marketingSettings?.data?.announcement_bar;
 const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
@@ -65,7 +66,7 @@ const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandNam
       });
     </script>
   </head>
-  <body class="flex flex-col min-h-screen">
+  <body class="flex flex-col min-h-screen" data-regions={isAffiliate ? JSON.stringify(affiliateSettings?.data?.regions || []) : undefined}>
     <AnnouncementBar announcement={announcement_bar} threshold={threshold} />
     <Navbar />
 

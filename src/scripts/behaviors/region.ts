@@ -3,9 +3,20 @@ import { formatCurrency } from '../utils/currency';
 
 export const regionStore = {
   active: 'india', // fallback
+  config: [] as any[],
 
   init() {
     this.checkAndDetect();
+    this.loadConfig();
+  },
+
+  loadConfig() {
+    try {
+      const db = document.body.dataset.regions;
+      if (db) this.config = JSON.parse(db);
+    } catch {
+      this.config = [];
+    }
   },
 
   async checkAndDetect() {
@@ -35,12 +46,16 @@ export const regionStore = {
     this.save(this.active);
   },
 
+  get configObj() {
+    return this.config.find((c: any) => c.id === this.active) || this.config[0] || {};
+  },
+
   get locale() {
-    return this.active === 'india' ? 'en-IN' : 'en-US';
+    return this.configObj.locale || 'en-US';
   },
 
   get currency() {
-    return this.active === 'india' ? 'INR' : 'USD';
+    return this.configObj.currency || 'USD';
   },
 
   set(region: string) {

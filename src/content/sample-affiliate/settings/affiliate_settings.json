@@ -1,0 +1,21 @@
+{
+  "geo_detection_enabled": true,
+  "preference_expiry_hours": 24,
+  "regions": [
+    {
+      "id": "india",
+      "name": "India",
+      "currency": "INR",
+      "locale": "en-IN",
+      "default_platform": "Myntra"
+    },
+    {
+      "id": "global",
+      "name": "Global",
+      "currency": "USD",
+      "locale": "en-US",
+      "default_platform": "Amazon"
+    }
+  ],
+  "fallback_region_id": "global"
+}
