@@ -1,0 +1,12 @@
+{
+  "title": "Stay in the Loop",
+  "description": "Join our inner circle for rare arrivals, seasonal pieces, and the occasional exclusives.",
+  "heading_locked": "One quiet step to join our inner circle.",
+  "heading_open": "Stay in the loop.",
+  "description_locked": "We share rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning. Nothing more.",
+  "description_open": "Enter your Gmail below to receive rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning.",
+  "email_placeholder": "Enter your Gmail address",
+  "email_error": "Please enter a valid Gmail address.",
+  "submit_label": "Yes, stay in the loop",
+  "footer_note": "Your email stays private. No spam, no exceptions.\nYou can leave any time via the unsubscribe link in any email."
+}

@@ -1,0 +1,22 @@
+{
+  "section": {
+    "heading": "The Inner Circle",
+    "description": "Zelia Vance exists because the 'Old Money' look shouldn't require an 'Old Money' bank account. Period. Join us for early access to the Signatures.",
+    "success_message": "Welcome to the circle. Check your inbox."
+  },
+  "footer": {
+    "heading": "Stay in the loop",
+    "description": "Get drop alerts and 'Zee's' style notes directly in your inbox.",
+    "success_message": "You're on the list!"
+  },
+  "modal": {
+    "heading": "Unlock 10% Off",
+    "description": "Join the Zelia Vance family today and get a secret code for your first 'Life-Proof' Signature piece.",
+    "success_message": "Check your email for the code!"
+  },
+  "sidebar": {
+    "heading": "Don't miss a drop",
+    "description": "Our Signatures sell out fast. Be the first to know.",
+    "success_message": "Subscribed!"
+  }
+}

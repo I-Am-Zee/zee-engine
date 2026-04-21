@@ -1,0 +1,15 @@
+{
+  "title": "Payment",
+  "subtitle_loading": "Connecting securely\u2026",
+  "amount_label": "Order Total",
+  "button_loading": "Loading\u2026",
+  "button_ready": "Pay Now",
+  "status_opening": "Opening secure payment window\u2026",
+  "status_verifying": "Confirming your payment\u2026",
+  "status_confirmed": "\u2713 Payment confirmed! Redirecting\u2026",
+  "error_expired": "Unable to load your order. The session may have expired.",
+  "error_config": "Configuration error \u2014 contact support",
+  "trust_badge_ssl": "256-bit SSL Encryption",
+  "trust_badge_razorpay": "Powered by Razorpay",
+  "trust_badge_pci": "PCI DSS Compliant"
+}
