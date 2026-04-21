@@ -30,6 +30,17 @@ export interface ZeliaProduct {
   variant_1?: any;
   variant_2?: any;
   variant_3?: any;
+  // Affiliate Fields (Multi-Region)
+  affiliate_links?: Array<{
+    region: string;
+    url: string;
+    platform?: string;
+    price: number;
+    currency: string;
+  }>;
+  // Flattened active affiliate data (for UI convenience)
+  affiliate_url?: string;
+  affiliate_platform?: string;
 }
 
 /**
@@ -51,9 +62,15 @@ export const mapProduct = (input: any): ZeliaProduct => {
       variant_1: input.data.variant_1,
       variant_2: input.data.variant_2,
       variant_3: input.data.variant_3,
+      // Handle Multi-Region Affiliate Data
+      affiliate_links: input.data.affiliate_links || [],
+      // Auto-flatten the first available link for the UI (The "Smart Fallback")
+      affiliate_url: input.data.affiliate_links?.[0]?.url || input.data.affiliate_url,
+      affiliate_platform: input.data.affiliate_links?.[0]?.platform || input.data.platform,
     };
   }
   // Otherwise, assume it's already a mapped or partial object (fallback)
+  const links = input.affiliate_links || [];
   return {
     id: input.id || "",
     sku: input.sku || input.id,
@@ -66,6 +83,9 @@ export const mapProduct = (input: any): ZeliaProduct => {
     variant_1: input.variant_1,
     variant_2: input.variant_2,
     variant_3: input.variant_3,
+    affiliate_links: links,
+    affiliate_url: links[0]?.url || input.affiliate_url,
+    affiliate_platform: links[0]?.platform || input.affiliate_platform || input.platform,
   };
 };
 
