@@ -1,0 +1,28 @@
+---
+import Modal from "../primitives/Modal.astro";
+import NewsletterWidget from "../features/NewsletterWidget.astro";
+
+interface Props {
+  data: {
+    enabled?: boolean;
+    title: string;
+    description: string;
+    image?: string;
+    denylist?: string[];
+  };
+}
+
+const { data } = Astro.props;
+if (!data?.enabled) return null;
+
+const denylist = data.denylist || [];
+---
+
+<Modal
+  id={`popupBehavior('newsletter', ${JSON.stringify(denylist)})`}
+  isOpen="open"
+  onClose="closePopup()"
+  maxWidth="max-w-2xl"
+>
+  <NewsletterWidget variant="modal" class="p-0 border-none rounded-none" />
+</Modal>

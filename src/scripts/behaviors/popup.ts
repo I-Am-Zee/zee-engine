@@ -1,22 +1,11 @@
-/**
- * Popup Modal Behavior (Intent-Based Pattern)
- * 
- * This popup stores the coupon intent in sessionStorage.
- * The actual application happens in snipcart-events.ts.
- */
-
-export const popupBehavior = (couponCode: string, denylist: string[] = []) => ({
+export const popupBehavior = (id: string, denylist: string[] = [], couponCode: string = '') => ({
   open: false,
-  
-  // Frequency control
+  STORAGE_KEY: `zeliavance_popup_${id}_seen`,
   EXPIRY_TIME: 24 * 60 * 60 * 1000, // 24 hours
 
   init() {
     // 1. Check if current path is on the denylist
-    if (this.isOnDeniedPath()) {
-      console.log('[Popup] Suppressed: Current path is on the denylist.');
-      return;
-    }
+    if (this.isOnDeniedPath()) return;
 
     // 2. Check frequency lockout
     if (this.hasSeenPopup()) return;
@@ -42,28 +31,22 @@ export const popupBehavior = (couponCode: string, denylist: string[] = []) => ({
 
   isOnDeniedPath() {
     const currentPath = window.location.pathname;
-    
     return denylist.some(path => {
-      // Direct match
       if (currentPath === path) return true;
-      
-      // Wildcard match (e.g., /shop/*)
       if (path.endsWith('/*')) {
         const base = path.slice(0, -2);
         return currentPath.startsWith(base);
       }
-      
       return false;
     });
   },
 
   hasSeenPopup() {
-    const stored = localStorage.getItem('zeliavance_popup_seen');
+    const stored = localStorage.getItem(this.STORAGE_KEY);
     if (!stored) return false;
-    
     const now = new Date().getTime();
     if (now > parseInt(stored)) {
-      localStorage.removeItem('zeliavance_popup_seen');
+      localStorage.removeItem(this.STORAGE_KEY);
       return false;
     }
     return true;
@@ -72,26 +55,14 @@ export const popupBehavior = (couponCode: string, denylist: string[] = []) => ({
   closePopup() {
     this.open = false;
     const expiry = new Date().getTime() + this.EXPIRY_TIME;
-    localStorage.setItem('zeliavance_popup_seen', expiry.toString());
+    localStorage.setItem(this.STORAGE_KEY, expiry.toString());
   },
 
-  /**
-   * SIMPLIFIED LOGIC: Intent-Based Pattern
-   * 
-   * We no longer check login status or cart state here.
-   * We simply store the intent and redirect to sign-in.
-   * The global handler (snipcart-events.ts) does the actual work.
-   */
   applyCoupon() {
+    if (!couponCode) return;
     console.log('[Popup] Storing coupon intent:', couponCode);
-    
-    // Store the intent
     sessionStorage.setItem('pending_coupon', couponCode);
-    
-    // Close popup immediately (clean handoff)
     this.closePopup();
-    
-    // Redirect to sign-in after 200ms (smooth transition)
     setTimeout(() => {
       window.location.hash = '/cart/signin';
     }, 200);

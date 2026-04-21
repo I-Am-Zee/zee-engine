@@ -19,7 +19,7 @@ import ComingSoon from "../../components/ui/ComingSoon.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
 
 
-import { slugify } from "../../scripts/utils/slugify";
+import { getCrossCategoryProducts } from "../../scripts/utils/recommendations";
 
 // Products per page for pagination
 const PRODUCTS_PER_PAGE = 12;
@@ -83,13 +83,11 @@ const { products, categoryLabel, categoryDescription, isComingSoon, comingSoonDa
 const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
 // ── Smart Page Controller Logic (Cross-Sell) ──────────────────────
-const allProducts = await getCollection("products");
+const allItems = await getCollection("products");
 const crossSellHeader = await getEntry("section_headers", "category-related");
 
-const crossSellProducts = allProducts
-  .filter((p) => p.data.category?.toLowerCase() !== categoryLabel.toLowerCase())
-  .sort(() => 0.5 - Math.random())
-  .slice(0, 4);
+// Algorithm: Unbiased Cross-Category Discovery (Fisher-Yates)
+const crossSellProducts = getCrossCategoryProducts(categoryLabel, allItems, 4);
 
 const crossSellTitle = crossSellHeader?.data?.title || "Pair With Your Selection";
 const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning pieces that elevate these styles";

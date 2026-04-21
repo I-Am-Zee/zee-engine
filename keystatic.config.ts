@@ -398,22 +398,32 @@ export default config({
           enabled: fields.checkbox({ label: 'Enable Announcement Bar', defaultValue: false }),
           text: fields.text({ label: 'Announcement Text' }),
           link: fields.text({ label: 'Announcement Link (optional)' }),
-        }, { label: 'Announcement Bar' }),
-        popup_modal: fields.object({
-          active: fields.checkbox({ label: 'Enable Popup', defaultValue: false }),
-          title: fields.text({ label: 'Popup Title' }),
-          description: fields.text({ label: 'Popup Description', multiline: true }),
+        }, { label: 'Announcement Bar 📢' }),
+
+        // --- POPUP HUB ---
+        discount_popup: fields.object({
+          enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
+          title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
+          description: fields.text({ label: 'Description', multiline: true }),
           coupon_code: fields.text({ label: 'Coupon Code' }),
+          image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/discount.webp' }),
           cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
           denylist: fields.array(
-            fields.text({ label: 'Path', description: 'Use /shop for exact, /shop/* for all sub-paths' }),
-            {
-              label: 'Pages to hide popup on',
-              description: 'Popup scripts still run in background. Only the visual popup is suppressed.',
-              itemLabel: (props) => props.value || 'New path',
-            }
-          ),
-        }, { label: 'Popup Modal' }),
+            fields.text({ label: 'Path', description: 'e.g. /checkout' }),
+            { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
+          )
+        }, { label: 'Discount Popup (D2C Only) 🏷️' }),
+
+        newsletter_popup: fields.object({
+          enabled: fields.checkbox({ label: 'Enable Newsletter Popup', defaultValue: false }),
+          title: fields.text({ label: 'Title', defaultValue: 'Join the Inner Circle' }),
+          description: fields.text({ label: 'Description', multiline: true }),
+          image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/newsletter.webp' }),
+          denylist: fields.array(
+            fields.text({ label: 'Path', description: 'e.g. /checkout' }),
+            { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
+          )
+        }, { label: 'Newsletter Popup 📧' }),
       },
     }),
     // ── Page Content ──────────────────────────────────────────────

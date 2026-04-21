@@ -39,7 +39,7 @@ const {
 const uid = customId || `newsletter-${variant}-${Math.random().toString(36).substring(2, 7)}`;
 
 // Each variant is its own file: footer.json, modal.json, section.json, sidebar.json
-const entry = await getEntry('newsletter_content', variant);
+const entry = await getEntry('newsletter_variants', variant);
 const copy = entry?.data || {
   heading: "Heading Level 2",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -49,6 +49,7 @@ const copy = entry?.data || {
 const isSection = variant === 'section';
 const isFooter = variant === 'footer';
 const isSidebar = variant === 'sidebar';
+const isModal = variant === 'modal';
 ---
 
 <section 
@@ -56,6 +57,7 @@ const isSidebar = variant === 'sidebar';
   class:list={[
     "relative overflow-hidden w-full",
     isSection && "py-24 px-6 bg-linear-to-b from-surface to-background-soft",
+    isModal && "p-6 md:p-10 bg-white",
     isFooter && "py-0",
     isSidebar && "p-6 bg-white border border-(--color-divider) rounded-xl",
     className
@@ -64,18 +66,19 @@ const isSidebar = variant === 'sidebar';
   <div class:list={[
     "mx-auto",
     isSection && "max-w-2xl text-center",
+    isModal && "max-w-xl text-center",
     isFooter && "w-full",
     isSidebar && "w-full"
   ]}>
     
     {!hideHeading && (
       <div class:list={[
-        isSection && "mb-8",
+        (isSection || isModal) && "mb-8",
         isSidebar && "text-center mb-6",
         isFooter && "mb-4"
       ]}>
         <Heading 
-          as={isSection || isFooter ? "h2" : "h4"}
+          as={isSection || isFooter || isModal ? "h2" : "h4"}
           class="mb-3"
         >
           {copy.heading}
@@ -84,7 +87,7 @@ const isSidebar = variant === 'sidebar';
           variant="body" 
           class:list={[
             "text-text-muted",
-            isSection && "text-lg",
+            (isSection || isModal) && "text-lg",
             isFooter && "leading-relaxed",
             isSidebar && "text-sm"
           ]}
@@ -95,22 +98,22 @@ const isSidebar = variant === 'sidebar';
     )}
 
     <div class:list={[
-      isSection && "mx-auto max-w-md",
+      (isSection || isModal) && "mx-auto max-w-md",
       isFooter && "w-full",
       isSidebar && "w-full"
     ]}>
       <NewsletterForm
         id={`${uid}-form`}
         placeholder="Enter your Gmail address"
-        buttonText={isSection ? "Join the Inner Circle" : "Subscribe"}
-        layout="row"
+        buttonText={isSection || isModal ? "Join the Inner Circle" : "Subscribe"}
+        layout={isModal ? "col" : "row"}
       />
       {!hideDisclaimer && (
         <Text 
           variant="caption" 
           class:list={[
             "mt-4 block opacity-60",
-            isSection && "text-center",
+            (isSection || isModal) && "text-center",
             isFooter && "text-left"
           ]}
         >
