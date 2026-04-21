@@ -2,6 +2,7 @@ import { newsletterConfirm, newsletterWidget } from './newsletter';
 import type { Alpine } from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 import { wishlistStore } from './wishlist';
+import { regionStore } from './region';
 import { popupBehavior } from './popup';
 import { sideDrawer } from './side-drawer';
 import { carousel } from './carousel';
@@ -10,8 +11,9 @@ export default (Alpine: Alpine) => {
   // Register plugins
   Alpine.plugin(collapse);
   
-  // Register the wishlist store
+  // Register the wishlist & region stores
   Alpine.store('wishlist', wishlistStore);
+  Alpine.store('region', regionStore);
 
   // Register components
   Alpine.data('popupBehavior', popupBehavior as any);

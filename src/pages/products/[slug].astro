@@ -245,17 +245,19 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
 
           <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
             {isAffiliate ? (
-              <Button
-                as="a"
-                href={product.data.affiliate_links?.[0]?.url || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                size="lg"
-                class="w-full sm:flex-1 whitespace-nowrap h-13"
-                disabled={isComingSoon ?? false}
-              >
-                {isComingSoon ? "Coming Soon" : `Shop on ${product.data.affiliate_links?.[0]?.platform || "Partner"}`}
-              </Button>
+              <div x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`} class="w-full sm:flex-1">
+                <Button
+                  as="a"
+                  x-bind:href="$store.region.getActiveLink(links)?.url || '#'"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="lg"
+                  class="w-full whitespace-nowrap h-13"
+                  disabled={isComingSoon ?? false}
+                >
+                  {isComingSoon ? "Coming Soon" : <span x-text="`Shop on ${$store.region.getActiveLink(links)?.platform || 'Partner'}`">Shop on Partner</span>}
+                </Button>
+              </div>
             ) : (
               <AddToCartButton
                 product={product}
@@ -325,17 +327,18 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
         </div>
         {isAffiliate ? (
-          <Button
-            as="a"
-            href={product.data.affiliate_links?.[0]?.url || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            size="md"
-            disabled={isComingSoon ?? false}
-            class="shrink-0"
-          >
-            {isComingSoon ? "Soon" : "Shop"}
-          </Button>
+          <div x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`} class="shrink-0 flex items-center">
+            <Button
+              as="a"
+              x-bind:href="$store.region.getActiveLink(links)?.url || '#'"
+              target="_blank"
+              rel="noopener noreferrer"
+              size="md"
+              disabled={isComingSoon ?? false}
+            >
+              {isComingSoon ? "Soon" : "Shop"}
+            </Button>
+          </div>
         ) : (
           <AddToCartButton
             product={product}

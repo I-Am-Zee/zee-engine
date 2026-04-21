@@ -243,8 +243,8 @@ This utility should live in `src/scripts/utils/shuffle.ts` (pure function, no DO
 ✅ CHUNK B  → Gate BaseLayout.astro: conditional SideDrawer vs AffiliateQuickView import
 ✅ CHUNK C  → Gate Snipcart script load (only when PUBLIC_AFFILIATE=false)
 ✅ CHUNK D  → Add affiliate_url field to product schema in Keystatic + content/config.ts
-CHUNK E  → Update PDP CTA: conditionally render Snipcart AddToCart OR affiliate link
-CHUNK F  → Update GlassProductCard: conditionally render quick-shop trigger OR quick-view trigger
+✅ CHUNK E  → Update PDP CTA: conditionally render Snipcart AddToCart OR affiliate link
+✅ CHUNK F  → Update GlassProductCard: conditionally render quick-shop trigger OR quick-view trigger
 ✅ CHUNK I  → Keystatic CONTENT nav group restore (products, lookbooks, blog, pages, collections_grid)
 ```
 
