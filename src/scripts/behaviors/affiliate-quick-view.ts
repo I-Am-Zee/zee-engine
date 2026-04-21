@@ -13,34 +13,23 @@ export const affiliateQuickView = () => ({
   product: null,
 
   init() {
-    window.addEventListener('engine:quick-view', (e: any) => {
-      this.open(e.detail.productSlug);
+    window.addEventListener('engine:affiliate-quick-view', (e: any) => {
+      this.open(e.detail);
     });
   },
 
-  async open(slug: string) {
+  async open(productData: any) {
     this.isOpen = true;
-    this.isLoading = true;
-    this.product = null;
-
-    try {
-      // Fetch product data from our API or directly if available in context
-      // For now, we simulate a fetch from the products api
-      const response = await fetch(`/api/products/${slug}`);
-      if (!response.ok) throw new Error('Product not found');
-      
-      const data = await response.json();
-      this.product = {
-        ...data,
-        // Heuristic: identify platform from URL if not explicitly provided
-        platform: this.detectPlatform(data.affiliate_url)
-      };
-    } catch (err) {
-      console.error('[QuickView] Failed to load product:', err);
-      this.close();
-    } finally {
-      this.isLoading = false;
-    }
+    this.isLoading = false;
+    
+    // Automatically use the first regional link found (fallback to Partner)
+    const activeLink = productData.affiliate_links?.[0] || {};
+    
+    this.product = {
+      ...productData,
+      affiliate_url: activeLink.url || '',
+      platform: activeLink.platform || 'Partner',
+    };
   },
 
   close() {

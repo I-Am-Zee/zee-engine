@@ -19,6 +19,9 @@ import WishlistButton from "../../components/features/WishlistButton.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
 import { getRelatedProducts } from "../../scripts/utils/recommendations";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
+import Button from "../../components/primitives/Button.astro";
+
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
 
 // Pre-render at build time (required in server mode)
 export const prerender = true;
@@ -241,16 +244,29 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           </template>
 
           <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
-            {/* Add to Cart Button - Snipcart */}
-            <AddToCartButton
-              product={product}
-              size="lg"
-              class="w-full sm:flex-1 whitespace-nowrap h-13"
-              disabled={isComingSoon ?? false}
-              @click="validateAdd($event)"
-            >
-              {isComingSoon ? "Coming Soon" : "Add to Cart"}
-            </AddToCartButton>
+            {isAffiliate ? (
+              <Button
+                as="a"
+                href={product.data.affiliate_links?.[0]?.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                size="lg"
+                class="w-full sm:flex-1 whitespace-nowrap h-13"
+                disabled={isComingSoon ?? false}
+              >
+                {isComingSoon ? "Coming Soon" : `Shop on ${product.data.affiliate_links?.[0]?.platform || "Partner"}`}
+              </Button>
+            ) : (
+              <AddToCartButton
+                product={product}
+                size="lg"
+                class="w-full sm:flex-1 whitespace-nowrap h-13"
+                disabled={isComingSoon ?? false}
+                @click="validateAdd($event)"
+              >
+                {isComingSoon ? "Coming Soon" : "Add to Cart"}
+              </AddToCartButton>
+            )}
 
             {/* Wishlist Button - Uses global store */}
             <WishlistButton productId={product.id} variant="with-label" size="lg" class="h-13" />
@@ -308,15 +324,29 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           <Text variant="paragraph" weight="semibold" class="truncate block">{product.data.title}</Text>
           <PriceTag price={product.data.price} salePrice={product.data.salePrice} />
         </div>
-        <AddToCartButton
-          product={product}
-          size="md"
-          disabled={isComingSoon ?? false}
-          class="shrink-0"
-          @click="validateAdd($event)"
-        >
-          {isComingSoon ? "Soon" : "Add"}
-        </AddToCartButton>
+        {isAffiliate ? (
+          <Button
+            as="a"
+            href={product.data.affiliate_links?.[0]?.url || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            size="md"
+            disabled={isComingSoon ?? false}
+            class="shrink-0"
+          >
+            {isComingSoon ? "Soon" : "Shop"}
+          </Button>
+        ) : (
+          <AddToCartButton
+            product={product}
+            size="md"
+            disabled={isComingSoon ?? false}
+            class="shrink-0"
+            @click="validateAdd($event)"
+          >
+            {isComingSoon ? "Soon" : "Add"}
+          </AddToCartButton>
+        )}
       </div>
     </div>
   </div>

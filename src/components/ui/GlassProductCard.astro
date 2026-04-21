@@ -18,6 +18,8 @@ import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badge
 import { mapProduct } from "../../config/ecommerce";
 import type { CollectionEntry } from "astro:content";
 
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+
 interface Props {
   product?: CollectionEntry<"products">; // Raw product entry (optional for backward compatibility)
   id?: string;
@@ -154,7 +156,7 @@ const priceTagProps = hasSale
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
-      x-on:click.prevent.stop={`$dispatch('engine:quick-shop', ${JSON.stringify(p)})`}
+      x-on:click.prevent.stop={isAffiliate ? `$dispatch('engine:affiliate-quick-view', ${JSON.stringify(p)})` : `$dispatch('engine:quick-shop', ${JSON.stringify(p)})`}
       aria-label={"Quick shop " + title}
     >
       <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />
