@@ -748,39 +748,42 @@ export default config({
       },
     }),
 
-    page_checkout_razorpay: singleton({
-      label: 'Checkout: Razorpay Bridge',
-      path: `src/content/${brandId}/pages_content/checkout_razorpay`,
-      format: { data: 'json' },
-      schema: {
-        title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
-        subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
-        amount_label: fields.text({ label: 'Amount Label', defaultValue: 'Order Total' }),
-        button_loading: fields.text({ label: 'Button (Loading)', defaultValue: 'Loading…' }),
-        button_ready: fields.text({ label: 'Button (Ready)', defaultValue: 'Pay Now' }),
-        status_opening: fields.text({ label: 'Status (Opening)', defaultValue: 'Opening secure payment window…' }),
-        status_verifying: fields.text({ label: 'Status (Verifying)', defaultValue: 'Confirming your payment…' }),
-        status_confirmed: fields.text({ label: 'Status (Confirmed)', defaultValue: '✓ Payment confirmed! Redirecting…' }),
-        error_expired: fields.text({ label: 'Error (Expired)', defaultValue: 'Unable to load your order. The session may have expired.' }),
-        error_config: fields.text({ label: 'Error (Config)', defaultValue: 'Configuration error — contact support' }),
-        trust_badge_ssl: fields.text({ label: 'Trust: SSL', defaultValue: '256-bit SSL Encryption' }),
-        trust_badge_razorpay: fields.text({ label: 'Trust: Razorpay', defaultValue: 'Powered by Razorpay' }),
-        trust_badge_pci: fields.text({ label: 'Trust: PCI', defaultValue: 'PCI DSS Compliant' }),
-      },
-    }),
+    // ── Checkout & Payments (D2C Only) ─────────────────────────────
+    ...(!isAffiliate ? {
+      page_checkout_razorpay: singleton({
+        label: 'Checkout: Razorpay Bridge',
+        path: `src/content/${brandId}/pages_content/checkout_razorpay`,
+        format: { data: 'json' },
+        schema: {
+          title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
+          subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
+          amount_label: fields.text({ label: 'Amount Label', defaultValue: 'Order Total' }),
+          button_loading: fields.text({ label: 'Button (Loading)', defaultValue: 'Loading…' }),
+          button_ready: fields.text({ label: 'Button (Ready)', defaultValue: 'Pay Now' }),
+          status_opening: fields.text({ label: 'Status (Opening)', defaultValue: 'Opening secure payment window…' }),
+          status_verifying: fields.text({ label: 'Status (Verifying)', defaultValue: 'Confirming your payment…' }),
+          status_confirmed: fields.text({ label: 'Status (Confirmed)', defaultValue: '✓ Payment confirmed! Redirecting…' }),
+          error_expired: fields.text({ label: 'Error (Expired)', defaultValue: 'Unable to load your order. The session may have expired.' }),
+          error_config: fields.text({ label: 'Error (Config)', defaultValue: 'Configuration error — contact support' }),
+          trust_badge_ssl: fields.text({ label: 'Trust: SSL', defaultValue: '256-bit SSL Encryption' }),
+          trust_badge_razorpay: fields.text({ label: 'Trust: Razorpay', defaultValue: 'Powered by Razorpay' }),
+          trust_badge_pci: fields.text({ label: 'Trust: PCI', defaultValue: 'PCI DSS Compliant' }),
+        },
+      }),
 
-    settings_ecommerce: singleton({
-      label: 'Ecommerce Settings',
-      path: `src/content/${brandId}/settings/ecommerce`,
-      format: { data: 'json' },
-      schema: {
-        roadmap_status: fields.text({
-          label: 'Roadmap & Future Blueprint',
-          description: "### Ecommerce Settings: Future Feature\n\nThis tab is reserved for future global ecommerce configurations (e.g., forced manual currency overrides).\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
-          defaultValue: 'Planned / Not Active',
-          validation: { isRequired: true }
-        })
-      },
-    }),
+      settings_ecommerce: singleton({
+        label: 'Ecommerce Settings',
+        path: `src/content/${brandId}/settings/ecommerce`,
+        format: { data: 'json' },
+        schema: {
+          roadmap_status: fields.text({
+            label: 'Roadmap & Future Blueprint',
+            description: "### Ecommerce Settings: Future Feature\n\nThis tab is reserved for future global ecommerce configurations (e.g., forced manual currency overrides).\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
+            defaultValue: 'Planned / Not Active',
+            validation: { isRequired: true }
+          })
+        },
+      }),
+    } : {}),
   },
 });

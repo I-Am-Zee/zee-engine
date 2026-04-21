@@ -5,15 +5,15 @@
   "social": [
     {
       "platform": "PhInstagramLogo",
-      "url": "https://instagram.com/zeliavance"
-    },
-    {
-      "platform": "PhPinterestLogo",
-      "url": "https://pinterest.com/zeliavance"
+      "url": "https://instagram.com/zelia.vance"
     },
     {
       "platform": "PhFacebookLogo",
       "url": "https://facebook.com/zeliavance"
+    },
+    {
+      "platform": "PhPinterestLogo",
+      "url": "https://pinterest.com/zeliavance"
     }
   ]
 }
