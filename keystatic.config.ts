@@ -411,7 +411,11 @@ export default config({
             ],
             defaultValue: 'timed'
           }),
-          delay_seconds: fields.integer({ label: 'Delay (Seconds)', defaultValue: 8 }),
+          delay_seconds: fields.integer({ 
+            label: 'Delay (Seconds)', 
+            description: 'Only applicable if Trigger Mode is "Timed Delay".',
+            defaultValue: 8 
+          }),
           title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
           description: fields.text({ label: 'Description', multiline: true }),
           coupon_code: fields.text({ label: 'Coupon Code' }),
@@ -433,7 +437,11 @@ export default config({
             ],
             defaultValue: 'exit'
           }),
-          delay_seconds: fields.integer({ label: 'Delay (Seconds)', defaultValue: 15 }),
+          delay_seconds: fields.integer({ 
+            label: 'Delay (Seconds)', 
+            description: 'Only applicable if Trigger Mode is "Timed Delay".',
+            defaultValue: 15 
+          }),
           title: fields.text({ label: 'Title', defaultValue: 'Join the Inner Circle' }),
           description: fields.text({ label: 'Description', multiline: true }),
           image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/newsletter.webp' }),

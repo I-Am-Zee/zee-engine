@@ -29,8 +29,8 @@ export const popupBehavior = (config: PopupConfig) => ({
     } 
     
     if (config.trigger === 'exit') {
+      // 4a. Desktop: Mouse-out top
       const exitHandler = (e: MouseEvent) => {
-        // e.clientY <= 0 detects cursor leaving the top of the viewport (tab/URL bar area)
         if (e.clientY <= 0) {
           if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
             this.open = true;
@@ -39,6 +39,25 @@ export const popupBehavior = (config: PopupConfig) => ({
         }
       };
       document.addEventListener('mouseleave', exitHandler);
+
+      // 4b. Mobile/Universal: Visibility Change (User leaves tab)
+      const visibilityHandler = () => {
+        if (document.visibilityState === 'hidden') {
+          if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
+            this.open = true;
+            document.removeEventListener('visibilitychange', visibilityHandler);
+          }
+        }
+      };
+      document.addEventListener('visibilitychange', visibilityHandler);
+
+      // 4c. Mobile Fallback: Since exit-intent is hard to track on touch,
+      // we use a generous timer (e.g. 25s) as a safety net.
+      setTimeout(() => {
+        if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
+          this.open = true;
+        }
+      }, 25000);
     }
   },
 
