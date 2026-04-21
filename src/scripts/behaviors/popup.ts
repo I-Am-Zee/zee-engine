@@ -51,13 +51,34 @@ export const popupBehavior = (config: PopupConfig) => ({
       };
       document.addEventListener('visibilitychange', visibilityHandler);
 
-      // 4c. Mobile Fallback: Since exit-intent is hard to track on touch,
-      // we use a generous timer (e.g. 25s) as a safety net.
-      setTimeout(() => {
-        if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
-          this.open = true;
+      // 4c. Mobile/Touch Behavioral: The "Flick Up" (Reaching for URL Bar)
+      let lastScrollY = window.scrollY;
+      let lastTime = Date.now();
+      
+      const scrollHandler = () => {
+        const currentScrollY = window.scrollY;
+        const currentTime = Date.now();
+        const timeDiff = currentTime - lastTime;
+        
+        if (timeDiff > 0) {
+          const velocity = (currentScrollY - lastScrollY) / timeDiff;
+          
+          // Trigger if: User is NOT at the top AND flicked UP fast (high negative velocity)
+          // Threshold of -1.5 pixels/ms is a standard "aggressive" scroll up
+          if (currentScrollY > 300 && velocity < -1.5) {
+            if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
+              this.open = true;
+              window.removeEventListener('scroll', scrollHandler);
+            }
+          }
         }
-      }, 25000);
+        
+        lastScrollY = currentScrollY;
+        lastTime = currentTime;
+      };
+      
+      // Throttle? Or just let it run. Browsers handle scroll well now.
+      window.addEventListener('scroll', scrollHandler, { passive: true });
     }
   },
 
