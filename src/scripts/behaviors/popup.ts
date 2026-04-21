@@ -1,6 +1,14 @@
-export const popupBehavior = (id: string, denylist: string[] = [], couponCode: string = '') => ({
+export interface PopupConfig {
+  id: string;
+  trigger: 'timed' | 'exit';
+  delay_seconds?: number;
+  denylist?: string[];
+  couponCode?: string;
+}
+
+export const popupBehavior = (config: PopupConfig) => ({
   open: false,
-  STORAGE_KEY: `zeliavance_popup_${id}_seen`,
+  STORAGE_KEY: `zeliavance_popup_${config.id}_seen`,
   EXPIRY_TIME: 24 * 60 * 60 * 1000, // 24 hours
 
   init() {
@@ -10,27 +18,33 @@ export const popupBehavior = (id: string, denylist: string[] = [], couponCode: s
     // 2. Check frequency lockout
     if (this.hasSeenPopup()) return;
 
-    // 3. Mobile Timer (8s)
-    setTimeout(() => {
-      if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
-        this.open = true;
-      }
-    }, 8000);
-
-    // 4. Desktop Exit Intent
-    const exitHandler = (e: MouseEvent) => {
-      if (e.clientY <= 0) {
+    // 3. Trigger Selection
+    if (config.trigger === 'timed') {
+      const delay = (config.delay_seconds || 8) * 1000;
+      setTimeout(() => {
         if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
           this.open = true;
-          document.removeEventListener('mouseleave', exitHandler);
         }
-      }
-    };
-    document.addEventListener('mouseleave', exitHandler);
+      }, delay);
+    } 
+    
+    if (config.trigger === 'exit') {
+      const exitHandler = (e: MouseEvent) => {
+        // e.clientY <= 0 detects cursor leaving the top of the viewport (tab/URL bar area)
+        if (e.clientY <= 0) {
+          if (!this.hasSeenPopup() && !this.open && !this.isOnDeniedPath()) {
+            this.open = true;
+            document.removeEventListener('mouseleave', exitHandler);
+          }
+        }
+      };
+      document.addEventListener('mouseleave', exitHandler);
+    }
   },
 
   isOnDeniedPath() {
     const currentPath = window.location.pathname;
+    const denylist = config.denylist || [];
     return denylist.some(path => {
       if (currentPath === path) return true;
       if (path.endsWith('/*')) {
@@ -59,9 +73,9 @@ export const popupBehavior = (id: string, denylist: string[] = [], couponCode: s
   },
 
   applyCoupon() {
-    if (!couponCode) return;
-    console.log('[Popup] Storing coupon intent:', couponCode);
-    sessionStorage.setItem('pending_coupon', couponCode);
+    if (!config.couponCode) return;
+    console.log('[Popup] Storing coupon intent:', config.couponCode);
+    sessionStorage.setItem('pending_coupon', config.couponCode);
     this.closePopup();
     setTimeout(() => {
       window.location.hash = '/cart/signin';

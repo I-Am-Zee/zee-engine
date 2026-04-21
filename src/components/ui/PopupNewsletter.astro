@@ -15,11 +15,16 @@ interface Props {
 const { data } = Astro.props;
 if (!data?.enabled) return null;
 
-const denylist = data.denylist || [];
+const config = {
+  id: 'newsletter',
+  trigger: data.trigger || 'exit',
+  delay_seconds: data.delay_seconds,
+  denylist: data.denylist
+};
 ---
 
 <Modal
-  id={`popupBehavior('newsletter', ${JSON.stringify(denylist)})`}
+  id={`popupBehavior(${JSON.stringify(config)})`}
   isOpen="open"
   onClose="closePopup()"
   maxWidth="max-w-2xl"

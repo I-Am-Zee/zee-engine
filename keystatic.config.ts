@@ -403,6 +403,15 @@ export default config({
         // --- POPUP HUB ---
         discount_popup: fields.object({
           enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
+          trigger: fields.select({
+            label: 'Trigger Mode',
+            options: [
+              { label: 'Timed Delay', value: 'timed' },
+              { label: 'Exit Intent', value: 'exit' },
+            ],
+            defaultValue: 'timed'
+          }),
+          delay_seconds: fields.integer({ label: 'Delay (Seconds)', defaultValue: 8 }),
           title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
           description: fields.text({ label: 'Description', multiline: true }),
           coupon_code: fields.text({ label: 'Coupon Code' }),
@@ -416,6 +425,15 @@ export default config({
 
         newsletter_popup: fields.object({
           enabled: fields.checkbox({ label: 'Enable Newsletter Popup', defaultValue: false }),
+          trigger: fields.select({
+            label: 'Trigger Mode',
+            options: [
+              { label: 'Timed Delay', value: 'timed' },
+              { label: 'Exit Intent', value: 'exit' },
+            ],
+            defaultValue: 'exit'
+          }),
+          delay_seconds: fields.integer({ label: 'Delay (Seconds)', defaultValue: 15 }),
           title: fields.text({ label: 'Title', defaultValue: 'Join the Inner Circle' }),
           description: fields.text({ label: 'Description', multiline: true }),
           image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/newsletter.webp' }),

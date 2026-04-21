@@ -21,11 +21,17 @@ interface Props {
 const { data } = Astro.props;
 if (!data?.enabled || !data?.coupon_code) return null;
 
-const denylist = data.denylist || [];
+const config = {
+  id: 'discount',
+  trigger: data.trigger || 'timed',
+  delay_seconds: data.delay_seconds,
+  denylist: data.denylist,
+  couponCode: data.coupon_code
+};
 ---
 
 <Modal
-  id={`popupBehavior('discount', ${JSON.stringify(denylist)}, '${data.coupon_code}')`}
+  id={`popupBehavior(${JSON.stringify(config)})`}
   isOpen="open"
   onClose="closePopup()"
 >
