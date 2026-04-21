@@ -32,10 +32,13 @@ export function getJaccardSimilarity(p1: CollectionEntry<"products">, p2: Collec
 export function getRelatedProducts(
   currentProduct: CollectionEntry<"products">, 
   allProducts: CollectionEntry<"products">[], 
-  count: number = 4
+  count: number = 4,
+  excludeIds: string[] = []
 ): CollectionEntry<"products">[] {
-  // 1. Filter out self
-  const candidates = allProducts.filter(p => p.id !== currentProduct.id);
+  // 1. Filter out self and explicit exclusions
+  const candidates = allProducts.filter(p => 
+    p.id !== currentProduct.id && !excludeIds.includes(p.id)
+  );
   
   // 2. Map items to their similarity scores
   const scored = candidates.map(p => ({

@@ -198,7 +198,7 @@ const settings = defineCollection({
   }),
 });
 
-const newsletter_content = defineCollection({
+const newsletter_variants = defineCollection({
   loader: glob({
     pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/newsletter`,
@@ -254,8 +254,7 @@ export const collections = {
   blog,
   pages,
   settings,
-  newsletter: newsletter_content,
-  newsletter_content,
+  newsletter_variants,
   collections_grid,
   section_headers,
   page_headers,

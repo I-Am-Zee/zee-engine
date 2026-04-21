@@ -4,14 +4,22 @@
     "text": "✨ Free Shipping on orders above ₹{{threshold}} | Use Code: FIRST10 for 10% Off",
     "link": "/shop"
   },
-  "popup_modal": {
-    "active": false,
-    "title": "Get 10% Off Your First Order",
+  "discount_popup": {
+    "enabled": false,
+    "title": "Unlock 10% Off",
     "description": "Join our exclusive list and receive a welcome discount plus early access to new arrivals and sales.",
     "coupon_code": "FIRST10",
+    "image": "",
     "cta_text": "Claim My Discount",
     "denylist": [
       "/checkout"
     ]
+  },
+  "newsletter_popup": {
+    "enabled": false,
+    "title": "Join the Inner Circle",
+    "description": "Get early access to luxury drops and exclusive styling tips before anyone else.",
+    "image": "",
+    "denylist": []
   }
 }

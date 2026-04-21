@@ -64,7 +64,9 @@ const allProducts = await getCollection("products");
 const crossSellHeader = await getEntry("section_headers", "pdp-related");
 
 // Algorithm: Tag Jaccard Similarity (Relevance Waterfall)
-const crossSellProducts = getRelatedProducts(product, allProducts, 4);
+// We exclude items already featured in "Complete the Look" (upsells)
+const upsellIds = product.data.related_products || [];
+const crossSellProducts = getRelatedProducts(product, allProducts, 4, upsellIds);
 
 const crossSellTitle = crossSellHeader?.data?.title || "You May Also Like";
 const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifically to complement your style";
