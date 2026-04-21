@@ -37,8 +37,9 @@ export default config({
   storage: { kind: 'local' },
 
   ui: {
-    brand: { name: `${brandId.toUpperCase()} Content Studio` },
+    brand: { name: `${brandId.toUpperCase()}` },
     navigation: {
+      'CONTENT': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
       'PAGE CONTENT': ['page_home_hero', 'page_trust_section', 'page_faq', 'page_blog', 'page_newsletter_confirm', 'page_newsletter_success', 'page_checkout_razorpay', 'page_wishlist_empty'],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'GENERAL UI': ['lookbook_settings'],

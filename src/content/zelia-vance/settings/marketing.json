@@ -5,7 +5,7 @@
     "link": "/shop"
   },
   "popup_modal": {
-    "active": true,
+    "active": false,
     "title": "Get 10% Off Your First Order",
     "description": "Join our exclusive list and receive a welcome discount plus early access to new arrivals and sales.",
     "coupon_code": "FIRST10",
