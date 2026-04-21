@@ -9,6 +9,7 @@ interface Props {
   currency?: string;
   variant?: "default" | "compact";
   class?: string;
+  affiliateLinks?: any[]; // Replaces static price when passed (Affiliate Engine)
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   currency = "INR",
   variant = "default",
   class: className,
+  affiliateLinks,
   ...rest
 } = Astro.props;
 
@@ -25,20 +27,26 @@ const displayPrice = hasSale ? salePrice : price;
 const discountPercent = hasSale ? calculateDiscount(price, salePrice!) : 0;
 ---
 
-<div class:list={["flex gap-2 flex-wrap items-center", className]} {...rest}>
+<div class:list={["flex gap-2 flex-wrap items-center", className]} {...rest} x-data={affiliateLinks ? `{ links: ${JSON.stringify(affiliateLinks)} }` : "{}"}>
   <div class="flex items-baseline gap-2">
-    <Text as="span" variant={variant === "compact" ? "caption" : "price"} weight={variant === "compact" ? "bold" : "bold"} class={variant === "compact" ? "text-sm tracking-tight" : ""}>
-      {formatCurrency(displayPrice, currency)}
-    </Text>
+    {affiliateLinks ? (
+       <Text as="span" variant={variant === "compact" ? "caption" : "price"} weight={variant === "compact" ? "bold" : "bold"} class={variant === "compact" ? "text-sm tracking-tight" : ""}>
+         <span x-text={`$store.region.format($store.region.getActiveLink(links)?.price || ${price})`}></span>
+       </Text>
+    ) : (
+      <Text as="span" variant={variant === "compact" ? "caption" : "price"} weight={variant === "compact" ? "bold" : "bold"} class={variant === "compact" ? "text-sm tracking-tight" : ""}>
+        {formatCurrency(displayPrice, currency)}
+      </Text>
+    )}
 
-    {hasSale && (
+    {!affiliateLinks && hasSale && (
       <Text as="span" variant="price_sale" class={variant === "compact" ? "text-[10px] md:text-px" : ""}>
         {formatCurrency(price, currency)}
       </Text>
     )}
   </div>
 
-  {hasSale && discountPercent > 0 && (
+  {!affiliateLinks && hasSale && discountPercent > 0 && (
     <Badge intent="coral" size="xs">
       {discountPercent}% OFF
     </Badge>

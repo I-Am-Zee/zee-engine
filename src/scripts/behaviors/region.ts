@@ -8,7 +8,7 @@ export const regionStore = {
     this.checkAndDetect();
   },
 
-  checkAndDetect() {
+  async checkAndDetect() {
     const savedRegion = localStorage.getItem('zeliavance_region');
     const savedExpiry = localStorage.getItem('zeliavance_region_expiry');
     const now = new Date().getTime();
@@ -18,18 +18,17 @@ export const regionStore = {
       return;
     }
 
-    // Auto-detect using TimeZone (most reliable client-side)
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const lang = navigator.language || 'en-US';
-    
-    // Check if timezone is Indian or language is en-IN
-    if (
-      timezone.toLowerCase().includes('kolkata') || 
-      timezone.toLowerCase().includes('calcutta') || 
-      lang.toLowerCase().includes('-in')
-    ) {
-      this.active = 'india';
-    } else {
+    try {
+      // Fetch authoritative geo data from Cloudflare edge
+      const response = await fetch('/api/geo');
+      if (response.ok) {
+        const data = await response.json();
+        this.active = data.region || 'global';
+      } else {
+        this.active = 'global';
+      }
+    } catch (e) {
+      console.warn('Geo detection failed:', e);
       this.active = 'global';
     }
 
