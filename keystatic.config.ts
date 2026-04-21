@@ -180,8 +180,8 @@ export default config({
         publishDate: fields.date({ label: 'Publish Date', description: 'Controls when the product appears on the site.', validation: { isRequired: false } }),
 
         // ── Mode-Specific Fields (D2C vs Affiliate) ──
-        // process.env is used here (not import.meta.env) because keystatic.config.ts
-        // is evaluated at Node.js config-load time, before Vite processes .env files.
+        // import.meta.env is used here because Astro's keystatic integration natively
+        // supports Vite replacement in this config file for both node & browser contexts.
         ...(!isAffiliate ? {
           // ── D2C: Snipcart Variants ──
           variant_1: fields.object({
@@ -223,13 +223,15 @@ export default config({
           }
         ),
 
-        // ── Logistics ──
-        shipping_slab: fields.select({
-          label: 'Shipping Slab',
-          description: 'Refer the Shipping Settings for your brand.',
-          options: shippingSlabOptions,
-          defaultValue: shippingSlabOptions.length > 0 ? shippingSlabOptions[0]!.value : 'small-packaging',
-        }),
+        // ── Logistics (D2C Only) ──
+        ...(!isAffiliate ? {
+          shipping_slab: fields.select({
+            label: 'Shipping Slab',
+            description: 'Refer the Shipping Settings for your brand.',
+            options: shippingSlabOptions,
+            defaultValue: shippingSlabOptions.length > 0 ? shippingSlabOptions[0]!.value : 'small-packaging',
+          }),
+        } : {}),
 
         // ── Full Description (rich text / MDX) ──
         body: fields.mdx({ label: 'Full Description', description: 'Rich text shown on the product detail page. Insert formatting, lists, and specs here.' }),
@@ -418,31 +420,33 @@ export default config({
         }, { label: 'Announcement Bar 📢' }),
 
         // --- POPUP HUB ---
-        discount_popup: fields.object({
-          enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
-          trigger: fields.select({
-            label: 'Trigger Mode',
-            options: [
-              { label: 'Timed Delay', value: 'timed' },
-              { label: 'Exit Intent', value: 'exit' },
-            ],
-            defaultValue: 'timed'
-          }),
-          delay_seconds: fields.integer({ 
-            label: 'Delay (Seconds)', 
-            description: 'Only applicable if Trigger Mode is "Timed Delay".',
-            defaultValue: 8 
-          }),
-          title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
-          description: fields.text({ label: 'Description', multiline: true }),
-          coupon_code: fields.text({ label: 'Coupon Code' }),
-          image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/discount.webp' }),
-          cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
-          denylist: fields.array(
-            fields.text({ label: 'Path', description: 'e.g. /checkout' }),
-            { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
-          )
-        }, { label: 'Discount Popup (D2C Only) 🏷️' }),
+        ...(!isAffiliate ? {
+          discount_popup: fields.object({
+            enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
+            trigger: fields.select({
+              label: 'Trigger Mode',
+              options: [
+                { label: 'Timed Delay', value: 'timed' },
+                { label: 'Exit Intent', value: 'exit' },
+              ],
+              defaultValue: 'timed'
+            }),
+            delay_seconds: fields.integer({ 
+              label: 'Delay (Seconds)', 
+              description: 'Only applicable if Trigger Mode is "Timed Delay".',
+              defaultValue: 8 
+            }),
+            title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+            coupon_code: fields.text({ label: 'Coupon Code' }),
+            image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/discount.webp' }),
+            cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
+            denylist: fields.array(
+              fields.text({ label: 'Path', description: 'e.g. /checkout' }),
+              { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
+            )
+          }, { label: 'Discount Popup (D2C Only) 🏷️' }),
+        } : {}),
 
         newsletter_popup: fields.object({
           enabled: fields.checkbox({ label: 'Enable Newsletter Popup', defaultValue: false }),
@@ -485,45 +489,47 @@ export default config({
       }
     }),
 
-    // ── Shipping Logistics ─────────────────────────────────────────
-    settings_shipping: singleton({
-      label: 'Shipping Logistics',
-      path: `src/content/${brandId}/settings/shipping`,
-      format: { data: 'json' },
-      schema: {
-        free_shipping_threshold: fields.number({ label: 'Free Shipping Threshold (₹)', defaultValue: 3000 }),
-        default_slab: fields.text({ label: 'Default Slab Key', defaultValue: 'small-packaging' }),
-        slabs: fields.object({
-          'small-packaging': fields.object({
-            name: fields.text({ label: 'Slab Name', defaultValue: 'Small Packaging' }),
-            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 0.5 }),
-            dimensions: fields.object({
-              length: fields.number({ label: 'Length (cm)', defaultValue: 15 }),
-              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 15 }),
-              height: fields.number({ label: 'Height (cm)', defaultValue: 10 }),
-            })
-          }),
-          'medium-packaging': fields.object({
-            name: fields.text({ label: 'Slab Name', defaultValue: 'Medium Packaging' }),
-            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 1.0 }),
-            dimensions: fields.object({
-              length: fields.number({ label: 'Length (cm)', defaultValue: 20 }),
-              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 20 }),
-              height: fields.number({ label: 'Height (cm)', defaultValue: 15 }),
-            })
-          }),
-          'large-packaging': fields.object({
-            name: fields.text({ label: 'Slab Name', defaultValue: 'Large Packaging' }),
-            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 2.0 }),
-            dimensions: fields.object({
-              length: fields.number({ label: 'Length (cm)', defaultValue: 25 }),
-              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 25 }),
-              height: fields.number({ label: 'Height (cm)', defaultValue: 20 }),
-            })
-          }),
-        }, { label: 'Shipping Slabs' })
-      },
-    }),
+    // ── Shipping Logistics (D2C Only) ──────────────────────────────
+    ...(!isAffiliate ? {
+      settings_shipping: singleton({
+        label: 'Shipping Logistics',
+        path: `src/content/${brandId}/settings/shipping`,
+        format: { data: 'json' },
+        schema: {
+          free_shipping_threshold: fields.number({ label: 'Free Shipping Threshold (₹)', defaultValue: 3000 }),
+          default_slab: fields.text({ label: 'Default Slab Key', defaultValue: 'small-packaging' }),
+          slabs: fields.object({
+            'small-packaging': fields.object({
+              name: fields.text({ label: 'Slab Name', defaultValue: 'Small Packaging' }),
+              weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 0.5 }),
+              dimensions: fields.object({
+                length: fields.number({ label: 'Length (cm)', defaultValue: 15 }),
+                breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 15 }),
+                height: fields.number({ label: 'Height (cm)', defaultValue: 10 }),
+              })
+            }),
+            'medium-packaging': fields.object({
+              name: fields.text({ label: 'Slab Name', defaultValue: 'Medium Packaging' }),
+              weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 1.0 }),
+              dimensions: fields.object({
+                length: fields.number({ label: 'Length (cm)', defaultValue: 20 }),
+                breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 20 }),
+                height: fields.number({ label: 'Height (cm)', defaultValue: 15 }),
+              })
+            }),
+            'large-packaging': fields.object({
+              name: fields.text({ label: 'Slab Name', defaultValue: 'Large Packaging' }),
+              weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 2.0 }),
+              dimensions: fields.object({
+                length: fields.number({ label: 'Length (cm)', defaultValue: 25 }),
+                breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 25 }),
+                height: fields.number({ label: 'Height (cm)', defaultValue: 20 }),
+              })
+            }),
+          }, { label: 'Shipping Slabs' })
+        },
+      }),
+    } : {}),
 
     // ── Analytics & Monetization ───────────────────────────────────
     settings_tracking: singleton({
