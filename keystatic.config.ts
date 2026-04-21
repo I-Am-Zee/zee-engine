@@ -7,7 +7,9 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
-const brandId = import.meta.env.PUBLIC_BRAND_ID;
+const brandId = process.env.PUBLIC_BRAND_ID;
+const isAffiliate = process.env.PUBLIC_AFFILIATE === 'true';
+
 if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environment.');
 
 // ── Tags, Badges & Categories (Dynamic via Vite Glob) ─────────────────────────
@@ -177,8 +179,11 @@ export default config({
         }),
         publishDate: fields.date({ label: 'Publish Date', description: 'Controls when the product appears on the site.', validation: { isRequired: false } }),
 
-        // ── Variants (Snipcart custom fields) — ONLY in D2C Mode ──
+        // ── Mode-Specific Fields (D2C vs Affiliate) ──
+        // process.env is used here (not import.meta.env) because keystatic.config.ts
+        // is evaluated at Node.js config-load time, before Vite processes .env files.
         ...(!isAffiliate ? {
+          // ── D2C: Snipcart Variants ──
           variant_1: fields.object({
             name: fields.text({ label: 'Option Name', description: 'e.g. Ring Size' }),
             values: fields.text({ label: 'Options (comma-separated)', description: 'e.g. 6, 7, 8, 9, 10' }),
@@ -197,14 +202,14 @@ export default config({
             price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, +99' }),
           }, { label: 'Variant 3 (Add-ons / Gift Options)' }),
         } : {
-          // ── Affiliate Specifics ──
+          // ── Affiliate: Outbound Links ──
           affiliate_url: fields.url({ 
             label: 'Affiliate Link', 
             description: 'The tracked outbound URL (Cuelinks, Admitad, etc.).' 
           }),
           platform: fields.text({ 
             label: 'Partner Store Name', 
-            description: 'e.g. Myntra, Nykaa. (Optional, we auto-detect if blank)' 
+            description: 'e.g. Myntra, Nykaa. Leave blank — we auto-detect from the URL.' 
           }),
         }),
 
