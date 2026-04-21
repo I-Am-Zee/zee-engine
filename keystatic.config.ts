@@ -202,15 +202,28 @@ export default config({
             price_modifiers: fields.text({ label: 'Price Modifiers (optional)', description: 'e.g. 0, +99' }),
           }, { label: 'Variant 3 (Add-ons / Gift Options)' }),
         } : {
-          // ── Affiliate: Outbound Links ──
-          affiliate_url: fields.url({ 
-            label: 'Affiliate Link', 
-            description: 'The tracked outbound URL (Cuelinks, Admitad, etc.).' 
-          }),
-          platform: fields.text({ 
-            label: 'Partner Store Name', 
-            description: 'e.g. Myntra, Nykaa. Leave blank — we auto-detect from the URL.' 
-          }),
+          // ── Affiliate: Outbound Links (Multi-Region) ──
+          affiliate_links: fields.array(
+            fields.object({
+              region: fields.select({
+                label: 'Region / Country',
+                options: [
+                  { label: 'India', value: 'india' },
+                  { label: 'Global / USA', value: 'global' },
+                ],
+                defaultValue: 'india'
+              }),
+              url: fields.url({ label: 'Affiliate URL', validation: { isRequired: true } }),
+              platform: fields.text({ label: 'Partner Platform', description: 'e.g. Myntra, Amazon' }),
+              price: fields.number({ label: 'Price (Numeric)', validation: { isRequired: true } }),
+              currency: fields.text({ label: 'Currency', defaultValue: 'INR' }),
+            }),
+            {
+              label: 'Affiliate Links by Region',
+              description: 'Add the partner links and prices for the regions where this product is available.',
+              itemLabel: (props) => `${props.fields.platform.value || 'Link'} (${props.fields.region.value})`
+            }
+          ),
         }),
 
         // ── Cross-sells ──
@@ -771,19 +784,45 @@ export default config({
         },
       }),
 
-      settings_ecommerce: singleton({
-        label: 'Ecommerce Settings',
-        path: `src/content/${brandId}/settings/ecommerce`,
+      settings_store_checkout: singleton({
+        label: 'Store & Checkout Settings',
+        path: `src/content/${brandId}/settings/store_checkout`,
         format: { data: 'json' },
         schema: {
           roadmap_status: fields.text({
             label: 'Roadmap & Future Blueprint',
-            description: "### Ecommerce Settings: Future Feature\n\nThis tab is reserved for future global ecommerce configurations (e.g., forced manual currency overrides).\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
+            description: "### Global Store Configuration (D2C Only)\n\nThis tab is reserved for future checkout routing (Razorpay India vs Stripe Global) and forced manual currency overrides.\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
             defaultValue: 'Planned / Not Active',
             validation: { isRequired: true }
           })
         },
       }),
-    } : {}),
+    } : {
+      settings_affiliate: singleton({
+        label: 'Affiliate & Currency Settings',
+        path: `src/content/${brandId}/settings/affiliate_settings`,
+        format: { data: 'json' },
+        schema: {
+          geo_detection_enabled: fields.checkbox({
+            label: 'Enable Soft Region Auto-Detection',
+            description: 'Automatically detects user locale (e.g., matching to India or Global). Users can manually override this preference.',
+            defaultValue: true
+          }),
+          preference_expiry_hours: fields.integer({
+            label: 'Region Preference Expiry (Hours)',
+            description: 'How long the user\'s local storage holds their region choice before auto-detecting again.',
+            defaultValue: 24
+          }),
+          india_defaults: fields.object({
+            currency: fields.text({ label: 'Default Currency (India)', defaultValue: 'INR' }),
+            platform_name: fields.text({ label: 'Default Platform Name', defaultValue: 'Myntra' })
+          }, { label: 'India Defaults' }),
+          global_defaults: fields.object({
+            currency: fields.text({ label: 'Default Currency (Global)', defaultValue: 'USD' }),
+            platform_name: fields.text({ label: 'Default Platform Name', defaultValue: 'Amazon' })
+          }, { label: 'Global Defaults' }),
+        }
+      })
+    }),
   },
 });

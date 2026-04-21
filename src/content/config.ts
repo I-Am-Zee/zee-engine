@@ -114,9 +114,16 @@ const products = defineCollection({
       })
       .optional(),
 
-    // ORGANISM: Affiliate Mode CTAs
-    affiliate_url: z.string().url().optional(),
-    platform: z.string().optional(),
+    // ORGANISM: Affiliate Mode CTAs (Multi-Region)
+    affiliate_links: z.array(
+      z.object({
+        region: z.string(),
+        url: z.string().url(),
+        platform: z.string().optional(),
+        price: z.number(),
+        currency: z.string()
+      })
+    ).optional(),
 
     // ORGANISM: Urgency & Scarcity — REMOVED (no component usage)
 
