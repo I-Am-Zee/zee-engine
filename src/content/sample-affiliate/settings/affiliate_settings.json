@@ -6,15 +6,13 @@
       "id": "india",
       "name": "India",
       "currency": "INR",
-      "locale": "en-IN",
-      "default_platform": "Myntra"
+      "locale": "en-IN"
     },
     {
       "id": "global",
       "name": "Global",
       "currency": "USD",
-      "locale": "en-US",
-      "default_platform": "Amazon"
+      "locale": "en-US"
     }
   ],
   "fallback_region_id": "global"

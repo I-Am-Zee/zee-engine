@@ -47,13 +47,14 @@ const products = defineCollection({
   schema: z.object({
     // MOLECULE: Core Identity
     title: z.string().max(100, "Product title must be ≤100 characters for SEO"),
-    sku: z
-      .string()
-      .regex(/^[A-Z]{3}-[0-9]{3}$/, "SKU format must be ABC-123 (e.g., 'CDR-010')")
-      .optional(),
+    sku: import.meta.env.PUBLIC_AFFILIATE === "true"
+      ? z.string().optional()
+      : z.string().regex(/^[A-Z]{3}-[0-9]{3}$/, "SKU format must be ABC-123 (e.g., 'CDR-010')").optional(),
 
     // MOLECULE: Pricing Set (with conflict prevention)
-    price: z.number().positive("Price must be greater than 0"),
+    price: import.meta.env.PUBLIC_AFFILIATE === "true" 
+      ? z.number().positive().optional() 
+      : z.number().positive("Price must be greater than 0"),
     salePrice: z
       .number()
       .positive("Sale price must be greater than 0")
@@ -120,6 +121,7 @@ const products = defineCollection({
         region: z.string(),
         url: z.string().url(),
         platform: z.string().optional(),
+        partnerProductId: z.string().optional(),
         price: z.number(),
         salePrice: z.number().optional(),
         currency: z.string()

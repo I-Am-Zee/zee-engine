@@ -85,7 +85,7 @@ export default config({
           options: [
             { label: 'None', value: 'none' },
             { label: 'Standard Link', value: 'link' },
-            { label: 'Feature Action (Complex)', value: 'feature' }
+            ...(!isAffiliate ? [{ label: 'Feature Action (Add-to-Cart)', value: 'feature' }] : [])
           ],
           defaultValue: 'none'
         }),
@@ -127,15 +127,9 @@ export default config({
       schema: {
         // ── Identity ──
         title: fields.slug({ name: { label: 'Product Title', description: 'The name shown on the product page and browser tab.' } }),
-        sku: fields.text({
-          label: 'SKU',
-          description: 'Format: [SUP]-[TY][MAT][ID] · Example: VOG-NKGLP001 · SUP=Supplier (3 letters), TY=Type (2 letters), MAT=Material (3 letters), ID=Global sequence starting at 001.',
-          validation: { isRequired: false },
-        }),
+        // ── Identity (Moved to D2C block below to hide for affiliates) ──
 
-        // ── Pricing ──
-        price: fields.number({ label: 'Price (₹)', validation: { isRequired: true, min: 1 } }),
-        salePrice: fields.number({ label: 'Sale Price (₹)', description: 'Must be lower than regular price. Leave empty if not on sale.', validation: { isRequired: false, min: 1 } }),
+        // ── Pricing (Moved to D2C block below to hide for affiliates) ──
 
         // ── Media ──
         image: fields.text({
@@ -198,6 +192,15 @@ export default config({
         // import.meta.env is used here because Astro's keystatic integration natively
         // supports Vite replacement in this config file for both node & browser contexts.
         ...(!isAffiliate ? {
+          // ── D2C: Identity & Pricing ──
+          sku: fields.text({
+            label: 'SKU',
+            description: 'Format: [SUP]-[TY][MAT][ID] · Example: VOG-NKGLP001 · SUP=Supplier (3 letters), TY=Type (2 letters), MAT=Material (3 letters), ID=Global sequence starting at 001.',
+            validation: { isRequired: false },
+          }),
+          price: fields.number({ label: 'Price (₹)', validation: { isRequired: true, min: 1 } }),
+          salePrice: fields.number({ label: 'Sale Price (₹)', description: 'Must be lower than regular price. Leave empty if not on sale.', validation: { isRequired: false, min: 1 } }),
+
           // ── D2C: Snipcart Variants ──
           variant_1: fields.object({
             name: fields.text({ label: 'Option Name', description: 'e.g. Ring Size' }),
@@ -230,6 +233,7 @@ export default config({
               }),
               url: fields.url({ label: 'Affiliate URL', validation: { isRequired: true } }),
               platform: fields.text({ label: 'Partner Platform', description: 'e.g. Myntra, Amazon' }),
+              partnerProductId: fields.text({ label: 'Partner Product ID / SKU', description: 'The unique ID from the partner platform (e.g. Amazon ASIN).', validation: { isRequired: false } }),
               price: fields.number({ label: 'Price (Numeric)', validation: { isRequired: true } }),
               salePrice: fields.number({ label: 'Sale Price (Numeric)', description: 'Leave empty if not on sale', validation: { isRequired: false } }),
               currency: fields.text({ label: 'Currency', defaultValue: 'INR' }),
@@ -246,9 +250,9 @@ export default config({
         related_products: fields.array(
           fields.relationship({ label: 'Product', collection: 'products' }),
           {
-            label: 'Related Products',
-            description: 'Products shown in the Complete the Look / Upsell panel.',
-            itemLabel: (props) => props.value || 'Select a product',
+            label: 'Upsell Collection (Complete the Look)',
+            description: 'Products shown in the PDP "Collection" / Upsell panel.',
+            itemLabel: (props) => props.value || 'New product selection',
           }
         ),
 

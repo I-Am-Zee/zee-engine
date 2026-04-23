@@ -2,6 +2,6 @@
   "id": "pdp-upsell",
   "title": "The Collection",
   "subtitle": "Curated selections to complete your current choice.",
-  "button_mode": "feature",
+  "button_mode": "none",
   "action_label": "Add Complete Look to Cart"
 }

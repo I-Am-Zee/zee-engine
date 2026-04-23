@@ -35,7 +35,9 @@ export interface ZeliaProduct {
     region: string;
     url: string;
     platform?: string;
+    partnerProductId?: string;
     price: number;
+    salePrice?: number;
     currency: string;
   }>;
   // Flattened active affiliate data (for UI convenience)
@@ -48,9 +50,11 @@ export interface ZeliaProduct {
  * This is the ONLY place where field names are mapped.
  */
 export const mapProduct = (input: any): ZeliaProduct => {
+  let obj: ZeliaProduct;
+
   // If it's a raw Astro Content Layer Entry (Astro 5: uses .id, not .slug)
   if (input.data && input.id) {
-    return {
+    obj = {
       id: input.id,
       sku: input.data.sku,
       title: input.data.title,
@@ -64,22 +68,39 @@ export const mapProduct = (input: any): ZeliaProduct => {
       variant_3: input.data.variant_3,
       affiliate_links: input.data.affiliate_links || [],
     };
+  } else {
+    // Otherwise, assume it's already a mapped or partial object (fallback)
+    obj = {
+      id: input.id || "",
+      sku: input.sku || input.id,
+      title: input.title || "",
+      price: Number(input.price) || 0,
+      salePrice: input.salePrice ? Number(input.salePrice) : undefined,
+      image: input.image || "",
+      weight: input.weight,
+      shipping_slab: input.shipping_slab,
+      variant_1: input.variant_1,
+      variant_2: input.variant_2,
+      variant_3: input.variant_3,
+      affiliate_links: input.affiliate_links || [],
+    };
   }
-  // Otherwise, assume it's already a mapped or partial object (fallback)
-  return {
-    id: input.id || "",
-    sku: input.sku || input.id,
-    title: input.title || "",
-    price: Number(input.price) || 0,
-    salePrice: input.salePrice ? Number(input.salePrice) : undefined,
-    image: input.image || "",
-    weight: input.weight,
-    shipping_slab: input.shipping_slab,
-    variant_1: input.variant_1,
-    variant_2: input.variant_2,
-    variant_3: input.variant_3,
-    affiliate_links: input.affiliate_links || [],
-  };
+
+  // Affiliate Mode: Primary Source of Truth Override
+  // This ensures the first link in the array (e.g. India) is used for the base displayPrice
+  // regardless of what is typed in the top-level frontmatter.
+  if (import.meta.env.PUBLIC_AFFILIATE === "true" && obj.affiliate_links && obj.affiliate_links.length > 0) {
+    const primary = obj.affiliate_links[0];
+    obj.price = primary.price;
+    obj.salePrice = primary.salePrice;
+    obj.affiliate_url = primary.url;
+    obj.affiliate_platform = primary.platform;
+  }
+
+  // Final Safety Fallback: Ensure price is never NaN/Undefined
+  if (typeof obj.price !== 'number') obj.price = 0;
+
+  return obj;
 };
 
 /**
