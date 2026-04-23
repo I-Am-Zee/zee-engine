@@ -2,12 +2,13 @@ import type { Alpine } from 'alpinejs';
 import { formatCurrency } from '../utils/currency';
 
 export const regionStore = {
-  active: 'india', // fallback
+  active: 'india', // temporary, gets overwritten in init
   config: [] as any[],
 
   init() {
-    this.checkAndDetect();
     this.loadConfig();
+    this.active = document.documentElement.dataset.activeRegion || (this.config[0]?.id || 'india');
+    this.checkAndDetect();
   },
 
   loadConfig() {
@@ -30,17 +31,17 @@ export const regionStore = {
     }
 
     try {
-      // Fetch authoritative geo data from Cloudflare edge
       const response = await fetch('/api/geo');
       if (response.ok) {
         const data = await response.json();
-        this.active = data.region || 'global';
-      } else {
-        this.active = 'global';
+        const detectedRegion = data.region || this.config[0]?.id || 'global';
+        if (this.active !== detectedRegion) {
+          this.active = detectedRegion;
+          document.documentElement.dataset.activeRegion = this.active;
+        }
       }
     } catch (e) {
       console.warn('Geo detection failed:', e);
-      this.active = 'global';
     }
 
     this.save(this.active);
@@ -60,7 +61,8 @@ export const regionStore = {
 
   set(region: string) {
     this.active = region;
-    this.save(this.active);
+    document.documentElement.dataset.activeRegion = this.active;
+    this.save(region);
   },
 
   save(region: string) {

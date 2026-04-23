@@ -121,6 +121,7 @@ const products = defineCollection({
         url: z.string().url(),
         platform: z.string().optional(),
         price: z.number(),
+        salePrice: z.number().optional(),
         currency: z.string()
       })
     ).optional(),

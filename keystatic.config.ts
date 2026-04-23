@@ -231,6 +231,7 @@ export default config({
               url: fields.url({ label: 'Affiliate URL', validation: { isRequired: true } }),
               platform: fields.text({ label: 'Partner Platform', description: 'e.g. Myntra, Amazon' }),
               price: fields.number({ label: 'Price (Numeric)', validation: { isRequired: true } }),
+              salePrice: fields.number({ label: 'Sale Price (Numeric)', description: 'Leave empty if not on sale', validation: { isRequired: false } }),
               currency: fields.text({ label: 'Currency', defaultValue: 'INR' }),
             }),
             {
@@ -833,8 +834,7 @@ export default config({
               id: fields.text({ label: 'Region ID (e.g. india, usa, uk)', validation: { isRequired: true } }),
               name: fields.text({ label: 'Display Name', validation: { isRequired: true } }),
               currency: fields.text({ label: 'Currency Code (e.g. INR, USD)', validation: { isRequired: true } }),
-              locale: fields.text({ label: 'Formatting Locale (e.g. en-IN, en-US)', validation: { isRequired: true } }),
-              default_platform: fields.text({ label: 'Default Platform (e.g. Myntra, Amazon)', validation: { isRequired: true } })
+              locale: fields.text({ label: 'Formatting Locale (e.g. en-IN, en-US)', validation: { isRequired: true } })
             }),
             {
               label: 'Configured Regions',

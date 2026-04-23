@@ -38,6 +38,8 @@ const {
 
 const brandName = brandSettings?.data?.name;
 const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandName);
+
+const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
 ---
 
 <!doctype html>
@@ -65,6 +67,24 @@ const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandNam
         }
       });
     </script>
+    {isAffiliate && (
+      <script is:inline define:vars={{ defaultRegionId }}>
+        // Synchronous Zero-CLS Pre-hydration
+        try {
+          const savedRegion = localStorage.getItem('zeliavance_region');
+          const savedExpiry = localStorage.getItem('zeliavance_region_expiry');
+          const now = new Date().getTime();
+          
+          if (savedRegion && savedExpiry && now < Number(savedExpiry)) {
+            document.documentElement.dataset.activeRegion = savedRegion;
+          } else {
+            document.documentElement.dataset.activeRegion = defaultRegionId;
+          }
+        } catch (e) {
+          document.documentElement.dataset.activeRegion = defaultRegionId;
+        }
+      </script>
+    )}
   </head>
   <body class="flex flex-col min-h-screen" data-regions={isAffiliate ? JSON.stringify(affiliateSettings?.data?.regions || []) : undefined}>
     <AnnouncementBar announcement={announcement_bar} threshold={threshold} />
