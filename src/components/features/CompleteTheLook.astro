@@ -44,6 +44,8 @@ const data = header?.data || {
   action_label: "Action Button"
 };
 
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+
 // Get all products and filter by slugs
 const allProducts = await getCollection("products");
 const relatedProducts = productSlugs
@@ -83,17 +85,21 @@ const productsForButton = [
         align="left"
         class="mb-10 lg:mb-14"
       >
-        <span class="text-text-muted capitalize tracking-widest text-xs mt-2 font-bold block">
-          {productsForButton.length} Items Total
-        </span>
-        <Fragment slot="action">
-          <BuySetButton 
-            products={productsForButton} 
-            label={data.action_label}
-            class="w-full" 
-            hideSavingsText={true} 
-          />
-        </Fragment>
+        {!isAffiliate && (
+          <span class="text-text-muted capitalize tracking-widest text-xs mt-2 font-bold block">
+            {productsForButton.length} Items Total
+          </span>
+        )}
+        {data.button_mode === "feature" && (
+          <Fragment slot="action">
+            <BuySetButton 
+              products={productsForButton} 
+              label={data.action_label}
+              class="w-full" 
+              hideSavingsText={true} 
+            />
+          </Fragment>
+        )}
       </SectionHeader>
 
       <ProductCarousel products={relatedProducts} columns={4} />

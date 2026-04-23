@@ -67,9 +67,7 @@ const badges = manualBadges || (product?.data?.badges) || [];
 const sortedBadges = sortBadgesByHierarchy(badges);
 
 const hasSale = salePrice !== undefined && salePrice < price;
-const priceTagProps = hasSale
-  ? { price: price, salePrice: salePrice }
-  : { price: price };
+const affiliateLinks = p.affiliate_links;
 ---
 
 <article
@@ -186,7 +184,9 @@ const priceTagProps = hasSale
 
     <div class="flex items-center justify-between">
       <PriceTag
-        {...priceTagProps}
+        price={price}
+        salePrice={salePrice}
+        affiliateLinks={isAffiliate ? affiliateLinks : undefined}
         variant="compact"
       />
     </div>

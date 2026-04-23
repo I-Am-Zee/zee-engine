@@ -54,6 +54,7 @@ const galleryHub = await getEntry('section_headers', 'lookbook-gallery');
 const productsHub = await getEntry('section_headers', 'lookbook-products');
 const exploreHub = await getEntry('section_headers', 'lookbook-explore');
 const lookbookSettings = await getEntry('settings', 'lookbook_settings');
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
 
 const galleryData = galleryHub?.data || { title: "Editorial Gallery", subtitle: "A closer look at the intricate details and design language." };
 const productsData = productsHub?.data || { 
@@ -108,18 +109,30 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
 
   <!-- Editorial Gallery -->
   {lookbook.data.gallery && lookbook.data.gallery.length > 0 && (
-    <section class="bg-surface py-12 md:py-16 px-4">
+    <section class="bg-surface py-12 md:py-16">
       <div class="mx-auto max-w-7xl px-4 lg:px-8">
         <SectionHeader title={galleryData.title} subtitle={galleryData.subtitle} />
         <Carousel 
-          options={{ perPage: 3, gap: 24, type: lookbook.data.gallery.length > 3 ? 'loop' : 'slide', pagination: true, autoplay: lookbook.data.gallery.length > 3, interval: 4000, pauseOnHover: true, breakpoints: { 1024: { perPage: 2 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' } }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }} 
+          options={{ 
+            perPage: 3, 
+            gap: 24, 
+            type: lookbook.data.gallery.length > 3 ? 'loop' : 'slide', 
+            pagination: true, 
+            arrows: false,
+            breakpoints: { 
+              1024: { perPage: 2, gap: 20 }, 
+              768: { perPage: 1, gap: 16, padding: { left: '1rem', right: '35%' } },
+              640: { perPage: 1, gap: 16, padding: { left: '1rem', right: '25%' } },
+              480: { perPage: 1, gap: 12, padding: { left: '1rem', right: '15%' } }
+            } 
+          }} 
           class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-8"
           trackClass="py-4"
           showArrows={lookbook.data.gallery.length > 3}
         >
           {lookbook.data.gallery.map((img) => (
             <li class="splide__slide flex justify-center items-center h-auto">
-              <div class="aspect-4/5 w-full max-w-sm md:max-w-md lg:max-w-lg rounded-2xl overflow-hidden cursor-zoom-in active:scale-[0.98] transition-all">
+              <div class="aspect-4/5 w-full rounded-2xl overflow-hidden cursor-zoom-in active:scale-[0.98] transition-all">
                 <Image 
                   src={img} 
                   alt={`${title} Editorial Detail`} 
@@ -142,27 +155,28 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
         subtitle={productsData.subtitle} 
       />
 
-      <ProductCarousel products={products} columns={3} class="mb-16" />
+      <ProductCarousel products={products} columns={3} class={isAffiliate ? "mb-8" : "mb-16"} />
 
-      <!-- Buy Complete Look Button -->
-      <div class="bg-white/50 backdrop-blur-sm relative overflow-hidden rounded-3xl p-6 md:p-20 border border-border-subtle/50 max-w-5xl mx-auto text-center shadow-sm">
-        <div class="absolute top-0 right-0 p-8 opacity-5">
-          <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      {!isAffiliate && (
+        <div class="bg-white/50 backdrop-blur-sm relative overflow-hidden rounded-3xl p-6 md:p-20 border border-border-subtle/50 max-w-5xl mx-auto text-center shadow-sm">
+          <div class="absolute top-0 right-0 p-8 opacity-5">
+            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          
+          <Heading as="h3" class="mb-4">The Master Set</Heading>
+          <Text class="mb-8 md:mb-10 block text-text-muted max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
+            Acquire the complete curation with a single click. Every piece is guaranteed to complement each other perfectly.
+          </Text>
+          <div class="flex justify-center flex-col items-center gap-4 md:gap-6">
+            <BuySetButton 
+              products={productsForButton} 
+              label={productsData.action_label}
+              class="w-full max-w-md"
+            />
+            <Text variant="caption" class="text-accent-brass font-bold animate-pulse text-[10px] md:text-xs">✨ Exclusive Bundle Pricing Applied</Text>
+          </div>
         </div>
-        
-        <Heading as="h3" class="mb-4">The Master Set</Heading>
-        <Text class="mb-8 md:mb-10 block text-text-muted max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
-          Acquire the complete curation with a single click. Every piece is guaranteed to complement each other perfectly.
-        </Text>
-        <div class="flex justify-center flex-col items-center gap-4 md:gap-6">
-          <BuySetButton 
-            products={productsForButton} 
-            label={productsData.action_label}
-            class="w-full max-w-md"
-          />
-          <Text variant="caption" class="text-accent-brass font-bold animate-pulse text-[10px] md:text-xs">✨ Exclusive Bundle Pricing Applied</Text>
-        </div>
-      </div>
+      )}
     </section>
   )}
 
@@ -180,7 +194,7 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
   </section>
 
   <!-- Related Lookbooks (Recommendation) -->
-  <section class="mx-auto max-w-7xl px-4 lg:px-8 py-12 md:py-16">
+  <section class="mx-auto max-w-7xl py-12 md:py-16 px-4 lg:px-8 overflow-hidden">
      <SectionHeader 
        title={exploreData.title} 
        subtitle={exploreData.subtitle}
@@ -190,14 +204,25 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
      />
      
      <Carousel 
-        options={{ perPage: 3, gap: 32, type: relatedLookbooks.length > 3 ? 'loop' : 'slide', pagination: true, breakpoints: { 1024: { perPage: 2 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' } }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }} 
+        options={{ 
+          perPage: 3, 
+          gap: 32, 
+          type: relatedLookbooks.length > 3 ? 'loop' : 'slide', 
+          pagination: true, 
+          breakpoints: { 
+            1024: { perPage: 2, gap: 24 }, 
+            768: { perPage: 1, gap: 20, padding: { left: '1rem', right: '30%' } },
+            640: { perPage: 1, gap: 16, padding: { left: '1rem', right: '20%' } },
+            480: { perPage: 1, gap: 16, padding: { left: '1rem', right: '15%' } }
+          } 
+        }} 
         class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16 related-carousel"
         trackClass="py-4"
         showArrows={relatedLookbooks.length > 3}
       >
         {relatedLookbooks.map(lb => (
           <li class="splide__slide flex justify-center h-auto">
-          <a href={`/lookbooks/${lb.id}`} class="group block relative w-full max-w-sm md:max-w-md lg:max-w-lg aspect-4/5 overflow-hidden rounded-3xl bg-black focus-glow">
+          <a href={`/lookbooks/${lb.id}`} class="group block relative w-full aspect-4/5 overflow-hidden rounded-3xl bg-black focus-glow">
               <Image src={lb.data.hero_image} alt={lb.data.title} class="absolute inset-0 w-full h-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-[1.05]" />
               <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/10"></div>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
@@ -211,32 +236,33 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
      </Carousel>
   </section>
 
-  <!-- Sticky Mobile CTA -->
-  <div 
-    x-data="{ show: false }"
-    @scroll.window="show = window.scrollY > 800 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
-    x-show="show"
-    x-transition:enter="transition ease-out duration-300 transform"
-    x-transition:enter-start="translate-y-full"
-    x-transition:enter-end="translate-y-0"
-    x-transition:leave="transition ease-in duration-200 transform"
-    x-transition:leave-start="translate-y-0"
-    x-transition:leave-end="translate-y-full"
-    class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50"
-    x-cloak
-  >
-    <div class="container mx-auto">
-      <Button
-        type="primary"
-        size="lg"
-        @click={`$dispatch('engine:master-set', { products: ${JSON.stringify(productsForButton)} })`}
-        class="w-full py-4 uppercase tracking-[0.2em] text-xs font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
-      >
-        <Icon name="PhShoppingBagOpen" size={20} weight="bold" />
-        <span>Acquire Set (₹{productsForButton.reduce((sum, p) => sum + (p.salePrice || p.price || 0), 0).toLocaleString("en-IN")})</span>
-      </Button>
+  {!isAffiliate && (
+    <div 
+      x-data="{ show: false }"
+      @scroll.window="show = window.scrollY > 800 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
+      x-show="show"
+      x-transition:enter="transition ease-out duration-300 transform"
+      x-transition:enter-start="translate-y-full"
+      x-transition:enter-end="translate-y-0"
+      x-transition:leave="transition ease-in duration-200 transform"
+      x-transition:leave-start="translate-y-0"
+      x-transition:leave-end="translate-y-full"
+      class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border-subtle p-4 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50"
+      x-cloak
+    >
+      <div class="container mx-auto">
+        <Button
+          type="primary"
+          size="lg"
+          @click={`$dispatch('engine:master-set', { products: ${JSON.stringify(productsForButton)} })`}
+          class="w-full py-4 uppercase tracking-[0.2em] text-xs font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+        >
+          <Icon name="PhShoppingBagOpen" size={20} weight="bold" />
+          <span>Acquire Set (₹{productsForButton.reduce((sum, p) => sum + (p.salePrice || p.price || 0), 0).toLocaleString("en-IN")})</span>
+        </Button>
+      </div>
     </div>
-  </div>
+  )}
 </EngineLayout>
 
 <style is:global>

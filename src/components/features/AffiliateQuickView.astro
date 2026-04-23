@@ -90,14 +90,25 @@ import Button from "../primitives/Button.astro";
                     <Text variant="caption" color="muted" x-text="product.category" />
                   </div>
                   <div class="text-right">
-                   <!-- Only standard price supported currently in affiliate schema -->
-                   <template x-if="product.affiliate_links">
-                      <div class="flex flex-col items-end">
-                        <span class="text-text text-xl font-bold" x-text="formatCurrency($store.region.getActiveLink(product.affiliate_links)?.price || product.price, $store.region.currency, $store.region.locale)"></span>
-                        <span class="text-text-muted text-xs uppercase" x-text="$store.region.getActiveLink(product.affiliate_links)?.currency || $store.region.currency"></span>
+                    <template x-if="product.affiliate_links">
+                      <div class="flex flex-col items-end gap-1">
+                        <!-- Active Price -->
+                        <span class="text-text text-2xl font-bold tracking-tight" 
+                              x-text="`Approx. ${$store.region.format($store.region.getActiveLink(product.affiliate_links)?.salePrice || $store.region.getActiveLink(product.affiliate_links)?.price || product.price)}`"
+                        ></span>
+                        
+                        <!-- Sale Info -->
+                        <div class="flex items-center gap-2" x-show="$store.region.getActiveLink(product.affiliate_links)?.salePrice < $store.region.getActiveLink(product.affiliate_links)?.price">
+                          <span class="text-text-muted text-sm line-through opacity-60" 
+                                x-text="$store.region.format($store.region.getActiveLink(product.affiliate_links)?.price)"
+                          ></span>
+                          <span class="bg-coral/10 text-coral rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                            <span x-text="Math.round((($store.region.getActiveLink(product.affiliate_links)?.price - $store.region.getActiveLink(product.affiliate_links)?.salePrice) / $store.region.getActiveLink(product.affiliate_links)?.price) * 100)"></span>% OFF
+                          </span>
+                        </div>
                       </div>
-                   </template>
-                </div>
+                    </template>
+                  </div>
                 </div>
 
                 <Text variant="paragraph" color="muted" class="leading-relaxed" x-text="product.description" />
