@@ -10,6 +10,7 @@ interface Props {
   variant?: "default" | "compact";
   class?: string;
   affiliateLinks?: any[];
+  showPrefix?: boolean;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   variant = "default",
   class: className,
   affiliateLinks,
+  showPrefix = false,
   ...rest
 } = Astro.props;
 
@@ -40,7 +42,10 @@ if (isAffiliate && primaryLink) {
   ssrLocale = ssrCurrency === 'INR' ? 'en-IN' : 'en-US';
 }
 
-const displayPriceStr = formatCurrency(ssrActivePrice, ssrCurrency, ssrLocale);
+const isAffiliateMode = import.meta.env.PUBLIC_AFFILIATE === "true";
+const prefix = (isAffiliateMode && showPrefix) ? "Approx. " : "";
+
+const displayPriceStr = prefix + formatCurrency(ssrActivePrice, ssrCurrency, ssrLocale);
 const salePriceStr = ssrHasSale ? formatCurrency(ssrOriginalPrice, ssrCurrency, ssrLocale) : null;
 const discountPercent = ssrHasSale ? calculateDiscount(ssrOriginalPrice, ssrActivePrice) : 0;
 ---
@@ -50,7 +55,7 @@ const discountPercent = ssrHasSale ? calculateDiscount(ssrOriginalPrice, ssrActi
     {/* Active Price */}
     <Text as="span" variant={variant === "compact" ? "caption" : "price"} weight={variant === "compact" ? "bold" : "bold"} class={variant === "compact" ? "text-sm tracking-tight" : ""}>
       {isAffiliate ? (
-        <span x-text={`$store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}>{displayPriceStr}</span>
+        <span x-text={`'${prefix}' + $store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}>{displayPriceStr}</span>
       ) : (
         <>{displayPriceStr}</>
       )}

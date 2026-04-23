@@ -155,8 +155,17 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
               salePrice={product.data.salePrice} 
               size="lg" 
               affiliateLinks={isAffiliate ? product.data.affiliate_links : undefined} 
+              showPrefix={true}
             />
           </div>
+
+          {isAffiliate && (
+            <div class="mb-6 max-w-sm">
+              <Text variant="metadata" class="italic opacity-60 leading-relaxed">
+                *Prices and availability are accurate at time of posting and are subject to change on partner platforms.
+              </Text>
+            </div>
+          )}
 
           {/* Rating */}
           {
@@ -229,9 +238,9 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
             )
           }
 
-          {/* Quantity Selector */}
+          {/* Quantity Selector - Hidden for Affiliate Mode */}
           {
-            !isComingSoon && (
+            !isComingSoon && !isAffiliate && (
               <div class="flex items-center gap-3">
                 <Text variant="label">
                   {" "}

@@ -34,9 +34,15 @@ export const regionStore = {
       const response = await fetch('/api/geo');
       if (response.ok) {
         const data = await response.json();
-        const detectedRegion = data.region || this.config[0]?.id || 'global';
-        if (this.active !== detectedRegion) {
-          this.active = detectedRegion;
+        const detectedId = data.region?.toLowerCase();
+        
+        // Match the user to our list -> If no match -> Catch-all to Global
+        const exists = this.config.some((c: any) => c.id === detectedId);
+        const fallbackId = document.body.dataset.regionFallback || 'global';
+        const finalRegionId = exists ? detectedId : fallbackId;
+
+        if (this.active !== finalRegionId) {
+          this.active = finalRegionId;
           document.documentElement.dataset.activeRegion = this.active;
         }
       }
