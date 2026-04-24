@@ -90,6 +90,8 @@ if (isGatewayImage) {
       decoding={decoding}
       fetchpriority={fetchpriority}
       onerror={`this.srcset=''; this.src='${src}'; this.onerror=null;`}
+      onload="this.style.opacity=1"
+      style="opacity: 0; transition: opacity 0.8s ease-out;"
       {...rest}
     />
   ) : bypassAstroImage ? (
@@ -102,6 +104,8 @@ if (isGatewayImage) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
+      onload="this.style.opacity=1"
+      style="opacity: 0; transition: opacity 0.8s ease-out;"
       {...rest}
     />
   ) : isString ? (
@@ -114,6 +118,8 @@ if (isGatewayImage) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
+      onload="this.style.opacity=1"
+      style="opacity: 0; transition: opacity 0.8s ease-out;"
       {...rest}
     />
   ) : (
@@ -126,6 +132,8 @@ if (isGatewayImage) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
+      onload="this.style.opacity=1"
+      style="opacity: 0; transition: opacity 0.8s ease-out;"
       {...rest} 
     />
   )

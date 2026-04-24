@@ -35,6 +35,8 @@ const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
   href: `/shop/${slugify(cat)}`,
 }));
 
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+
 const dynamicNavigation: NavItem[] = [
   {
     label: "Shop",
@@ -94,21 +96,25 @@ const dynamicNavigation: NavItem[] = [
           class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-coral text-[10px] font-bold text-white shadow-sm"
         ></span>
       </Button>
-      <Button
-        type="ghost"
-        variant="icon-only"
-        size="sm"
-        class="snipcart-customer-signin"
-        aria-label="Customer Account"
-      >
-        <Icon name="PhUser" />
-      </Button>
-      <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label="Cart">
-        <Button type="ghost" variant="icon-only" size="sm" as="span">
-          <Icon name="PhShoppingCart" />
-        </Button>
-        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"></span>
-      </button>
+      { !isAffiliate && (
+        <>
+          <Button
+            type="ghost"
+            variant="icon-only"
+            size="sm"
+            class="snipcart-customer-signin"
+            aria-label="Customer Account"
+          >
+            <Icon name="PhUser" />
+          </Button>
+          <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label="Cart">
+            <Button type="ghost" variant="icon-only" size="sm" as="span">
+              <Icon name="PhShoppingCart" />
+            </Button>
+            <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"></span>
+          </button>
+        </>
+      )}
     </div>
 
     {/* Mobile: Actions + Menu Toggle */}
@@ -120,12 +126,14 @@ const dynamicNavigation: NavItem[] = [
       <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label="Search">
         <Icon name="PhMagnifyingGlass" />
       </Button>
-      <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label="Cart">
-        <Button type="ghost" variant="icon-only" size="sm" as="span">
-          <Icon name="PhShoppingCart" />
-        </Button>
-        <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"></span>
-      </button>
+      { !isAffiliate && (
+        <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label="Cart">
+          <Button type="ghost" variant="icon-only" size="sm" as="span">
+            <Icon name="PhShoppingCart" />
+          </Button>
+          <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"></span>
+        </button>
+      )}
 
       {/* Mobile Menu Toggle */}
       <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = true">
@@ -234,15 +242,17 @@ const dynamicNavigation: NavItem[] = [
                       class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
                     ></span>
                   </Button>
-                  <Button
-                    type="ghost"
-                    variant="icon-only"
-                    size="sm"
-                    class="snipcart-customer-signin"
-                    aria-label="Customer Account"
-                  >
-                    <Icon name="PhUser" />
-                  </Button>
+                  { !isAffiliate && (
+                    <Button
+                      type="ghost"
+                      variant="icon-only"
+                      size="sm"
+                      class="snipcart-customer-signin"
+                      aria-label="Customer Account"
+                    >
+                      <Icon name="PhUser" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

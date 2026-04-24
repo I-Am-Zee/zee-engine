@@ -48,14 +48,19 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <noscript>
+      <style>
+        img { opacity: 1 !important; }
+      </style>
+    </noscript>
     <meta name="description" content={description} />
     
-    {/* Global Assets - Always sourced from public or R2 */}
+    <!-- Global Assets - Always sourced from public or R2 -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
     <title>{fullTitle}</title>
 
-    {/* Universal Interactivity: Email Obfuscation Fix for ViewTransitions */}
+    <!-- Universal Interactivity: Email Obfuscation Fix for ViewTransitions -->
     <script is:inline>
       document.addEventListener('astro:page-load', () => {
         const cloudflareScript = document.querySelector('script[src*="email-decode.min.js"]');
