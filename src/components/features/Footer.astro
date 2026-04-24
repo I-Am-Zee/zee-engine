@@ -1,12 +1,7 @@
 ---
 /**
- * Footer - Kaleido-inspired premium layout
- *
- * Structure:
- * 1. Newsletter strip (full-width, airy)
- * 2. Navigation row: brand tagline left, link columns center, socials right
- * 3. Bottom bar: copyright + legal
- * 4. Giant "Zelia Vance" brand name watermark
+ * Master Footer - Pure Engine Refined Layout
+ * Inspired by the user's architectural vision and editorial jewelry brands.
  */
 
 import { getEntry } from "astro:content";
@@ -14,10 +9,13 @@ import Logo from "../primitives/Logo.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Link from "../primitives/Link.astro";
-import SocialLinks from "../ui/SocialLinks.astro";
-import NewsletterWidget from "./NewsletterWidget.astro";
-import type { NavItem } from "../../types/navigation";
-import { slugify } from "../../scripts/utils/slugify";
+import Image from "../primitives/Image.astro";
+import NewsletterForm from "../ui/NewsletterForm.astro";
+
+// Formatter for social platform names
+const formatPlatform = (name: string) => {
+  return name.replace(/^Ph/, '').replace(/Logo$/, '').replace(/([A-Z])/g, ' $1').trim();
+};
 
 interface Props {
   class?: string;
@@ -25,239 +23,239 @@ interface Props {
 
 const { class: className, ...rest } = Astro.props;
 
-// Fetch Global Settings from Content Layer
+// Fetch Data
 const siteSettings = await getEntry("settings", "brand");
 const navigationEntry = await getEntry("settings", "navigation");
+const taxonomy = await getEntry("settings", "taxonomy");
 
 const brandName = siteSettings?.data?.name || "Brand";
 const socialLinks = siteSettings?.data?.social || [];
 const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
 
-const navigationData = navigationEntry?.data || { main_menus: [], support_links: [] };
-
-// ── Smart Logic: Build Dynamic Navigation ───────────────────
-const taxonomy = await getEntry("settings", "taxonomy");
+// Dynamic Navigation Logic
 const categories = (taxonomy?.data as any)?.categories || [];
-
-const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
-  label: cat.charAt(0).toUpperCase() + cat.slice(1),
-  href: `/shop/${slugify(cat)}`,
-}));
-
-const shopCategories: NavItem[] = [
+const shopCategories: any[] = [
   { label: "All Jewelry", href: "/shop" },
-  ...shopCategoryItems
+  ...categories.map((cat: string) => ({
+    label: cat.charAt(0).toUpperCase() + cat.slice(1),
+    href: `/shop/${cat.toLowerCase().replace(/\s+/g, '-')}`,
+  }))
 ];
 
+const navigationData = navigationEntry?.data || { main_menus: [], support_links: [] };
 const exploreLinks = navigationData.main_menus || [];
 const supportLinks = navigationData.support_links || [];
+
+// Fetch Newsletter Copy
+const newsletterEntry = await getEntry('newsletter_variants', 'footer');
+const newsletterCopy = newsletterEntry?.data || {
+  heading: "Get drop alerts & Zee's style notes",
+  description: "No spam. Just drops, restocks, and the occasional 'Zee's pick'."
+};
 ---
 
-
 <footer
-  class:list={["bg-surface overflow-hidden", className]}
+  class:list={["bg-surface relative pt-12 pb-8 sm:pt-16", className]}
   {...rest}
 >
-
-  {/* ── Section 1: Newsletter Strip ─────────────────────────────── */}
-  <div class="border-t border-border-subtle">
-    <div class="mx-auto max-w-7xl px-6 lg:px-12 py-16 lg:py-20">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
-        <div class="w-full lg:flex-1 lg:pr-10 max-w-2xl">
-          <NewsletterWidget variant="footer" hideDisclaimer />
-        </div>
-      </div>
-      
-      {/* Social Links Row */}
-      <div class="mt-8 flex flex-col lg:flex-row lg:justify-end w-full">
-        <div class="w-full lg:max-w-md flex flex-col gap-3">
-          <Text variant="metadata" class="block font-medium uppercase tracking-wider text-text-main">
-            Follow Us
-          </Text>
-          <SocialLinks links={socialLinks} orientation="horizontal" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* ── Section 2: Nav Row and Images (50/50 Split) ────────────────── */}
-  <div class="border-t border-border-subtle relative z-10 overflow-hidden bg-surface">
-    <div class="mx-auto max-w-7xl px-6 lg:px-12 py-10 lg:py-20">
-      <div class="flex flex-col lg:flex-row-reverse gap-16 lg:gap-8 w-full items-start">
-        
-        {/* Right side (Desktop) / Top (Mobile): Imagery Block */}
-        <div class="w-full lg:w-1/2 flex justify-center lg:justify-end gap-3 sm:gap-6 mb-12 lg:mb-0">
-          <img 
-            src="/images/products/1515562141207-7a88fb7ce338.jpg" 
-            alt={`${brandName} Curated Style`}
-            class="w-1/2 aspect-square lg:max-w-70 lg:aspect-4/5 object-cover rounded-sm shadow-sm"
-            loading="lazy"
-          />
-          <img 
-            src="/images/products/1535632066927-ab7c9ab60908.jpg" 
-            alt={`${brandName} Authentic Detail`}
-            class="w-1/2 aspect-square lg:max-w-70 lg:aspect-4/5 object-cover rounded-sm shadow-sm lg:translate-y-12"
-            loading="lazy"
-          />
-        </div>
-
-        {/* Left side (Desktop) / Bottom (Mobile): Link Grid, Watermark, Legal */}
-        <div class="w-full lg:w-1/2 flex flex-col justify-between h-full min-h-75">
-          
-          {/* Top Half: 3-Column Link Grid */}
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-16 lg:mb-24 w-full">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+    
+    {/* ── Section 1: The Newsletter "Guest List" Card ───────────────── */}
+    <div class="bg-surface-alt rounded-sm overflow-hidden mb-16 sm:mb-20 lg:mb-24 shadow-sm border border-border-subtle/50">
+      <div class="flex flex-col md:flex-row">
+        {/* Left: Content & Form */}
+        <div class="flex-1 p-4 pt-10 pb-10 sm:p-8 sm:pt-12 sm:pb-12 lg:p-14">
+          <div class="max-w-md md:max-w-lg text-center md:text-left mx-auto md:mx-0">
+            <Heading as="h2" class="mb-3 text-2xl sm:text-3xl lg:text-4xl">
+              {newsletterCopy.heading}
+            </Heading>
+            <Text variant="body" color="muted" class="mb-4 text-sm sm:text-base leading-relaxed">
+              {newsletterCopy.description}
+            </Text>
             
-            {/* Column 1: Shop */}
-            <div x-data="{ open: false }">
-              <button
-                class="flex w-full items-center justify-between py-4 border-b border-border-subtle lg:hidden"
-                @click="open = !open"
-              >
-                <Heading as="h5">Shop</Heading>
-                <svg
-                  class="h-4 w-4 text-text-muted shrink-0 transition-transform duration-300"
-                  :class="open && 'rotate-180'"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <Heading as="h5" class="hidden lg:block mb-5">Shop</Heading>
-              <div x-show="open" x-collapse class="lg:hidden!">
-                <ul class="space-y-3 pt-3 pb-4">
-                  {shopCategories.map((item) => (
-                    <li>
-                      <Link href={item.href} variant="plain">
-                        <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                          {item.label}
-                        </Text>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <ul class="hidden lg:flex flex-col space-y-3">
-                {shopCategories.map((item) => (
-                  <li>
-                    <Link href={item.href} variant="plain">
-                      <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                        {item.label}
-                      </Text>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+            <div class="max-w-md md:max-w-lg mx-auto md:mx-0">
+              <NewsletterForm 
+                placeholder="Enter your email address" 
+                buttonText="Subscribe"
+              />
             </div>
-
-            {/* Column 2: Explore */}
-            <div x-data="{ open: false }">
-              <button
-                class="flex w-full items-center justify-between py-4 border-b border-border-subtle lg:hidden"
-                @click="open = !open"
-              >
-                <Heading as="h5">Explore</Heading>
-                <svg
-                  class="h-4 w-4 text-text-muted shrink-0 transition-transform duration-300"
-                  :class="open && 'rotate-180'"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <Heading as="h5" class="hidden lg:block mb-5">Explore</Heading>
-              <div x-show="open" x-collapse class="lg:hidden!">
-                <ul class="space-y-3 pt-3 pb-4">
-                  {exploreLinks.map((item) => (
-                    <li>
-                      <Link href={item.href} variant="plain">
-                        <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                          {item.label}
-                        </Text>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <ul class="hidden lg:flex flex-col space-y-3">
-                {exploreLinks.map((item) => (
-                  <li>
-                    <Link href={item.href} variant="plain">
-                      <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                        {item.label}
-                      </Text>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Column 3: Support */}
-            <div x-data="{ open: false }">
-              <button
-                class="flex w-full items-center justify-between py-4 border-b border-border-subtle lg:hidden"
-                @click="open = !open"
-              >
-                <Heading as="h5">Support</Heading>
-                <svg
-                  class="h-4 w-4 text-text-muted shrink-0 transition-transform duration-300"
-                  :class="open && 'rotate-180'"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <Heading as="h5" class="hidden lg:block mb-5">Support</Heading>
-              <div x-show="open" x-collapse class="lg:hidden!">
-                <ul class="space-y-3 pt-3 pb-4">
-                  {supportLinks.map((item) => (
-                    <li>
-                      <Link href={item.href} variant="plain">
-                        <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                          {item.label}
-                        </Text>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <ul class="hidden lg:flex flex-col space-y-3">
-                {supportLinks.map((item) => (
-                  <li>
-                    <Link href={item.href} variant="plain">
-                      <Text variant="caption" color="muted" class="hover:text-text-main transition-colors">
-                        {item.label}
-                      </Text>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
           </div>
-
-          {/* Bottom Half: Watermark Area & Copyright Anchored strict left */}
-          <div class="flex flex-col gap-6 items-start justify-end w-full">
-             <div class="pointer-events-none select-none opacity-20 transform -translate-x-1 lg:-translate-x-0 w-full overflow-hidden">
-               <Logo variant="full" brandName={brandName} class="text-[17vw]! min-[400px]:text-[4rem]! md:text-[6rem]! lg:text-[5.5rem]! xl:text-[6.5rem]! leading-[0.8]! tracking-tighter whitespace-nowrap" />
-             </div>
-             
-             <div class="flex flex-row flex-wrap items-center justify-between gap-y-4 gap-x-8 pt-2 2xl:pt-4 w-full">
-                <Text variant="metadata" color="muted">{copyright}</Text>
-                <div class="flex flex-wrap gap-4 sm:gap-5 lg:pr-10">
-                  <Link href="/privacy-policy" variant="plain">
-                    <Text variant="metadata" color="muted">Privacy Policy</Text>
-                  </Link>
-                  <Link href="/terms-of-service" variant="plain">
-                    <Text variant="metadata" color="muted">Terms of Service</Text>
-                  </Link>
-                </div>
-             </div>
-          </div>
-
         </div>
-
+        
+        {/* Right: Editorial Image (Hidden on very small screens to maintain focus) */}
+        <div class="hidden md:block md:w-1/3 lg:w-2/5 relative">
+          <Image 
+            src="/images/products/1515562141207-7a88fb7ce338.jpg" 
+            alt="Zelia Vance Aesthetic"
+            ratio="auto"
+            class="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
       </div>
     </div>
+
+    {/* ── Section 2: The Link Grid (Shop, Explore, Support, Social) ────────── */}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-12 mb-24">
+      
+      {/* Shop Column */}
+      <div x-data="{ open: false }">
+        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+          <Heading as="h5">Shop</Heading>
+          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Shop</Heading>
+        <div x-show="open" x-collapse class="md:hidden!">
+          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
+            {shopCategories.map((item) => (
+              <li>
+                <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                  <Text variant="caption" color="muted">{item.label}</Text>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ul class="hidden md:flex flex-col space-y-4">
+          {shopCategories.map((item) => (
+            <li>
+              <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
+                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                  {item.label}
+                </Text>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Explore Column */}
+      <div x-data="{ open: false }">
+        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+          <Heading as="h5">Explore</Heading>
+          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Explore</Heading>
+        <div x-show="open" x-collapse class="md:hidden!">
+          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
+            {exploreLinks.map((item) => (
+              <li>
+                <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                  <Text variant="caption" color="muted">{item.label}</Text>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ul class="hidden md:flex flex-col space-y-4">
+          {exploreLinks.map((item) => (
+            <li>
+              <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
+                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                  {item.label}
+                </Text>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Support Column */}
+      <div x-data="{ open: false }">
+        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+          <Heading as="h5">Support</Heading>
+          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Support</Heading>
+        <div x-show="open" x-collapse class="md:hidden!">
+          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
+            {supportLinks.map((item) => (
+              <li>
+                <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                  <Text variant="caption" color="muted">{item.label}</Text>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ul class="hidden md:flex flex-col space-y-4">
+          {supportLinks.map((item) => (
+            <li>
+              <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
+                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                  {item.label}
+                </Text>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Social Column */}
+      <div x-data="{ open: false }">
+        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+          <Heading as="h5">Social</Heading>
+          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Social</Heading>
+        <div x-show="open" x-collapse class="md:hidden!">
+          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
+            {socialLinks.map((item) => (
+              <li>
+                <Link href={item.url} variant="plain" target="_blank" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                  <Text variant="caption" color="muted">{formatPlatform(item.platform)}</Text>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ul class="hidden md:flex flex-col space-y-4">
+          {socialLinks.map((item) => (
+            <li>
+              <Link href={item.url} variant="plain" target="_blank" class="hover:translate-x-1 transition-transform inline-block group">
+                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                  {formatPlatform(item.platform)}
+                </Text>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+
+    {/* ── Section 3: The Signature & Legal Row ────────────────────────── */}
+    <div class="pt-12 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-8 mb-12">
+      
+      {/* Brand Signature */}
+      <Logo variant="full" brandName={brandName} class="h-9 md:h-10 w-auto" />
+
+      {/* Legal Links */}
+      <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+        <Link href="/privacy-policy" variant="plain">
+          <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">Privacy Policy</Text>
+        </Link>
+        <Link href="/terms-of-service" variant="plain">
+          <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">Terms of Service</Text>
+        </Link>
+      </div>
+    </div>
+
   </div>
 
+  {/* ── Section 4: The Foundation (Copyright Bar) ───────────────────── */}
+  <div class="border-t border-border-subtle/30 bg-surface-alt/30 py-6">
+    <div class="mx-auto max-w-7xl px-4 text-center">
+      <Text variant="metadata" color="muted" class="opacity-70 text-[0.65rem] uppercase tracking-widest">
+        {copyright}
+      </Text>
+    </div>
+  </div>
 </footer>
