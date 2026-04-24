@@ -11,7 +11,7 @@ import ProductCarousel from "../components/features/ProductCarousel.astro";
 
 import LookbookCarousel from "../components/features/LookbookCarousel.astro";
 import TrustSection from "../components/ui/TrustSection.astro";
-import Carousel from "../components/ui/Carousel.astro";
+import CategoryCarousel from "../components/features/CategoryCarousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
 import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 
@@ -114,22 +114,7 @@ const categories = [
           linkUrl={catData.button_mode === 'link' ? catData.link_url : undefined}
         />
         
-        <Carousel 
-          options={{ perPage: 4, perMove: 1, gap: 24, type: 'loop', pagination: true, breakpoints: { 1024: { perPage: 3, gap: 24 }, 768: { perPage: 2, padding: { left: '1rem', right: '2rem' }, gap: 16 }, 640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } } }}
-          class="w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16"
-          trackClass="py-4"
-        >
-          {categories.map((category) => (
-            <li class="splide__slide h-auto py-4">
-              <CollectionCard 
-                title={category.name}
-                href={category.href}
-                image={category.image}
-                itemCount={category.itemCount}
-              />
-            </li>
-          ))}
-        </Carousel>
+        <CategoryCarousel categories={categories} />
       </div>
     </section>
 

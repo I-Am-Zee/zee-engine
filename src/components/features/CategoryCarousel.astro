@@ -1,0 +1,48 @@
+---
+import Carousel from "../ui/Carousel.astro";
+import CollectionCard from "../ui/CollectionCard.astro";
+
+export interface Category {
+  name: string;
+  href: string;
+  image: string;
+  itemCount: number;
+}
+
+interface Props {
+  categories: Category[];
+  class?: string;
+}
+
+const { categories, class: className } = Astro.props;
+
+const options = { 
+  perPage: 4, 
+  perMove: 1, 
+  gap: 24, 
+  type: 'loop', 
+  pagination: true, 
+  breakpoints: { 
+    1024: { perPage: 3, gap: 24 }, 
+    768: { perPage: 2, padding: { left: '1rem', right: '2rem' }, gap: 16 }, 
+    640: { perPage: 1, padding: { left: '1rem', right: '5rem' }, gap: 16 } 
+  } 
+};
+---
+
+<Carousel 
+  options={options}
+  class:list={["w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16", className]}
+  trackClass="py-4"
+>
+  {categories.map((category) => (
+    <li class="splide__slide h-auto py-4">
+      <CollectionCard 
+        title={category.name}
+        href={category.href}
+        image={category.image}
+        itemCount={category.itemCount}
+      />
+    </li>
+  ))}
+</Carousel>
