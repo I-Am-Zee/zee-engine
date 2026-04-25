@@ -382,29 +382,28 @@ export default config({
         name: fields.text({ label: 'Brand Name', validation: { isRequired: true } }),
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
         description: fields.text({ label: 'SEO Description', multiline: true, validation: { isRequired: true } }),
+        legal_entity: fields.text({ label: 'Legal Entity Name', description: 'Used for Copyright text at the bottom of the page.', defaultValue: 'I Am Zee' }),
         social: fields.array(
           fields.object({
             platform: fields.select({
-              label: 'Platform Icon',
+              label: 'Platform Name',
               options: [
-                { label: 'Instagram', value: 'PhInstagramLogo' },
-                { label: 'Facebook', value: 'PhFacebookLogo' },
-                { label: 'Twitter/X', value: 'PhXLogo' },
-                { label: 'Pinterest', value: 'PhPinterestLogo' },
-                { label: 'TikTok', value: 'PhTiktokLogo' },
-                { label: 'YouTube', value: 'PhYoutubeLogo' },
-                { label: 'LinkedIn', value: 'PhLinkedinLogo' },
-                { label: 'WhatsApp', value: 'PhWhatsappLogo' },
+                { label: 'Instagram', value: 'Instagram' },
+                { label: 'Facebook', value: 'Facebook' },
+                { label: 'Twitter/X', value: 'Twitter/X' },
+                { label: 'Pinterest', value: 'Pinterest' },
+                { label: 'TikTok', value: 'TikTok' },
+                { label: 'YouTube', value: 'YouTube' },
+                { label: 'LinkedIn', value: 'LinkedIn' },
+                { label: 'WhatsApp', value: 'WhatsApp' },
               ],
-              defaultValue: 'PhInstagramLogo'
+              defaultValue: 'Instagram'
             }),
             url: fields.url({ label: 'Profile URL', validation: { isRequired: true } })
           }),
           {
             label: 'Social Links',
-            itemLabel: props => props.fields.platform.value 
-              ? props.fields.platform.value.replace('Ph', '').replace('Logo', '').replace('X', 'Twitter/X') 
-              : 'New link' 
+            itemLabel: props => props.fields.platform.value || 'New link' 
           }
         ),
       },
@@ -434,6 +433,17 @@ export default config({
           {
             label: 'Support Links (Footer)',
             description: 'Customer care links like FAQ, Shipping, Returns.',
+            itemLabel: (props) => props.fields.label.value || 'New link'
+          }
+        ),
+        legal_links: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label' }),
+            href: fields.text({ label: 'Link / URL' }),
+          }),
+          {
+            label: 'Legal Links (Bottom Bar)',
+            description: 'Links for the bottom footer bar (e.g., Privacy Policy, Terms of Service).',
             itemLabel: (props) => props.fields.label.value || 'New link'
           }
         ),

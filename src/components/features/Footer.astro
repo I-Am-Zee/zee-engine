@@ -12,11 +12,6 @@ import Link from "../primitives/Link.astro";
 import Image from "../primitives/Image.astro";
 import NewsletterForm from "../ui/NewsletterForm.astro";
 
-// Formatter for social platform names
-const formatPlatform = (name: string) => {
-  return name.replace(/^Ph/, '').replace(/Logo$/, '').replace(/([A-Z])/g, ' $1').trim();
-};
-
 interface Props {
   class?: string;
 }
@@ -29,8 +24,9 @@ const navigationEntry = await getEntry("settings", "navigation");
 const taxonomy = await getEntry("settings", "taxonomy");
 
 const brandName = siteSettings?.data?.name || "Brand";
+const legalEntity = siteSettings?.data?.legal_entity || "I Am Zee";
 const socialLinks = siteSettings?.data?.social || [];
-const copyright = `© ${new Date().getFullYear()} I Am Zee. All rights reserved.`;
+const copyright = `Copyright © ${new Date().getFullYear()} ${legalEntity}. All rights reserved.`;
 
 // Dynamic Navigation Logic
 const categories = (taxonomy?.data as any)?.categories || [];
@@ -42,9 +38,10 @@ const shopCategories: any[] = [
   }))
 ];
 
-const navigationData = navigationEntry?.data || { main_menus: [], support_links: [] };
+const navigationData = navigationEntry?.data || { main_menus: [], support_links: [], legal_links: [] };
 const exploreLinks = navigationData.main_menus || [];
 const supportLinks = navigationData.support_links || [];
+const legalLinks = navigationData.legal_links || [];
 
 // Fetch Newsletter Copy
 const newsletterEntry = await getEntry('newsletter_variants', 'footer');
@@ -86,7 +83,7 @@ const newsletterCopy = newsletterEntry?.data || {
         <div class="hidden md:block md:w-1/3 lg:w-2/5 relative">
           <Image 
             src="/images/products/1515562141207-7a88fb7ce338.jpg" 
-            alt="Zelia Vance Aesthetic"
+            alt={`${brandName} Editorial`}
             ratio="auto"
             class="absolute inset-0 w-full h-full object-cover"
           />
@@ -210,7 +207,7 @@ const newsletterCopy = newsletterEntry?.data || {
             {socialLinks.map((item) => (
               <li>
                 <Link href={item.url} variant="plain" target="_blank" class="block py-3 px-4 active:bg-surface-alt transition-colors">
-                  <Text variant="caption" color="muted">{formatPlatform(item.platform)}</Text>
+                  <Text variant="caption" color="muted">{item.platform}</Text>
                 </Link>
               </li>
             ))}
@@ -221,7 +218,7 @@ const newsletterCopy = newsletterEntry?.data || {
             <li>
               <Link href={item.url} variant="plain" target="_blank" class="hover:translate-x-1 transition-transform inline-block group">
                 <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
-                  {formatPlatform(item.platform)}
+                  {item.platform}
                 </Text>
               </Link>
             </li>
@@ -239,12 +236,11 @@ const newsletterCopy = newsletterEntry?.data || {
 
       {/* Legal Links */}
       <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-        <Link href="/privacy-policy" variant="plain">
-          <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">Privacy Policy</Text>
-        </Link>
-        <Link href="/terms-of-service" variant="plain">
-          <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">Terms of Service</Text>
-        </Link>
+        {legalLinks.map((link: any) => (
+          <Link href={link.href} variant="plain">
+            <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">{link.label}</Text>
+          </Link>
+        ))}
       </div>
     </div>
 
