@@ -17,12 +17,11 @@ const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 // https://astro.build/config
 export default defineConfig({
   site: siteUrl,
-  
-  // Hybrid mode allows for both static generation and dynamic API/Admin routes
-  output: 'hybrid',
+  // Astro 5 'static' mode - dynamic routes opt-out via 'export const prerender = false'
+  output: 'static',
 
   server: {
-    host: true, // Bind to all interfaces (essential for tunnels/dev.zeliavance.com)
+    host: true, // Bind to all interfaces for tunnel support
     port: 4321
   },
   
@@ -36,32 +35,34 @@ export default defineConfig({
       allowedHosts: ['dev.zeliavance.com']
     },
     optimizeDeps: {
-      // Prevents Vite from over-bundling Keystatic, which causes hydration issues in Astro 5
-      exclude: ['@keystatic/core', '@keystatic/astro']
+      // Pre-bundle common Keystatic UI dependencies to prevent 404s and CJS/ESM syntax errors
+      include: [
+        'react', 
+        'react-dom', 
+        '@keystatic/core',
+        '@keystatic/core/ui', 
+        '@keystatic/core/renderer',
+        'lodash/debounce'
+      ]
     },
     build: {
       rollupOptions: {
-        // Externalize packages that are dynamically imported in API routes
         external: ['stripe']
       }
     }
   },
 
   integrations: [
-    // React renderer — required by Keystatic admin UI
     react(),
-    // Keystatic CMS — enabled in DEV and on the development domain
-    ...(process.env.NODE_ENV === 'development' || siteUrl.includes('dev.zeliavance.com') ? [keystatic()] : []),
+    // Keystatic CMS — Active in local dev OR when on the dev domain
+    ...(process.env.NODE_ENV === 'development' || siteUrl.includes('dev') ? [keystatic()] : []),
     alpinejs({
       entrypoint: '/src/scripts/behaviors/alpine-entrypoint.ts'
     }),
     mdx()
   ],
 
-  // Cloudflare adapter for deployment (supports hybrid mode)
   adapter: cloudflare({
-    platformProxy: {
-      enabled: true
-    }
+    platformProxy: { enabled: true }
   })
 });
