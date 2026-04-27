@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import EngineLayout from '../../layouts/EngineLayout.astro';
+import Heading from '../../components/primitives/Heading.astro';
+import Text from '../../components/primitives/Text.astro';
+
+export async function getStaticPaths() {
+  const legalPages = await getCollection('legal');
+  // Only generate paths for non-draft pages
+  return legalPages
+    .filter(page => !page.data.isDraft)
+    .map(page => ({
+      params: { slug: page.id },
+      props: { page },
+    }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+
+export const prerender = true;
+---
+
+<EngineLayout pageTitle={page.data.title}>
+  <article class="mx-auto max-w-4xl px-4 py-16 md:py-32">
+    <div class="text-center mb-16 md:mb-24">
+      <Text variant="eyebrow" class="text-accent-brass mb-4 block">Legal Center</Text>
+      <Heading as="h1" class="mb-6">{page.data.title}</Heading>
+      {page.data.description && (
+        <Text variant="lead" color="muted" class="max-w-2xl mx-auto">
+          {page.data.description}
+        </Text>
+      )}
+      {page.data.lastUpdated && (
+        <Text variant="caption" color="muted" class="mt-4 block italic">
+          Last Updated: {page.data.lastUpdated.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </Text>
+      )}
+    </div>
+
+    <div class="prose prose-zelia mx-auto max-w-none">
+      <Content />
+    </div>
+  </article>
+</EngineLayout>

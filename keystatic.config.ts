@@ -41,7 +41,7 @@ export default config({
   ui: {
     brand: { name: `${brandId.toUpperCase()}` },
     navigation: {
-      'CONTENT': ['products', 'lookbooks', 'blog', 'pages', 'collections_grid'],
+      'CONTENT': ['products', 'lookbooks', 'blog', 'legal', 'brand', 'collections_grid'],
       'PAGE CONTENT': [
         'page_home_hero', 
         'page_trust_section', 
@@ -322,33 +322,124 @@ export default config({
     }),
 
     // ── Legal Pages ───────────────────────────────────────────────
-    pages: collection({
+    legal: collection({
       label: 'Legal Pages',
       slugField: 'title',
-      path: `src/content/${brandId}/pages/*`,
-      format: { contentField: 'body' },
+      path: `src/content/${brandId}/legal/*`,
+      format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         description: fields.text({ label: 'Description', multiline: true }),
-        lastUpdated: fields.date({ label: 'Last Updated', validation: { isRequired: false } }),
-        body: fields.mdx({ label: 'Content' }),
+        lastUpdated: fields.date({ label: 'Last Updated' }),
+        isDraft: fields.checkbox({ label: 'Draft Mode', defaultValue: false }),
+        content: fields.mdx({
+          label: 'Content',
+          options: {
+            image: {
+              directory: `src/assets/images/legal`,
+              publicPath: `../../assets/images/legal`,
+            },
+          },
+        }),
+      },
+    }),
+    brand: collection({
+      label: 'Brand Stories',
+      slugField: 'slug',
+      path: `src/content/${brandId}/brand/*`,
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({ label: 'Internal Title (Used as Page Eyebrow)' }),
+        slug: fields.text({ label: 'Slug' }),
+        isDraft: fields.checkbox({ label: 'Draft Mode', defaultValue: false }),
+        
+        // --- THE HERO (SINGLETON PER PAGE) ---
+        hero: fields.object({
+          heading: fields.text({ label: 'Hero Heading' }),
+          text: fields.text({ label: 'Hero Description/Italic Lead', multiline: true }),
+          image: fields.text({ label: 'Hero Image Path (R2/Local)' }),
+          isImmersive: fields.checkbox({ label: 'Enable Immersive Reveal (GSAP)', defaultValue: false }),
+        }, { label: 'Hero Section (Top of Page)' }),
+
+        // --- THE BODY SECTIONS ---
+        sections: fields.array(
+          fields.object({
+            layout: fields.select({
+              label: 'Layout Style',
+              options: [
+                { label: 'No Image (Centered Content Column)', value: 'no-image' },
+                { label: 'Magazine Flow: Image Left (Wraps Text)', value: 'image-left' },
+                { label: 'Magazine Flow: Image Right (Wraps Text)', value: 'image-right' },
+              ],
+              defaultValue: 'image-right',
+            }),
+            alignment: fields.select({
+              label: 'Text Alignment',
+              options: [
+                { label: 'Left', value: 'left' },
+                { label: 'Center', value: 'center' },
+                { label: 'Right', value: 'right' },
+              ],
+              defaultValue: 'left',
+            }),
+            
+            // --- THE STACK (Modular Vertical Column) ---
+            stack: fields.blocks({
+              heading: {
+                label: 'Heading',
+                schema: fields.object({
+                  type: fields.select({
+                    label: 'Size',
+                    options: [
+                      { label: 'H2 (Large)', value: 'h2' },
+                      { label: 'H3 (Medium)', value: 'h3' },
+                      { label: 'H4 (Small)', value: 'h4' },
+                    ],
+                    defaultValue: 'h2',
+                  }),
+                  content: fields.text({ label: 'Heading Text' }),
+                  italic: fields.checkbox({ label: 'Italic Styling', defaultValue: false }),
+                }),
+              },
+              text: {
+                label: 'Text',
+                schema: fields.object({
+                  type: fields.select({
+                    label: 'Variant',
+                    options: [
+                      { label: 'Paragraph (Body)', value: 'paragraph' },
+                      { label: 'Lead (Introductory)', value: 'lead' },
+                      { label: 'Muted (Secondary)', value: 'muted' },
+                      { label: 'Eyebrow (Label)', value: 'eyebrow' },
+                      { label: 'Callout (Sidebar Style)', value: 'callout' },
+                      { label: 'Quote (Blockquote)', value: 'quote' },
+                    ],
+                    defaultValue: 'paragraph',
+                  }),
+                  content: fields.text({ label: 'Text Content', multiline: true }),
+                  italic: fields.checkbox({ label: 'Italic Styling', defaultValue: false }),
+                }),
+              },
+            }, { label: 'Content Stack' }),
+
+            image: fields.object({
+              url: fields.text({ label: 'Image URL/Path' }),
+              alt: fields.text({ label: 'Alt Text' }),
+              caption: fields.text({ label: 'Visible Caption' }),
+              mobileOffset: fields.integer({ 
+                label: 'Image After (Block #)', 
+                defaultValue: 0 
+              }),
+            }, { label: 'Section Image' }),
+          }),
+          {
+            label: 'Body Sections',
+            itemLabel: (props) => props.fields.layout.value.toUpperCase() + ' Section',
+          }
+        ),
       },
     }),
 
-    // ── Newsletter ────────────────────────────────────────────────
-    newsletter: collection({
-      label: 'Newsletter Widgets',
-      slugField: 'heading',
-      path: `src/content/${brandId}/newsletter/*`,
-      format: { data: 'json' },
-      // slugField is required by Keystatic types. The filename (footer, modal, section, sidebar)
-      // acts as the slug. Do not create new entries or rename existing ones.
-      schema: {
-        heading: fields.slug({ name: { label: 'Heading', description: 'The headline copy shown in this newsletter widget variant.' } }),
-        description: fields.text({ label: 'Description', multiline: true, validation: { isRequired: true } }),
-        success_message: fields.text({ label: 'Success Message', defaultValue: 'Thank you for subscribing!', validation: { isRequired: false } }),
-      },
-    }),
 
     // ── Page Headers (H1 Strategy) ────────────────────────────────
     page_headers: collection({

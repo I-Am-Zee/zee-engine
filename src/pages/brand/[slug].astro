@@ -1,0 +1,241 @@
+---
+import { getCollection } from 'astro:content';
+import EngineLayout from '../../layouts/EngineLayout.astro';
+import Heading from '../../components/primitives/Heading.astro';
+import Text from '../../components/primitives/Text.astro';
+import Image from '../../components/primitives/Image.astro';
+
+export async function getStaticPaths() {
+  const brandPages = await getCollection('brand');
+  return brandPages
+    .filter(page => !page.data.isDraft)
+    .map(page => {
+      // Defensively strip .json if it exists in the ID
+      const slug = page.id.replace(/\.json$/, '');
+      return {
+        params: { slug },
+        props: { page },
+      };
+    });
+}
+
+export const prerender = true;
+
+const { page } = Astro.props;
+const { hero, sections = [], title } = page.data;
+
+const alignmentMap: Record<string, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+---
+
+<style is:inline>
+  /* Atomic display toggles that bypass ALL bundling and scoping */
+  div.force-hide-on-mobile { 
+    display: none !important; 
+  }
+  @media (min-width: 768px) {
+    div.force-hide-on-mobile { 
+      display: block !important; 
+    }
+  }
+  
+  div.force-hide-on-desktop { 
+    display: block !important; 
+  }
+  @media (min-width: 768px) {
+    div.force-hide-on-desktop { 
+      display: none !important; 
+    }
+  }
+</style>
+
+<EngineLayout pageTitle={title}>
+  <article class="relative overflow-hidden bg-background">
+    
+    {/* ── CINEMATIC HERO (SINGLETON) ── */}
+    {hero && (
+      <header class="relative w-full h-[60vh] md:h-[80vh] bg-black overflow-hidden">
+        {hero.image && (
+          <Image
+            src={hero.image}
+            alt={hero.heading || title}
+            class="absolute inset-0 w-full h-full object-cover brightness-50"
+            loading="eager"
+            fetchpriority="high"
+          />
+        )}
+        <div class="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+        
+        {/* Title Overlay */}
+        <div class="absolute bottom-0 left-0 right-0 p-8 md:p-20 text-white">
+          <div class="mx-auto max-w-7xl px-4 lg:px-8">
+            <Text variant="eyebrow" class="text-accent-brass mb-4">{title}</Text>
+            
+            {hero.heading && (
+              <Heading as="h1" size="h2" color="inverse" class="mb-6">
+                {hero.heading}
+              </Heading>
+            )}
+            
+            {hero.text && (
+              <p class="text-lg md:text-2xl max-w-2xl font-light italic leading-relaxed text-gray-200 opacity-90 border-l-2 border-accent-brass/50 pl-6 py-2">
+                {hero.text}
+              </p>
+            )}
+          </div>
+        </div>
+      </header>
+    )}
+
+    {/* ── STORY BODY (LUXURY MAGAZINE FLOW) ── */}
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12 md:py-20">
+      {sections.map((section: any) => {
+        const { layout, alignment = 'left', stack = [], image } = section;
+        
+        const isImageLeft = layout === 'image-left';
+        const isImageRight = layout === 'image-right';
+        const isNoImage = layout === 'no-image';
+        const alignmentClass = alignmentMap[alignment] || 'text-left';
+
+        return (
+          <section 
+            class={`relative py-12 md:py-20 clear-both ${alignmentClass}`}
+            data-layout={layout}
+          >
+            
+            {/* ── MAGAZINE IMAGE (FLOAT) ── */}
+            {(isImageLeft || isImageRight) && image?.url && (
+              <div class={`force-hide-on-mobile w-full md:w-[35%] mb-8 ${isImageLeft ? 'md:float-left md:mr-16' : 'md:float-right md:ml-16'}`}>
+                <div class="overflow-hidden rounded-sm shadow-2xl">
+                  <Image src={image.url} alt={image.alt || "Story visual"} ratio="portrait" />
+                </div>
+                {image.caption && (
+                  <Text variant="caption" color="muted" class="mt-4 italic block text-center">
+                    {image.caption}
+                  </Text>
+                )}
+              </div>
+            )}
+
+            {/* ── CONTENT STACK (FLOWS AROUND FLOAT) ── */}
+            <div class="content-flow leading-relaxed">
+              {stack.map((item: any, blockIndex: number) => {
+                const { discriminant, value } = item;
+                
+                // --- UNIFORM RHYTHM LOGIC ---
+                const prevItem = blockIndex > 0 ? stack[blockIndex - 1] : null;
+                const isHeading = discriminant === 'heading';
+                const isPrevEyebrow = prevItem?.discriminant === 'text' && prevItem?.value?.type === 'eyebrow';
+
+                let spacingClass = '';
+                if (blockIndex > 0) {
+                  if (isHeading && isPrevEyebrow) {
+                    spacingClass = 'mt-2 md:mt-4'; // Magnetize Eyebrow to Heading
+                  } else {
+                    spacingClass = 'mt-8'; // Uniform Editorial Rhythm
+                  }
+                }
+                
+                // Mobile Image Injection Logic (Choreographer)
+                const targetOffset = Number(image?.mobileOffset || 0);
+                const showImageHere = !isNoImage && image?.url && blockIndex === targetOffset;
+
+                return (
+                  <>
+                    {showImageHere && (
+                      <div class="force-hide-on-desktop w-full mb-12 mt-4 pt-8">
+                        <div class="overflow-hidden rounded-sm shadow-2xl">
+                          <Image 
+                            src={image.url} 
+                            alt={image.alt || "Story visual"} 
+                            ratio="portrait" 
+                            class="max-h-[70vh]"
+                          />
+                        </div>
+                        {image.caption && (
+                          <Text variant="caption" color="muted" class="mt-4 italic block text-center">
+                            {image.caption}
+                          </Text>
+                        )}
+                      </div>
+                    )}
+
+                    {discriminant === 'heading' && (
+                      <div class={spacingClass}>
+                        <Heading 
+                          as={value.type as any} 
+                          italic={value.italic}
+                          class="text-balance"
+                        >
+                          {value.content}
+                        </Heading>
+                      </div>
+                    )}
+                    {discriminant === 'text' && (() => {
+                      const isQuote = value.type === 'quote';
+                      return (
+                        <div class={`
+                          ${spacingClass} 
+                          overflow-hidden
+                          ${isQuote ? 'px-8 md:px-17' : ''}
+                          ${isQuote && isNoImage && alignment === 'center' ? 'flex justify-center' : ''}
+                        `}>
+                          <Text 
+                            variant={value.type as any} 
+                            italic={value.italic}
+                            class={`${isQuote && isNoImage ? 'max-w-3xl mx-auto' : 'max-w-none'}`}
+                          >
+                            {value.content}
+                          </Text>
+                        </div>
+                      );
+                    })()}
+                  </>
+                );
+              })}
+
+              {/* Handle case where image is appended to the end of the mobile stack */}
+              {!isNoImage && image?.url && Number(image?.mobileOffset || 0) >= stack.length && (
+                <div class="force-hide-on-desktop w-full mb-12 mt-12 pt-8">
+                  <div class="overflow-hidden rounded-sm shadow-2xl">
+                    <Image 
+                      src={image.url} 
+                      alt={image.alt || "Story visual"} 
+                      ratio="portrait" 
+                      class="max-h-[70vh]"
+                    />
+                  </div>
+                  {image.caption && (
+                    <Text variant="caption" color="muted" class="mt-4 italic block text-center">
+                      {image.caption}
+                    </Text>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Clear floats for the next section */}
+            <div class="clear-both" />
+          </section>
+        )
+      })}
+    </div>
+
+  </article>
+</EngineLayout>
+
+<style is:global>
+  /* Magazine Flow Specific Wrapping Logic */
+  .content-flow {
+  }
+  
+  /* Prevent content from getting squashed on small screens next to float */
+  @media (max-width: 768px) {
+    .content-flow {
+      clear: both;
+    }
+  }
+</style>

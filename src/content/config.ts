@@ -188,17 +188,67 @@ const blog = defineCollection({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// STATIC PAGES — Legal (Shared across all brands, NOT brand-specific)
+// ATOMIC SILOED PAGES: Legal & Brand
 // ═══════════════════════════════════════════════════════════════════════════
-const pages = defineCollection({
+const legal = defineCollection({
   loader: glob({
     pattern: "**/*.{md,mdx}",
-    base: `./src/content/${brandId}/pages`,
+    base: `./src/content/${brandId}/legal`,
   }),
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
     lastUpdated: z.date().optional(),
+    isDraft: z.boolean().default(false),
+  }),
+});
+
+const brand = defineCollection({
+  loader: glob({
+    pattern: "**/*.json",
+    base: `./src/content/${brandId}/brand`,
+  }),
+  schema: z.object({
+    title: z.string(),
+    isDraft: z.boolean().default(false),
+    hero: z.object({
+      heading: z.string(),
+      text: z.string(),
+      image: z.string(),
+      isImmersive: z.boolean().default(false),
+    }).optional(),
+    sections: z.array(
+      z.object({
+        layout: z.enum(['no-image', 'image-left', 'image-right']),
+        alignment: z.enum(['left', 'center', 'right']).default('left'),
+        stack: z.array(
+          z.discriminatedUnion('discriminant', [
+            z.object({
+              discriminant: z.literal('heading'),
+              value: z.object({
+                type: z.string(),
+                content: z.string(),
+                italic: z.boolean(),
+              }),
+            }),
+            z.object({
+              discriminant: z.literal('text'),
+              value: z.object({
+                type: z.string(),
+                content: z.string(),
+                italic: z.boolean(),
+              }),
+            }),
+          ])
+        ).default([]),
+        image: z.object({
+          url: z.string().optional(),
+          alt: z.string().optional(),
+          caption: z.string().optional(),
+          mobileOffset: z.number().optional(),
+        }).optional(),
+      })
+    ).default([]),
   }),
 });
 
@@ -266,7 +316,8 @@ export const collections = {
   products,
   lookbooks,
   blog,
-  pages,
+  legal,
+  brand,
   settings,
   newsletter_variants,
   collections_grid,

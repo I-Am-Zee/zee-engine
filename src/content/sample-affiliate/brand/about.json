@@ -1,0 +1,15 @@
+{
+  "title": "About Sample Affiliate",
+  "slug": "about",
+  "isDraft": false,
+  "isImmersive": false,
+  "sections": [
+    {
+      "layout": "hero",
+      "heading": "Our Journey",
+      "text": "This is a sample brand story for the affiliate engine. It demonstrates how sections can be used to tell a compelling narrative about a brand or movement.",
+      "image": "",
+      "imageAlt": ""
+    }
+  ]
+}

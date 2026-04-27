@@ -1,0 +1,116 @@
+{
+  "title": "About Zelia Vance",
+  "isDraft": false,
+  "hero": {
+    "heading": "Old Money Looks, Modern World Soul.",
+    "text": "\"Zelia Vance exists because the 'Old Money' look shouldn't require an 'Old Money' bank account. Period.\"",
+    "image": "/images/brand-shots/HeroCheck.jpg",
+    "isImmersive": false
+  },
+  "sections": [
+    {
+      "layout": "image-right",
+      "alignment": "left",
+      "stack": [
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "eyebrow",
+            "content": "THE PHILOSOPHY",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "heading",
+          "value": {
+            "type": "h2",
+            "content": "The High-End Secret",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "lead",
+            "content": "Zelia Vance was founded on a singular observation: high-street jewelry taints, and high-jewelry breaks the bank. We chose a third path.",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "paragraph",
+            "content": "Our journey began in the search for pieces that could handle the pace of a modern woman's life—from morning coffee runs to late-night galas—without losing their golden luster. By utilizing 18K PVD-coating technology, we've bridged that gap.",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "quote",
+            "content": "Real luxury isn't about the price tag; it's about the feeling of wearing something that never lets you down.",
+            "italic": true
+          }
+        },
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "muted",
+            "content": "*Note: All Zelia Vance pieces are certified tarnish-free for up to 2 years under standard care conditions.*",
+            "italic": false
+          }
+        }
+      ],
+      "image": {
+        "url": "/images/brand-shots/HeroCheck.jpg",
+        "alt": "Brand Philosophy Visual",
+        "caption": "The glow that lasts.",
+        "mobileOffset": 2
+      }
+    },
+    {
+      "layout": "image-left",
+      "alignment": "left",
+      "stack": [
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "eyebrow",
+            "content": "CRAFTSMANSHIP",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "heading",
+          "value": {
+            "type": "h3",
+            "content": "Life-Proof Engineering",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "paragraph",
+            "content": "Standard gold plating is essentially a thin wash. It wears off with a single splash of perfume. Our PVD process bonds 18K gold to a surgical-grade steel base at a molecular level.",
+            "italic": false
+          }
+        },
+        {
+          "discriminant": "text",
+          "value": {
+            "type": "callout",
+            "content": "Did you know? PVD coating is 10x more durable than standard electroplating, making it truly water-resistant and sweat-proof.",
+            "italic": false
+          }
+        }
+      ],
+      "image": {
+        "url": "/images/brand-shots/HeroCheck.jpg",
+        "alt": "Technical Details",
+        "caption": "Detailing the PVD process.",
+        "mobileOffset": 3
+      }
+    }
+  ]
+}
