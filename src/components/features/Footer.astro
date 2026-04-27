@@ -11,6 +11,7 @@ import Text from "../primitives/Text.astro";
 import Link from "../primitives/Link.astro";
 import Image from "../primitives/Image.astro";
 import NewsletterForm from "../ui/NewsletterForm.astro";
+import { slugify } from "../../scripts/utils/slugify";
 
 interface Props {
   class?: string;
@@ -34,7 +35,7 @@ const shopCategories: any[] = [
   { label: "All Jewelry", href: "/shop" },
   ...categories.map((cat: string) => ({
     label: cat.charAt(0).toUpperCase() + cat.slice(1),
-    href: `/shop/${cat.toLowerCase().replace(/\s+/g, '-')}`,
+    href: `/shop/${slugify(cat)}`,
   }))
 ];
 

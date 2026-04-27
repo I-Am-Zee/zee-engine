@@ -16,15 +16,15 @@
   "support_links": [
     {
       "label": "About Us",
-      "href": "/about"
+      "href": "/brand/about"
     },
     {
       "label": "Shipping",
-      "href": "/shipping"
+      "href": "/legal/shipping"
     },
     {
       "label": "Returns",
-      "href": "/returns"
+      "href": "/legal/returns"
     },
     {
       "label": "FAQ",
@@ -38,11 +38,11 @@
   "legal_links": [
     {
       "label": "Privacy Policy",
-      "href": "/privacy-policy"
+      "href": "/legal/privacy-policy"
     },
     {
       "label": "Terms of Service",
-      "href": "/terms-of-service"
+      "href": "/legal/terms-of-service"
     }
   ]
 }
