@@ -34,18 +34,18 @@ const {
 
 // Intent-specific styles (Atomic Design)
 const variantStyles: Record<string, string> = {
-  paragraph: "text-base leading-relaxed",
-  body: "text-base leading-relaxed",
-  lead: "text-lg md:text-xl leading-relaxed font-light",
-  caption: "text-sm leading-normal",
-  muted: "text-base leading-relaxed",
-  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-accent-brass",
+  paragraph: "text-base leading-relaxed text-pretty",
+  body: "text-base leading-relaxed text-pretty",
+  lead: "text-lg md:text-xl leading-relaxed font-light text-pretty",
+  caption: "text-sm leading-normal text-balance",
+  muted: "text-base leading-relaxed text-pretty",
+  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-accent-brass text-balance",
   metadata: "text-[10px] md:text-xs font-medium leading-none text-text-muted",
   price: "text-lg md:text-xl font-bold tracking-tight leading-none text-primary",
   price_sale: "text-xs md:text-sm line-through opacity-50 font-normal leading-none",
   label: "text-xs font-semibold uppercase tracking-wider",
-  callout: "text-base font-semibold leading-relaxed italic border-l-2 border-accent-brass pl-4 py-1",
-  quote: "text-lg md:text-xl font-serif italic leading-relaxed text-text-muted",
+  callout: "text-base font-semibold leading-relaxed italic border-l-4 border-accent-brass pl-6",
+  quote: "text-lg md:text-xl font-serif italic leading-relaxed text-text-muted text-pretty",
   code: "font-mono text-sm bg-surface-muted px-1.5 py-0.5 rounded border border-border-subtle text-primary",
   tag: "inline-flex items-center text-[10px] font-bold uppercase tracking-wider bg-surface px-2 py-0.5 rounded-full border border-border-subtle",
 };
@@ -61,7 +61,8 @@ const defaultTagMap: Record<string, any> = {
   metadata: "span",
   eyebrow: "span",
   tag: "span",
-  muted: "p"
+  muted: "p",
+  callout: "p"
 };
 
 const Tag = as || defaultTagMap[variant] || "span";

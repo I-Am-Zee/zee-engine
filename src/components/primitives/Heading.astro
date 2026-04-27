@@ -1,11 +1,15 @@
 ---
 export interface Props {
   as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   color?: "main" | "muted" | "inverse" | "accent";
   class?: string;
 }
 
-const { as: Tag, color = "main", class: className, ...rest } = Astro.props;
+const { as: Tag, size, color = "main", class: className, ...rest } = Astro.props;
+
+// Use explicit size if provided, otherwise fallback to Tag for semantic/visual alignment
+const visualSize = size || Tag;
 
 // Color mappings
 const colorChoices: Record<string, string> = {
@@ -30,7 +34,7 @@ const sizeStyles: Record<string, string> = {
   h6: "text-[clamp(1rem,2vw,1.125rem)] font-bold",
 };
 
-const combinedClasses = `${baseStyles} ${sizeStyles[Tag]} ${className || ""}`.trim();
+const combinedClasses = `${baseStyles} ${sizeStyles[visualSize]} ${className || ""}`.trim();
 ---
 
 <Tag class={combinedClasses} {...rest}>
