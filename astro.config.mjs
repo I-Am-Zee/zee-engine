@@ -18,11 +18,11 @@ const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 export default defineConfig({
   site: siteUrl,
   
-  // Static by default (hybrid automatically supported in Astro 5 for API routes)
-  output: 'static',
+  // Hybrid mode allows for both static generation and dynamic API/Admin routes
+  output: 'hybrid',
 
   server: {
-    host: '127.0.0.1',
+    host: true, // Bind to all interfaces (essential for tunnels/dev.zeliavance.com)
     port: 4321
   },
   
@@ -35,6 +35,10 @@ export default defineConfig({
     server: {
       allowedHosts: ['dev.zeliavance.com']
     },
+    optimizeDeps: {
+      // Prevents Vite from over-bundling Keystatic, which causes hydration issues in Astro 5
+      exclude: ['@keystatic/core', '@keystatic/astro']
+    },
     build: {
       rollupOptions: {
         // Externalize packages that are dynamically imported in API routes
@@ -44,10 +48,10 @@ export default defineConfig({
   },
 
   integrations: [
-    // React renderer — required by Keystatic admin UI (local dev only)
+    // React renderer — required by Keystatic admin UI
     react(),
-    // Keystatic CMS — mounts /keystatic dashboard in DEV only
-    ...(import.meta.env.DEV ? [keystatic()] : []),
+    // Keystatic CMS — enabled in DEV and on the development domain
+    ...(process.env.NODE_ENV === 'development' || siteUrl.includes('dev.zeliavance.com') ? [keystatic()] : []),
     alpinejs({
       entrypoint: '/src/scripts/behaviors/alpine-entrypoint.ts'
     }),
@@ -55,5 +59,9 @@ export default defineConfig({
   ],
 
   // Cloudflare adapter for deployment (supports hybrid mode)
-  adapter: cloudflare()
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true
+    }
+  })
 });
