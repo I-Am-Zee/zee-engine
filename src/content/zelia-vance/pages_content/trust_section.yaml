@@ -1,0 +1,12 @@
+main_heading: "Unapologetically Bold. Effortlessly You."
+hero_image: "/images/brand-shots/WomenWearingGold_TrustImage.jpeg"
+markers:
+  - title: "Runway Quality, Real-World Ready"
+    description: "We bridge the gap between high-street and high-end. Get the weight, the shine, and the \"Where did you get that?\" factor in every piece."
+    icon: "PhSketchLogo"
+  - title: "Sustainability in Style"
+    description: "By using PVD coating—a vacuum-sealed, eco-friendly process—we eliminate the harsh chemicals of traditional plating while doubling the lifespan of your jewelry."
+    icon: "PhLeaf"
+  - title: "The 365-Day Glow"
+    description: "From your morning latte to a midnight gala, our pieces are sweat-proof and waterproof. Wear them daily; love them forever."
+    icon: "PhCalendarCheck"
