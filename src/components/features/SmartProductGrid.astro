@@ -1,0 +1,62 @@
+---
+import { getEntry } from "astro:content";
+import FilterSortBar from "../ui/FilterSortBar.astro";
+import GlassProductCard from "../ui/GlassProductCard.astro";
+
+interface Props {
+  products: any[];
+  itemLabel?: string;
+}
+
+const { products, itemLabel } = Astro.props;
+
+// Fetch global default sort from specialized singleton
+const methodsEntry = await getEntry("settings", "sorting-methods");
+const defaultSort = methodsEntry?.data?.products?.default_sort || 'featured';
+---
+
+<div class="smart-product-grid" x-data={`productSorter('${defaultSort}')`}>
+  <!-- Filter & Sort Bar -->
+  <FilterSortBar productCount={products.length} itemLabel={itemLabel} />
+
+  <!-- Product Grid -->
+  <div 
+    id="product-grid" 
+    x-ref="grid"
+    class="grid grid-cols-1 min-[375px]:grid-cols-2 gap-x-4 gap-y-6 sm:gap-x-6 sm:gap-y-8 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-12"
+  >
+    {products.map((product) => (
+      <div
+        class="product-item"
+        data-id={product.id}
+        data-price={product.data.salePrice || product.data.price}
+        data-name={product.data.title}
+        data-rating={product.data.rating || 0}
+        data-date={product.data.publishDate ? new Date(product.data.publishDate).toISOString() : 0}
+        data-on-sale={product.data.salePrice ? "true" : "false"}
+      >
+        <GlassProductCard product={product} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { gridSort } from "../../scripts/behaviors/sorting";
+
+  function initSorter() {
+    // @ts-ignore
+    if (window.Alpine) {
+      // @ts-ignore
+      window.Alpine.data("productSorter", (initialSort = 'featured') => gridSort(initialSort));
+    }
+  }
+
+  // Ensure it runs on both initial load and view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", initSorter);
+  } else {
+    initSorter();
+  }
+  document.addEventListener("astro:page-load", initSorter);
+</script>

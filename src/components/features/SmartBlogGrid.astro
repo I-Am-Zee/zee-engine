@@ -1,0 +1,61 @@
+---
+/**
+ * SmartBlogGrid - Feature Component (Organism)
+ * 
+ * Orchestrates blog listing with client-side sorting.
+ */
+
+import { getEntry } from "astro:content";
+import FilterSortBar from "../ui/FilterSortBar.astro";
+import BlogCard from "../ui/BlogCard.astro";
+
+interface Props {
+  posts: any[];
+  itemLabel?: string;
+}
+
+const { posts, itemLabel } = Astro.props;
+
+// Fetch global default sort for blog from specialized singleton
+const methodsEntry = await getEntry("settings", "sorting-methods");
+const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
+---
+
+<div class="smart-blog-grid" x-data={`productSorter('${defaultSort}')`}>
+  <!-- Filter & Sort Bar -->
+  <FilterSortBar productCount={posts.length} itemLabel={itemLabel} context="blog" />
+
+  <!-- Blog Grid -->
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3" x-ref="grid">
+    {posts.map((post) => (
+      <div
+        class="blog-item"
+        data-id={post.id}
+        data-name={post.data.title}
+        data-date={post.data.publishDate.toISOString()}
+      >
+        <BlogCard post={post} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { gridSort } from "../../scripts/behaviors/sorting";
+
+  function initSorter() {
+    // @ts-ignore
+    if (window.Alpine) {
+      // @ts-ignore
+      window.Alpine.data("productSorter", (initialSort = 'latest') => gridSort(initialSort));
+    }
+  }
+
+  // Ensure it runs on both initial load and view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", initSorter);
+  } else {
+    initSorter();
+  }
+  document.addEventListener("astro:page-load", initSorter);
+</script>
