@@ -10,6 +10,7 @@
 - [ ] **Free Shipping Nudge (Visual Fix)**: Fix the progress bar logic so it doesn't say "₹3,000 more" when the cart is already above the threshold.
 
 ## Phase 2: Medium Priority (Security & Marketing)
+- [ ] **Heading Component Audit**: Sweep usages of `src/components/primitives/Heading.astro` to ensure the new `size` prop is used instead of unnecessary hardcoded CSS overrides.
 - [ ] **Rate Limiting & Security**: Implement basic rate limiting and security headers for Cloudflare Pages/Workers.
 - [ ] **SEO & Meta Optimization**: Audit all page titles, meta descriptions, and Open Graph tags across the multi-brand engine.
 - [ ] **Marketing Pixels & Consent**:
@@ -21,6 +22,7 @@
     - *Note*: Currently on hold. Description added to Keystatic for "Enable Immersive Reveal (GSAP)" to toggle this later.
 - [ ] **Multi-Currency (Global Sync)**: Ensure multi-currency logic is consistent across D2C and Affiliate modes.
 - [ ] **NewsletterWidget Cleanup**: Remove the "Section" variant logic as it's now standard in the footer.
+- [ ] **Section Sorting**: Not required for now. Possible future exploration.
 
 ---
 
