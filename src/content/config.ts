@@ -22,12 +22,12 @@ if (!brandId) {
 
 
 // Dynamically load categories from taxonomy
-const taxonomyPath = `./src/content/${brandId}/settings/taxonomy.json`;
+const taxonomyPath = `./src/content/${brandId}/settings/taxonomy.yaml`;
 var brandCategories: [string, ...string[]] = ["rings", "necklaces", "earrings", "bracelets", "gifts", "sets"];
 try {
   if (fs.existsSync(taxonomyPath)) {
     const fileContents = fs.readFileSync(taxonomyPath, 'utf8');
-    const parsed = JSON.parse(fileContents);
+    const parsed = yaml.parse(fileContents);
     if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
       brandCategories = parsed.categories as [string, ...string[]];
     }

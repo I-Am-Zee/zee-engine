@@ -9,7 +9,7 @@
  * - 'modal': Floating (future/planned).
  * 
  * Data:
- * - Brand-specific copy is loaded from src/content/{brand}/newsletter.json.
+ * - Brand-specific copy is loaded from src/content/{brand}/newsletter/*.yaml.
  */
 
 import { getEntry } from 'astro:content';
@@ -38,7 +38,7 @@ const {
 // Generate a unique ID for targeting the behavior
 const uid = customId || `newsletter-${variant}-${Math.random().toString(36).substring(2, 7)}`;
 
-// Each variant is its own file: footer.json, modal.json, section.json, sidebar.json
+// Each variant is its own file: footer.yaml, modal.yaml, section.yaml, sidebar.yaml
 const entry = await getEntry('newsletter_variants', variant);
 const copy = entry?.data || {
   heading: "Heading Level 2",

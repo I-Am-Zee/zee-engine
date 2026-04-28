@@ -10,8 +10,8 @@ export async function getStaticPaths() {
   return brandPages
     .filter(page => !page.data.isDraft)
     .map(page => {
-      // Defensively strip .json if it exists in the ID
-      const slug = page.id.replace(/\.json$/, '');
+      // Defensively strip extensions if they exist in the ID
+      const slug = page.id.replace(/\.(json|yaml|yml)$/, '');
       return {
         params: { slug },
         props: { page },
