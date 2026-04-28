@@ -1,0 +1,17 @@
+products:
+  enabled_sorts:
+    - featured
+    - latest
+    - price-asc
+    - price-desc
+    - name-asc
+    - name-desc
+    - rating-desc
+  default_sort: featured
+blog:
+  enabled_sorts:
+    - latest
+    - oldest
+    - name-asc
+    - name-desc
+  default_sort: latest
