@@ -64,7 +64,7 @@ Think of it like: one codebase, one component library, deployed N times for N br
 **Content Systems — Two Types, Never Mix:**
 
 - **Markdown** → Legal pages (T&C, Privacy, Returns, Shipping). Plain text, linear. Lives in `src/content/pages/`.
-- **JSON** → Immersive pages (About, Care Guide, brand story). May contain images. Paired with GSAP/Lenis templates. Lives in `src/content/{BrandName}/`.
+- **YAML** → Immersive pages (About, Care Guide, brand story) and Site Settings. May contain images. Paired with GSAP/Lenis templates. Lives in `src/content/{BrandName}/`.
 
 ---
 
@@ -253,7 +253,7 @@ pages/api/actions/newsletter-subscribe.ts  ← POST endpoint → MailerLite API
 - Gmail-only validation applies when user types their email. Pre-filled email (from delivery link) uses basic format validation only (order email may not be a Gmail).
 - MailerLite Group ID: `183469983098995840`.
 
-**A `NewsletterWidget.astro` feature component with variant system is planned** (variants: `section`, `footer`, `sidebar`, `modal`) but not yet built. When building it, it must be brand-agnostic — copy comes from a JSON content file, not hardcoded.
+**A `NewsletterWidget.astro` feature component with variant system is planned** (variants: `section`, `footer`, `sidebar`, `modal`) but not yet built. When building it, it must be brand-agnostic — copy comes from a YAML content file, not hardcoded.
 
 ---
 
@@ -344,8 +344,8 @@ A "Source → Processor → Consumer" pipeline is fully active:
 - ⏳ **NewsletterWidget.astro** — Feature component with variants (`section`, `footer`, `sidebar`, `modal`). Copy from brand JSON. Not yet built.
 - ⏳ **PopupModal scoping** — Currently fires on all pages via BaseLayout. Should be gated per page (not appropriate on checkout, PDP, shop, lookbook).
 - ✅ **R2 + Worker image engine** — Implemented and handling all `400|800|1200` transformations via 5k Free Tier proxy loophole.
-- ⏳ **About page** — GSAP + Lenis scroll, JSON-driven screenplay. Immersive layout.
-- ⏳ **Care Guide page** — Same as About. GSAP + Lenis. JSON-driven.
+- ⏳ **About page** — GSAP + Lenis scroll, YAML-driven screenplay. Immersive layout.
+- ⏳ **Care Guide page** — Same as About. GSAP + Lenis. YAML-driven.
 - ⏳ **Blog system** — Including sticky TOC sidebar.
 - ⏳ **Gemini CLI setup** — Terminal integration for PR review and Jules briefing.
 
@@ -493,7 +493,7 @@ These are non-negotiable. Violating any of these will break the codebase, the br
 
 ### Architecture Rules
 
-15. **Never mix Markdown and JSON content systems.** Legal pages = Markdown. Immersive pages = JSON.
+15. **Never mix Markdown and YAML content systems.** Legal pages = Markdown. Immersive pages and Settings = YAML.
 16. **Never hardcode brand-specific values** (brand name, colors, copy) in shared components. All brand-specific data comes from environment variables or content files.
 17. **Never merge to `main`** without owner review and approval.
 
