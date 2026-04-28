@@ -9,7 +9,7 @@ import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
 import GlassProductCard from "../../components/ui/GlassProductCard.astro";
-import ProductGrid from "../../components/features/ProductGrid.astro";
+import SmartProductGrid from "../../components/features/SmartProductGrid.astro";
 import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
@@ -21,6 +21,7 @@ import EmptyState from "../../components/ui/EmptyState.astro";
 
 import { slugify } from "../../scripts/utils/slugify";
 import { getCrossCategoryProducts } from "../../scripts/utils/recommendations";
+import { sortProductsByHierarchy } from "../../scripts/utils/product-sort";
 
 // Products per page for pagination
 const PRODUCTS_PER_PAGE = 12;
@@ -44,17 +45,20 @@ export async function getStaticPaths() {
   }
   const cards = (gridData?.data as any)?.cards || [];
 
-  return categories.map((categoryLabel: string) => {
+  return Promise.all(categories.map(async (categoryLabel: string) => {
     const categorySlug = slugify(categoryLabel);
     
     // Find matching CMS record
     const match = cards.find((c: any) => c.slug === categorySlug && c.type === 'category');
-    const isComingSoon = match?.is_coming_soon === true;
+    const isComing_soon = match?.is_coming_soon === true;
     
     // Find products, OR force empty if coming soon
-    const categoryProducts = isComingSoon ? [] : allProducts.filter(
+    let categoryProducts = isComing_soon ? [] : allProducts.filter(
       (product) => product.data.category?.toLowerCase() === categoryLabel.toLowerCase()
     );
+
+    // Apply Hierarchical Sorting
+    categoryProducts = await sortProductsByHierarchy(categoryProducts);
 
     return {
       params: { category: categorySlug },
@@ -62,11 +66,11 @@ export async function getStaticPaths() {
         products: categoryProducts,
         categoryLabel,
         categoryDescription: match?.description || "",
-        isComingSoon,
+        isComingSoon: isComing_soon,
         comingSoonData
       },
     };
-  });
+  }));
 }
 
 interface Props {
@@ -125,36 +129,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
         <ComingSoon categoryName={categoryLabel} {...comingSoonData} />
       ) : products.length > 0 ? (
         <>
-          {/* Filter/Sort Bar */}
-          <FilterSortBar productCount={products.length} categoryName={categoryLabel.toLowerCase()} />
-
-          {/* Product Grid with Alpine.js sorting */}
-          <div id="product-grid">
-            <ProductGrid>
-              {products.map((product, index) => (
-                <div
-                  class="product-item"
-                  data-index={index}
-                  data-id={product.id}
-                  data-price={product.data.salePrice || product.data.price}
-                  data-original-price={product.data.price}
-                  data-sale-price={product.data.salePrice || ""}
-                  data-name={product.data.title}
-                  data-rating={product.data.rating || 0}
-                  data-publish-date={
-                    product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0
-                  }
-                  data-discount={
-                    product.data.salePrice
-                      ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
-                      : 0
-                  }
-                >
-                  <GlassProductCard product={product} />
-                </div>
-              ))}
-            </ProductGrid>
-          </div>
+          <SmartProductGrid products={products} categoryName={categoryLabel.toLowerCase()} />
 
           {/* Pagination */}
           {totalPages > 1 && (
@@ -183,63 +158,3 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
   </div>
 </EngineLayout>
 
-<script>
-  // @ts-ignore
-  function initSorter() {
-    if (!window.Alpine) return;
-    window.Alpine.data("productSorter", () => ({
-      sortBy: "default",
-      sort(criteria) {
-        this.sortBy = criteria;
-        const grid = document.querySelector("#product-grid");
-        if (!grid) return;
-
-        const items = Array.from(grid.querySelectorAll(".product-item"));
-
-        items.sort((a, b) => {
-          // @ts-ignore
-          const aPrice = parseFloat(a.dataset.price || "0");
-          // @ts-ignore
-          const bPrice = parseFloat(b.dataset.price || "0");
-          // @ts-ignore
-          const aName = a.dataset.name || "";
-          // @ts-ignore
-          const bName = b.dataset.name || "";
-          // @ts-ignore
-          const aRating = parseFloat(a.dataset.rating || "0");
-          // @ts-ignore
-          const bRating = parseFloat(b.dataset.rating || "0");
-          // @ts-ignore
-          const aDate = parseInt(a.dataset.publishDate || "0");
-          // @ts-ignore
-          const bDate = parseInt(b.dataset.publishDate || "0");
-          // @ts-ignore
-          const aDiscount = parseFloat(a.dataset.discount || "0");
-          // @ts-ignore
-          const bDiscount = parseFloat(b.dataset.discount || "0");
-          // @ts-ignore
-          const aIndex = parseInt(a.dataset.index || "0");
-          // @ts-ignore
-          const bIndex = parseInt(b.dataset.index || "0");
-
-          switch (criteria) {
-            case "price-asc": return aPrice - bPrice;
-            case "price-desc": return bPrice - aPrice;
-            case "name-asc": return aName.localeCompare(bName);
-            case "name-desc": return bName.localeCompare(aName);
-            case "rating-desc": return bRating - aRating;
-            case "date-desc": return bDate - aDate;
-            case "discount-desc": return bDiscount - aDiscount;
-            case "default": return aIndex - bIndex;
-            default: return 0;
-          }
-        });
-
-        items.forEach((item) => grid.appendChild(item));
-      },
-    }));
-  }
-
-  document.addEventListener("alpine:init", initSorter);
-  document.addEventListener("astro:page-load", initSorter);
-</script>

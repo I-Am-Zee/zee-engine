@@ -3,6 +3,7 @@ import EngineLayout from "../../layouts/EngineLayout.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
 import CollectionCard from "../../components/ui/CollectionCard.astro";
 import { getCollection, getEntry } from "astro:content";
+import { slugify } from "../../scripts/utils/slugify";
 
 const allProducts = await getCollection("products");
 
@@ -16,30 +17,29 @@ const hubData = hubEntry?.data || {
 };
 
 const collections = ((gridEntry?.data as any)?.cards || []).map((card: any) => {
+  const isTag = card.type === "tag";
+  const filterValue = card.slug.toLowerCase();
+
+  const count = allProducts.filter(p => {
+    if (isTag) {
+      return p.data.tags?.some(tag => slugify(tag) === filterValue);
+    }
+    return slugify(p.data.category || "") === filterValue;
+  }).length;
+
+  let itemCount: string | undefined;
+  if (card.is_coming_soon) {
+    itemCount = "Coming Soon";
+  } else if (count > 0) {
+    itemCount = `${count} ${count === 1 ? 'Product' : 'Products'}`;
+  }
+
   return {
     title: card.title,
     description: card.description,
     image: card.image,
-    href: card.type === "category" ? `/shop/${card.slug}` : `/collections/${card.slug}`,
-    type: card.type,
-    slug: card.slug
-  };
-}).map((collection: any) => {
-  const count = allProducts.filter(p => {
-    // Robust normalization: Strip all spaces and hyphens for comparison
-    const normalize = (s: string) => s?.toLowerCase().replace(/[\s-]/g, "") || "";
-    const targetSlug = normalize(collection.slug);
-
-    if (collection.type === "category") {
-      return normalize(p.data.category) === targetSlug;
-    } else {
-      return p.data.tags?.some(tag => normalize(tag) === targetSlug);
-    }
-  }).length;
-  
-  return {
-    ...collection,
-    count: `${count} ${count === 1 ? 'Product' : 'Products'}`
+    href: isTag ? `/collections/${card.slug}` : `/shop/${card.slug}`,
+    itemCount
   };
 });
 ---
@@ -61,7 +61,7 @@ const collections = ((gridEntry?.data as any)?.cards || []).map((card: any) => {
           href={collection.href}
           image={collection.image}
           description={collection.description}
-          itemCount={collection.count}
+          itemCount={collection.itemCount}
         />
       ))}
     </div>

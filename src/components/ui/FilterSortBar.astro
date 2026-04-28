@@ -1,45 +1,64 @@
 ---
-/**
- * FilterSortBar - Horizontal bar for filtering and sorting products
- * Uses Alpine.js for client-side sorting without page reload
- */
-
+import { getEntry } from "astro:content";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 
 interface Props {
   productCount: number;
-  categoryName?: string;
+  itemLabel?: string;
+  context?: 'products' | 'blog';
+  sortOptions?: { label: string; value: string }[];
 }
 
-const { productCount, categoryName } = Astro.props;
+const { productCount, itemLabel, context = 'products', sortOptions: manualOptions } = Astro.props;
+
+// Default labels mapping for CMS-driven values
+const SORT_LABELS: Record<string, string> = {
+  'featured': 'Sort by: Featured',
+  'latest': 'Latest',
+  'oldest': 'Oldest',
+  'price-asc': 'Price: Low to High',
+  'price-desc': 'Price: High to Low',
+  'name-asc': 'Name: A to Z',
+  'name-desc': 'Name: Z to A',
+  'rating-desc': 'Rating: High to Low',
+  'on-sale': 'On Sale'
+};
+
+// Fetch global settings from specialized singletons
+const methodsEntry = await getEntry("settings", "sorting-methods");
+const methodsData = methodsEntry?.data;
+
+// Get enabled sorts based on context
+const contextSettings = context === 'blog' ? methodsData?.blog : methodsData?.products;
+const enabledSorts = contextSettings?.enabled_sorts || [];
+
+const finalSortOptions = manualOptions || enabledSorts.map((val: string) => ({
+  label: SORT_LABELS[val] || val,
+  value: val
+}));
 ---
 
 <div
   class="mb-6 flex flex-col items-start justify-between gap-4 border-b border-(--color-border-subtle) pb-4 sm:flex-row sm:items-center"
 >
-  {/* Product Count */}
-  <Text variant="muted">
-    {productCount} {categoryName ? ` ${categoryName}` : " products"}
+  <!-- Count Display -->
+  <Text variant="metadata" class="text-text-muted">
+    {`${productCount} ${itemLabel || (context === 'blog' ? "articles" : "products")}`}
   </Text>
 
-  {/* Sort Dropdown */}
+  <!-- Sort Dropdown -->
   <div class="relative">
-    <label for="sort-select" class="sr-only">Sort products</label>
+    <label for="sort-select" class="sr-only">Sort items</label>
     <select
       id="sort-select"
       x-model="sortBy"
-      @change="sort(sortBy)"
-      class="appearance-none rounded-md border border-(--color-border-subtle) bg-background py-2 pr-10 pl-4 text-sm text-text-main transition-colors hover:border-primary focus:border-primary focus-glow outline-none"
+      @change="sort()"
+      class="appearance-none rounded-md border border-(--color-border-subtle) bg-background py-2 pr-10 pl-4 text-sm text-text-main transition-colors hover:border-primary focus:border-primary focus-glow outline-none cursor-pointer"
     >
-      <option value="default">Sort by: Featured</option>
-      <option value="date-desc">Newest Arrivals</option>
-      <option value="discount-desc">On Sale</option>
-      <option value="price-asc">Price: Low to High</option>
-      <option value="price-desc">Price: High to Low</option>
-      <option value="name-asc">Name: A to Z</option>
-      <option value="name-desc">Name: Z to A</option>
-      <option value="rating-desc">Rating: High to Low</option>
+      {finalSortOptions.map(opt => (
+        <option value={opt.value}>{opt.label}</option>
+      ))}
     </select>
     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
       <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted" />

@@ -1,27 +1,51 @@
-import { getEntry } from "astro:content";
+---
+import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
+import BlogCard from "../components/ui/BlogCard.astro";
+import SectionHeader from "../components/ui/SectionHeader.astro";
 
-// Load Page content (Hub Strategy)
-const blogPage = await getEntry('page_blog', 'blog');
+import SmartBlogGrid from "../components/features/SmartBlogGrid.astro";
+
+// Load Page content (Hub Strategy - Fix: collection name is 'pages_content')
+const blogPage = await getEntry('pages_content', 'blog');
 const hubData = blogPage?.data || {
   title: "The Journal",
   subtitle: "Style notes, care guides, and the stories behind our collections.",
   empty_state: "Our stories are being penned. Coming soon."
 };
 
+// Fetch and sort blog posts
+const allPosts = await getCollection("blog", ({ data }) => {
+  return data.isDraft !== true;
+});
+
+// We keep the initial server-side sort as newest-first
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
 export const prerender = true;
 ---
 
 <EngineLayout pageTitle={hubData.title}>
-  <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
-    <Heading as="h1" class="mb-6">{hubData.title}</Heading>
-    <Text variant="lead" color="muted" class="mb-8">
-      {hubData.subtitle}
-    </Text>
-    <Text variant="paragraph" color="muted">
-      {hubData.empty_state}
-    </Text>
+  <main class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
+    <div class="mb-16 text-center">
+      <Heading as="h1" class="mb-6">{hubData.title}</Heading>
+      <Text variant="lead" color="muted" class="mx-auto max-w-2xl">
+        {hubData.subtitle}
+      </Text>
+    </div>
+
+    {sortedPosts.length > 0 ? (
+      <SmartBlogGrid posts={sortedPosts} itemLabel="articles" />
+    ) : (
+      <div class="py-20 text-center">
+        <Text variant="paragraph" color="muted">
+          {hubData.empty_state}
+        </Text>
+      </div>
+    )}
   </main>
 </EngineLayout>

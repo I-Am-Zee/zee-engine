@@ -14,6 +14,7 @@ import TrustSection from "../components/ui/TrustSection.astro";
 import CategoryCarousel from "../components/features/CategoryCarousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
 import NewsletterWidget from "../components/features/NewsletterWidget.astro";
+import { slugify } from "../scripts/utils/slugify";
 
 // Load Hero Content (Brand Aware)
 const homeHeroEntry = await getEntry("pages_content", "home");
@@ -56,20 +57,60 @@ const featData = featuredHeader?.data || {
 export const prerender = true;
 
 const allProducts = await getCollection("products");
-const featuredProducts = allProducts.slice(0, 8);
 
-const categories = [
-  { name: "Rings", href: "/shop/rings", image: "/images/products/1605100804763-247f67b3557e.jpg" },
-  { name: "Necklaces", href: "/shop/necklaces", image: "/images/products/1599643478518-a784e5dc4c8f.jpg" },
-  { name: "Earrings", href: "/shop/earrings", image: "/images/products/1535632066927-ab7c9ab60908.jpg" },
-  { name: "Bracelets", href: "/shop/bracelets", image: "/images/products/1602173574767-37ac01994b2a.jpg" },
-  { name: "Engagement", href: "/shop/rings", image: "/images/products/1605100804763-247f67b3557e.jpg" },
-  { name: "Timepieces", href: "/shop/watches", image: "/images/products/1599643478518-a784e5dc4c8f.jpg" },
-  { name: "Fine Jewels", href: "/shop/necklaces", image: "/images/products/1535632066927-ab7c9ab60908.jpg" },
-].map(cat => ({
-  ...cat,
-  itemCount: allProducts.filter(p => p.data.category === cat.name.toLowerCase()).length
-}));
+// Fetch Home Carousel Content
+const homeCarouselEntry = await getEntry("pages_content", "home_carousel");
+const cmsFeaturedIds = homeCarouselEntry?.data?.featured_products || [];
+
+let featuredProducts = [];
+
+if (cmsFeaturedIds.length > 0) {
+  // Map specific products in order as chosen in CMS
+  featuredProducts = cmsFeaturedIds
+    .map(id => allProducts.find(p => p.id === id || p.id.split('/').pop()?.split('.')[0] === id))
+    .filter(Boolean);
+} else {
+  // Fallback: Show up to 8 most recent products if no manual choice
+  featuredProducts = [...allProducts]
+    .sort((a, b) => {
+      const dateA = a.data.publishDate ? new Date(a.data.publishDate).getTime() : 0;
+      const dateB = b.data.publishDate ? new Date(b.data.publishDate).getTime() : 0;
+      return dateB - dateA;
+    })
+    .slice(0, 8);
+}
+
+// Dynamic Categories from Content Collection
+const collectionsGridEntry = await getEntry("collections_grid", "data");
+const collectionsGrid = collectionsGridEntry?.data?.cards || [];
+
+const categories = collectionsGrid.map(cat => {
+  const isTag = cat.type === 'tag';
+  const filterValue = cat.slug.toLowerCase();
+  
+  // Calculate item count based on category OR tag
+  const count = allProducts.filter(p => {
+    if (isTag) {
+      return p.data.tags?.some(t => slugify(t) === filterValue);
+    }
+    return slugify(p.data.category || "") === filterValue;
+  }).length;
+
+  let itemCount: string | undefined;
+  if (cat.is_coming_soon) {
+    itemCount = "Coming Soon";
+  } else if (count > 0) {
+    itemCount = `${count} ${count === 1 ? 'Item' : 'Items'}`;
+  }
+
+  return {
+    name: cat.title,
+    href: isTag ? `/shop?tag=${cat.slug}` : `/shop/${cat.slug}`,
+    image: cat.image,
+    itemCount,
+    isComingSoon: cat.is_coming_soon
+  };
+});
 ---
 
 <EngineLayout>
@@ -141,5 +182,3 @@ const categories = [
 
   </main>
 </EngineLayout>
-
-
