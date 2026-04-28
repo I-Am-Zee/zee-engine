@@ -42,8 +42,10 @@ export default config({
     brand: { name: `${brandId.toUpperCase()}` },
     navigation: {
       'CONTENT': ['products', 'lookbooks', 'blog', 'legal', 'brand', 'collections_grid'],
+      'STOREFRONT SETTINGS': ['storefront_weights', 'storefront_methods'],
       'PAGE CONTENT': [
         'page_home_hero', 
+        'page_home_carousel',
         'page_trust_section', 
         'page_faq', 
         'page_blog', 
@@ -70,7 +72,7 @@ export default config({
       label: 'Section Headers',
       slugField: 'id',
       path: `src/content/${brandId}/section_headers/*`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         id: fields.slug({ 
           name: { 
@@ -105,7 +107,7 @@ export default config({
       label: 'Newsletter Variants',
       slugField: 'id',
       path: `src/content/${brandId}/newsletter/*`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         id: fields.slug({ 
           name: { 
@@ -119,6 +121,8 @@ export default config({
       }
     }),
     // ── Products ──────────────────────────────────────────────────
+    // storefront singletons moved to singletons object below
+
     products: collection({
       label: 'Products',
       slugField: 'title',
@@ -347,7 +351,7 @@ export default config({
       label: 'Brand Stories',
       slugField: 'slug',
       path: `src/content/${brandId}/brand/*`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         title: fields.text({ label: 'Internal Title (Used as Page Eyebrow)' }),
         slug: fields.text({ label: 'Slug' }),
@@ -446,7 +450,7 @@ export default config({
       label: 'Page Headers',
       slugField: 'id',
       path: `src/content/${brandId}/page_headers/*`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         id: fields.slug({ name: { label: 'Page Identifier', description: 'Internal slug used to map this content to a page.' } }),
         title: fields.text({ label: 'Page Title (H1)' }),
@@ -468,7 +472,7 @@ export default config({
     settings_brand: singleton({
       label: 'Brand Identity',
       path: `src/content/${brandId}/settings/brand`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         name: fields.text({ label: 'Brand Name', validation: { isRequired: true } }),
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
@@ -503,7 +507,7 @@ export default config({
     settings_navigation: singleton({
       label: 'Navigation Menus',
       path: `src/content/${brandId}/settings/navigation`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         main_menus: fields.array(
           fields.object({
@@ -545,7 +549,7 @@ export default config({
     settings_marketing: singleton({
       label: 'Marketing & Conversion',
       path: `src/content/${brandId}/settings/marketing`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         announcement_bar: fields.object({
           enabled: fields.checkbox({ label: 'Enable Announcement Bar', defaultValue: false }),
@@ -611,7 +615,7 @@ export default config({
     page_home_hero: singleton({
       label: 'Home-Hero Section',
       path: `src/content/${brandId}/pages_content/home`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         title: fields.text({ label: 'Hero Title', validation: { isRequired: true } }),
         subtitle: fields.text({ label: 'Hero Subtitle', multiline: true, validation: { isRequired: true } }),
@@ -669,7 +673,7 @@ export default config({
     settings_tracking: singleton({
       label: 'Analytics & Tracking',
       path: `src/content/${brandId}/settings/tracking`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         show_ads: fields.checkbox({ label: 'Show Ads on Blog Pages', defaultValue: false }),
         google_analytics_id: fields.text({ label: 'Google Analytics ID (G-XXXXX)', validation: {isRequired: false} }),
@@ -682,7 +686,7 @@ export default config({
     page_trust_section: singleton({
       label: 'Trust Section',
       path: `src/content/${brandId}/pages_content/trust_section`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         main_heading: fields.text({ label: 'Main Section Heading (Above columns)' }),
         hero_image: fields.text({ label: 'Editorial Hero Image', description: 'R2 path: /images/identity/filename.webp' }),
@@ -704,18 +708,19 @@ export default config({
     lookbook_settings: singleton({
       label: 'Lookbook Page Settings',
       path: `src/content/${brandId}/settings/lookbook_settings`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         narrative_heading: fields.text({ label: 'Lookbook Narrative Title', description: 'e.g. The Narrative' }),
         carousel_eyebrow: fields.text({ label: 'Homepage Carousel Eyebrow', description: 'e.g. Curated Story' }),
         carousel_cta_label: fields.text({ label: 'Homepage Carousel Button Label', description: 'e.g. Explore Look' }),
       }
     }),
+    // storefront_settings singleton removed in favor of storefront collection
 
     component_coming_soon: singleton({
       label: 'Component: Coming Soon',
       path: `src/content/${brandId}/component_hub/coming_soon`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         heading: fields.text({ label: 'Heading', description: 'Use {category} for dynamic injection.' }),
         description: fields.text({ label: 'Description', multiline: true, description: 'Use {category} for dynamic injection.' }),
@@ -729,7 +734,7 @@ export default config({
     page_faq: singleton({
       label: 'FAQ Page',
       path: `src/content/${brandId}/pages_content/faq`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         heading: fields.text({ label: 'Main Heading' }),
         subtitle: fields.text({ label: 'Subtitle', multiline: true }),
@@ -759,7 +764,7 @@ export default config({
     page_wishlist_empty: singleton({
       label: 'Wishlist Page (Empty)',
       path: `src/content/${brandId}/pages_content/wishlist_empty`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         heading: fields.text({ label: 'Heading' }),
         description: fields.text({ label: 'Description', multiline: true }),
@@ -802,10 +807,26 @@ export default config({
       }
     }),
 
+    page_home_carousel: singleton({
+      label: 'Home-Product Carousel',
+      path: `src/content/${brandId}/pages_content/home_carousel`,
+      format: { data: 'yaml' },
+      schema: {
+        featured_products: fields.array(
+          fields.relationship({ label: 'Product', collection: 'products' }),
+          {
+            label: 'Featured Products (Curator\'s Choice)',
+            description: 'Select the specific products to show in the homepage carousel. Leave empty to fallback to newest arrivals. Number of products selected is exactly what will be shown.',
+            itemLabel: (props) => props.value || 'Select a product',
+          }
+        ),
+      }
+    }),
+
     page_blog: singleton({
       label: 'Blog Page',
       path: `src/content/${brandId}/pages_content/blog`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         title: fields.text({ label: 'Page Title', defaultValue: 'The Journal' }),
         subtitle: fields.text({ 
@@ -823,7 +844,7 @@ export default config({
     page_newsletter_confirm: singleton({
       label: 'Newsletter: Confirm Page',
       path: `src/content/${brandId}/pages_content/newsletter_confirm`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         title: fields.text({ label: 'Page Title', defaultValue: 'Stay in the Loop' }),
         description: fields.text({ 
@@ -857,7 +878,7 @@ export default config({
     page_newsletter_success: singleton({
       label: 'Newsletter: Success Page',
       path: `src/content/${brandId}/pages_content/newsletter_success`,
-      format: { data: 'json' },
+      format: { data: 'yaml' },
       schema: {
         title: fields.text({ label: 'Page Title', defaultValue: "You're in the Loop" }),
         description: fields.text({ 
@@ -887,7 +908,7 @@ export default config({
       page_checkout_razorpay: singleton({
         label: 'Checkout: Razorpay Bridge',
         path: `src/content/${brandId}/pages_content/checkout_razorpay`,
-        format: { data: 'json' },
+        format: { data: 'yaml' },
         schema: {
           title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
           subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
@@ -908,7 +929,7 @@ export default config({
       settings_store_checkout: singleton({
         label: 'Store & Checkout Settings',
         path: `src/content/${brandId}/settings/store_checkout`,
-        format: { data: 'json' },
+        format: { data: 'yaml' },
         schema: {
           roadmap_status: fields.text({
             label: 'Roadmap & Future Blueprint',
@@ -922,7 +943,7 @@ export default config({
       settings_affiliate: singleton({
         label: 'Affiliate & Currency Settings',
         path: `src/content/${brandId}/settings/affiliate_settings`,
-        format: { data: 'json' },
+        format: { data: 'yaml' },
         schema: {
           geo_detection_enabled: fields.checkbox({
             label: 'Enable Soft Region Auto-Detection',
@@ -949,6 +970,72 @@ export default config({
           fallback_region_id: fields.text({ label: 'Fallback Region ID (if detection fails)', defaultValue: 'global' }),
         }
       })
+    }),
+    storefront_weights: singleton({
+      label: 'Tag Weights',
+      path: `src/content/${brandId}/settings/tag-weights`,
+      format: { data: 'yaml' },
+      schema: {
+        w5: fields.array(fields.select({ label: 'Tag/Badge', options: [...brandTags, ...brandBadges].length > 0 ? [...brandTags, ...brandBadges] : [{ label: 'Select Tag', value: '' }], defaultValue: ([...brandTags, ...brandBadges][0]?.value ?? '') }), { label: 'Weight 5 (Super Priority)', itemLabel: props => props.value }),
+        w4: fields.array(fields.select({ label: 'Tag/Badge', options: [...brandTags, ...brandBadges].length > 0 ? [...brandTags, ...brandBadges] : [{ label: 'Select Tag', value: '' }], defaultValue: ([...brandTags, ...brandBadges][0]?.value ?? '') }), { label: 'Weight 4 (High Priority)', itemLabel: props => props.value }),
+        w3: fields.array(fields.select({ label: 'Tag/Badge', options: [...brandTags, ...brandBadges].length > 0 ? [...brandTags, ...brandBadges] : [{ label: 'Select Tag', value: '' }], defaultValue: ([...brandTags, ...brandBadges][0]?.value ?? '') }), { label: 'Weight 3 (Medium Priority)', itemLabel: props => props.value }),
+        w2: fields.array(fields.select({ label: 'Tag/Badge', options: [...brandTags, ...brandBadges].length > 0 ? [...brandTags, ...brandBadges] : [{ label: 'Select Tag', value: '' }], defaultValue: ([...brandTags, ...brandBadges][0]?.value ?? '') }), { label: 'Weight 2 (Low Priority)', itemLabel: props => props.value }),
+        w1: fields.array(fields.select({ label: 'Tag/Badge', options: [...brandTags, ...brandBadges].length > 0 ? [...brandTags, ...brandBadges] : [{ label: 'Select Tag', value: '' }], defaultValue: ([...brandTags, ...brandBadges][0]?.value ?? '') }), { label: 'Weight 1 (Subtle Priority)', itemLabel: props => props.value }),
+      }
+    }),
+
+    storefront_methods: singleton({
+      label: 'Sorting Methods',
+      path: `src/content/${brandId}/settings/sorting-methods`,
+      format: { data: 'yaml' },
+      schema: {
+        products: fields.object({
+          enabled_sorts: fields.multiselect({
+            label: 'Visible Sorting Methods',
+            options: [
+              { label: 'Featured (Weighted)', value: 'featured' },
+              { label: 'Newest Arrivals', value: 'latest' },
+              { label: 'Oldest First', value: 'oldest' },
+              { label: 'Price: Low to High', value: 'price-asc' },
+              { label: 'Price: High to Low', value: 'price-desc' },
+              { label: 'Name: A to Z', value: 'name-asc' },
+              { label: 'Name: Z to A', value: 'name-desc' },
+              { label: 'Rating: High to Low', value: 'rating-desc' },
+            ],
+            defaultValue: ['featured', 'latest', 'price-asc', 'price-desc']
+          }),
+          default_sort: fields.select({
+            label: 'Default Sort Order',
+            options: [
+              { label: 'Featured (Weighted)', value: 'featured' },
+              { label: 'Newest Arrivals', value: 'latest' },
+              { label: 'Name: A to Z', value: 'name-asc' },
+            ],
+            defaultValue: 'featured'
+          })
+        }, { label: 'Product Pages (Shop/Categories)' }),
+
+        blog: fields.object({
+          enabled_sorts: fields.multiselect({
+            label: 'Visible Sorting Methods',
+            options: [
+              { label: 'Newest First', value: 'latest' },
+              { label: 'Oldest First', value: 'oldest' },
+              { label: 'Name: A to Z', value: 'name-asc' },
+              { label: 'Name: Z to A', value: 'name-desc' },
+            ],
+            defaultValue: ['latest', 'oldest']
+          }),
+          default_sort: fields.select({
+            label: 'Default Sort Order',
+            options: [
+              { label: 'Newest First', value: 'latest' },
+              { label: 'Oldest First', value: 'oldest' },
+            ],
+            defaultValue: 'latest'
+          })
+        }, { label: 'Blog Page' })
+      }
     }),
   },
 });

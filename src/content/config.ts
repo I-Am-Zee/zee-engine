@@ -205,7 +205,7 @@ const legal = defineCollection({
 
 const brand = defineCollection({
   loader: glob({
-    pattern: "**/*.json",
+    pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/brand`,
   }),
   schema: z.object({
@@ -286,31 +286,33 @@ const collections_grid = defineCollection({
 
 const section_headers = defineCollection({
   loader: glob({
-    pattern: "**/*.json",
+    pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/section_headers`,
   }),
 });
 
 const page_headers = defineCollection({
   loader: glob({
-    pattern: "**/*.json",
+    pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/page_headers`,
   }),
 });
 
 const component_hub = defineCollection({
   loader: glob({
-    pattern: "**/*.json",
+    pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/component_hub`,
   }),
 });
 
 const pages_content = defineCollection({
   loader: glob({
-    pattern: "**/*.json",
+    pattern: "**/*.{yml,yaml,json}",
     base: `./src/content/${brandId}/pages_content`,
   }),
 });
+
+
 
 export const collections = {
   products,
