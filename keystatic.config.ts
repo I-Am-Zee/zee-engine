@@ -14,11 +14,11 @@ if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environ
 
 // ── Tags, Badges & Categories (Dynamic via Vite Glob) ─────────────────────────
 // Using import.meta.glob for browser-safe dynamic imports in Vite/ESM
-const taxonomyFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/taxonomy.json', { eager: true });
-const shippingFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/shipping.json', { eager: true });
+const taxonomyFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/taxonomy.yaml', { eager: true });
+const shippingFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/shipping.yaml', { eager: true });
 
-const taxonomyJson = taxonomyFiles[`./src/content/${brandId}/settings/taxonomy.json`]?.default || { categories: [], tags: [], badges: [] };
-const shippingJson = shippingFiles[`./src/content/${brandId}/settings/shipping.json`]?.default || { slabs: {} };
+const taxonomyJson = taxonomyFiles[`./src/content/${brandId}/settings/taxonomy.yaml`]?.default || { categories: [], tags: [], badges: [] };
+const shippingJson = shippingFiles[`./src/content/${brandId}/settings/shipping.yaml`]?.default || { slabs: {} };
 
 const brandCategories = (taxonomyJson.categories || []).map((c: string) => ({
   label: c.charAt(0).toUpperCase() + c.slice(1),
@@ -632,7 +632,7 @@ export default config({
       settings_shipping: singleton({
         label: 'Shipping Logistics',
         path: `src/content/${brandId}/settings/shipping`,
-        format: { data: 'json' },
+        format: { data: 'yaml' },
         schema: {
           free_shipping_threshold: fields.number({ label: 'Free Shipping Threshold (₹)', defaultValue: 3000 }),
           default_slab: fields.text({ label: 'Default Slab Key', defaultValue: 'small-packaging' }),

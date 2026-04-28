@@ -6,6 +6,7 @@ import alpinejs from '@astrojs/alpinejs';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import keystatic from '@keystatic/astro';
+import yaml from '@rollup/plugin-yaml';
 
 import cloudflare from '@astrojs/cloudflare';
 
@@ -30,7 +31,7 @@ export default defineConfig({
   },
   
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), yaml()],
     server: {
       allowedHosts: ['dev.zeliavance.com']
     },
