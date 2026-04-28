@@ -1,0 +1,16 @@
+title: Sorting Methods
+config:
+  discriminant: methods
+  value:
+    products:
+      enabled_sorts:
+        - featured
+        - latest
+        - price-asc
+        - price-desc
+      default_sort: featured
+    blog:
+      enabled_sorts:
+        - latest
+        - oldest
+      default_sort: latest

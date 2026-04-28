@@ -1,0 +1,106 @@
+---
+import { getCollection, render } from "astro:content";
+import EngineLayout from "../../layouts/EngineLayout.astro";
+import Heading from "../../components/primitives/Heading.astro";
+import Text from "../../components/primitives/Text.astro";
+import Image from "../../components/primitives/Image.astro";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.[^/.]+$/, "") },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { title, excerpt, publishDate, author, image, tags } = post.data;
+const { Content } = await render(post);
+
+const formattedDate = new Intl.DateTimeFormat('en-IN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(publishDate);
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "Journal", href: "/blog" },
+  { label: title, href: `/blog/${post.id.replace(/\.[^/.]+$/, "")}`, current: true },
+];
+---
+
+<EngineLayout pageTitle={title}>
+  <article class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    {/* Navigation */}
+    <div class="mb-12">
+      <Breadcrumbs items={breadcrumbItems} />
+    </div>
+
+    {/* Header */}
+    <header class="mx-auto mb-16 max-w-3xl text-center">
+      <div class="mb-6 flex items-center justify-center gap-4 text-xs font-bold tracking-widest uppercase text-text-muted">
+        <time datetime={publishDate.toISOString()}>{formattedDate}</time>
+        <span class="h-1.5 w-1.5 rounded-full bg-primary/30"></span>
+        <span>{author}</span>
+      </div>
+      
+      <Heading as="h1" class="mb-8 leading-tight">
+        {title}
+      </Heading>
+      
+      <Text variant="lead" color="muted" class="italic">
+        "{excerpt}"
+      </Text>
+    </header>
+
+    {/* Featured Image */}
+    <div class="mb-16 aspect-video overflow-hidden rounded-3xl border border-border-subtle/30 shadow-2xl">
+      <Image 
+        src={image} 
+        alt={title}
+        class="h-full w-full object-cover"
+        loading="eager"
+      />
+    </div>
+
+    {/* Content */}
+    <div class="mx-auto max-w-3xl">
+      <div class="prose prose-zelia prose-lg max-w-none 
+                  prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
+                  prose-p:leading-relaxed prose-p:text-text-main/90
+                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-text-main prose-strong:font-bold
+                  prose-blockquote:border-l-primary prose-blockquote:bg-surface prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-xl prose-blockquote:italic
+                  prose-img:rounded-2xl prose-img:shadow-lg">
+        <Content />
+      </div>
+
+      {/* Footer Tags */}
+      {tags && tags.length > 0 && (
+        <div class="mt-16 pt-8 border-t border-border-subtle/30 flex flex-wrap gap-2">
+          {tags.map(tag => (
+            <span class="px-4 py-2 bg-surface rounded-full text-xs font-medium text-text-muted border border-border-subtle/50 hover:border-primary/30 transition-colors cursor-default">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Author Bio (Placeholder) */}
+      <div class="mt-16 rounded-3xl bg-surface p-8 border border-border-subtle/30 flex flex-col sm:flex-row items-center gap-6">
+        <div class="h-20 w-20 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl border border-primary/20">
+          {author.charAt(0)}
+        </div>
+        <div class="text-center sm:text-left">
+          <Text variant="small" color="muted" class="mb-1 uppercase tracking-widest font-bold">Written By</Text>
+          <Heading as="h4" class="mb-2">{author}</Heading>
+          <Text variant="paragraph" color="muted" class="text-sm">
+            Curating the finest jewelry style guides and behind-the-scenes stories for Zelia Vance.
+          </Text>
+        </div>
+      </div>
+    </div>
+  </article>
+</EngineLayout>

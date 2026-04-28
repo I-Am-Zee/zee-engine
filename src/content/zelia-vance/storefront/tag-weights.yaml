@@ -1,0 +1,9 @@
+title: Tag Weights
+config:
+  discriminant: weights
+  value:
+    w5: []
+    w4: []
+    w3: []
+    w2: []
+    w1: []
