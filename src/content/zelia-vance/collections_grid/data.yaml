@@ -47,3 +47,9 @@ cards:
     image: https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80
     type: tag
     is_coming_soon: false
+  - title: Gift Sets
+    slug: gift
+    description: Perfect pairings for your loved ones.
+    image: /images/products/1549492423-400259a2e574.jpg
+    type: tag
+    is_coming_soon: false
