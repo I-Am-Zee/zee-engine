@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 import { getEntry } from "astro:content";
+import CheckoutLayout from "../../layouts/CheckoutLayout.astro";
 
 const publicToken = Astro.url.searchParams.get("publicToken");
 
@@ -11,9 +12,12 @@ if (!publicToken) {
 
 const razorpayKeyId = import.meta.env.PUBLIC_RAZORPAY_KEY_ID;
 const siteUrl = Astro.url.origin;
+const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
+const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
+
 const brandSettings = await getEntry("settings", "brand");
 const ecommerceSettings = await getEntry("settings", "ecommerce");
-const checkoutPage = await getEntry("page_checkout_razorpay", "checkout_razorpay");
+const checkoutPage = await getEntry("pages_content", "checkout_razorpay");
 
 // Hub Strategy: Fallbacks
 const brandName = brandSettings?.data?.name || "Our Boutique";
@@ -38,6 +42,8 @@ const hubData = checkoutPage?.data || {
   trust_badge_razorpay: "Powered by Razorpay",
   trust_badge_pci: "PCI DSS Compliant",
 };
+
+const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : `${siteUrl}/favicon.svg`;
 ---
 
 <CheckoutLayout pageTitle={hubData.title}>
@@ -100,7 +106,8 @@ const hubData = checkoutPage?.data || {
     brandColor,
     currencyCode,
     locale,
-    hubData
+    hubData,
+    faviconUrl
   }} is:inline>
     /** @type {object|null} */
     let paymentSession = null;
@@ -174,7 +181,7 @@ const hubData = checkoutPage?.data || {
         currency: currencyCode,
         name: brandName,
         description: `Order #${String(paymentSession.id).substring(0, 8).toUpperCase()}`,
-        image: `${siteUrl}/favicon.svg`,
+        image: faviconUrl,
         prefill: {
           name:    paymentSession.invoice.billingAddress?.name || "",
           email:   paymentSession.invoice.email               || "",

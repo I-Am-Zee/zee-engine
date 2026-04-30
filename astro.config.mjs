@@ -55,8 +55,7 @@ export default defineConfig({
 
   integrations: [
     react(),
-    // Keystatic CMS — Active in local dev OR when on the dev domain
-    ...(process.env.NODE_ENV === 'development' || siteUrl.includes('dev') ? [keystatic()] : []),
+    keystatic(),
     alpinejs({
       entrypoint: '/src/scripts/behaviors/alpine-entrypoint.ts'
     }),

@@ -1,0 +1,75 @@
+---
+/**
+ * FilterChip - Primitive Atom
+ * 
+ * An interactive, pill-shaped button used for filtering.
+ * Handles active/inactive states via Alpine.js or static props.
+ */
+import Text from "./Text.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  label: string;
+  isActive?: string; // Alpine.js expression for active state
+  onClick?: string;  // Alpine.js click handler
+  variant?: "pill" | "outline" | "sidebar";
+  class?: string;
+  [key: string]: any;
+}
+
+const { 
+  label, 
+  isActive, 
+  onClick, 
+  variant = "pill", 
+  class: className,
+  ...rest 
+} = Astro.props;
+
+// Base styles for the chip container
+const baseStyles = "shrink-0 px-4 py-2 rounded-full border text-xs font-bold transition-all whitespace-nowrap cursor-pointer disabled:cursor-not-allowed";
+
+// Variant-specific styles (Default/Inactive)
+const inactiveStyles = {
+  pill: "bg-surface border-(--color-border-subtle) text-text-muted hover:border-primary hover:text-primary",
+  outline: "bg-transparent border-(--color-border-subtle) text-text-muted hover:border-primary hover:text-primary",
+  sidebar: "flex items-center gap-3 w-full text-left transition-colors hover:text-primary group",
+};
+
+// Active-specific styles
+const activeStyles = {
+  pill: "bg-primary border-primary text-text-inverse shadow-md",
+  outline: "bg-primary/10 border-primary text-primary font-bold",
+  sidebar: "text-primary font-bold",
+};
+---
+
+<button
+  type="button"
+  @click={onClick}
+  class:list={[
+    variant !== "sidebar" ? baseStyles : inactiveStyles.sidebar,
+    className
+  ]}
+  :class={isActive ? `(${isActive}) ? '${activeStyles[variant]}' : '${inactiveStyles[variant]}'` : undefined}
+  {...rest}
+>
+  {variant === "sidebar" && (
+    <span 
+      class="h-4 w-4 rounded border border-(--color-border-subtle) flex items-center justify-center transition-all group-hover:border-primary"
+      :class={`(${isActive}) ? 'bg-primary border-primary' : ''`}
+    >
+      <template x-if={isActive}>
+        <Icon name="PhCheck" class="h-2.5 w-2.5 text-white" weight="bold" />
+      </template>
+    </span>
+  )}
+  
+  <Text 
+    variant="label" 
+    color="inherit" 
+    class="transition-colors group-hover:text-primary"
+  >
+    {label}
+  </Text>
+</button>

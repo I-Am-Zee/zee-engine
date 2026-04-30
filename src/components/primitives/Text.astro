@@ -40,10 +40,10 @@ const variantStyles: Record<string, string> = {
   caption: "text-sm leading-normal text-pretty",
   muted: "text-base leading-relaxed text-pretty",
   eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-accent-brass text-pretty",
-  metadata: "text-[10px] md:text-xs font-medium leading-none text-text-muted",
+  metadata: "text-[10px] md:text-[11px] font-semibold leading-none tracking-[0.15em] uppercase text-text-muted",
   price: "text-lg md:text-xl font-bold tracking-tight leading-none text-primary",
   price_sale: "text-xs md:text-sm line-through opacity-50 font-normal leading-none",
-  label: "text-xs font-semibold uppercase tracking-wider",
+  label: "text-[11px] font-semibold uppercase tracking-[0.2em] text-text-main",
   callout: "text-base font-semibold leading-relaxed italic border-l-4 border-accent-brass pl-6",
   quote: "text-lg md:text-xl font-serif italic leading-relaxed text-text-muted text-pretty",
   code: "font-mono text-sm bg-surface-muted px-1.5 py-0.5 rounded border border-border-subtle text-primary",
@@ -90,13 +90,30 @@ const colorChoices: Record<string, string> = {
   accent: "text-accent-brass",
   coral: "text-accent-coral",
   emerald: "text-accent-emerald",
+  inherit: "text-inherit",
 };
 
 const colorStyles = colorChoices[color || (variant === "muted" ? "muted" : "")] || "";
-
 const italicStyle = italic ? "italic" : "";
 
-const combinedClasses = `${baseStyles} ${variantStyles[variant] || ""} ${weightStyles} ${colorStyles} ${italicStyle} ${className || ""}`.trim();
+// Resolve weight and color - if props exist, strip variant defaults to prevent conflicts
+const activeWeightStyle = weightStyles || "";
+const activeColorStyle = colorStyles || "";
+
+let filteredVariantStyle = variantStyles[variant] || "";
+
+// If weight prop is provided, remove any existing font-weight classes
+if (activeWeightStyle) {
+  filteredVariantStyle = filteredVariantStyle.replace(/font-\w+/g, "");
+}
+
+// If color prop is provided, remove any existing brand-specific text-color classes
+// We use a specific pattern to avoid stripping font-size classes like text-sm or text-[10px]
+if (color) {
+  filteredVariantStyle = filteredVariantStyle.replace(/text-(text|accent|primary|secondary|emerald|coral)-\S+/g, "");
+}
+
+const combinedClasses = `${baseStyles} ${filteredVariantStyle.trim()} ${activeWeightStyle} ${activeColorStyle} ${italicStyle} ${className || ""}`.trim();
 ---
 
 <Tag class={combinedClasses} {...rest}>

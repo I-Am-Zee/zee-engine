@@ -2,67 +2,142 @@
 /**
  * BlogCard - UI Molecule
  * 
- * Premium card for blog posts.
+ * Premium editorial card for blog posts.
  * Consistent with GlassProductCard design system.
  */
+import { getEntry, type CollectionEntry } from "astro:content";
 import Image from "../primitives/Image.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
-import Icon from "../primitives/Icon.astro";
-import type { CollectionEntry } from "astro:content";
+import Badge from "../primitives/Badge.astro";
+import MetadataStrip from "../ui/MetadataStrip.astro";
+import { calculateReadTime } from "../../scripts/utils/reading-time";
 
 interface Props {
   post: CollectionEntry<"blog">;
+  variant?: "horizontal" | "vertical";
   class?: string;
 }
 
-const { post, class: className } = Astro.props;
-const { title, excerpt, publishDate, image, author } = post.data;
+const { post, variant = "horizontal", class: className } = Astro.props;
+const { title, excerpt, publishDate, image, author: authorName, category } = post.data;
+
+const readTime = calculateReadTime(post.body || "");
+const authorsEntry = await getEntry("authors", "authors");
+const authorsList = authorsEntry?.data || [];
+const authorData = Array.isArray(authorsList) 
+  ? (authorsList.find((a: any) => a.name === authorName) || authorsList[0])
+  : null;
 
 const formattedDate = new Intl.DateTimeFormat('en-IN', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 }).format(publishDate);
+
+const postUrl = `/blog/${post.id.replace(/\.[^/.]+$/, "")}`;
+const isHorizontal = variant === "horizontal";
 ---
 
-<article class:list={["group relative flex flex-col overflow-hidden rounded-2xl bg-surface border border-border-subtle/50 transition-all duration-500 hover:shadow-xl hover:border-border-subtle hover:-translate-y-1", className]}>
-  {/* Link Wrapper */}
-  <a href={`/blog/${post.id.replace(/\.[^/.]+$/, "")}`} class="absolute inset-0 z-20" aria-label={`Read more about ${title}`}></a>
-
-  {/* Image Container */}
-  <div class="relative aspect-video overflow-hidden">
-    <Image 
-      src={image} 
-      alt={title}
-      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-    />
-    <div class="absolute inset-0 bg-linear-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-  </div>
-
-  {/* Content Container */}
-  <div class="flex flex-1 flex-col p-6 sm:p-8">
-    {/* Meta */}
-    <div class="mb-4 flex items-center gap-4 text-xs font-medium tracking-wider uppercase text-text-muted">
-      <time datetime={publishDate.toISOString()}>{formattedDate}</time>
-      <span class="h-1 w-1 rounded-full bg-border-subtle"></span>
-      <span>{author}</span>
+<article 
+  class:list={[
+    "group relative flex transition-all duration-500 ease-out",
+    "bg-surface rounded-2xl",
+    "shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08),0_2px_4px_-1px_rgba(0,0,0,0.04)]",
+    "hover:shadow-[0_30px_60px_-12px_rgba(0,0,0,0.18)] hover:-translate-y-1",
+    className
+  ]}
+>
+  {/* The clickable surface MUST be top-level to cover everything */}
+  <a href={postUrl} class="absolute inset-0 z-30 focus-glow rounded-2xl" aria-label={`Read more about ${title}`}></a>
+ 
+  {/* CONTENT LAYER - Unified layout wrapper */}
+  <div class:list={[
+    "relative z-10 flex-1 flex rounded-2xl transition-all duration-500 ease-out",
+    "border border-(--color-border-subtle)/40",
+    "ring-1 ring-inset ring-white/10", // The "Rim Light" highlight
+    "group-hover:border-(--color-border-subtle)/80 group-hover:ring-white/20",
+    isHorizontal ? "flex-col md:flex-row" : "flex-col"
+  ]}>
+    
+    {/* 1. IMAGE SECTION - Card-First Logic: stretches to match content height */}
+    <div class:list={[
+      "relative overflow-hidden shrink-0 bg-surface-muted self-stretch",
+      isHorizontal 
+        ? "w-full md:w-2/5 rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none min-h-[250px]" 
+        : "w-full aspect-video rounded-t-2xl"
+    ]}>
+      {/* Subtle bottom-weighted inner shadow to blend image into the outer shadow */}
+      <div class="absolute inset-0 z-10 pointer-events-none shadow-[inset_0_-20px_40px_-20px_rgba(0,0,0,0.3)]"></div>
+      
+      <div class="absolute inset-0">
+        <Image 
+          src={image} 
+          alt={title}
+          class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+        />
+      </div>
+      
+      {/* Category Overlay for Vertical or Mobile Horizontal */}
+      {category && (
+        <div class:list={[
+          "absolute z-10 top-4 left-4",
+          isHorizontal ? "md:hidden" : ""
+        ]}>
+          <Badge intent="surface" size="xs">{category}</Badge>
+        </div>
+      )}
     </div>
 
-    {/* Title */}
-    <Heading as="h3" size="h4" class="mb-3 line-clamp-2 transition-colors group-hover:text-primary">
-      {title}
-    </Heading>
+    {/* 2. CONTENT SECTION */}
+    <div class:list={[
+      "flex flex-1 flex-col p-6 sm:p-8 lg:p-10",
+      isHorizontal 
+        ? "rounded-b-2xl md:rounded-r-2xl md:rounded-bl-none" 
+        : "rounded-b-2xl"
+    ]}>
+      {/* Category for Desktop Horizontal */}
+      {isHorizontal && category && (
+        <div class="hidden md:block mb-6">
+          <Badge intent="surface" size="xs">{category}</Badge>
+        </div>
+      )}
 
-    {/* Excerpt */}
-    <Text variant="paragraph" color="muted" class="mb-6 line-clamp-2">
-      {excerpt}
-    </Text>
+      {/* Title */}
+      <Heading 
+        as="h3" 
+        size={isHorizontal ? "h3" : "h4"} 
+        class="mb-4 line-clamp-2 transition-colors group-hover:text-primary"
+      >
+        {title}
+      </Heading>
 
-    {/* Read More Link (Visual Only) */}
-    <div class="mt-auto flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-main group-hover:text-primary transition-colors">
-      <span>Read Article</span>
-      <Icon name="PhArrowRight" size={14} class="transition-transform duration-300 group-hover:translate-x-1" />
+      {/* Excerpt */}
+      <Text variant="paragraph" color="muted" class="mb-8 line-clamp-3 text-sm leading-relaxed max-w-prose">
+        {excerpt}
+      </Text>
+
+      {/* Metadata Strip */}
+      <div class="mt-auto flex items-center gap-4 pt-6 border-t border-(--color-border-subtle)/30">
+        {/* Author Avatar */}
+        <div class="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle) bg-surface-muted">
+          <Image 
+            src={authorData?.avatar || "/images/authors/placeholder.jpg"} 
+            alt={authorName}
+            class="h-full w-full object-cover"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <Text variant="label" weight="bold" color="main">{authorName}</Text>
+          <MetadataStrip 
+            items={[
+              { label: formattedDate, datetime: publishDate.toISOString() },
+              readTime
+            ]} 
+          />
+        </div>
+      </div>
     </div>
   </div>
 </article>

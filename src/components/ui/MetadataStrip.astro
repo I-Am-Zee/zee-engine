@@ -1,0 +1,29 @@
+---
+/**
+ * MetadataStrip - UI Molecule
+ * 
+ * Standardized horizontal list for metadata items (date, read time, tags).
+ * Handles separators and typography automatically.
+ */
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  items: (string | { label: string; datetime?: string })[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<div class:list={["flex items-center flex-wrap gap-x-3 gap-y-1.5", className]}>
+  {items.map((item, index) => (
+    <>
+      <Text variant="metadata" as={typeof item === 'object' && item.datetime ? 'time' : 'span'} rest={typeof item === 'object' ? { datetime: item.datetime } : {}}>
+        {typeof item === 'object' ? item.label : item}
+      </Text>
+      {index < items.length - 1 && (
+        <span class="h-1 w-1 rounded-full bg-(--color-border-subtle)/40 shrink-0"></span>
+      )}
+    </>
+  ))}
+</div>

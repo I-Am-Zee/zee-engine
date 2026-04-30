@@ -12,6 +12,11 @@ import AffiliateQuickView from "../components/features/AffiliateQuickView.astro"
 import Lightbox from "../components/ui/Lightbox.astro";
 
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
+const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
+const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
+
+// Dynamic Favicon Strategy: R2 Gateway (Production) -> Local Fallback (Dev)
+const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : "/favicon.svg";
 
 // Fetch Modular Settings from Content Layer
 const brandSettings = await getEntry("settings", "brand");
@@ -56,7 +61,7 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     <meta name="description" content={description} />
     
     <!-- Global Assets - Always sourced from public or R2 -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={faviconUrl} />
     
     <title>{fullTitle}</title>
 

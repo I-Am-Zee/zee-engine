@@ -1,0 +1,82 @@
+---
+/**
+ * BlogCategoryFilter - UI Molecule
+ * 
+ * Orchestrates category filters for the blog.
+ * Reuses the FilterChip primitive for consistent styling.
+ */
+import { getEntry } from "astro:content";
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+import FilterChip from "../primitives/FilterChip.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const taxonomyEntry = await getEntry("settings", "blog-taxonomy");
+const categories = taxonomyEntry?.data?.categories || [];
+---
+
+<div class:list={["w-full", className]}>
+  {/* Desktop Sidebar Filter */}
+  <aside class="hidden lg:block sticky top-32 w-64 pr-8">
+    <div class="mb-6 flex flex-col gap-2">
+      <Heading as="h4" size="h5" class="uppercase tracking-widest text-xs font-bold">Category Filter</Heading>
+      <div x-show="selectedCategories.length > 0" class="flex items-center gap-2" x-cloak>
+        <span class="h-1.5 w-1.5 rounded-full bg-accent-emerald"></span>
+        <Text variant="metadata" color="emerald" weight="bold">
+          Showing <Text as="span" x-text="filteredCount"></Text> filtered
+        </Text>
+      </div>
+    </div>
+
+    <nav class="flex flex-col gap-3">
+      <FilterChip 
+        variant="sidebar" 
+        label="All Stories" 
+        isActive="isAllSelected()" 
+        onClick="clearFilters()"
+      />
+
+      {categories.map((cat: string) => (
+        <FilterChip 
+          variant="sidebar" 
+          label={cat} 
+          isActive={`isActive('${cat}')`}
+          onClick={`toggleCategory('${cat}')`}
+        />
+      ))}
+    </nav>
+  </aside>
+
+  {/* Tablet/Mobile Horizontal Scroll Chips */}
+  <div class="hidden md:flex lg:hidden flex-col gap-4 mb-8 overflow-hidden">
+    <div class="flex items-center justify-between">
+      <Heading as="h4" size="h5" class="uppercase tracking-widest text-[10px] font-bold">Filter By Category</Heading>
+      <div x-show="selectedCategories.length > 0" class="flex items-center gap-2" x-cloak>
+        <Text variant="metadata" color="emerald" weight="bold">
+          <Text as="span" x-text="filteredCount"></Text> found
+        </Text>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+      <FilterChip 
+        label="All" 
+        isActive="isAllSelected()" 
+        onClick="clearFilters()"
+      />
+
+      {categories.map((cat: string) => (
+        <FilterChip 
+          label={cat} 
+          isActive={`isActive('${cat}')`}
+          onClick={`toggleCategory('${cat}')`}
+        />
+      ))}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import EngineLayout from "../../layouts/EngineLayout.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
+import FilterSortBar from "../../components/ui/FilterSortBar.astro";
+import BlogCard from "../../components/ui/BlogCard.astro";
+import BlogCategoryFilter from "../../components/ui/BlogCategoryFilter.astro";
+import Pagination from "../../components/ui/Pagination.astro";
+import Text from "../../components/primitives/Text.astro";
+import type { Page, PaginateFunction } from "astro";
+
+export const prerender = true;
+
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
+  const allPosts = await getCollection("blog", ({ data }) => {
+    return data.isDraft !== true;
+  });
+
+  // Default sort: latest first
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+  );
+
+  return paginate(sortedPosts, { pageSize: 8 });
+}
+
+interface Props {
+  page: Page<any>;
+}
+
+const { page } = Astro.props;
+const posts = page.data;
+
+// Load Page Header content
+const headerEntry = await getEntry('page_headers', 'blog-index');
+const headerData = headerEntry?.data || {
+  title: "The Journal",
+  description: "Stories, style guides, and care tips from the world of Zelia Vance."
+};
+
+// Default sort for FilterSortBar
+const methodsEntry = await getEntry("settings", "sorting-methods");
+const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
+---
+
+<EngineLayout pageTitle={headerData.title}>
+  <main 
+    class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8" 
+    x-data={`blogDiscovery('${defaultSort}')`}
+  >
+    {/* Page Header */}
+    <div class="mb-12">
+      <PageHeader 
+        title={headerData.heading || headerData.title} 
+        subtitle={headerData.description}
+        align="left"
+      />
+    </div>
+
+    {/* Filter & Sort Bar (Sticky Context) */}
+    <FilterSortBar 
+      productCount={page.total} 
+      itemLabel="articles" 
+      context="blog" 
+    />
+
+    {/* Main Layout: Sidebar + Grid */}
+    <div class="flex flex-col lg:flex-row gap-12 mt-8">
+      {/* Category Filter Sidebar */}
+      <BlogCategoryFilter class="lg:w-64 shrink-0" />
+
+      {/* Blog Grid */}
+      <div class="flex-1">
+        <div 
+          class="grid gap-8 md:grid-cols-1" 
+          x-ref="grid"
+        >
+          {posts.map((post) => (
+            <div
+              class="blog-item transition-all duration-500"
+              x-show={`shouldShow('${JSON.stringify(post.data.tags || [])}', '${post.data.category}')`}
+              x-transition:enter="transition ease-out duration-300"
+              x-transition:enter-start="opacity-0 translate-y-4"
+              x-transition:enter-end="opacity-100 translate-y-0"
+              data-tags={JSON.stringify(post.data.tags || [])}
+              data-category={post.data.category}
+              data-date={post.data.publishDate.toISOString()}
+              data-name={post.data.title}
+            >
+              <BlogCard post={post} variant="horizontal" />
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State — only show when a filter is active AND no results match */}
+        <div x-show="selectedCategories.length > 0 && filteredCount === 0" class="py-20 text-center" x-cloak>
+          <Text variant="paragraph" color="muted" class="mb-4">
+            No articles found in the selected categories.
+          </Text>
+          <button 
+            type="button"
+            @click="clearFilters()" 
+            class="group cursor-pointer"
+          >
+            <Text variant="label" color="accent" class="border-b border-accent-brass pb-0.5 group-hover:text-primary group-hover:border-primary transition-colors">
+              Show All Stories
+            </Text>
+          </button>
+        </div>
+
+        {/* Pagination */}
+        {page.lastPage > 1 && (
+          <div x-show="isAllSelected()">
+            <Pagination 
+              currentPage={page.currentPage} 
+              totalPages={page.lastPage} 
+              baseUrl="/blog" 
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  </main>
+</EngineLayout>

@@ -5,7 +5,8 @@
 import { defineMiddleware } from 'astro:middleware';
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const ua = context.request.headers.get('user-agent') || 'No UA';
+  // Use optional chaining and fallback for header access to avoid warnings on prerendered pages
+  const ua = context.request?.headers?.get('user-agent') || 'No UA';
   console.log(`[middleware] Processing request: ${context.url.pathname} (UA: ${ua})`);
 
   // Proceed with response
