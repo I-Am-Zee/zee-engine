@@ -21,9 +21,9 @@ if (!brandId) {
 
 
 
-// Dynamically load categories from taxonomy
+// ─── Product Taxonomy ───────────────────────────────────────────────────────
 const taxonomyPath = `./src/content/${brandId}/settings/taxonomy.yaml`;
-var brandCategories: [string, ...string[]] = ["rings", "necklaces", "earrings", "bracelets", "gifts", "sets"];
+var brandCategories: [string, ...string[]] = ["Rings", "Earrings", "Necklaces", "Bracelets", "Jewellery Sets"];
 try {
   if (fs.existsSync(taxonomyPath)) {
     const fileContents = fs.readFileSync(taxonomyPath, 'utf8');
@@ -33,7 +33,22 @@ try {
     }
   }
 } catch (e) {
-  console.warn("Could not load categories from taxonomy, using defaults.");
+  console.warn("Could not load product categories from taxonomy, using defaults.");
+}
+
+// ─── Blog Taxonomy (Separate from Products) ──────────────────────────────────
+const blogTaxonomyPath = `./src/content/${brandId}/settings/blog-taxonomy.yaml`;
+var blogCategories: [string, ...string[]] = ["Style Guide", "Behind the Scenes", "Care Tips", "Trend Report", "Jewellery 101", "Gift Guide"];
+try {
+  if (fs.existsSync(blogTaxonomyPath)) {
+    const fileContents = fs.readFileSync(blogTaxonomyPath, 'utf8');
+    const parsed = yaml.parse(fileContents);
+    if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
+      blogCategories = parsed.categories as [string, ...string[]];
+    }
+  }
+} catch (e) {
+  console.warn("Could not load blog categories from blog-taxonomy, using defaults.");
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -181,7 +196,13 @@ const blog = defineCollection({
     excerpt: z.string(),
     publishDate: z.date(),
     author: z.string().default("Zelia Vance Team"),
-    image: z.string(),
+    category: z.enum(
+      [blogCategories[0], ...blogCategories.slice(1)],
+      {
+        errorMap: () => ({ message: `Category must be one of: ${blogCategories.join(', ')}` }),
+      }
+    ),
+    image: z.string().min(1, "Cover image is required for all blog posts"),
     tags: z.array(z.string()).optional(),
     isDraft: z.boolean().default(false),
   }),
@@ -252,6 +273,15 @@ const brand = defineCollection({
   }),
 });
 
+const authors = defineCollection({
+  loader: file(`./src/content/${brandId}/authors.yaml`),
+  schema: z.array(z.object({
+    name: z.string(),
+    avatar: z.string(),
+    bio: z.string().optional()
+  }))
+});
+
 // ═══════════════════════════════════════════════════════════════════════════
 // GLOBAL SETTINGS - Marketing Command Center (brand-specific)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -318,6 +348,7 @@ export const collections = {
   products,
   lookbooks,
   blog,
+  authors,
   legal,
   brand,
   settings,

@@ -7,8 +7,8 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
-const brandId = import.meta.env.PUBLIC_BRAND_ID;
-const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
+const brandId = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_BRAND_ID) || (typeof process !== 'undefined' && process.env?.PUBLIC_BRAND_ID);
+const isAffiliate = ((typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_AFFILIATE) || (typeof process !== 'undefined' && process.env?.PUBLIC_AFFILIATE)) === 'true';
 
 if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environment.');
 
@@ -27,6 +27,17 @@ const brandCategories = (taxonomyJson.categories || []).map((c: string) => ({
 
 const brandTags = (taxonomyJson.tags || []).map((t: string) => ({ label: t, value: t }));
 const brandBadges = (taxonomyJson.badges || []).map((b: string) => ({ label: b, value: b }));
+
+// ── Blog Taxonomy (Separate from product taxonomy) ─────────────────────────
+const blogTaxonomyFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/blog-taxonomy.yaml', { eager: true });
+const blogTaxonomyJson = blogTaxonomyFiles[`./src/content/${brandId}/settings/blog-taxonomy.yaml`]?.default || { categories: [], tags: [] };
+
+const blogCategories = (blogTaxonomyJson.categories || []).map((c: string) => ({
+  label: c,
+  value: c,
+}));
+const blogTags = (blogTaxonomyJson.tags || []).map((t: string) => ({ label: t, value: t }));
+
 
 // ── Shipping Slabs (Dynamic via Glob) ───────────────────
 const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, slab]: [string, any]) => ({
@@ -61,8 +72,10 @@ export default config({
         'settings_navigation', 
         'settings_marketing', 
         ...(!isAffiliate ? ['settings_store_checkout', 'settings_shipping'] : ['settings_affiliate']),
-        'settings_tracking'
+        'settings_tracking',
+        'settings_blog_taxonomy'
       ],
+      'PEOPLE': ['authors'],
     }
   },
 
@@ -316,9 +329,15 @@ export default config({
         publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: true } }),
         author: fields.text({ label: 'Author', defaultValue: 'Content Team' }),
         image: fields.text({ label: 'Cover Image URL', validation: { isRequired: true } }),
+        category: fields.select({
+          label: 'Category',
+          description: 'Single category this post belongs to. Drives the Category pages and filters.',
+          options: blogCategories,
+          defaultValue: blogCategories[0]?.value ?? 'Style Guide',
+        }),
         tags: fields.array(
-          fields.text({ label: 'Tag' }),
-          { label: 'Tags' }
+          fields.select({ label: 'Tag', options: blogTags }),
+          { label: 'Tags', itemLabel: (props) => props.value || 'Select a tag' }
         ),
         isDraft: fields.checkbox({ label: 'Save as Draft', defaultValue: false }),
         content: fields.mdx({ label: 'Content' }),
@@ -1035,6 +1054,40 @@ export default config({
             defaultValue: 'latest'
           })
         }, { label: 'Blog Page' })
+      }
+    }),
+
+    authors: singleton({
+      label: 'Author Registry',
+      path: `src/content/${brandId}/authors`,
+      format: { data: 'yaml' },
+      schema: {
+        authors: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Name' }),
+            avatar: fields.text({ label: 'Avatar Path', description: 'e.g. /images/authors/zee.jpg' }),
+            bio: fields.text({ label: 'Short Bio', multiline: true }),
+          }),
+          {
+            label: 'Authors',
+            itemLabel: (props) => props.fields.name.value || 'New Author'
+          }
+        )
+      }
+    }),
+
+    settings_blog_taxonomy: singleton({
+      label: 'Blog Taxonomy',
+      path: `src/content/${brandId}/settings/blog-taxonomy`,
+      format: { data: 'yaml' },
+      schema: {
+        categories: fields.array(
+          fields.text({ label: 'Category Name' }),
+          {
+            label: 'Blog Categories',
+            itemLabel: (props) => props.value || 'New Category'
+          }
+        )
       }
     }),
   },
