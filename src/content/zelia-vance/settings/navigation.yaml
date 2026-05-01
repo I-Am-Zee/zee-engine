@@ -21,3 +21,13 @@ legal_links:
     href: "/legal/privacy-policy"
   - label: "Terms of Service"
     href: "/legal/terms-of-service"
+
+labels:
+  shop: "Shop"
+  allJewelry: "All Jewelry"
+  search: "Search"
+  wishlist: "Wishlist"
+  cart: "Cart"
+  account: "Account"
+  menu: "Menu"
+  close: "Close"

@@ -1,0 +1,47 @@
+---
+/**
+ * Section - Layout Primitive
+ * 
+ * Standardizes vertical spacing and horizontal containment across the brand.
+ * Every major page section should use this instead of raw divs.
+ */
+
+interface Props {
+  id?: string;
+  variant?: "standard" | "compact" | "hero" | "full";
+  class?: string;
+  containerClass?: string;
+  as?: "section" | "div" | "footer" | "header" | "main";
+  [key: string]: any;
+}
+
+const { 
+  id, 
+  variant = "standard", 
+  class: className,
+  containerClass: customContainerClass,
+  as: Tag = "section",
+  ...rest
+} = Astro.props;
+
+// Vertical padding tokens
+const verticalSpacing = {
+  standard: "py-16 md:py-24",
+  compact: "py-8 md:py-12",
+  hero: "pt-24 pb-16 md:pt-32 md:pb-24",
+  full: "py-0"
+};
+
+// Horizontal containment tokens
+const containerStyles = variant === "full" 
+  ? "w-full" 
+  : `mx-auto max-w-7xl px-4 lg:px-8 ${customContainerClass || ""}`.trim();
+
+const combinedClasses = `${verticalSpacing[variant]} ${className || ""}`.trim();
+---
+
+<Tag id={id} class={combinedClasses} {...rest}>
+  <div class={containerStyles}>
+    <slot />
+  </div>
+</Tag>

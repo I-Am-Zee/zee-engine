@@ -1,7 +1,7 @@
 ---
 /**
  * Master Footer - Pure Engine Refined Layout
- * Inspired by the user's architectural vision and editorial jewelry brands.
+ * Atomic & De-hardcoded.
  */
 
 import { getEntry } from "astro:content";
@@ -10,6 +10,8 @@ import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Link from "../primitives/Link.astro";
 import Image from "../primitives/Image.astro";
+import Icon from "../primitives/Icon.astro";
+import Section from "../primitives/Section.astro";
 import NewsletterForm from "../ui/NewsletterForm.astro";
 import { slugify } from "../../scripts/utils/slugify";
 
@@ -23,16 +25,23 @@ const { class: className, ...rest } = Astro.props;
 const siteSettings = await getEntry("settings", "brand");
 const navigationEntry = await getEntry("settings", "navigation");
 const taxonomy = await getEntry("settings", "taxonomy");
+const footerSettings = await getEntry("settings", "footer");
 
 const brandName = siteSettings?.data?.name || "Brand";
 const legalEntity = siteSettings?.data?.legal_entity || "I Am Zee";
 const socialLinks = siteSettings?.data?.social || [];
 const copyright = `Copyright © ${new Date().getFullYear()} ${legalEntity}. All rights reserved.`;
 
+const footerData = footerSettings?.data || {
+  newsletter: { heading: "Subscribe", description: "", placeholder: "Email", buttonText: "Join", image: "" },
+  column_headers: { shop: "Shop", explore: "Explore", support: "Support", social: "Social" },
+  labels: { allJewelry: "All Jewelry" }
+};
+
 // Dynamic Navigation Logic
 const categories = (taxonomy?.data as any)?.categories || [];
 const shopCategories: any[] = [
-  { label: "All Jewelry", href: "/shop" },
+  { label: footerData.labels.allJewelry, href: "/shop" },
   ...categories.map((cat: string) => ({
     label: cat.charAt(0).toUpperCase() + cat.slice(1),
     href: `/shop/${slugify(cat)}`,
@@ -43,216 +52,198 @@ const navigationData = navigationEntry?.data || { main_menus: [], support_links:
 const exploreLinks = navigationData.main_menus || [];
 const supportLinks = navigationData.support_links || [];
 const legalLinks = navigationData.legal_links || [];
-
-// Fetch Newsletter Copy
-const newsletterEntry = await getEntry('newsletter_variants', 'footer');
-const newsletterCopy = newsletterEntry?.data || {
-  heading: "Get drop alerts & Zee's style notes",
-  description: "No spam. Just drops, restocks, and the occasional 'Zee's pick'."
-};
 ---
 
-<footer
-  class:list={["bg-surface relative pt-12 pb-8 sm:pt-16", className]}
-  {...rest}
->
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
-    
-    {/* ── Section 1: The Newsletter "Guest List" Card ───────────────── */}
-    <div class="bg-surface-alt rounded-sm overflow-hidden mb-16 sm:mb-20 lg:mb-24 shadow-sm border border-border-subtle/50">
-      <div class="flex flex-col md:flex-row">
-        {/* Left: Content & Form */}
-        <div class="flex-1 p-4 pt-10 pb-10 sm:p-8 sm:pt-12 sm:pb-12 lg:p-14">
-          <div class="max-w-md md:max-w-lg text-center md:text-left mx-auto md:mx-0">
-            <Heading as="h2" class="mb-3 text-2xl sm:text-3xl lg:text-4xl">
-              {newsletterCopy.heading}
-            </Heading>
-            <Text variant="body" color="muted" class="mb-4 text-sm sm:text-base leading-relaxed">
-              {newsletterCopy.description}
-            </Text>
-            
-            <div class="max-w-md md:max-w-lg mx-auto md:mx-0">
-              <NewsletterForm 
-                placeholder="Enter your email address" 
-                buttonText="Subscribe"
-              />
-            </div>
+<Section as="footer" variant="standard" class={`bg-surface !pt-12 !pb-0 sm:!pt-16${className ? ` ${className}` : ''}`}>
+  
+  {/* ── Section 1: The Newsletter "Guest List" Card ───────────────── */}
+  <div class="bg-surface-alt rounded-sm overflow-hidden mb-16 sm:mb-20 lg:mb-24 shadow-sm border border-border-subtle/50">
+    <div class="flex flex-col md:flex-row">
+      {/* Left: Content & Form */}
+      <div class="flex-1 p-4 pt-10 pb-10 sm:p-8 sm:pt-12 sm:pb-12 lg:p-14">
+        <div class="max-w-md md:max-w-lg text-center md:text-left mx-auto md:mx-0">
+          <Heading as="h2" class="mb-3 text-2xl sm:text-3xl lg:text-4xl">
+            {footerData.newsletter.heading}
+          </Heading>
+          <Text variant="body" color="muted" class="mb-4 text-sm sm:text-base leading-relaxed">
+            {footerData.newsletter.description}
+          </Text>
+          
+          <div class="max-w-md md:max-w-lg mx-auto md:mx-0">
+            <NewsletterForm 
+              placeholder={footerData.newsletter.placeholder} 
+              buttonText={footerData.newsletter.buttonText}
+            />
           </div>
         </div>
-        
-        {/* Right: Editorial Image (Hidden on very small screens to maintain focus) */}
-        <div class="hidden md:block md:w-1/3 lg:w-2/5 relative">
-          <Image 
-            src="/images/products/1515562141207-7a88fb7ce338.jpg" 
-            alt={`${brandName} Editorial`}
-            ratio="auto"
-            class="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
+      </div>
+      
+      {/* Right: Editorial Image */}
+      <div class="hidden md:block md:w-1/3 lg:w-2/5 relative">
+        <Image 
+          src={footerData.newsletter.image} 
+          alt={`${brandName} Editorial`}
+          ratio="auto"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
       </div>
     </div>
+  </div>
 
-    {/* ── Section 2: The Link Grid (Shop, Explore, Support, Social) ────────── */}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-12 mb-24">
-      
-      {/* Shop Column */}
-      <div x-data="{ open: false }">
-        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
-          <Heading as="h5">Shop</Heading>
-          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Shop</Heading>
-        <div x-show="open" x-collapse class="md:hidden!">
-          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-            {shopCategories.map((item) => (
-              <li>
-                <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
-                  <Text variant="caption" color="muted">{item.label}</Text>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <ul class="hidden md:flex flex-col space-y-4">
+  {/* ── Section 2: The Link Grid (Shop, Explore, Support, Social) ────────── */}
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-12 mb-24">
+    
+    {/* Shop Column */}
+    <div x-data="{ open: false }">
+      <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+        <Heading as="h5">{footerData.column_headers.shop}</Heading>
+        <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" />
+      </button>
+      <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
+        {footerData.column_headers.shop}
+      </Heading>
+      <div x-show="open" x-collapse class="md:hidden!">
+        <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {shopCategories.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
-                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
-                  {item.label}
-                </Text>
+              <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                <Text variant="caption" color="muted">{item.label}</Text>
               </Link>
             </li>
           ))}
         </ul>
       </div>
+      <ul class="hidden md:flex flex-col space-y-4">
+        {shopCategories.map((item) => (
+          <li>
+            <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
+              <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                {item.label}
+              </Text>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
 
-      {/* Explore Column */}
-      <div x-data="{ open: false }">
-        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
-          <Heading as="h5">Explore</Heading>
-          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Explore</Heading>
-        <div x-show="open" x-collapse class="md:hidden!">
-          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-            {exploreLinks.map((item) => (
-              <li>
-                <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
-                  <Text variant="caption" color="muted">{item.label}</Text>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <ul class="hidden md:flex flex-col space-y-4">
+    {/* Explore Column */}
+    <div x-data="{ open: false }">
+      <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+        <Heading as="h5">{footerData.column_headers.explore}</Heading>
+        <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" />
+      </button>
+      <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
+        {footerData.column_headers.explore}
+      </Heading>
+      <div x-show="open" x-collapse class="md:hidden!">
+        <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {exploreLinks.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
-                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
-                  {item.label}
-                </Text>
+              <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                <Text variant="caption" color="muted">{item.label}</Text>
               </Link>
             </li>
           ))}
         </ul>
       </div>
+      <ul class="hidden md:flex flex-col space-y-4">
+        {exploreLinks.map((item) => (
+          <li>
+            <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
+              <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                {item.label}
+              </Text>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
 
-      {/* Support Column */}
-      <div x-data="{ open: false }">
-        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
-          <Heading as="h5">Support</Heading>
-          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Support</Heading>
-        <div x-show="open" x-collapse class="md:hidden!">
-          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-            {supportLinks.map((item) => (
-              <li>
-                <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
-                  <Text variant="caption" color="muted">{item.label}</Text>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <ul class="hidden md:flex flex-col space-y-4">
+    {/* Support Column */}
+    <div x-data="{ open: false }">
+      <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+        <Heading as="h5">{footerData.column_headers.support}</Heading>
+        <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" />
+      </button>
+      <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
+        {footerData.column_headers.support}
+      </Heading>
+      <div x-show="open" x-collapse class="md:hidden!">
+        <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {supportLinks.map((item) => (
             <li>
-              <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
-                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
-                  {item.label}
-                </Text>
+              <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                <Text variant="caption" color="muted">{item.label}</Text>
               </Link>
             </li>
           ))}
         </ul>
       </div>
+      <ul class="hidden md:flex flex-col space-y-4">
+        {supportLinks.map((item) => (
+          <li>
+            <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
+              <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                {item.label}
+              </Text>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
 
-      {/* Social Column */}
-      <div x-data="{ open: false }">
-        <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
-          <Heading as="h5">Social</Heading>
-          <svg class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">Social</Heading>
-        <div x-show="open" x-collapse class="md:hidden!">
-          <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-            {socialLinks.map((item) => (
-              <li>
-                <Link href={item.url} variant="plain" target="_blank" class="block py-3 px-4 active:bg-surface-alt transition-colors">
-                  <Text variant="caption" color="muted">{item.platform}</Text>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <ul class="hidden md:flex flex-col space-y-4">
+    {/* Social Column */}
+    <div x-data="{ open: false }">
+      <button class="flex w-full items-center justify-between py-4 border-b border-border-subtle md:hidden" @click="open = !open">
+        <Heading as="h5">{footerData.column_headers.social}</Heading>
+        <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted transition-transform duration-300" :class="open && 'rotate-180'" />
+      </button>
+      <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
+        {footerData.column_headers.social}
+      </Heading>
+      <div x-show="open" x-collapse class="md:hidden!">
+        <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {socialLinks.map((item) => (
             <li>
-              <Link href={item.url} variant="plain" target="_blank" class="hover:translate-x-1 transition-transform inline-block group">
-                <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
-                  {item.platform}
-                </Text>
+              <Link href={item.url} variant="plain" target="_blank" class="block py-3 px-4 active:bg-surface-alt transition-colors">
+                <Text variant="caption" color="muted">{item.platform}</Text>
               </Link>
             </li>
           ))}
         </ul>
       </div>
-
-    </div>
-
-    {/* ── Section 3: The Signature & Legal Row ────────────────────────── */}
-    <div class="pt-12 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-8 mb-12">
-      
-      {/* Brand Signature */}
-      <Logo variant="full" brandName={brandName} class="h-9 md:h-10 w-auto" />
-
-      {/* Legal Links */}
-      <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-        {legalLinks.map((link: any) => (
-          <Link href={link.href} variant="plain">
-            <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">{link.label}</Text>
-          </Link>
+      <ul class="hidden md:flex flex-col space-y-4">
+        {socialLinks.map((item) => (
+          <li>
+            <Link href={item.url} variant="plain" target="_blank" class="hover:translate-x-1 transition-transform inline-block group">
+              <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
+                {item.platform}
+              </Text>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
+  </div>
 
+  {/* ── Section 3: The Signature & Legal Row ────────────────────────── */}
+  <div class="pt-12 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-8 mb-12">
+    <Logo variant="full" brandName={brandName} class="h-9 md:h-10 w-auto" />
+    <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+      {legalLinks.map((link: any) => (
+        <Link href={link.href} variant="plain">
+          <Text variant="metadata" color="muted" class="hover:text-text-main transition-colors">{link.label}</Text>
+        </Link>
+      ))}
+    </div>
   </div>
 
   {/* ── Section 4: The Foundation (Copyright Bar) ───────────────────── */}
-  <div class="border-t border-border-subtle/30 bg-surface-alt/30 py-6">
+  <div class="border-t border-border-subtle/30 bg-surface-alt/30 py-6 -mx-4 lg:-mx-8">
     <div class="mx-auto max-w-7xl px-4 text-center">
       <Text variant="metadata" color="muted" class="opacity-70 text-[0.65rem] uppercase tracking-widest">
         {copyright}
       </Text>
     </div>
   </div>
-</footer>
+</Section>

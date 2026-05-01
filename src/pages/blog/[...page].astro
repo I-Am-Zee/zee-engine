@@ -7,6 +7,7 @@ import BlogCard from "../../components/ui/BlogCard.astro";
 import BlogCategoryFilter from "../../components/ui/BlogCategoryFilter.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import Text from "../../components/primitives/Text.astro";
+import Section from "../../components/primitives/Section.astro";
 import type { Page, PaginateFunction } from "astro";
 
 export const prerender = true;
@@ -31,11 +32,19 @@ interface Props {
 const { page } = Astro.props;
 const posts = page.data;
 
-// Load Page Header content
+// Load Page Header and UI Labels content
 const headerEntry = await getEntry('page_headers', 'blog-index');
 const headerData = headerEntry?.data || {
-  title: "The Journal",
-  description: "Stories, style guides, and care tips from the world of Zelia Vance."
+  heading: "The Journal",
+  description: "Stories, style guides, and care tips.",
+  labels: {
+    filterHeading: "Filter By Category",
+    allStories: "All Stories",
+    showAll: "Show All Stories",
+    noResults: "No articles found.",
+    itemsFound: "found",
+    showingFiltered: "Showing"
+  }
 };
 
 // Default sort for FilterSortBar
@@ -43,19 +52,18 @@ const methodsEntry = await getEntry("settings", "sorting-methods");
 const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
 ---
 
-<EngineLayout pageTitle={headerData.title}>
-  <main 
-    class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8" 
+<EngineLayout pageTitle={headerData.heading}>
+  <Section 
+    as="main" 
     x-data={`blogDiscovery('${defaultSort}')`}
   >
     {/* Page Header */}
-    <div class="mb-12">
-      <PageHeader 
-        title={headerData.heading || headerData.title} 
-        subtitle={headerData.description}
-        align="left"
-      />
-    </div>
+    <PageHeader 
+      title={headerData.heading} 
+      subtitle={headerData.description}
+      align="left"
+      class="mb-12"
+    />
 
     {/* Filter & Sort Bar (Sticky Context) */}
     <FilterSortBar 
@@ -67,7 +75,10 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
     {/* Main Layout: Sidebar + Grid */}
     <div class="flex flex-col lg:flex-row gap-12 mt-8">
       {/* Category Filter Sidebar */}
-      <BlogCategoryFilter class="lg:w-64 shrink-0" />
+      <BlogCategoryFilter 
+        class="lg:w-64 shrink-0" 
+        labels={headerData.labels}
+      />
 
       {/* Blog Grid */}
       <div class="flex-1">
@@ -95,7 +106,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
         {/* Empty State — only show when a filter is active AND no results match */}
         <div x-show="selectedCategories.length > 0 && filteredCount === 0" class="py-20 text-center" x-cloak>
           <Text variant="paragraph" color="muted" class="mb-4">
-            No articles found in the selected categories.
+            {headerData.labels.noResults}
           </Text>
           <button 
             type="button"
@@ -103,7 +114,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
             class="group cursor-pointer"
           >
             <Text variant="label" color="accent" class="border-b border-accent-brass pb-0.5 group-hover:text-primary group-hover:border-primary transition-colors">
-              Show All Stories
+              {headerData.labels.showAll}
             </Text>
           </button>
         </div>
@@ -120,5 +131,5 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
         )}
       </div>
     </div>
-  </main>
+  </Section>
 </EngineLayout>

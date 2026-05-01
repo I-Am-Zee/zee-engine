@@ -1,217 +1,198 @@
 ---
-// Pre-render at build time (required in server mode)
+// Pre-render at build time
 export const prerender = true;
 
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
+import Section from "../components/primitives/Section.astro";
+import Input from "../components/primitives/Input.astro";
 import Icon from "../components/primitives/Icon.astro";
 import FilterChip from "../components/primitives/FilterChip.astro";
 import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import BlogCard from "../components/ui/BlogCard.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
 
+// Load content and settings
 const allProducts = await getCollection("products");
 const allPosts = await getCollection("blog", ({ data }) => !data.isDraft);
+const searchSettings = await getEntry("settings", "search");
+const labels = searchSettings?.data || {
+  title: "Search",
+  description: "Discover our world.",
+  placeholder: "Search...",
+  initialState: { heading: "Start typing...", subtext: "" },
+  labels: { resultsFound: "Found", resultsIn: "in", nothingFound: "Nothing found", nothingFoundSub: "", viewAllAction: "View Shop" },
+  filters: { all: "All", product: "Jewellery", blog: "Stories" }
+};
 
-// Flatten products for Fuse
+// Flatten products for Fuse — serializable plain objects only
 const searchableProducts = allProducts.map(p => ({
-  type: "product" as const,
+  type: "product",
   title: p.data.title,
   description: p.data.description,
   tags: p.data.tags || [],
   category: p.data.category,
   slug: p.id,
-  image: p.data.image,
-  price: p.data.price,
-  salePrice: p.data.salePrice,
-  badges: p.data.badges || [],
-  rating: p.data.rating,
 }));
 
-// Flatten blog posts for Fuse
+// Flatten blog posts for Fuse — serializable plain objects only
 const searchablePosts = allPosts.map(p => ({
-  type: "blog" as const,
+  type: "blog",
   title: p.data.title,
   description: p.data.excerpt,
   tags: p.data.tags || [],
   category: p.data.category,
   slug: p.id.replace(/\.[^/.]+$/, ""),
-  image: p.data.image,
 }));
 
 const allSearchable = [...searchableProducts, ...searchablePosts];
+
+// Serialise labels.filters for the inline script
+const filterLabels = labels.filters;
 ---
 
-<EngineLayout pageTitle="Search">
-  <main 
-    class="mx-auto max-w-7xl px-4 py-16 lg:px-8"
-    x-data={`searchApp(${JSON.stringify(allSearchable)})`}
-  >
+<EngineLayout pageTitle={labels.title}>
+  <Section variant="hero" x-data="searchApp">
 
     {/* ── Hero Search Bar ─────────────────────────────────── */}
     <div class="mb-10 text-center">
-      <Heading as="h1" class="mb-2 uppercase tracking-wider">Search</Heading>
-      <Text variant="paragraph" color="muted" class="mb-8">
-        Discover jewellery, stories, and style from the Zelia Vance world.
-      </Text>
+      <Heading as="h1" class="mb-2 uppercase tracking-wider">{labels.title}</Heading>
+      <Text variant="paragraph" color="muted" class="mb-8">{labels.description}</Text>
 
-      {/* Search Input — icon sits INSIDE the field via pl-12 on input */}
-      <div class="relative mx-auto max-w-2xl">
-        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 z-10">
-          <Icon name="PhMagnifyingGlass" class="h-5 w-5 text-text-muted" />
-        </div>
-        <input
+      {/* Atomic Input — uses upgraded Input primitive with icon support */}
+      <div class="mx-auto max-w-2xl">
+        <Input
           id="search-input"
           type="search"
           x-model="query"
           @input.debounce.300ms="performSearch()"
-          placeholder="Search for rings, care guides, gold..."
-          class="w-full font-sans pl-12 pr-4 py-3 rounded-md bg-background border border-border-strong transition-all duration-200 outline-none focus:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] focus:border-primary placeholder:text-text-muted"
+          placeholder={labels.placeholder}
+          icon="PhMagnifyingGlass"
           autocomplete="off"
         />
       </div>
 
-      {/* Result count */}
-      <template x-if="query.length >= 2">
-        <Text variant="metadata" color="muted" class="mt-3 block">
-          Found <Text as="span" weight="bold" color="main" x-text="totalCount"></Text> results
-          <template x-if="activeType !== 'all'">
-            <Text as="span" color="muted"> in <Text as="span" weight="bold" color="main" x-text="activeType"></Text></Text>
-          </template>
+      {/* Result count — only show when actively searching */}
+      <div x-show="query.length >= 2" class="mt-3 min-h-[1.5rem]" x-cloak>
+        <Text variant="metadata" color="muted">
+          {labels.labels.resultsFound}&nbsp;<span class="font-bold text-(--color-text-main)" x-text="totalCount"></span>&nbsp;results
         </Text>
-      </template>
+      </div>
     </div>
 
     {/* ── Content-Type Chips ──────────────────────────────── */}
-    <div class="mb-8 flex items-center justify-center gap-3 flex-wrap">
+    <div class="mb-10 flex items-center justify-center gap-3 flex-wrap">
       <FilterChip
-        label="Everything"
+        label={labels.filters.all}
         isActive="activeType === 'all'"
         onClick="setType('all')"
       />
       <FilterChip
-        label="Jewellery"
+        label={labels.filters.product}
         isActive="activeType === 'product'"
         onClick="setType('product')"
       />
       <FilterChip
-        label="Stories"
+        label={labels.filters.blog}
         isActive="activeType === 'blog'"
         onClick="setType('blog')"
       />
     </div>
 
-    {/* ── Results ─────────────────────────────────────────── */}
-    <div id="search-results">
-
-      {/* Product results */}
-      <template x-if="(activeType === 'all' || activeType === 'product') && matchingProductSlugs.length > 0">
-        <div>
-          <template x-if="activeType === 'all'">
-            <div class="mb-6 flex items-center gap-3">
-              <Icon name="PhDiamond" class="h-4 w-4 text-primary" />
-              <Text variant="label" weight="bold" color="main" class="uppercase tracking-widest text-xs">Jewellery</Text>
-              <div class="flex-1 h-px bg-(--color-border-subtle)"></div>
-            </div>
-          </template>
-          <div class="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {allProducts.map((product) => (
-              <div
-                x-show={`matchingProductSlugs.includes('${product.id}')`}
-                x-cloak
-              >
-                <GlassProductCard product={product} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </template>
-
-      {/* Blog results */}
-      <template x-if="(activeType === 'all' || activeType === 'blog') && matchingPostSlugs.length > 0">
-        <div :class="(activeType === 'all' && matchingProductSlugs.length > 0) ? 'mt-14' : ''">
-          <template x-if="activeType === 'all'">
-            <div class="mb-6 flex items-center gap-3">
-              <Icon name="PhBookOpenText" class="h-4 w-4 text-primary" />
-              <Text variant="label" weight="bold" color="main" class="uppercase tracking-widest text-xs">Stories</Text>
-              <div class="flex-1 h-px bg-(--color-border-subtle)"></div>
-            </div>
-          </template>
-          <div class="grid gap-6 grid-cols-1 md:grid-cols-2">
-            {allPosts.map((post) => (
-              <div
-                x-show={`matchingPostSlugs.includes('${post.id.replace(/\.[^/.]+$/, "")}')`}
-                x-cloak
-              >
-                <BlogCard post={post} variant="vertical" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </template>
-
-      {/* No results for active type */}
-      <template x-if="query.length >= 2 && totalCount === 0">
-        <div>
-          <EmptyState
-            icon="magnifying-glass"
-            heading="Nothing found"
-            description="Try different keywords or browse our collections."
-            action={{ label: "View All Products", href: "/shop" }}
-          />
-        </div>
-      </template>
-    </div>
-
-    {/* ── Initial State ────────────────────────────────────── */}
-    <div x-show="query.length < 2" class="text-center py-24" x-cloak>
-      <div class="mb-8 opacity-20">
-        <Icon name="PhMagnifyingGlass" class="mx-auto h-20 w-20 text-text-muted" weight="thin" />
+    {/* ── Initial State (shown when query is too short) ────── */}
+    <div x-show="query.length < 2" class="py-20 text-center" x-cloak>
+      <div class="mb-8 opacity-20 flex justify-center">
+        <Icon name="PhMagnifyingGlass" size="5rem" weight="thin" class="text-text-muted" />
       </div>
-      <Heading as="h3" color="muted">Start typing to search...</Heading>
-      <Text variant="paragraph" color="muted" class="mt-2">Jewellery, stories, care guides — all in one place.</Text>
+      <Heading as="h3" color="muted">{labels.initialState.heading}</Heading>
+      <Text variant="paragraph" color="muted" class="mt-2">{labels.initialState.subtext}</Text>
     </div>
 
-  </main>
+    {/* ── Results Container ────────────────────────────────── */}
+    <div id="search-results" x-show="query.length >= 2" x-cloak>
+
+      {/* No results */}
+      <div x-show="totalCount === 0" class="py-16">
+        <EmptyState
+          icon="PhMagnifyingGlass"
+          heading={labels.labels.nothingFound}
+          description={labels.labels.nothingFoundSub}
+          action={{ label: labels.labels.viewAllAction, href: "/shop" }}
+        />
+      </div>
+
+      {/* Product results section */}
+      <div x-show="(activeType === 'all' || activeType === 'product') && matchingProductSlugs.length > 0">
+        <div x-show="activeType === 'all'" class="mb-6 flex items-center gap-3">
+          <Icon name="PhDiamond" class="h-4 w-4 text-(--color-primary) shrink-0" />
+          <span class="text-xs font-bold uppercase tracking-widest text-(--color-text-main)">{labels.filters.product}</span>
+          <div class="flex-1 h-px bg-(--color-border-subtle)"></div>
+        </div>
+        <div class="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {allProducts.map((product) => (
+            <div x-show={`matchingProductSlugs.includes('${product.id}')`} x-cloak>
+              <GlassProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Blog results section */}
+      <div
+        x-show="(activeType === 'all' || activeType === 'blog') && matchingPostSlugs.length > 0"
+        :class="(activeType === 'all' && matchingProductSlugs.length > 0) ? 'mt-14' : ''"
+      >
+        <div x-show="activeType === 'all'" class="mb-6 flex items-center gap-3">
+          <Icon name="PhBookOpenText" class="h-4 w-4 text-(--color-primary) shrink-0" />
+          <span class="text-xs font-bold uppercase tracking-widest text-(--color-text-main)">{labels.filters.blog}</span>
+          <div class="flex-1 h-px bg-(--color-border-subtle)"></div>
+        </div>
+        <div class="grid gap-6 grid-cols-1 md:grid-cols-2">
+          {allPosts.map((post) => (
+            <div
+              x-show={`matchingPostSlugs.includes('${post.id.replace(/\.[^/.]+$/, "")}')`}
+              x-cloak
+            >
+              <BlogCard post={post} variant="vertical" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+  </Section>
 </EngineLayout>
 
-<script>
-  import Fuse from "fuse.js";
-
+<script is:inline define:vars={{ allSearchable, filterLabels }}>
   document.addEventListener("alpine:init", () => {
-    // @ts-ignore
-    window.Alpine.data("searchApp", (items: any[]) => ({
+    window.Alpine.data("searchApp", () => ({
       query: "",
       activeType: "all",
-      allItems: items,
-      matchingProductSlugs: [] as string[],
-      matchingPostSlugs: [] as string[],
-      fuse: null as any,
+      matchingProductSlugs: [],
+      matchingPostSlugs: [],
+      _fuse: null,
 
       get totalCount() {
-        const pt = this.activeType === "all" || this.activeType === "product";
-        const bt = this.activeType === "all" || this.activeType === "blog";
-        return (pt ? this.matchingProductSlugs.length : 0) + (bt ? this.matchingPostSlugs.length : 0);
+        const countProducts = this.activeType === "all" || this.activeType === "product";
+        const countBlog = this.activeType === "all" || this.activeType === "blog";
+        return (countProducts ? this.matchingProductSlugs.length : 0) +
+               (countBlog ? this.matchingPostSlugs.length : 0);
       },
 
-      init() {
-        this.fuse = new Fuse(this.allItems, {
-          keys: ["title", "description", "tags", "category"],
-          threshold: 0.35,
-          includeMatches: true,
-        });
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const q = urlParams.get("q");
-        if (q) {
-          this.query = q;
-          this.performSearch();
+      _getFuse() {
+        if (!this._fuse) {
+          this._fuse = new Fuse(allSearchable, {
+            keys: ["title", "description", "tags", "category"],
+            threshold: 0.35,
+            includeScore: true,
+          });
         }
+        return this._fuse;
       },
 
-      setType(type: string) {
+      setType(type) {
         this.activeType = type;
       },
 
@@ -222,16 +203,24 @@ const allSearchable = [...searchableProducts, ...searchablePosts];
           return;
         }
 
-        const results = this.fuse.search(this.query) as any[];
+        const results = this._getFuse().search(this.query);
+
         this.matchingProductSlugs = results
-          .filter((r: any) => r.item.type === "product")
-          .map((r: any) => r.item.slug);
+          .filter((r) => r.item.type === "product")
+          .map((r) => r.item.slug);
+
         this.matchingPostSlugs = results
-          .filter((r: any) => r.item.type === "blog")
-          .map((r: any) => r.item.slug);
+          .filter((r) => r.item.type === "blog")
+          .map((r) => r.item.slug);
       },
     }));
   });
+</script>
+
+<script>
+  // Load Fuse.js into global scope for the inline script
+  import Fuse from "fuse.js";
+  (window as any).Fuse = Fuse;
 </script>
 
 <style>

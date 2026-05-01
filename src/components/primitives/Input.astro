@@ -1,4 +1,6 @@
 ---
+import Icon from "./Icon.astro";
+
 export interface Props {
   id: string;
   type?: "text" | "password" | "email" | "number" | "tel" | "search" | "url";
@@ -8,6 +10,8 @@ export interface Props {
   name?: string;
   value?: string;
   readonly?: boolean;
+  icon?: string;
+  iconPosition?: "left" | "right";
 }
 
 const {
@@ -19,6 +23,8 @@ const {
   name,
   value,
   readonly = false,
+  icon,
+  iconPosition = "left",
   ...rest
 } = Astro.props;
 
@@ -26,22 +32,37 @@ const {
 const baseStyles =
   "w-full font-sans px-4 py-2 rounded-md bg-background border transition-all duration-200 outline-none focus:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)] disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-text-muted";
 
+// Padding adjustments for icons
+const paddingStyles = icon 
+  ? (iconPosition === "left" ? "pl-11" : "pr-11") 
+  : "";
+
 // Error state changes border color
 const stateStyles = error
   ? "border-red-500 focus:border-red-500"
   : "border-border-strong focus:border-primary";
 
-const combinedClasses = `${baseStyles} ${stateStyles} ${className || ""}`.trim();
+const combinedClasses = `${baseStyles} ${paddingStyles} ${stateStyles} ${className || ""}`.trim();
 ---
 
-<input
-  id={id}
-  type={type}
-  placeholder={placeholder}
-  name={name}
-  value={value}
-  readonly={readonly || undefined}
-  class={combinedClasses}
-  aria-invalid={error ? "true" : undefined}
-  {...rest}
-/>
+<div class="relative w-full">
+  {icon && (
+    <div class:list={[
+      "pointer-events-none absolute inset-y-0 flex items-center z-10",
+      iconPosition === "left" ? "left-4" : "right-4"
+    ]}>
+      <Icon name={icon} class="h-5 w-5 text-text-muted" />
+    </div>
+  )}
+  <input
+    id={id}
+    type={type}
+    placeholder={placeholder}
+    name={name}
+    value={value}
+    readonly={readonly || undefined}
+    class={combinedClasses}
+    aria-invalid={error ? "true" : undefined}
+    {...rest}
+  />
+</div>
