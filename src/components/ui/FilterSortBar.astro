@@ -4,13 +4,14 @@ import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 
 interface Props {
+  class?: string;
   productCount: number;
   itemLabel?: string;
   context?: 'products' | 'blog';
   sortOptions?: { label: string; value: string }[];
 }
 
-const { productCount, itemLabel, context = 'products', sortOptions: manualOptions } = Astro.props;
+const { class: className, productCount, itemLabel, context = 'products', sortOptions: manualOptions } = Astro.props;
 
 // Default labels mapping for CMS-driven values
 const SORT_LABELS: Record<string, string> = {
@@ -40,7 +41,11 @@ const finalSortOptions = manualOptions || enabledSorts.map((val: string) => ({
 ---
 
 <div
-  class="mb-6 flex flex-col items-start justify-between gap-4 border-b border-(--color-border-subtle) pb-4 sm:flex-row sm:items-center"
+  class:list={[
+    "flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center border-b border-border-subtle/40",
+    context === 'blog' ? "py-4" : "pb-4 mb-6",
+    className
+  ]}
 >
   <!-- Count Display -->
   <Text variant="metadata" class="text-text-muted">

@@ -36,13 +36,13 @@ const categories = taxonomyEntry?.data?.categories || [];
 
 <div class:list={["w-full", className]}>
   {/* Desktop Sidebar Filter */}
-  <aside class="hidden lg:block sticky top-32 w-64 pr-8">
+  <aside class="hidden lg:block sticky top-44 w-64 pr-8">
     <div class="mb-6 flex flex-col gap-2">
       <Heading as="h4" size="h5" class="uppercase tracking-widest text-xs font-bold">{labels.filterHeading}</Heading>
       <div x-show="selectedCategories.length > 0" class="flex items-center gap-2" x-cloak>
         <span class="h-1.5 w-1.5 rounded-full bg-accent-emerald"></span>
         <Text variant="metadata" color="emerald" weight="bold">
-          {labels.showingFiltered} <Text as="span" x-text="filteredCount"></Text>
+          {labels.showingFiltered}&nbsp;<span x-text="filteredCount"></span>
         </Text>
       </div>
     </div>

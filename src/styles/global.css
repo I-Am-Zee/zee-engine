@@ -106,14 +106,17 @@ body {
   background-color: var(--color-background) !important;
 }
 
-/* Navbar solid background fallback */
+/* Navbar glass utility - Aligned with Blog Filter Bar (95% opacity) */
 .bg-navbar-glass {
-  background-color: rgba(249, 245, 240, 0.98); /* 98% opacity --color-background */
-  @supports (backdrop-filter: blur(8px)) {
-    background-color: rgba(249, 245, 240, 0.90);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(249, 245, 240, 0.98); /* Fallback */
+  @supports (backdrop-filter: blur(12px)) {
+    background-color: rgba(249, 245, 240, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
+  /* Prevent tiny sub-pixel gaps at top: 0 when sticking */
+  margin-top: -1px;
+  padding-top: 1px;
 }
 
 /* ─── Luxury Editorial Typography (.prose-zelia) ─── */
