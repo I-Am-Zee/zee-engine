@@ -161,7 +161,8 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
           {page.lastPage > 1 && (
             <div x-show="isAllSelected()" class="mt-16" x-cloak>
               <Pagination 
-                page={page} 
+                currentPage={page.currentPage} 
+                totalPages={page.lastPage}
                 baseUrl="/blog"
               />
             </div>

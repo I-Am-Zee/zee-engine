@@ -6,9 +6,10 @@ import GlassProductCard from "../ui/GlassProductCard.astro";
 interface Props {
   products: any[];
   itemLabel?: string;
+  categoryName?: string;
 }
 
-const { products, itemLabel } = Astro.props;
+const { products, itemLabel, categoryName } = Astro.props;
 
 // Fetch global default sort from specialized singleton
 const methodsEntry = await getEntry("settings", "sorting-methods");
@@ -17,7 +18,7 @@ const defaultSort = methodsEntry?.data?.products?.default_sort || 'featured';
 
 <div class="smart-product-grid" x-data={`productSorter('${defaultSort}')`}>
   <!-- Filter & Sort Bar -->
-  <FilterSortBar productCount={products.length} itemLabel={itemLabel} />
+  <FilterSortBar productCount={products.length} itemLabel={itemLabel} categoryName={categoryName} />
 
   <!-- Product Grid -->
   <div 

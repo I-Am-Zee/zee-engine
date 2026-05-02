@@ -51,7 +51,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // 200 = updated existing subscriber, 201 = newly created
     if (mlRes.ok) {
-      const mlData = await mlRes.json();
+      const mlData = await mlRes.json() as any;
       console.log(`[Newsletter Subscribe] ✓ ${email} added/updated in MailerLite group ${mlGroup}.`);
       return new Response(
         JSON.stringify({ success: true, id: mlData.data?.id }),

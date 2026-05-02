@@ -94,7 +94,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(null, { status: 200 }); // Still 200 for Shiprocket
     }
 
-    const searchData = await searchResponse.json();
+    const searchData = await searchResponse.json() as any;
     const order = searchData.items?.[0];
 
     if (!order || !order.token) {

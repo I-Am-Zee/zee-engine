@@ -4,9 +4,11 @@ interface Props {
   variant?: "plain" | "underline";
   class?: string;
   isExternal?: boolean;
+  target?: string;
+  rel?: string;
 }
 
-const { href, variant = "plain", class: className, isExternal: isExternalProp, ...rest } = Astro.props;
+const { href, variant = "plain", class: className, isExternal: isExternalProp, target, rel, ...rest } = Astro.props;
 
 // Smart detection for external links if not explicitly provided
 const isExternal = isExternalProp ?? (href.startsWith("http") || href.startsWith("//"));
@@ -23,7 +25,7 @@ const variantStyles = {
 
 const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${className || ""}`.trim();
 
-const externalProps = isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
+const externalProps = isExternal ? { target: target || "_blank", rel: rel || "noopener noreferrer" } : (target ? { target, rel } : {});
 ---
 
 <a href={href} class={combinedClasses} {...externalProps} {...rest}>

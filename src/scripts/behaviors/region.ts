@@ -1,4 +1,3 @@
-import type { Alpine } from 'alpinejs';
 import { formatCurrency } from '../utils/currency';
 
 export const regionStore = {
@@ -33,7 +32,7 @@ export const regionStore = {
     try {
       const response = await fetch('/api/geo');
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json() as any;
         const detectedId = data.region?.toLowerCase();
         
         // Match the user to our list -> If no match -> Catch-all to Global

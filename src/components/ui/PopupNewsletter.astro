@@ -9,6 +9,8 @@ interface Props {
     description: string;
     image?: string;
     denylist?: string[];
+    trigger?: 'timed' | 'exit' | 'scroll';
+    delay_seconds?: number;
   };
 }
 

@@ -1,4 +1,5 @@
 ---
+import * as PhosphorIcons from "phosphor-icons-astro";
 import Icon from "./Icon.astro";
 
 export interface Props {
@@ -10,8 +11,10 @@ export interface Props {
   name?: string;
   value?: string;
   readonly?: boolean;
-  icon?: string;
+  icon?: keyof typeof PhosphorIcons;
   iconPosition?: "left" | "right";
+  autocomplete?: string;
+  [key: string]: any;
 }
 
 const {
@@ -25,6 +28,7 @@ const {
   readonly = false,
   icon,
   iconPosition = "left",
+  autocomplete,
   ...rest
 } = Astro.props;
 
@@ -51,7 +55,7 @@ const combinedClasses = `${baseStyles} ${paddingStyles} ${stateStyles} ${classNa
       "pointer-events-none absolute inset-y-0 flex items-center z-10",
       iconPosition === "left" ? "left-4" : "right-4"
     ]}>
-      <Icon name={icon} class="h-5 w-5 text-text-muted" />
+      <Icon name={icon as any} class="h-5 w-5 text-text-muted" />
     </div>
   )}
   <input
@@ -63,6 +67,7 @@ const combinedClasses = `${baseStyles} ${paddingStyles} ${stateStyles} ${classNa
     readonly={readonly || undefined}
     class={combinedClasses}
     aria-invalid={error ? "true" : undefined}
+    autocomplete={autocomplete}
     {...rest}
   />
 </div>

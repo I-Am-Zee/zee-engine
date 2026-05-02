@@ -5,9 +5,9 @@
  * Reusable across different filter layouts.
  */
 
-export function blogFilter(initialCategories = []) {
+export function blogFilter(initialCategories: string[] = []) {
   return {
-    selectedCategories: initialCategories,
+    selectedCategories: initialCategories as string[],
     filteredCount: 0,
 
     init() {

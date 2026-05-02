@@ -9,7 +9,7 @@ import { gridSort } from "./sorting";
 export const blogDiscovery = (initialSort = 'latest') => ({
   ...gridSort(initialSort), // Inherit base sorting logic
   
-  selectedCategories: [],
+  selectedCategories: [] as string[],
   filteredCount: 0,
 
   init() {
@@ -27,12 +27,13 @@ export const blogDiscovery = (initialSort = 'latest') => ({
   gridSortInit() {
     // @ts-ignore
     this.$nextTick(() => {
+      // @ts-ignore
       let grid = this.$refs.grid as HTMLElement;
       if (!grid) return;
 
       this.items = Array.from(grid.children).map((el: any, index) => {
         el.dataset.index = index.toString();
-        return el;
+        return el as HTMLElement;
       });
 
       if (this.sortBy !== 'featured') {
@@ -43,7 +44,7 @@ export const blogDiscovery = (initialSort = 'latest') => ({
 
   updateFilteredCount() {
     // @ts-ignore
-    const grid = this.$refs.grid;
+    const grid = this.$refs.grid as HTMLElement;
     if (!grid) return;
     
     const items = Array.from(grid.querySelectorAll('.blog-item')) as HTMLElement[];
@@ -51,28 +52,22 @@ export const blogDiscovery = (initialSort = 'latest') => ({
       if (this.selectedCategories.length === 0) return true;
       
       const category = el.dataset.category || '';
-      // @ts-ignore
       if (this.selectedCategories.includes(category)) return true;
       
       const tags = JSON.parse(el.dataset.tags || '[]');
-      // @ts-ignore
       return this.selectedCategories.some(cat => tags.includes(cat));
     }).length;
   },
 
   toggleCategory(cat: string) {
-    // @ts-ignore
     if (this.selectedCategories.includes(cat)) {
-      // @ts-ignore
       this.selectedCategories = this.selectedCategories.filter(c => c !== cat);
     } else {
-      // @ts-ignore
       this.selectedCategories.push(cat);
     }
   },
 
   isActive(cat: string) {
-    // @ts-ignore
     return this.selectedCategories.includes(cat);
   },
 
@@ -88,11 +83,9 @@ export const blogDiscovery = (initialSort = 'latest') => ({
     if (this.selectedCategories.length === 0) return true;
     
     // Check both category and tags for maximum flexibility
-    // @ts-ignore
     if (this.selectedCategories.includes(category)) return true;
     
     const tags = JSON.parse(tagsJson || '[]');
-    // @ts-ignore
     return this.selectedCategories.some(cat => tags.includes(cat));
   }
 });

@@ -5,15 +5,12 @@ import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
 import Image from "../components/primitives/Image.astro";
-import GlassProductCard from "../components/ui/GlassProductCard.astro";
-import CollectionCard from "../components/ui/CollectionCard.astro";
 import ProductCarousel from "../components/features/ProductCarousel.astro";
 
 import LookbookCarousel from "../components/features/LookbookCarousel.astro";
 import TrustSection from "../components/ui/TrustSection.astro";
 import CategoryCarousel from "../components/features/CategoryCarousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
-import NewsletterWidget from "../components/features/NewsletterWidget.astro";
 import { slugify } from "../scripts/utils/slugify";
 
 // Load Hero Content (Brand Aware)
@@ -60,15 +57,15 @@ const allProducts = await getCollection("products");
 
 // Fetch Home Carousel Content
 const homeCarouselEntry = await getEntry("pages_content", "home_carousel");
-const cmsFeaturedIds = homeCarouselEntry?.data?.featured_products || [];
+const cmsFeaturedIds: string[] = homeCarouselEntry?.data?.featured_products || [];
 
-let featuredProducts = [];
+let featuredProducts: any[] = [];
 
 if (cmsFeaturedIds.length > 0) {
   // Map specific products in order as chosen in CMS
   featuredProducts = cmsFeaturedIds
-    .map(id => allProducts.find(p => p.id === id || p.id.split('/').pop()?.split('.')[0] === id))
-    .filter(Boolean);
+    .map((id: string) => allProducts.find(p => p.id === id || p.id.split('/').pop()?.split('.')[0] === id))
+    .filter((p): p is any => Boolean(p));
 } else {
   // Fallback: Show up to 8 most recent products if no manual choice
   featuredProducts = [...allProducts]
@@ -82,9 +79,9 @@ if (cmsFeaturedIds.length > 0) {
 
 // Dynamic Categories from Content Collection
 const collectionsGridEntry = await getEntry("collections_grid", "data");
-const collectionsGrid = collectionsGridEntry?.data?.cards || [];
+const collectionsGrid: any[] = collectionsGridEntry?.data?.cards || [];
 
-const categories = collectionsGrid.map(cat => {
+const categories = collectionsGrid.map((cat: any) => {
   const isTag = cat.type === 'tag';
   const filterValue = cat.slug.toLowerCase();
   

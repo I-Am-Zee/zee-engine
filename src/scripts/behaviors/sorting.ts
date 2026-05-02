@@ -5,15 +5,17 @@
  */
 
 export const gridSort = (defaultSort = 'latest') => ({
-  sortBy: defaultSort,
-  items: [],
+  sortBy: defaultSort as string,
+  items: [] as HTMLElement[],
   
   init() {
     // We use $nextTick to ensure all children and refs are fully rendered
     // @ts-ignore
     this.$nextTick(() => {
+      // @ts-ignore
       let grid = this.$refs.grid as HTMLElement;
       if (!grid) {
+        // @ts-ignore
         grid = (this.$el as HTMLElement).querySelector('[x-ref="grid"]') as HTMLElement;
       }
       if (!grid) return;
@@ -21,7 +23,7 @@ export const gridSort = (defaultSort = 'latest') => ({
       // Capture initial order as 'featured'
       this.items = Array.from(grid.children).map((el: any, index) => {
         el.dataset.index = index.toString();
-        return el;
+        return el as HTMLElement;
       });
 
       // If default is not featured, run initial sort
@@ -32,17 +34,20 @@ export const gridSort = (defaultSort = 'latest') => ({
   },
 
   sort() {
-    const grid = this.$refs.grid;
-    const sorted = [...this.items].sort((a, b) => {
+    // @ts-ignore
+    const grid = this.$refs.grid as HTMLElement;
+    if (!grid) return;
+    
+    const sorted = [...this.items].sort((a: HTMLElement, b: HTMLElement) => {
       switch (this.sortBy) {
         case 'featured':
-          return parseInt(a.dataset.index) - parseInt(b.dataset.index);
+          return parseInt(a.dataset.index || '0') - parseInt(b.dataset.index || '0');
         
         case 'latest':
-          return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
+          return new Date(b.dataset.date || 0).getTime() - new Date(a.dataset.date || 0).getTime();
         
         case 'oldest':
-          return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
+          return new Date(a.dataset.date || 0).getTime() - new Date(b.dataset.date || 0).getTime();
         
         case 'price-asc':
           return parseFloat(a.dataset.price || '0') - parseFloat(b.dataset.price || '0');

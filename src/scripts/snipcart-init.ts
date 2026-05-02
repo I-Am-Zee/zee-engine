@@ -116,7 +116,7 @@ function initSnipcartLogic() {
     // DIRECT FIELD CHECK (Zero-Bypass): Look at the screen if data is missing
     const emailInput = document.querySelector('snipcart-input[name="email"] input, input[name="email"]') as HTMLInputElement;
     const phoneInput = document.querySelector('snipcart-input[name="phone"] input, input[name="phone"]') as HTMLInputElement;
-    const countryInput = document.querySelector('select[name="country"], .snipcart-typeahead__input') as HTMLSelectElement;
+    const countryInput = document.querySelector('select[name="country"], .snipcart-typeahead__input') as unknown as HTMLSelectElement;
 
     const email = (emailInput ? emailInput.value : (billing.email || '')).trim().toLowerCase();
     const phone = (phoneInput ? phoneInput.value : (billing.phone || '')).trim();
@@ -184,7 +184,7 @@ function initSnipcartLogic() {
           target.value = cleanedValue;
         }
 
-        const countryElement = document.querySelector('select[name="country"], .snipcart-typeahead__input') as HTMLSelectElement;
+        const countryElement = document.querySelector('select[name="country"], .snipcart-typeahead__input') as unknown as HTMLSelectElement;
         const countryCode = countryElement ? countryElement.value : 'IN';
         const val = target.value.trim();
 

@@ -19,7 +19,7 @@ interface Props {
   class?: string;
 }
 
-const { class: className, ...rest } = Astro.props;
+const { class: className } = Astro.props;
 
 // Fetch Data
 const siteSettings = await getEntry("settings", "brand");
@@ -29,7 +29,7 @@ const footerSettings = await getEntry("settings", "footer");
 
 const brandName = siteSettings?.data?.name || "Brand";
 const legalEntity = siteSettings?.data?.legal_entity || "I Am Zee";
-const socialLinks = siteSettings?.data?.social || [];
+const socialLinks: any[] = siteSettings?.data?.social || [];
 const copyright = `Copyright © ${new Date().getFullYear()} ${legalEntity}. All rights reserved.`;
 
 const footerData = footerSettings?.data || {
@@ -49,9 +49,9 @@ const shopCategories: any[] = [
 ];
 
 const navigationData = navigationEntry?.data || { main_menus: [], support_links: [], legal_links: [] };
-const exploreLinks = navigationData.main_menus || [];
-const supportLinks = navigationData.support_links || [];
-const legalLinks = navigationData.legal_links || [];
+const exploreLinks: any[] = navigationData.main_menus || [];
+const supportLinks: any[] = navigationData.support_links || [];
+const legalLinks: any[] = navigationData.legal_links || [];
 ---
 
 <Section as="footer" variant="standard" class={`bg-surface pt-12! pb-0! sm:pt-16!${className ? ` ${className}` : ''}`}>
@@ -104,7 +104,7 @@ const legalLinks = navigationData.legal_links || [];
       </Heading>
       <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-          {shopCategories.map((item) => (
+          {shopCategories.map((item: any) => (
             <li>
               <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
                 <Text variant="caption" color="muted">{item.label}</Text>
@@ -114,7 +114,7 @@ const legalLinks = navigationData.legal_links || [];
         </ul>
       </div>
       <ul class="hidden md:flex flex-col space-y-4">
-        {shopCategories.map((item) => (
+        {shopCategories.map((item: any) => (
           <li>
             <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
               <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
@@ -137,7 +137,7 @@ const legalLinks = navigationData.legal_links || [];
       </Heading>
       <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-          {exploreLinks.map((item) => (
+          {exploreLinks.map((item: any) => (
             <li>
               <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
                 <Text variant="caption" color="muted">{item.label}</Text>
@@ -147,7 +147,7 @@ const legalLinks = navigationData.legal_links || [];
         </ul>
       </div>
       <ul class="hidden md:flex flex-col space-y-4">
-        {exploreLinks.map((item) => (
+        {exploreLinks.map((item: any) => (
           <li>
             <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
               <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
@@ -170,7 +170,7 @@ const legalLinks = navigationData.legal_links || [];
       </Heading>
       <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-          {supportLinks.map((item) => (
+          {supportLinks.map((item: any) => (
             <li>
               <Link href={item.href} variant="plain" class="block py-3 px-4 active:bg-surface-alt transition-colors">
                 <Text variant="caption" color="muted">{item.label}</Text>
@@ -180,7 +180,7 @@ const legalLinks = navigationData.legal_links || [];
         </ul>
       </div>
       <ul class="hidden md:flex flex-col space-y-4">
-        {supportLinks.map((item) => (
+        {supportLinks.map((item: any) => (
           <li>
             <Link href={item.href} variant="plain" class="hover:translate-x-1 transition-transform inline-block group">
               <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">
@@ -203,7 +203,7 @@ const legalLinks = navigationData.legal_links || [];
       </Heading>
       <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
-          {socialLinks.map((item) => (
+          {socialLinks.map((item: any) => (
             <li>
               <Link href={item.url} variant="plain" target="_blank" class="block py-3 px-4 active:bg-surface-alt transition-colors">
                 <Text variant="caption" color="muted">{item.platform}</Text>
@@ -213,7 +213,7 @@ const legalLinks = navigationData.legal_links || [];
         </ul>
       </div>
       <ul class="hidden md:flex flex-col space-y-4">
-        {socialLinks.map((item) => (
+        {socialLinks.map((item: any) => (
           <li>
             <Link href={item.url} variant="plain" target="_blank" class="hover:translate-x-1 transition-transform inline-block group">
               <Text variant="caption" color="muted" class="group-hover:text-text-main transition-colors">

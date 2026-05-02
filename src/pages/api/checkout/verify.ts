@@ -188,7 +188,7 @@ async function notifySnipcartPayment(
       return { success: false, error: errorText };
     }
 
-    const result = await response.json();
+    const result = await response.json() as any;
     console.log('[verify] Snipcart response:', JSON.stringify(result));
     
     return { 

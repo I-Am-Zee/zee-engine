@@ -15,6 +15,8 @@ interface Props {
     coupon_code: string;
     cta_text?: string;
     denylist?: string[];
+    trigger?: 'timed' | 'exit' | 'scroll';
+    delay_seconds?: number;
   };
 }
 
