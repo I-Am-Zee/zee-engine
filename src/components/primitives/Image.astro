@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { 
-  src, 
+  src: srcProp, 
   alt, 
   ratio = "auto", 
   class: className = "", 
@@ -29,12 +29,19 @@ const {
   ...rest 
 } = Astro.props;
 
-// Determine if we should use Astro's optimized Image or a raw img tag (for remote R2 paths)
-// If it's a string starting with http or /, it's likely a remote/R2 path
-const isRemote = typeof src === "string" && (src.startsWith("http") || src.startsWith("/"));
+// Normalize src: empty strings or null/undefined should be treated as missing
+const src = srcProp || null;
+
+// Guard: If no source is provided and no Alpine dynamic source exists, skip rendering to prevent Astro crash
+if (!src && !rest[':src']) return null;
+
+// Determine if we should use Astro's optimized Image or a raw img tag
+// Remote if it's a string starting with http or /, or if it has an Alpine :src attribute
+const isRemote = (typeof src === "string" && (src.startsWith("http") || src.startsWith("/"))) || !!rest[':src'];
 
 // Logic to resolve R2 paths through the gateway
 const resolveSrc = (path: string) => {
+  if (!path) return "";
   const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
   const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
   
@@ -43,7 +50,7 @@ const resolveSrc = (path: string) => {
   return path;
 };
 
-const finalSrc = isRemote ? resolveSrc(src as string) : src;
+const finalSrc = isRemote && typeof src === "string" ? resolveSrc(src) : (src || "");
 
 const aspectClasses = {
   portrait: "aspect-2/3",
