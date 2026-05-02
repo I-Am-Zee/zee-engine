@@ -1,0 +1,35 @@
+---
+/**
+ * AdSlot - Google AdSense Unit
+ * 
+ * Renders an AdSense unit for the provided slot ID.
+ * Only renders in Affiliate mode if tracking is enabled.
+ */
+import { getEntry } from "astro:content";
+
+interface Props {
+  id: string; // The specific AdSense Slot ID
+}
+
+const { id } = Astro.props;
+
+const trackingEntry = await getEntry("settings", "tracking");
+const tracking = trackingEntry?.data || {};
+
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+const isEnabled = tracking.google_adsense_id && (isAffiliate || tracking.show_ads);
+---
+
+{isEnabled && (
+  <div class="ad-slot my-12 flex justify-center overflow-hidden">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client={tracking.google_adsense_id}
+         data-ad-slot={id}
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script is:inline>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+)}

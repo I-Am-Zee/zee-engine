@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import AffiliateProductCTA from "../../components/features/AffiliateProductCTA.astro";
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
@@ -259,19 +260,11 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
 
           <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
             {isAffiliate ? (
-              <div x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`} class="w-full sm:flex-1">
-                <Button
-                  as="a"
-                  x-bind:href="$store.region.getActiveLink(links)?.url || '#'"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  size="lg"
-                  class="w-full whitespace-nowrap h-13"
-                  disabled={isComingSoon ?? false}
-                >
-                  {isComingSoon ? "Coming Soon" : <span x-text="`Shop on ${$store.region.getActiveLink(links)?.platform || 'Partner'}`">Shop on Partner</span>}
-                </Button>
-              </div>
+              <AffiliateProductCTA 
+                links={product.data.affiliate_links || []} 
+                isComingSoon={isComingSoon} 
+                class="w-full sm:flex-1 h-13" 
+              />
             ) : (
               <AddToCartButton
                 product={product}
@@ -345,18 +338,12 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           />
         </div>
         {isAffiliate ? (
-          <div x-data={`{ links: ${JSON.stringify(product.data.affiliate_links || [])} }`} class="shrink-0 flex items-center">
-            <Button
-              as="a"
-              x-bind:href="$store.region.getActiveLink(links)?.url || '#'"
-              target="_blank"
-              rel="noopener noreferrer"
-              size="md"
-              disabled={isComingSoon ?? false}
-            >
-              {isComingSoon ? "Soon" : "Shop"}
-            </Button>
-          </div>
+          <AffiliateProductCTA 
+            links={product.data.affiliate_links || []} 
+            isComingSoon={isComingSoon} 
+            size="md"
+            class="shrink-0 flex items-center" 
+          />
         ) : (
           <AddToCartButton
             product={product}

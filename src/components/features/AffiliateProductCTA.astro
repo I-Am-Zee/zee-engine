@@ -1,0 +1,49 @@
+---
+/**
+ * AffiliateProductCTA - Multi-Platform Action Button
+ * 
+ * Standardized button for Affiliate-mode products.
+ * Handles:
+ * 1. Regional link selection via Alpine.js global store.
+ * 2. Platform-specific labeling (e.g. "Shop on Amazon").
+ * 3. Consistent "Coming Soon" states.
+ * 
+ * @component Feature (features/)
+ * @uses Alpine.js $store.region
+ */
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+
+interface Props {
+  links: any[];
+  isComingSoon?: boolean;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { links = [], isComingSoon = false, size = "lg", class: className } = Astro.props;
+---
+
+<div 
+  x-data={`{ links: ${JSON.stringify(links)} }`} 
+  class:list={[className]}
+>
+  <Button
+    as="a"
+    x-bind:href="$store.region.getActiveLink(links)?.url || '#'"
+    target="_blank"
+    rel="noopener noreferrer"
+    size={size}
+    class="w-full whitespace-nowrap h-full"
+    disabled={isComingSoon}
+  >
+    {isComingSoon ? (
+      "Coming Soon"
+    ) : (
+      <div class="flex items-center justify-center gap-2">
+        <span x-text="`Shop on ${$store.region.getActiveLink(links)?.platform || 'Partner'}`">Shop on Partner</span>
+        <Icon name="PhArrowUpRight" size={size === "sm" ? 14 : 18} weight="bold" />
+      </div>
+    )}
+  </Button>
+</div>

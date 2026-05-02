@@ -12,6 +12,7 @@ import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
 import Image from "../primitives/Image.astro";
+import AffiliateProductCTA from "./AffiliateProductCTA.astro";
 ---
 
 <div
@@ -130,18 +131,10 @@ import Image from "../primitives/Image.astro";
         <!-- Footer Footer CTA -->
         <div class="border-border-subtle bg-surface/80 border-t p-6 sm:p-8 backdrop-blur-md">
            <template x-if="product">
-              <Button
-                as="a"
-                x-bind:href="$store.region.getActiveLink(product.affiliate_links)?.url || '#'"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="w-full py-4 text-center uppercase tracking-widest"
-              >
-                <div class="flex items-center justify-center gap-2">
-                  <span x-text="`Shop on ${$store.region.getActiveLink(product.affiliate_links)?.platform || 'Partner'}`"></span>
-                  <Icon name="PhArrowUpRight" size={18} weight="bold" />
-                </div>
-              </Button>
+              <AffiliateProductCTA 
+                x-bind:links="product.affiliate_links || []" 
+                class="w-full" 
+              />
            </template>
            <Text variant="caption" color="muted" class="mt-4 block text-center opacity-70">
               You will be redirected to our partner platform.

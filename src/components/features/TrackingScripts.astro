@@ -1,0 +1,92 @@
+---
+/**
+ * TrackingScripts - Analytics & Pixel Manager
+ * 
+ * Orchestrates all external tracking scripts based on CMS configuration.
+ * Handles:
+ * 1. Google Analytics (GA4)
+ * 2. Meta Pixel (Facebook)
+ * 3. Google AdSense (Global Client Script)
+ * 4. Cuelinks (Affiliate Mode only)
+ * 
+ * Optimization: Only renders script tags if IDs are present in the config.
+ */
+import { getEntry } from "astro:content";
+
+const trackingEntry = await getEntry("settings", "tracking");
+const tracking = trackingEntry?.data || {
+  google_analytics_id: "",
+  meta_pixel_id: "",
+  google_adsense_id: "",
+  cuelinks_id: ""
+};
+
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+---
+
+{/* ─── Google Analytics (GA4) ─── */}
+{tracking.google_analytics_id && (
+  <>
+    <script 
+      async 
+      src={`https://www.googletagmanager.com/gtag/js?id=${tracking.google_analytics_id}`}
+      is:inline
+    ></script>
+    <script define:vars={{ gaId: tracking.google_analytics_id }} is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  </>
+)}
+
+{/* ─── Meta Pixel (Facebook) ─── */}
+{tracking.meta_pixel_id && (
+  <>
+    <script define:vars={{ pixelId: tracking.meta_pixel_id }} is:inline>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', pixelId);
+      fbq('track', 'PageView');
+    </script>
+    <noscript>
+      <img 
+        height="1" 
+        width="1" 
+        style="display:none"
+        src={`https://www.facebook.com/tr?id=${tracking.meta_pixel_id}&ev=PageView&noscript=1`}
+      />
+    </noscript>
+  </>
+)}
+
+{/* ─── Google AdSense (Head Script) ─── */}
+{tracking.google_adsense_id && (
+  <script 
+    async 
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${tracking.google_adsense_id}`}
+    crossorigin="anonymous"
+    is:inline
+  ></script>
+)}
+
+{/* ─── Cuelinks (Affiliate Mode Only) ─── */}
+{isAffiliate && tracking.cuelinks_id && (
+  <>
+    <script define:vars={{ cl_id: tracking.cuelinks_id }} is:inline>
+      window.cl_id = cl_id;
+    </script>
+    <script 
+      async
+      src="https://tracking.cuelinks.com/cuelinks.js"
+      is:inline
+    ></script>
+  </>
+)}

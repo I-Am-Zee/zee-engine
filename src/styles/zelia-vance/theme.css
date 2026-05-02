@@ -1,0 +1,22 @@
+/* ─── Zelia Vance Theme Tokens ─── */
+@layer base {
+  :root {
+    --color-primary: #052b22;           /* Deep Forest Green */
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #f3ede6;          /* Cream / Off-White */
+    --color-accent-brass: #bfa05f;       /* Luxury Brass */
+    --color-accent-coral: #d97757;       /* Warm Coral */
+    --color-accent-emerald: #052b22;     /* Using Primary for Emerald */
+    --color-background: #ffffff;
+    --color-surface: #fdfcfb;            /* Paper-like Surface */
+    --color-surface-alt: #f3ede6;
+    --color-surface-muted: #f7f3ef;
+    --color-text-main: #1a1a1a;
+    --color-text-muted: #6b5e54;
+    --color-border-subtle: #e8ddd3;
+    --color-border-strong: #d4c5b9;
+    --color-ghost-hover: rgba(5, 43, 34, 0.04);
+    --color-ring: #052b22;
+    --color-ring-glow: rgba(5, 43, 34, 0.1);
+  }
+}

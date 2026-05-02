@@ -8,6 +8,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import BrandEngine from "../components/features/BrandEngine.astro";
 import AffiliateEngine from "../components/features/AffiliateEngine.astro";
+import TrackingScripts from "../components/features/TrackingScripts.astro";
 
 interface Props {
   pageTitle?: string;
@@ -24,6 +25,9 @@ const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 ---
 
 <BaseLayout pageTitle={pageTitle} title={title} description={description}>
+  {/* Inject tracking scripts into the head */}
+  <TrackingScripts slot="head" />
+
   {/* Inject the correct Engine logic/scripts */}
   {isAffiliate ? <AffiliateEngine /> : <BrandEngine />}
 

@@ -95,6 +95,7 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
         }
       </script>
     )}
+    <slot name="head" />
   </head>
   <body class="flex flex-col min-h-screen" data-regions={isAffiliate ? JSON.stringify(affiliateSettings?.data?.regions || []) : undefined}>
     <AnnouncementBar announcement={announcement_bar} threshold={threshold} />

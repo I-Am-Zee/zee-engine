@@ -696,7 +696,9 @@ export default config({
       schema: {
         show_ads: fields.checkbox({ label: 'Show Ads on Blog Pages', defaultValue: false }),
         google_analytics_id: fields.text({ label: 'Google Analytics ID (G-XXXXX)', validation: {isRequired: false} }),
-        meta_pixel_id: fields.text({ label: 'Meta Pixel ID', validation: {isRequired: false} })
+        meta_pixel_id: fields.text({ label: 'Meta Pixel ID', validation: {isRequired: false} }),
+        google_adsense_id: fields.text({ label: 'Google AdSense Publisher ID (ca-pub-XXX)', validation: {isRequired: false} }),
+        cuelinks_id: fields.text({ label: 'Cuelinks ID', description: 'For Affiliate mode automation.', validation: {isRequired: false} }),
       },
     }),
 

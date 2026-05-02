@@ -8,6 +8,7 @@ interface Props {
   salePrice?: number;
   affiliateLinks?: any[]; // For affiliate mode
   variant?: "standard" | "compact";
+  showPrefix?: boolean; // e.g. "Approx. ₹500"
   class?: string;
 }
 
@@ -16,6 +17,7 @@ const {
   salePrice, 
   affiliateLinks = [], 
   variant = "standard", 
+  showPrefix = false,
   class: className 
 } = Astro.props;
 
@@ -61,9 +63,9 @@ const discountPercent = calculateDiscount(price, salePrice);
         as="span" 
         variant="price_main" 
         class={variant === "compact" ? "text-base md:text-lg" : ""}
-        x-text={`$store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}
+        x-text={`${showPrefix ? "'Approx. ' + " : ""}$store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}
       >
-        {formatCurrency(salePrice || price)}
+        {showPrefix && "Approx. "}{formatCurrency(salePrice || price)}
       </Text>
       
       <Text 
