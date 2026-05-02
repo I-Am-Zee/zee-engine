@@ -1,7 +1,6 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
-import Heading from "../../components/primitives/Heading.astro";
 import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import ProductGrid from "../../components/features/ProductGrid.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
@@ -110,7 +109,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
                 <div
                   class="product-item"
                   data-index={index}
-                  data-slug={product.slug}
+                  data-slug={product.id}
                   data-price={product.data.salePrice || product.data.price}
                   data-original-price={product.data.price}
                   data-sale-price={product.data.salePrice || ""}
@@ -120,7 +119,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
                     product.data.publishDate ? new Date(product.data.publishDate).getTime() : 0
                   }
                   data-discount={
-                    product.data.salePrice
+                    product.data.salePrice && product.data.price
                       ? Math.round((1 - product.data.salePrice / product.data.price) * 100)
                       : 0
                   }
@@ -162,14 +161,15 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
 </EngineLayout>
 
 <script>
-  // @ts-ignore
   function initSorter() {
+    // @ts-ignore
     if (!window.Alpine) return;
+    // @ts-ignore
     window.Alpine.data("productSorter", () => ({
       sortOrder: "featured",
       get sortedProducts() {
-        const products = Array.from(document.querySelectorAll('.product-item')); // Changed from .product-card to .product-item
-        const sortContainer = document.getElementById('product-grid'); // Changed from product-grid-container to product-grid
+        const products = Array.from(document.querySelectorAll('.product-item')) as HTMLElement[];
+        const sortContainer = document.getElementById('product-grid');
         
         if (!sortContainer) return;
 
@@ -184,17 +184,17 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
           sortContainer.removeChild(sortContainer.firstChild);
         }
         products.forEach(p => sortContainer.appendChild(p));
-        return products; // Return sorted products for reactivity if needed
+        return products;
       },
 
       // Retaining the original sort method logic for compatibility with FilterSortBar
       sortBy: "default",
-      sort(criteria) {
+      sort(criteria: string) {
         this.sortBy = criteria;
-        const grid = document.querySelector("#product-grid"); // Use ID selector
+        const grid = document.querySelector("#product-grid");
         if (!grid) return;
 
-        const items = Array.from(grid.querySelectorAll(".product-item"));
+        const items = Array.from(grid.querySelectorAll(".product-item")) as HTMLElement[];
 
         items.sort((a, b) => {
           const aPrice = parseFloat(a.dataset.price || "0");

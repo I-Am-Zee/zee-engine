@@ -1,5 +1,4 @@
 // src/scripts/behaviors/wishlist.ts
-import type { Alpine } from 'alpinejs';
 
 export const wishlistStore = {
   items: [] as string[],

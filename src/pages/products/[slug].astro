@@ -20,7 +20,6 @@ import WishlistButton from "../../components/features/WishlistButton.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
 import { getRelatedProducts } from "../../scripts/utils/recommendations";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
-import Button from "../../components/primitives/Button.astro";
 
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
 
@@ -261,7 +260,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
             {isAffiliate ? (
               <AffiliateProductCTA 
                 links={product.data.affiliate_links || []} 
-                isComingSoon={isComingSoon} 
+                isComingSoon={!!isComingSoon} 
                 class="w-full sm:flex-1 h-13" 
               />
             ) : (
@@ -269,7 +268,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
                 product={product}
                 size="lg"
                 class="w-full sm:flex-1 whitespace-nowrap h-13"
-                disabled={isComingSoon ?? false}
+                disabled={!!isComingSoon}
                 @click="validateAdd($event)"
               >
                 {isComingSoon ? "Coming Soon" : "Add to Cart"}
@@ -299,7 +298,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           currentProduct={{
             id: product.id,
             title: product.data.title,
-            price: product.data.price,
+            price: product.data.price || 0,
             salePrice: product.data.salePrice,
             image: product.data.image,
           }}
@@ -339,7 +338,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
         {isAffiliate ? (
           <AffiliateProductCTA 
             links={product.data.affiliate_links || []} 
-            isComingSoon={isComingSoon} 
+            isComingSoon={!!isComingSoon} 
             size="md"
             class="shrink-0 flex items-center" 
           />
@@ -347,7 +346,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
           <AddToCartButton
             product={product}
             size="md"
-            disabled={isComingSoon ?? false}
+            disabled={!!isComingSoon}
             class="shrink-0"
             @click="validateAdd($event)"
           >

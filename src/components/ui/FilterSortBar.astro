@@ -9,6 +9,7 @@ interface Props {
   itemLabel?: string;
   context?: 'products' | 'blog';
   sortOptions?: { label: string; value: string }[];
+  categoryName?: string;
 }
 
 const { class: className, productCount, itemLabel, context = 'products', sortOptions: manualOptions } = Astro.props;
@@ -61,7 +62,7 @@ const finalSortOptions = manualOptions || enabledSorts.map((val: string) => ({
       @change="sort()"
       class="appearance-none rounded-md border border-(--color-border-subtle) bg-background py-2 pr-10 pl-4 text-sm text-text-main transition-colors hover:border-primary focus:border-primary focus-glow outline-none cursor-pointer"
     >
-      {finalSortOptions.map(opt => (
+      {finalSortOptions.map((opt: any) => (
         <option value={opt.value}>{opt.label}</option>
       ))}
     </select>
