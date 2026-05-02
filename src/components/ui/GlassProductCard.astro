@@ -73,9 +73,9 @@ const affiliateLinks = p.affiliate_links;
 <article
   class:list={[
     "relative flex flex-col overflow-hidden rounded-2xl group aspect-2/3",
-    "cursor-pointer select-none bg-surface-muted border border-border-subtle/40",
+    "cursor-pointer select-none bg-(--color-surface-muted) border border-(--color-border-subtle)/40",
     "shadow-xs motion-soft",
-    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-border-subtle/80 hover:-translate-y-1",
+    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-(--color-border-subtle)/80 hover:-translate-y-1",
     className,
   ]}
   x-data
@@ -102,7 +102,7 @@ const affiliateLinks = p.affiliate_links;
   ></a>
 
   {/* LAYER 2: Crisp product image (Flex-1 fills all space above the glass panel) */}
-  <div class="relative flex-1 block overflow-hidden z-5 pointer-events-none">
+  <div class="relative flex-1 block overflow-hidden z-[5] pointer-events-none">
     <Image
       src={image}
       alt={title}

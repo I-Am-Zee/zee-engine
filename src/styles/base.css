@@ -31,7 +31,9 @@
 
 @utility focus-glow {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring), 0 0 12px var(--color-ring-glow);
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring), 0 0 12px var(--color-ring-glow);
+  }
 }
 
 /* ─── Custom Animations ─── */

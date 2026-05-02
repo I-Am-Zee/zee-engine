@@ -39,15 +39,15 @@ const variantStyles: Record<string, string> = {
   lead: "text-lg md:text-xl leading-relaxed font-light text-pretty",
   caption: "text-sm leading-normal text-pretty",
   muted: "text-base leading-relaxed text-pretty",
-  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-accent-brass text-pretty",
-  metadata: "text-[10px] md:text-[11px] font-semibold leading-none tracking-[0.15em] uppercase text-text-muted",
-  price: "text-lg md:text-xl font-bold tracking-tight leading-none text-primary",
+  eyebrow: "text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-(--color-accent-brass) text-pretty",
+  metadata: "text-[10px] md:text-[11px] font-semibold leading-none tracking-[0.15em] uppercase text-(--color-text-muted)",
+  price: "text-lg md:text-xl font-bold tracking-tight leading-none text-(--color-primary)",
   price_sale: "text-xs md:text-sm line-through opacity-50 font-normal leading-none",
-  label: "text-[11px] font-semibold uppercase tracking-[0.2em] text-text-main",
-  callout: "text-base font-semibold leading-relaxed italic border-l-4 border-accent-brass pl-6",
-  quote: "text-lg md:text-xl font-serif italic leading-relaxed text-text-muted text-pretty",
-  code: "font-mono text-sm bg-surface-muted px-1.5 py-0.5 rounded border border-border-subtle text-primary",
-  tag: "inline-flex items-center text-[10px] font-bold uppercase tracking-wider bg-surface px-2 py-0.5 rounded-full border border-border-subtle",
+  label: "text-[11px] font-semibold uppercase tracking-[0.2em] text-(--color-text-main)",
+  callout: "text-base font-semibold leading-relaxed italic border-l-4 border-(--color-accent-brass) pl-6",
+  quote: "text-lg md:text-xl font-serif italic leading-relaxed text-(--color-text-muted) text-pretty",
+  code: "font-mono text-sm bg-(--color-surface-muted) px-1.5 py-0.5 rounded border border-(--color-border-subtle) text-(--color-primary)",
+  tag: "inline-flex items-center text-[10px] font-bold uppercase tracking-wider bg-(--color-surface) px-2 py-0.5 rounded-full border border-(--color-border-subtle)",
 };
 
 // Smart Semantic Mapping based on Intent
@@ -84,12 +84,12 @@ const weightStyles = weight
 
 // Color mappings - standardized to Tailwind v4 theme variables
 const colorChoices: Record<string, string> = {
-  main: "text-text-main",
-  muted: "text-text-muted",
-  inverse: "text-text-inverse",
-  accent: "text-accent-brass",
-  coral: "text-accent-coral",
-  emerald: "text-accent-emerald",
+  main: "text-(--color-text-main)",
+  muted: "text-(--color-text-muted)",
+  inverse: "text-(--color-text-inverse)",
+  accent: "text-(--color-accent-brass)",
+  coral: "text-(--color-accent-coral)",
+  emerald: "text-(--color-accent-emerald)",
   inherit: "text-inherit",
 };
 
@@ -110,7 +110,7 @@ if (activeWeightStyle) {
 // If color prop is provided, remove any existing brand-specific text-color classes
 // We use a specific pattern to avoid stripping font-size classes like text-sm or text-[10px]
 if (color) {
-  filteredVariantStyle = filteredVariantStyle.replace(/text-(text|accent|primary|secondary|emerald|coral)-\S+/g, "");
+  filteredVariantStyle = filteredVariantStyle.replace(/text-\(--color-\S+\)/g, "");
 }
 
 const combinedClasses = `${baseStyles} ${filteredVariantStyle.trim()} ${activeWeightStyle} ${activeColorStyle} ${italicStyle} ${className || ""}`.trim();

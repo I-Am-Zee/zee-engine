@@ -43,10 +43,24 @@ const isRemote = (typeof src === "string" && (src.startsWith("http") || src.star
 const resolveSrc = (path: string) => {
   if (!path) return "";
   const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
-  const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
+  const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
   
   if (path.startsWith("http")) return path;
-  if (path.startsWith("/")) return `${gateway}/${brandId}${path}`;
+  
+  if (path.startsWith("/")) {
+    // Transform path: /images/products/photo.jpg -> /zelia-vance/products/photo.jpg
+    // This aligns local public paths with the R2 multi-tenant structure
+    const r2Path = path.replace(/^\/images\//, `/${brandId}/`);
+    
+    // If the path was transformed, prepend the gateway
+    if (r2Path !== path) {
+      return `${gateway}${r2Path}`;
+    }
+    
+    // If it's a root path but not in /images/ (unlikely for assets), still prefix with brandId
+    return `${gateway}/${brandId}${path}`;
+  }
+  
   return path;
 };
 

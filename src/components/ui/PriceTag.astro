@@ -38,7 +38,7 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
     <div class="flex items-baseline gap-2 flex-wrap">
       <Text 
         as="span" 
-        variant="price_main" 
+        variant="price" 
         class={variant === "compact" ? "text-base md:text-lg" : ""}
       >
         {formatCurrency(salePrice || price)}
@@ -48,7 +48,7 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
         <Text 
           as="span" 
           variant="price_sale" 
-          class={variant === "compact" ? "text-[10px] md:text-px" : ""}
+          class={variant === "compact" ? "text-[10px] md:text-xs" : ""}
         >
           {formatCurrency(price)}
         </Text>
@@ -61,7 +61,7 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
     <div class="flex items-baseline gap-2 flex-wrap">
       <Text 
         as="span" 
-        variant="price_main" 
+        variant="price" 
         class={variant === "compact" ? "text-base md:text-lg" : ""}
         x-text={`${showPrefix ? "'Approx. ' + " : ""}$store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}
       >
@@ -71,7 +71,7 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
       <Text 
         as="span" 
         variant="price_sale" 
-        class:list={[variant === "compact" ? "text-[10px] md:text-px" : "", !ssrHasSale && "hidden"]} 
+        class:list={[variant === "compact" ? "text-[10px] md:text-xs" : "", !ssrHasSale && "hidden"]} 
         x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} 
         x-cloak
         x-text={`$store.region.format($store.region.getActiveLink(links)?.price)`}
