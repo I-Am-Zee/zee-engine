@@ -82,9 +82,9 @@ const dynamicNavigation: NavItem[] = [
           ) : (
             <a
               href={item.href}
-              class="inline-flex items-center justify-center px-3 py-2 transition-colors duration-200 hover:text-text-muted transition-all hover:scale-105 active:scale-95"
+              class="inline-flex items-center justify-center rounded-md px-3 py-2 transition-all duration-200 hover:text-(--color-text-muted)"
             >
-              <Text as="span" variant="label" class="normal-case tracking-normal">
+              <Text variant="label">
                 {item.label}
               </Text>
             </a>

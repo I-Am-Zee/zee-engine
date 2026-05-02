@@ -51,10 +51,10 @@ const isHorizontal = variant === "horizontal";
 
 <article 
   class:list={[
-    "group relative flex transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
+    "group relative flex motion-soft",
     "bg-surface rounded-2xl h-full",
-    "shadow-[0_2px_8px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)]",
-    "hover:shadow-[0_40px_80px_-15px_rgba(5,43,34,0.12)] hover:-translate-y-1.5",
+    "shadow-xs",
+    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1",
     className
   ]}
 >
@@ -63,7 +63,7 @@ const isHorizontal = variant === "horizontal";
  
   {/* CONTENT LAYER - Unified layout wrapper */}
   <div class:list={[
-    "relative z-10 flex-1 flex rounded-2xl overflow-hidden",
+    "relative z-10 flex-1 flex rounded-2xl overflow-hidden motion-soft",
     "border border-(--color-border-subtle)/40",
     "group-hover:border-(--color-border-subtle)/80",
     isHorizontal ? "flex-col md:flex-row" : "flex-col"
@@ -77,13 +77,13 @@ const isHorizontal = variant === "horizontal";
         : "w-full aspect-[16/10] rounded-t-2xl"
     ]}>
       {/* Subtle overlay to enhance image contrast on light modes */}
-      <div class="absolute inset-0 z-10 pointer-events-none bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+      <div class="absolute inset-0 z-10 pointer-events-none bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
       <div class="absolute inset-0">
         <Image 
           src={image} 
           alt={title}
-          class="h-full w-full object-cover transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.08] group-hover:rotate-1"
+          class="h-full w-full object-cover motion-soft group-hover:scale-[1.04]"
         />
       </div>
       

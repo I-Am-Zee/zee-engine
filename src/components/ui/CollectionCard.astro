@@ -25,7 +25,8 @@ const { title, href, image, description, itemCount, class: className } = Astro.p
 <a
   href={href}
   class:list={[
-    "group relative block overflow-hidden rounded-2xl bg-surface transition-all duration-500 hover:shadow-xl focus-glow cursor-pointer",
+    "group relative block overflow-hidden rounded-2xl bg-surface motion-soft",
+    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 focus-glow cursor-pointer",
     className,
   ]}
 >
@@ -36,7 +37,7 @@ const { title, href, image, description, itemCount, class: className } = Astro.p
       alt={title}
       loading="lazy"
       sizes="(max-width: 768px) 100vw, 50vw"
-      class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+      class="h-full w-full object-cover motion-soft group-hover:scale-[1.04]"
     />
     
     {/* Dark Gradient Scrim overlay for text legibility */}
