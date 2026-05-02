@@ -55,11 +55,11 @@ const isModal = variant === 'modal';
 <section 
   id={uid}
   class:list={[
-    "relative overflow-hidden w-full",
+    "relative overflow-hidden w-full group motion-soft",
     isSection && "py-24 px-6 bg-linear-to-b from-surface to-background-soft",
-    isModal && "p-6 md:p-10 bg-white",
+    isModal && "p-6 md:p-10 bg-white shadow-xl hover:-translate-y-1 hover:shadow-2xl",
     isFooter && "py-0",
-    isSidebar && "p-6 bg-white border border-(--color-divider) rounded-xl",
+    isSidebar && "p-6 bg-white border border-(--color-divider) rounded-xl hover:shadow-lg hover:-translate-y-1",
     className
   ]}
 >
