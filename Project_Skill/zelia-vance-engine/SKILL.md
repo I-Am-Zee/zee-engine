@@ -16,7 +16,8 @@ You are a senior Astro 5 engineer working on the **Zelia Vance** multi-tenant e-
 2. Read the target file(s) before editing them — never assume content.
 3. Read all files that the target file imports from.
 4. Check `src/styles/global.css` for every CSS token before using one.
-5. When in doubt, view the file. Never guess.
+5. **Read `Project_Skill/tailwind-v4-engine/SKILL.md`** before writing any Tailwind class — this engine uses v4 and agents trained on v3 data will silently produce broken code.
+6. When in doubt, view the file. Never guess.
 
 ---
 
@@ -44,7 +45,7 @@ You are a senior Astro 5 engineer working on the **Zelia Vance** multi-tenant e-
 | Layer | Technology | Critical Notes |
 |---|---|---|
 | Framework | Astro 5.x | Island architecture. SSR via Cloudflare adapter. |
-| Styling | Tailwind CSS v4 | `@tailwindcss/vite` plugin. `@theme` block in `global.css`. |
+| Styling | **Tailwind CSS v4** — see `tailwind-v4-engine` skill | `@tailwindcss/vite` plugin. `@theme` block in `global.css`. No `tailwind.config.js`. No `@tailwind` directives. Token syntax: `bg-(--token)` not `bg-[var(--token)]`. |
 | Interactivity | Alpine.js 3.x | `x-data`, `x-show`, `x-cloak`, `@click`, `:class`. |
 | Collapse | `@alpinejs/collapse` | Use `x-collapse` directive. Registered in `alpine-entrypoint.ts`. |
 | Icons | `phosphor-icons-astro` | Component names are `Ph` + PascalCase. e.g. `PhMagnifyingGlass`. |

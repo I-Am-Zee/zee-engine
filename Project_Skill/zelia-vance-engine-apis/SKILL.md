@@ -257,10 +257,17 @@ razorpay: ^2.9.6
 ```
 
 ### Tailwind v4 Breaking Changes (Already Applied)
+
+> **Full v4 rules in dedicated skill:** `Project_Skill/tailwind-v4-engine/SKILL.md` — read it before any Tailwind work.
+
 - `@theme {}` block in `global.css` replaces `tailwind.config.js`
-- CSS variable syntax: `bg-(--token)` not `bg-[var(--token)]`
+- CSS variable syntax: `bg-(--token)` not `bg-[var(--token)]` — **this is the #1 agent mistake**
 - `@tailwindcss/vite` plugin, not PostCSS
 - `@plugin "@tailwindcss/typography"` in CSS, not JS
+- Opacity: `bg-red-500/50` not `bg-opacity-50` (removed in v4)
+- Gradients: `bg-linear-to-r` not `bg-gradient-to-r` (renamed)
+- Important: `flex!` postfix not `!flex` prefix
+- Smallest shadow: `shadow-xs` not `shadow-sm`
 
 ---
 

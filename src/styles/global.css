@@ -55,6 +55,13 @@
   --z-lightbox: 400;
 }
 
+/* ─── Custom Utilities ─── */
+@utility motion-soft {
+  transition-property: all !important;
+  transition-duration: 500ms !important;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1) !important;
+}
+
 /* Base Styles */
 * {
   box-sizing: border-box;
