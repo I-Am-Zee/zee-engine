@@ -63,7 +63,7 @@ const discountPercent = ssrHasSale ? calculateDiscount(ssrOriginalPrice, ssrActi
 
     {/* Original Price (Strikethrough) */}
     {isAffiliate ? (
-      <Text as="span" variant="price_sale" class={variant === "compact" ? "text-[10px] md:text-px" : ""} x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} style={ssrHasSale ? "" : "display: none;"}>
+      <Text as="span" variant="price_sale" class={variant === "compact" ? "text-[10px] md:text-px" : ""} x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} style={ssrHasSale ? "" : "display: none;"} x-cloak>
         <span x-text={`$store.region.format($store.region.getActiveLink(links)?.price || 0)`}>{salePriceStr}</span>
       </Text>
     ) : (
@@ -77,7 +77,7 @@ const discountPercent = ssrHasSale ? calculateDiscount(ssrOriginalPrice, ssrActi
 
   {/* Discount Badge */}
   {isAffiliate ? (
-    <Badge intent="coral" size="xs" x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} style={ssrHasSale ? "" : "display: none;"}>
+    <Badge intent="coral" size="xs" x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} style={ssrHasSale ? "" : "display: none;"} x-cloak>
       <span x-text={`Math.round((($store.region.getActiveLink(links)?.price - $store.region.getActiveLink(links)?.salePrice) / $store.region.getActiveLink(links)?.price) * 100)`}>{discountPercent}</span>% OFF
     </Badge>
   ) : (

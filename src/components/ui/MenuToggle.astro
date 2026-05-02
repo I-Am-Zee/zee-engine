@@ -39,6 +39,7 @@ const { label, class: className, ...rest } = Astro.props;
     x-transition:leave-end="opacity-0 scale-95"
     x-on:click.away="isOpen = false"
     class="absolute top-full left-0 mt-2 z-[60]"
+    x-cloak
   >
     <slot />
   </div>

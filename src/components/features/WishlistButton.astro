@@ -58,7 +58,7 @@ const buttonSizes = {
     ]}
     x-data
     @click={`$store.wishlist.toggle('${productId}')`}
-    x-bind:class={`$store.wishlist.has('${productId}') ? '!text-red-500' : ''`}
+    x-bind:class={`$store.wishlist.has('${productId}') ? 'text-red-500!' : ''`}
     x-bind:aria-label={`$store.wishlist.has('${productId}') ? 'Remove from wishlist' : 'Add to wishlist'`}
     {...rest}
   >
@@ -72,6 +72,7 @@ const buttonSizes = {
       size={iconNumSizes[size]}
       class:list={[iconSizes[size], "transition-colors block"]}
       x-show={`!$store.wishlist.has('${productId}')`}
+      x-cloak
     />
     <Icon 
       name="PhHeart" 
@@ -93,7 +94,7 @@ const buttonSizes = {
     ]}
     x-data
     @click={`$store.wishlist.toggle('${productId}')`}
-    x-bind:class={`$store.wishlist.has('${productId}') ? 'border-red-200 bg-red-50 !text-red-600' : ''`}
+    x-bind:class={`$store.wishlist.has('${productId}') ? 'border-red-200 bg-red-50 text-red-600!' : ''`}
     x-bind:aria-label={`$store.wishlist.has('${productId}') ? 'Remove from wishlist' : 'Add to wishlist'`}
     {...rest}
   >
@@ -102,6 +103,7 @@ const buttonSizes = {
       size={iconNumSizes[size]}
       class:list={[iconSizes[size], "block"]}
       x-show={`!$store.wishlist.has('${productId}')`}
+      x-cloak
     />
     <Icon 
       name="PhHeart" 

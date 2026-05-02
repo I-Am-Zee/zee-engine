@@ -21,6 +21,7 @@ const { title, id, class: className } = Astro.props;
       name="PhPlus"
       class="h-5 w-5 shrink-0 transition-transform duration-300"
       x-show={`activeAccordion !== '${id}'`}
+      x-cloak
     />
      <Icon
       name="PhMinus"

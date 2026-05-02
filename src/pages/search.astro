@@ -75,7 +75,7 @@ const filterLabels = labels.filters;
           placeholder={labels.placeholder}
           icon="PhMagnifyingGlass"
           autocomplete="off"
-          class="!py-5 !pl-14 text-lg shadow-sm focus:shadow-xl transition-shadow duration-500"
+          class="py-5! pl-14! text-lg shadow-xs focus:shadow-xl transition-shadow duration-500"
         />
         
         {/* Loading indicator (visual only for now as Fuse is instant) */}
@@ -112,7 +112,7 @@ const filterLabels = labels.filters;
     </div>
 
     {/* ── Initial State (shown when query is too short) ────── */}
-    <div x-show="query.length < 2" class="py-20 text-center" x-transition>
+    <div x-show="query.length < 2" class="py-20 text-center" x-transition x-cloak>
       <div class="mb-8 opacity-5 flex justify-center scale-150">
         <Icon name="PhMagnifyingGlass" size="5rem" weight="thin" class="text-text-muted" />
       </div>
@@ -124,7 +124,7 @@ const filterLabels = labels.filters;
     <div id="search-results" x-show="query.length >= 2" x-cloak>
 
       {/* No results */}
-      <div x-show="totalCount === 0" class="py-16" x-transition>
+      <div x-show="totalCount === 0" class="py-16" x-transition x-cloak>
         <EmptyState
           icon="PhMagnifyingGlass"
           heading={labels.labels.nothingFound}
@@ -134,8 +134,8 @@ const filterLabels = labels.filters;
       </div>
 
       {/* Product results section */}
-      <div x-show="(activeType === 'all' || activeType === 'product') && matchingProductSlugs.length > 0" x-transition>
-        <div x-show="activeType === 'all'" class="mb-10 flex items-center gap-4">
+      <div x-show="(activeType === 'all' || activeType === 'product') && matchingProductSlugs.length > 0" x-transition x-cloak>
+        <div x-show="activeType === 'all'" class="mb-10 flex items-center gap-4" x-cloak>
           <div class="h-px flex-1 bg-linear-to-r from-transparent to-(--color-border-subtle)"></div>
           <div class="flex items-center gap-2 px-4">
             <Icon name="PhDiamond" class="h-4 w-4 text-(--color-primary) opacity-50" />
@@ -164,8 +164,9 @@ const filterLabels = labels.filters;
         x-show="(activeType === 'all' || activeType === 'blog') && matchingPostSlugs.length > 0"
         :class="(activeType === 'all' && matchingProductSlugs.length > 0) ? 'mt-24' : ''"
         x-transition
+        x-cloak
       >
-        <div x-show="activeType === 'all'" class="mb-10 flex items-center gap-4">
+        <div x-show="activeType === 'all'" class="mb-10 flex items-center gap-4" x-cloak>
           <div class="h-px flex-1 bg-linear-to-r from-transparent to-(--color-border-subtle)"></div>
           <div class="flex items-center gap-2 px-4">
             <Icon name="PhBookOpenText" class="h-4 w-4 text-(--color-primary) opacity-50" />

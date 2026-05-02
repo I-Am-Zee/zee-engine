@@ -105,7 +105,7 @@ const dynamicNavigation: NavItem[] = [
           x-show="$store.wishlist.count > 0"
           x-text="$store.wishlist.count"
           x-cloak
-          class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-coral text-[10px] font-bold text-white shadow-sm"
+          class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-coral text-[10px] font-bold text-white shadow-xs"
         ></span>
       </Button>
       { !isAffiliate && (
@@ -215,6 +215,7 @@ const dynamicNavigation: NavItem[] = [
                               x-show={`activeAccordion === '${item.label}'`}
                               x-collapse
                               class="mt-1 ml-4 space-y-1"
+                              x-cloak
                             >
                               {item.items.map((subItem) => (
                                 <li>

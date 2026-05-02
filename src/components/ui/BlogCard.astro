@@ -89,7 +89,7 @@ const isHorizontal = variant === "horizontal";
           "absolute z-10 top-5 left-5",
           isHorizontal ? "md:hidden" : ""
         ]}>
-          <Badge intent="surface" size="xs" class="shadow-sm backdrop-blur-md bg-white/80! border-white/40!">{category}</Badge>
+          <Badge intent="surface" size="xs" class="shadow-xs backdrop-blur-md bg-white/80! border-white/40!">{category}</Badge>
         </div>
       )}
 
@@ -138,7 +138,7 @@ const isHorizontal = variant === "horizontal";
       <div class="mt-auto flex items-center justify-between pt-6 border-t border-(--color-border-subtle)/30">
         <div class="flex items-center gap-3">
           {/* Author Avatar with Ring */}
-          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle) bg-surface-muted ring-2 ring-white ring-offset-2 ring-offset-surface-muted/10 shadow-sm">
+          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle) bg-surface-muted ring-2 ring-white ring-offset-2 ring-offset-surface-muted/10 shadow-xs">
             <Image 
               src={authorData?.avatar || "/images/authors/placeholder.jpg"} 
               alt={authorName}

@@ -51,6 +51,7 @@ const emptyState = emptyStateEntry?.data || {
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
+        x-cloak
       >
         <div class="flex flex-col items-center gap-4">
           <Icon name="PhCircleNotch" class="h-10 w-10 animate-spin text-accent-brass" />
@@ -68,7 +69,7 @@ const emptyState = emptyStateEntry?.data || {
         class="flex-1 flex flex-col"
       >
         {/* Empty State - shown when no items */}
-        <div x-show="$store.wishlist.count === 0" class="flex-1 flex flex-col justify-center">
+        <div x-show="$store.wishlist.count === 0" class="flex-1 flex flex-col justify-center" x-cloak>
           <EmptyState
             icon="PhHeart"
             heading={emptyState.heading}
@@ -78,7 +79,7 @@ const emptyState = emptyStateEntry?.data || {
         </div>
 
         {/* Wishlist Grid - shown when there are items */}
-        <div x-show="$store.wishlist.count > 0" class="flex-1">
+        <div x-show="$store.wishlist.count > 0" class="flex-1" x-cloak>
           <ProductGrid>
             {
               allProducts.map((product) => (

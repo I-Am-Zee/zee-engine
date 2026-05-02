@@ -111,8 +111,9 @@ const { autoDismissMs = 4000 } = Astro.props;
           :src="productImage"
           alt="Product"
           class="h-full w-full object-cover"
+          x-cloak
         />
-        <div x-show="!productImage" class="h-full w-full flex items-center justify-center bg-surface-muted">
+        <div x-show="!productImage" class="h-full w-full flex items-center justify-center bg-surface-muted" x-cloak>
           <Icon name="PhShoppingBag" size={24} class="text-text-muted" />
         </div>
       </div>

@@ -54,10 +54,10 @@ const supportLinks = navigationData.support_links || [];
 const legalLinks = navigationData.legal_links || [];
 ---
 
-<Section as="footer" variant="standard" class={`bg-surface !pt-12 !pb-0 sm:!pt-16${className ? ` ${className}` : ''}`}>
+<Section as="footer" variant="standard" class={`bg-surface pt-12! pb-0! sm:pt-16!${className ? ` ${className}` : ''}`}>
   
   {/* ── Section 1: The Newsletter "Guest List" Card ───────────────── */}
-  <div class="bg-surface-alt rounded-sm overflow-hidden mb-16 sm:mb-20 lg:mb-24 shadow-sm border border-border-subtle/50">
+  <div class="bg-surface-alt rounded-sm overflow-hidden mb-16 sm:mb-20 lg:mb-24 shadow-xs border border-border-subtle/50">
     <div class="flex flex-col md:flex-row">
       {/* Left: Content & Form */}
       <div class="flex-1 p-4 pt-10 pb-10 sm:p-8 sm:pt-12 sm:pb-12 lg:p-14">
@@ -102,7 +102,7 @@ const legalLinks = navigationData.legal_links || [];
       <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
         {footerData.column_headers.shop}
       </Heading>
-      <div x-show="open" x-collapse class="md:hidden!">
+      <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {shopCategories.map((item) => (
             <li>
@@ -135,7 +135,7 @@ const legalLinks = navigationData.legal_links || [];
       <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
         {footerData.column_headers.explore}
       </Heading>
-      <div x-show="open" x-collapse class="md:hidden!">
+      <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {exploreLinks.map((item) => (
             <li>
@@ -168,7 +168,7 @@ const legalLinks = navigationData.legal_links || [];
       <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
         {footerData.column_headers.support}
       </Heading>
-      <div x-show="open" x-collapse class="md:hidden!">
+      <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {supportLinks.map((item) => (
             <li>
@@ -201,7 +201,7 @@ const legalLinks = navigationData.legal_links || [];
       <Heading as="h5" class="hidden md:block mb-8 uppercase tracking-[0.2em] text-[0.7rem] text-text-muted">
         {footerData.column_headers.social}
       </Heading>
-      <div x-show="open" x-collapse class="md:hidden!">
+      <div x-show="open" x-collapse class="md:hidden!" x-cloak>
         <ul class="pt-2 border-l border-border-subtle/30 ml-1">
           {socialLinks.map((item) => (
             <li>

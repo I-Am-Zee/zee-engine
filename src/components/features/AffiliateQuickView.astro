@@ -36,6 +36,7 @@ import Button from "../primitives/Button.astro";
     x-transition:leave-end="opacity-0"
     @click="close()"
     class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+    x-cloak
   ></div>
 
   <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
@@ -48,6 +49,7 @@ import Button from "../primitives/Button.astro";
       x-transition:leave-start="translate-x-0"
       x-transition:leave-end="translate-x-full"
       class="w-screen max-w-md will-change-transform"
+      x-cloak
     >
       <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
@@ -69,7 +71,7 @@ import Button from "../primitives/Button.astro";
 
         <!-- Scrollable Content -->
         <div class="relative flex-1 overflow-y-auto px-6 py-8 sm:px-8">
-          <div x-show="isLoading" class="flex items-center justify-center py-12">
+          <div x-show="isLoading" class="flex items-center justify-center py-12" x-cloak>
             <div class="animate-spin text-accent-brass">
               <Icon name="PhCircleNotch" size={32} weight="bold" />
             </div>
@@ -98,7 +100,7 @@ import Button from "../primitives/Button.astro";
                         ></span>
                         
                         <!-- Sale Info -->
-                        <div class="flex items-center gap-2" x-show="$store.region.getActiveLink(product.affiliate_links)?.salePrice < $store.region.getActiveLink(product.affiliate_links)?.price">
+                        <div class="flex items-center gap-2" x-show="$store.region.getActiveLink(product.affiliate_links)?.salePrice < $store.region.getActiveLink(product.affiliate_links)?.price" x-cloak>
                           <span class="text-text-muted text-sm line-through opacity-60" 
                                 x-text="$store.region.format($store.region.getActiveLink(product.affiliate_links)?.price)"
                           ></span>

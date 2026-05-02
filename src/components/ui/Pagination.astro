@@ -69,7 +69,7 @@ const getUrl = (pg: number): string => {
           class:list={[
             "flex h-10 w-10 items-center justify-center rounded-md border text-sm font-medium transition-all duration-200",
             page === currentPage
-              ? "border-primary bg-primary text-text-inverse shadow-sm"
+              ? "border-primary bg-primary text-text-inverse shadow-xs"
               : "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none"
           ]}
           aria-current={page === currentPage ? "page" : undefined}

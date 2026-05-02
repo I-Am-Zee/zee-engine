@@ -44,6 +44,7 @@ import FreeShippingNudge from "../features/FreeShippingNudge.astro";
     x-transition:leave-end="opacity-0"
     @click="close()"
     class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+    x-cloak
   >
   </div>
 
@@ -57,6 +58,7 @@ import FreeShippingNudge from "../features/FreeShippingNudge.astro";
       x-transition:leave-start="translate-x-0"
       x-transition:leave-end="translate-x-full"
       class="w-screen max-w-md will-change-transform"
+      x-cloak
     >
       <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
@@ -87,7 +89,7 @@ import FreeShippingNudge from "../features/FreeShippingNudge.astro";
           <!-- Main Item Summary (Only for upsell) -->
           <template x-if="mode === 'upsell' && mainItem">
             <div
-              class="bg-background border-border-subtle mt-6 flex items-center gap-4 rounded-xl border p-3 shadow-sm"
+              class="bg-background border-border-subtle mt-6 flex items-center gap-4 rounded-xl border p-3 shadow-xs"
             >
               <img
                 :src="mainItem.image"
@@ -237,6 +239,7 @@ import FreeShippingNudge from "../features/FreeShippingNudge.astro";
             x-show="typeof validationError !== 'undefined' && validationError"
             class="bg-accent-coral/10 border-accent-coral/20 mb-5 rounded-lg border p-3"
             x-transition
+            x-cloak
           >
             <Text
               id="side-drawer-error-text"
@@ -252,10 +255,10 @@ import FreeShippingNudge from "../features/FreeShippingNudge.astro";
             :disabled="((mode === 'master-set' || mode === 'upsell') && selectedItems.length === 0) || isSubmitting"
             class="w-full py-5 text-base tracking-widest uppercase shadow-xl"
           >
-            <span x-show="!isSubmitting">
+            <span x-show="!isSubmitting" x-cloak>
               <Text variant="label" color="inherit" x-text="submitButtonText" />
             </span>
-            <span x-show="isSubmitting" class="flex items-center gap-2">
+            <span x-show="isSubmitting" class="flex items-center gap-2" x-cloak>
               <Icon name="PhCircleNotch" class="animate-spin" size={20} />
               <Text variant="label" color="inherit">Processing...</Text>
             </span>
