@@ -1,74 +1,66 @@
-  ---
-  export interface Props {
-    as?: "button" | "a";
-    type?: "primary" | "secondary" | "neutral" | "ghost";
-    variant?: "default" | "icon-left" | "icon-right" | "icon-only";
-    size?: "sm" | "md" | "lg";
-    disabled?: boolean;
-    class?: string;
-    href?: string;
-  }
+---
+export interface Props {
+  as?: "button" | "a";
+  type?: "primary" | "secondary" | "neutral" | "ghost";
+  variant?: "default" | "icon-left" | "icon-right" | "icon-only";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  class?: string;
+  href?: string;
+}
 
-  const {
-    as: Tag = "button",
-    type = "primary",
-    variant = "default",
-    size = "md",
-    disabled = false,
-    class: className,
-    href,
-    ...rest
-  } = Astro.props;
+const {
+  as: Tag = "button",
+  type = "primary",
+  variant = "default",
+  size = "md",
+  disabled = false,
+  class: className,
+  href,
+  ...rest
+} = Astro.props;
 
-  // Base styles shared across all buttons - using shadow glow for focus
-  const baseStyles =
-    "inline-flex items-center justify-center font-sans font-medium transition-all duration-200 rounded-md outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]";
+// Base styles shared across all buttons - using shadow glow for focus
+const baseStyles =
+  "inline-flex items-center justify-center font-sans font-medium transition-all duration-200 rounded-md outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:shadow-[0_0_0_2px_var(--color-background),0_0_0_4px_var(--color-ring),0_0_12px_var(--color-ring-glow)]";
 
-  // Paint logic - type determines color scheme
-  const typeStyles = {
-    primary:
-      "bg-(--color-primary) text-(--color-primary-foreground) hover:bg-black active:scale-[0.98]",
-    secondary:
-      "bg-(--color-accent-brass) text-(--color-primary) hover:bg-(--color-accent-brass)/90 active:scale-[0.98]",
-    neutral:
-      "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle) hover:bg-(--color-surface-muted) active:border-(--color-border-strong)",
-    ghost:
-      "bg-transparent text-(--color-text-main) hover:bg-(--color-ghost-hover) active:bg-(--color-surface-muted)",
-  };
+// Paint logic - type determines color scheme
+const typeStyles = {
+  primary:
+    "bg-(--color-primary) text-(--color-primary-foreground) hover:bg-black active:scale-[0.98]",
+  secondary:
+    "bg-(--color-accent-brass) text-(--color-primary) hover:bg-(--color-accent-brass)/90 active:scale-[0.98]",
+  neutral:
+    "bg-(--color-surface) text-(--color-text-main) border border-(--color-border-subtle) hover:bg-(--color-surface-muted) active:border-(--color-border-strong)",
+  ghost:
+    "bg-transparent text-(--color-text-main) hover:bg-(--color-ghost-hover) active:bg-(--color-surface-muted)",
+};
 
-  // Size styles with specific gaps for visual balance
-  // Using min-h instead of fixed h to handle text wrapping gracefully
-  const sizeStyles = {
-    sm: variant === "icon-only" ? "min-h-8 w-8 text-sm" : `min-h-8 px-3 py-1.5 text-sm ${variant === "icon-right" ? "gap-2.5" : "gap-2"}`,
-    md: variant === "icon-only" ? "min-h-10 w-10 text-base" : `min-h-10 px-4 py-2 text-base ${variant === "icon-right" ? "gap-3" : "gap-2.5"}`,
-    lg: variant === "icon-only" ? "min-h-12 w-12 text-lg" : `min-h-12 px-6 py-3 text-lg ${variant === "icon-right" ? "gap-3.5" : "gap-3"}`,
-  };
+// Size styles with specific gaps for visual balance
+// Using min-h instead of fixed h to handle text wrapping gracefully
+const sizeStyles = {
+  sm: variant === "icon-only" ? "min-h-8 w-8 text-sm" : `min-h-8 px-3 py-1.5 text-sm ${variant === "icon-right" ? "gap-2.5" : "gap-2"}`,
+  md: variant === "icon-only" ? "min-h-10 w-10 text-base" : `min-h-10 px-4 py-2 text-base ${variant === "icon-right" ? "gap-3" : "gap-2.5"}`,
+  lg: variant === "icon-only" ? "min-h-12 w-12 text-lg" : `min-h-12 px-6 py-3 text-lg ${variant === "icon-right" ? "gap-3.5" : "gap-3"}`,
+};
 
-  // Layout logic - variant determines icon position
-  const variantStyles = {
-    default: "",
-    "icon-left": "flex-row",
-    "icon-right": "flex-row group",
-    "icon-only": "",
-  };
+// Layout logic - variant determines icon position
+const variantStyles = {
+  default: "",
+  "icon-left": "flex-row",
+  "icon-right": "flex-row group",
+  "icon-only": "",
+};
 
-  const combinedClasses =
-    `${baseStyles} ${variant} ${typeStyles[type as keyof typeof typeStyles]} ${sizeStyles[size as keyof typeof sizeStyles]} ${variantStyles[variant as keyof typeof variantStyles]} ${className || ""}`.trim();
+// Icon motion logic for group hover (Tailwind v4 syntax)
+const iconMotionClasses = variant === "icon-right" ? "[&_svg]:transition-transform [&_svg]:duration-200 group-hover:[&_svg]:translate-x-0.5" : "";
 
-  const componentProps = Tag === "a" ? { href, ...rest } : { type: "button", disabled, ...rest };
-  ---
+const combinedClasses =
+  `${baseStyles} ${variant} ${typeStyles[type as keyof typeof typeStyles]} ${sizeStyles[size as keyof typeof sizeStyles]} ${variantStyles[variant as keyof typeof variantStyles]} ${iconMotionClasses} ${className || ""}`.trim();
 
-  <Tag class={combinedClasses} {...componentProps}>
-    <slot />
-  </Tag>
+const componentProps = Tag === "a" ? { href, ...rest } : { type: "button", disabled, ...rest };
+---
 
-  <style>
-    /* Add subtle motion to icons inside "icon-right" buttons for luxury feel */
-    .group.icon-right:hover :global(svg) {
-      transform: translateX(2px);
-      transition: transform 0.2s ease-out;
-    }
-    .group.icon-right :global(svg) {
-      transition: transform 0.2s ease-out;
-    }
-  </style>
+<Tag class={combinedClasses} {...componentProps}>
+  <slot />
+</Tag>

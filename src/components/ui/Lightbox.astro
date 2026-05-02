@@ -9,6 +9,7 @@
  */
 
 import Icon from "../primitives/Icon.astro";
+import Image from "../primitives/Image.astro";
 ---
 
 <div
@@ -98,7 +99,8 @@ import Icon from "../primitives/Icon.astro";
        :class="scale > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-zoom-in'"
        @click.self="close()"
   >
-    <img 
+    <Image 
+      src=""
       :src="imageSrc" 
       :alt="imageAlt"
       @click="zoom($event)"
@@ -112,6 +114,7 @@ import Icon from "../primitives/Icon.astro";
       class="max-w-full max-h-[90vh] object-contain transition-transform duration-300 select-none shadow-2xl"
       :style="`transform: translate(${translateX}px, ${translateY}px) scale(${scale}); transition: ${isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)'};`"
       draggable="false"
+      ratio="auto"
     />
   </div>
 </div>

@@ -6,78 +6,88 @@ import { formatCurrency, calculateDiscount } from "../../scripts/utils/currency"
 interface Props {
   price?: number;
   salePrice?: number;
-  currency?: string;
-  variant?: "default" | "compact";
+  affiliateLinks?: any[]; // For affiliate mode
+  variant?: "standard" | "compact";
   class?: string;
-  affiliateLinks?: any[];
-  showPrefix?: boolean;
 }
 
-const {
-  price = 0,
-  salePrice,
-  currency, // Handled automatically or bypassed
-  variant = "default",
-  class: className,
-  affiliateLinks,
-  showPrefix = false,
-  ...rest
+const { 
+  price = 0, 
+  salePrice, 
+  affiliateLinks = [], 
+  variant = "standard", 
+  class: className 
 } = Astro.props;
 
-const isAffiliate = Boolean(affiliateLinks && affiliateLinks.length > 0);
-const primaryLink = isAffiliate ? affiliateLinks![0] : null;
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+const links = affiliateLinks || [];
 
-// Determine SSR Initial State
-let ssrHasSale = salePrice !== undefined && salePrice < price;
-let ssrActivePrice = ssrHasSale ? salePrice! : price;
-let ssrOriginalPrice = price;
-let ssrCurrency = currency || "INR";
-let ssrLocale = "en-IN";
-
-if (isAffiliate && primaryLink) {
-  ssrHasSale = primaryLink.salePrice !== undefined && primaryLink.salePrice < primaryLink.price;
-  ssrActivePrice = ssrHasSale ? primaryLink.salePrice : primaryLink.price;
-  ssrOriginalPrice = primaryLink.price;
-  ssrCurrency = primaryLink.currency || "INR";
-  ssrLocale = ssrCurrency === 'INR' ? 'en-IN' : 'en-US';
-}
-
-const isAffiliateMode = import.meta.env.PUBLIC_AFFILIATE === "true";
-const prefix = (isAffiliateMode && showPrefix) ? "Approx. " : "";
-
-const displayPriceStr = prefix + formatCurrency(ssrActivePrice, ssrCurrency, ssrLocale);
-const salePriceStr = ssrHasSale ? formatCurrency(ssrOriginalPrice, ssrCurrency, ssrLocale) : null;
-const discountPercent = ssrHasSale ? calculateDiscount(ssrOriginalPrice, ssrActivePrice) : 0;
+// SSR Initial state
+const ssrHasSale = salePrice !== undefined && salePrice < price;
+const discountPercent = calculateDiscount(price, salePrice);
 ---
 
-<div class:list={["flex gap-2 flex-wrap items-center", className]} {...rest} x-data={isAffiliate ? `{ links: ${JSON.stringify(affiliateLinks)} }` : "{}"}>
-  <div class="flex items-baseline gap-2">
-    {/* Active Price */}
-    <Text as="span" variant={variant === "compact" ? "caption" : "price"} weight={variant === "compact" ? "bold" : "bold"} class={variant === "compact" ? "text-sm tracking-tight" : ""}>
-      {isAffiliate ? (
-        <span x-text={`'${prefix}' + $store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}>{displayPriceStr}</span>
-      ) : (
-        <>{displayPriceStr}</>
-      )}
-    </Text>
-
-    {/* Original Price (Strikethrough) */}
-    {isAffiliate ? (
-      <Text as="span" variant="price_sale" class={variant === "compact" ? "text-[10px] md:text-px" : ""} x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} style={ssrHasSale ? "" : "display: none;"} x-cloak>
-        <span x-text={`$store.region.format($store.region.getActiveLink(links)?.price || 0)`}>{salePriceStr}</span>
+<div 
+  class:list={["flex items-baseline gap-2 flex-wrap", className]}
+  x-data="{}"
+>
+  {/* Standard Mode (D2C) */}
+  {!isAffiliate && (
+    <div class="flex items-baseline gap-2 flex-wrap">
+      <Text 
+        as="span" 
+        variant="price_main" 
+        class={variant === "compact" ? "text-base md:text-lg" : ""}
+      >
+        {formatCurrency(salePrice || price)}
       </Text>
-    ) : (
-      ssrHasSale && salePriceStr && (
-        <Text as="span" variant="price_sale" class={variant === "compact" ? "text-[10px] md:text-px" : ""}>
-          {salePriceStr}
+      
+      {ssrHasSale && (
+        <Text 
+          as="span" 
+          variant="price_sale" 
+          class={variant === "compact" ? "text-[10px] md:text-px" : ""}
+        >
+          {formatCurrency(price)}
         </Text>
-      )
-    )}
-  </div>
+      )}
+    </div>
+  )}
+
+  {/* Affiliate Mode (Dynamic Region-Based) */}
+  {isAffiliate && (
+    <div class="flex items-baseline gap-2 flex-wrap">
+      <Text 
+        as="span" 
+        variant="price_main" 
+        class={variant === "compact" ? "text-base md:text-lg" : ""}
+        x-text={`$store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}
+      >
+        {formatCurrency(salePrice || price)}
+      </Text>
+      
+      <Text 
+        as="span" 
+        variant="price_sale" 
+        class:list={[variant === "compact" ? "text-[10px] md:text-px" : "", !ssrHasSale && "hidden"]} 
+        x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} 
+        x-cloak
+        x-text={`$store.region.format($store.region.getActiveLink(links)?.price)`}
+      >
+        {formatCurrency(price)}
+      </Text>
+    </div>
+  )}
 
   {/* Discount Badge */}
   {isAffiliate ? (
-    <Badge intent="coral" size="xs" x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} style={ssrHasSale ? "" : "display: none;"} x-cloak>
+    <Badge 
+      intent="coral" 
+      size="xs" 
+      class:list={[!ssrHasSale && "hidden"]}
+      x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} 
+      x-cloak
+    >
       <span x-text={`Math.round((($store.region.getActiveLink(links)?.price - $store.region.getActiveLink(links)?.salePrice) / $store.region.getActiveLink(links)?.price) * 100)`}>{discountPercent}</span>% OFF
     </Badge>
   ) : (

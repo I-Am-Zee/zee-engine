@@ -13,6 +13,7 @@
 import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
+import Image from "../primitives/Image.astro";
 
 interface Props {
   autoDismissMs?: number;
@@ -106,12 +107,14 @@ const { autoDismissMs = 4000 } = Astro.props;
     <!-- Product Info -->
     <div class="flex items-center gap-3 bg-(--color-background) p-4">
       <div class="h-14 w-14 shrink-0 overflow-hidden rounded bg-(--color-surface) border border-(--color-border-subtle)">
-        <img
-          x-show="productImage"
+        <Image
+          src=""
           :src="productImage"
           alt="Product"
           class="h-full w-full object-cover"
+          x-show="productImage"
           x-cloak
+          ratio="auto"
         />
         <div x-show="!productImage" class="h-full w-full flex items-center justify-center bg-surface-muted" x-cloak>
           <Icon name="PhShoppingBag" size={24} class="text-text-muted" />

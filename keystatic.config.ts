@@ -732,6 +732,7 @@ export default config({
         narrative_heading: fields.text({ label: 'Lookbook Narrative Title', description: 'e.g. The Narrative' }),
         carousel_eyebrow: fields.text({ label: 'Homepage Carousel Eyebrow', description: 'e.g. Curated Story' }),
         carousel_cta_label: fields.text({ label: 'Homepage Carousel Button Label', description: 'e.g. Explore Look' }),
+        bundle_pricing_label: fields.text({ label: 'Bundle Pricing Label', defaultValue: '✨ Exclusive Bundle Pricing Applied' }),
       }
     }),
     // storefront_settings singleton removed in favor of storefront collection
@@ -856,6 +857,10 @@ export default config({
         empty_state: fields.text({ 
           label: 'Empty State Message', 
           defaultValue: 'Our stories are being penned. Coming soon.' 
+        }),
+        read_more: fields.text({ 
+          label: 'Read More Label', 
+          defaultValue: 'Read' 
         }),
       },
     }),

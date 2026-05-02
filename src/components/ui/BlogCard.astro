@@ -35,6 +35,10 @@ if (!authorData) {
     : null;
 }
 
+// Fetch labels
+const blogPage = await getEntry("pages_content", "blog");
+const readMoreLabel = blogPage?.data?.read_more || "Read";
+
 const formattedDate = new Intl.DateTimeFormat('en-IN', {
   year: 'numeric',
   month: 'short',
@@ -153,7 +157,7 @@ const isHorizontal = variant === "horizontal";
 
         {/* Mobile Read More Link */}
         <div class="md:hidden flex items-center gap-1 text-primary">
-          <Text variant="label" weight="bold" class="text-[10px] uppercase tracking-widest">Read</Text>
+          <Text variant="label" weight="bold" class="text-[10px] uppercase tracking-widest">{readMoreLabel}</Text>
           <Icon name="PhArrowRight" class="h-3 w-3" />
         </div>
       </div>

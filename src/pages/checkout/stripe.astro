@@ -17,6 +17,8 @@
 
 // This page needs to be server-rendered
 export const prerender = false;
+import { getEntry } from "astro:content";
+import CheckoutLayout from "../../layouts/CheckoutLayout.astro";
 
 const publicToken = Astro.url.searchParams.get('publicToken');
 
@@ -31,9 +33,6 @@ const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
 
 // Check if Stripe is configured
 const stripeConfigured = !!stripePublishableKey;
----
-
-import { getEntry } from "astro:content";
 
 const brandSettings = await getEntry("settings", "brand");
 const brandName = brandSettings?.data?.name || "Our Boutique";
@@ -44,22 +43,24 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
     <script slot="head" src="https://js.stripe.com/v3/"></script>
   )}
 
-  <div class="stripe-container">
-    <div class="stripe-card">
-      <div class="stripe-logo">{brandName}</div>
+  <div class="w-full max-w-[480px]">
+    <div class="bg-(--color-surface) border border-(--color-border-subtle) rounded-[4px] p-10">
+      <div class="font-serif text-[2rem] text-(--color-primary) text-center mb-8">{brandName}</div>
       
-      <div id="error-message" class="stripe-error-box" style="display: none;"></div>
-      <div id="status-message" class="stripe-status-text">Loading payment details...</div>
+      <div id="error-message" class="bg-(--color-accent-coral)/5 border border-(--color-accent-coral)/20 text-(--color-accent-coral) p-4 rounded-[4px] mb-6 text-sm" style="display: none;"></div>
+      <div id="status-message" class="text-center mb-6 text-(--color-text-muted) text-sm">Loading payment details...</div>
       
       {!stripeConfigured ? (
-        <div class="stripe-error-box">
+        <div class="bg-(--color-accent-coral)/5 border border-(--color-accent-coral)/20 text-(--color-accent-coral) p-4 rounded-[4px] mb-6 text-sm">
           Stripe is not configured yet. Please add settings to environment variables.
         </div>
       ) : (
         <form id="payment-form">
           <div id="payment-element"></div>
-          <button type="submit" id="pay-button" class="stripe-pay-button">
-            <span class="stripe-loader"><span class="stripe-spinner"></span> Preparing...</span>
+          <button type="submit" id="pay-button" class="w-full p-4 bg-(--color-primary) text-(--color-primary-foreground) border-none rounded-[4px] font-semibold cursor-pointer uppercase tracking-[0.1em] mt-6 disabled:opacity-50 disabled:cursor-not-allowed group">
+            <span id="pay-button-content" class="flex items-center justify-center gap-3">
+              <span class="inline-block w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> Preparing...
+            </span>
           </button>
         </form>
       )}
@@ -71,6 +72,7 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
     const stripe = Stripe(stripePublishableKey);
     const form = document.getElementById('payment-form');
     const payButton = document.getElementById('pay-button');
+    const payContent = document.getElementById('pay-button-content');
     const statusMessage = document.getElementById('status-message');
     const errorMessage = document.getElementById('error-message');
     
@@ -117,7 +119,7 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
         const paymentElement = elements.create('payment');
         paymentElement.mount('#payment-element');
         payButton.disabled = false;
-        payButton.innerHTML = 'Pay Now';
+        payContent.innerHTML = 'Pay Now';
         updateStatus('Enter your payment details');
       } catch (error) {
         showError('Setup failed');
@@ -127,30 +129,21 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       payButton.disabled = true;
-      payButton.innerHTML = 'Processing...';
+      payContent.innerHTML = '<span class="inline-block w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> Processing...';
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${siteUrl}/checkout/stripe-success?publicToken=${publicToken}`,
         },
       });
-      if (error) showError(error.message);
+      if (error) {
+        showError(error.message);
+        payButton.disabled = false;
+        payContent.innerHTML = 'Pay Now';
+      }
     });
     
     init();
     </script>
   )}
-
-  <style>
-    .stripe-container { width: 100%; max-width: 480px; }
-    .stripe-card { background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: 4px; padding: 2.5rem; }
-    .stripe-logo { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); text-align: center; margin-bottom: 2rem; }
-    .stripe-status-text { text-align: center; margin-bottom: 1.5rem; color: var(--color-text-muted); font-size: 0.875rem; }
-    .stripe-error-box { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.875rem; }
-    .stripe-pay-button { width: 100%; padding: 1rem; background: var(--color-primary); color: var(--color-primary-foreground); border: none; border-radius: 4px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; }
-    .stripe-pay-button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .stripe-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255, 255, 255, 0.2); border-top-color: #fff; border-radius: 50%; animation: stripe-spin 0.6s linear infinite; }
-    @keyframes stripe-spin { to { transform: rotate(360deg); } }
-    .stripe-loader { display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
-  </style>
 </CheckoutLayout>

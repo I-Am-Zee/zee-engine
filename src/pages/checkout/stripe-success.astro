@@ -7,32 +7,30 @@
  */
 
 export const prerender = false;
+import { getEntry } from "astro:content";
+import CheckoutLayout from "../../layouts/CheckoutLayout.astro";
 
 const publicToken = Astro.url.searchParams.get('publicToken');
 const paymentIntentId = Astro.url.searchParams.get('payment_intent');
-const paymentIntentClientSecret = Astro.url.searchParams.get('payment_intent_client_secret');
 
 const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
----
-
-import { getEntry } from "astro:content";
 
 const brandSettings = await getEntry("settings", "brand");
 const brandName = brandSettings?.data?.name || "Our Boutique";
 ---
 
 <CheckoutLayout pageTitle="Order Confirmed">
-  <div class="stripe-container">
-    <div class="stripe-card text-center">
-      <div class="stripe-logo">{brandName}</div>
+  <div class="w-full max-w-[480px]">
+    <div class="bg-(--color-surface) border border-(--color-border-subtle) rounded-[4px] p-12 px-8 text-center">
+      <div class="font-serif text-[2rem] text-(--color-primary) mb-8">{brandName}</div>
       
-      <svg class="stripe-success-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="w-16 h-16 mx-auto mb-6 text-(--color-accent-emerald)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       
-      <h1 class="stripe-heading">Payment Successful!</h1>
-      <p class="stripe-status" id="status">
-        <span class="stripe-spinner"></span> Confirming your order...
+      <h1 class="text-2xl mb-2 font-serif">Payment Successful!</h1>
+      <p class="text-(--color-text-muted) text-sm" id="status">
+        <span class="inline-block w-3.5 h-3.5 border-2 border-black/10 border-t-(--color-primary) rounded-full animate-spin"></span> Confirming your order...
       </p>
     </div>
   </div>
@@ -58,15 +56,4 @@ const brandName = brandSettings?.data?.name || "Our Boutique";
     }
     verifyAndConfirm();
   </script>
-
-  <style>
-    .stripe-container { width: 100%; max-width: 480px; }
-    .stripe-card { background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: 4px; padding: 3rem 2rem; text-align: center; }
-    .stripe-logo { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary); margin-bottom: 2rem; }
-    .stripe-success-icon { width: 64px; height: 64px; margin: 0 auto 1.5rem; color: #10b981; }
-    .stripe-heading { font-size: 1.5rem; margin-bottom: 0.5rem; font-family: var(--font-serif); }
-    .stripe-status { color: var(--color-text-muted); font-size: 0.875rem; }
-    .stripe-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.1); border-top-color: var(--color-primary); border-radius: 50%; animation: stripe-spin 0.6s linear infinite; }
-    @keyframes stripe-spin { to { transform: rotate(360deg); } }
-  </style>
 </CheckoutLayout>

@@ -21,7 +21,9 @@ const checkoutPage = await getEntry("pages_content", "checkout_razorpay");
 
 // Hub Strategy: Fallbacks
 const brandName = brandSettings?.data?.name || "Our Boutique";
-const brandColor = brandSettings?.data?.primary_color || "#052b22";
+// Use CSS variable instead of raw hex if possible, but Razorpay theme needs a string. 
+// We'll use the token value but from our system if available.
+const brandColor = brandSettings?.data?.primary_color || "#052b22"; 
 
 const currencyCode = ecommerceSettings?.data?.currency_code || "INR";
 const currencySymbol = ecommerceSettings?.data?.currency_symbol || "₹";
@@ -51,48 +53,48 @@ const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : 
   <script slot="head" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <!-- ── Checkout Card ── -->
-  <div class="checkout-card">
-    <div class="card-accent" aria-hidden="true"></div>
+  <div class="w-full max-w-[460px] bg-(--color-surface) border border-(--color-border-subtle) rounded-xs overflow-hidden">
+    <div class="h-[3px] bg-linear-to-r from-(--color-primary) to-(--color-accent-brass)" aria-hidden="true"></div>
 
-    <div class="card-body">
-      <p class="step-label">Step 3 of 3</p>
-      <h1 class="card-title">{hubData.title}</h1>
-      <p class="card-subtitle" id="email-display">{hubData.subtitle_loading}</p>
+    <div class="p-10 pb-8 sm:px-6 sm:py-8">
+      <p class="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase text-(--color-accent-brass) mb-2">Step 3 of 3</p>
+      <h1 class="font-serif font-normal text-[1.75rem] tracking-tight text-(--color-primary) mb-1">{hubData.title}</h1>
+      <p class="text-sm text-(--color-text-muted) mb-8 min-h-[1.25rem]" id="email-display">{hubData.subtitle_loading}</p>
 
       <!-- Amount — populated after session load -->
-      <div id="amount-section" class="amount-block hidden" aria-live="polite">
-        <div class="amount-meta">
-          <span class="amount-label">{hubData.amount_label}</span>
+      <div id="amount-section" class="flex items-center justify-between bg-(--color-background) border border-(--color-border-subtle) rounded-xs p-5 px-6 mb-7 hidden" aria-live="polite">
+        <div class="flex flex-col">
+          <span class="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase text-(--color-text-muted)">{hubData.amount_label}</span>
         </div>
-        <div class="amount-value" id="amount-display" aria-label="Order total">{currencySymbol}0</div>
+        <div class="font-serif text-[2rem] font-normal text-(--color-primary) tracking-tight" id="amount-display" aria-label="Order total">{currencySymbol}0</div>
       </div>
 
       <!-- Pay CTA -->
       <button
-        class="pay-button"
+        class="w-full px-8 py-3.5 font-sans text-[0.8125rem] font-semibold tracking-[0.1em] uppercase text-(--color-primary-foreground) bg-(--color-primary) border border-(--color-primary) rounded-xs cursor-pointer transition-all duration-200 hover:bg-transparent hover:text-(--color-primary) focus-glow disabled:opacity-50 disabled:cursor-not-allowed group"
         id="pay-button"
         disabled
         aria-label="Loading payment session"
       >
-        <span class="loader" aria-hidden="true">
-          <span class="spinner"></span>
+        <span class="inline-flex items-center justify-center gap-2.5" aria-hidden="true" id="pay-button-content">
+          <span class="w-3.5 h-3.5 border-2 border-white/25 border-t-current rounded-full animate-spin group-hover:border-(--color-primary)/15"></span>
           {hubData.button_loading}
         </span>
       </button>
 
-      <p class="status-text" id="status" role="status" aria-live="polite"></p>
-      <div class="error-box hidden" id="error" role="alert"></div>
+      <p class="mt-4 text-[0.8125rem] text-(--color-text-muted) text-center min-h-[1.25rem]" id="status" role="status" aria-live="polite"></p>
+      <div class="mt-5 p-4 border-l-3 border-(--color-accent-coral) bg-(--color-accent-coral)/5 rounded-xs text-sm leading-relaxed text-(--color-accent-coral) hidden" id="error" role="alert"></div>
     </div>
 
     <!-- Trust strip -->
-    <div class="trust-strip" aria-label="Security information">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <div class="flex items-center justify-center gap-2.5 p-4 px-8 border-t border-(--color-border-subtle) bg-(--color-background) text-[0.6875rem] tracking-[0.06em] uppercase font-medium text-(--color-text-muted) sm:flex-wrap sm:gap-2 sm:px-5 sm:py-3.5" aria-label="Security information">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-(--color-accent-brass) shrink-0" aria-hidden="true">
         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
       </svg>
       {hubData.trust_badge_ssl}
-      <span class="trust-dot" aria-hidden="true"></span>
+      <span class="w-[3px] h-[3px] rounded-full bg-(--color-border-subtle) shrink-0" aria-hidden="true"></span>
       {hubData.trust_badge_razorpay}
-      <span class="trust-dot" aria-hidden="true"></span>
+      <span class="w-[3px] h-[3px] rounded-full bg-(--color-border-subtle) shrink-0" aria-hidden="true"></span>
       {hubData.trust_badge_pci}
     </div>
   </div>
@@ -114,6 +116,7 @@ const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : 
 
     // ── DOM refs ──
     const payButton     = document.getElementById("pay-button");
+    const payContent    = document.getElementById("pay-button-content");
     const emailDisplay  = document.getElementById("email-display");
     const amountSection = document.getElementById("amount-section");
     const amountDisplay = document.getElementById("amount-display");
@@ -141,13 +144,13 @@ const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : 
     function setButtonBusy(label) {
       payButton.disabled = true;
       payButton.setAttribute("aria-label", label);
-      payButton.innerHTML = `<span class="loader" aria-hidden="true"><span class="spinner"></span>${label}</span>`;
+      payContent.innerHTML = `<span class="w-3.5 h-3.5 border-2 border-white/25 border-t-current rounded-full animate-spin"></span>${label}`;
     }
 
     function setButtonReady(label) {
       payButton.disabled = false;
       payButton.setAttribute("aria-label", label);
-      payButton.textContent = label;
+      payContent.textContent = label;
     }
 
     // ── Step 1: Fetch Snipcart payment session ──
@@ -264,188 +267,3 @@ const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : 
     init();
   </script>
 </CheckoutLayout>
-
-<style>
-/* ── Card ── */
-.checkout-card {
-  width: 100%;
-  max-width: 460px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.card-accent {
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent-brass) 100%);
-}
-
-.card-body {
-  padding: 2.5rem 2.5rem 2rem;
-}
-
-/* ── Hierarchy ── */
-.step-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent-brass);
-  margin-bottom: 0.5rem;
-}
-
-.card-title {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: 1.75rem;
-  letter-spacing: 0.01em;
-  color: var(--color-primary);
-  margin-bottom: 0.25rem;
-}
-
-.card-subtitle {
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  margin-bottom: 2rem;
-  min-height: 1.25rem;
-}
-
-/* ── Amount block ── */
-.amount-block {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--color-background);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 2px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1.75rem;
-}
-
-.amount-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
-.amount-value {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  font-weight: 400;
-  color: var(--color-primary);
-  letter-spacing: -0.01em;
-}
-
-/* ── CTA ── */
-.pay-button {
-  width: 100%;
-  padding: 0.9375rem 2rem;
-  font-family: var(--font-sans-serif);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-primary-foreground);
-  background: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-
-.pay-button:hover:not(:disabled) {
-  background: transparent;
-  color: var(--color-primary);
-}
-
-.pay-button:focus-visible {
-  box-shadow:
-    0 0 0 2px var(--color-background),
-    0 0 0 4px var(--color-accent-brass),
-    0 0 12px var(--color-ring-glow);
-}
-
-.pay-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Spinner */
-.loader {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-}
-
-.spinner {
-  width: 14px; height: 14px;
-  border: 2px solid rgba(255,255,255,0.25);
-  border-top-color: currentColor;
-  border-radius: 50%;
-  animation: spin 0.75s linear infinite;
-}
-
-.pay-button:hover .spinner {
-  border-color: rgba(5,43,34,0.15);
-  border-top-color: var(--color-primary);
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Trust strip ── */
-.trust-strip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  padding: 1rem 2rem;
-  border-top: 1px solid var(--color-border-subtle);
-  background: var(--color-background);
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-text-muted);
-}
-
-.trust-strip svg { color: var(--color-accent-brass); flex-shrink: 0; }
-
-.trust-dot {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--color-border-subtle);
-}
-
-/* ── Status / Error ── */
-.status-text {
-  margin-top: 1rem;
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  text-align: center;
-  min-height: 1.25rem;
-}
-
-.error-box {
-  margin-top: 1.25rem;
-  padding: 1rem 1.25rem;
-  border-left: 3px solid var(--color-accent-coral);
-  background: rgba(230, 81, 66, 0.05);
-  border-radius: 2px;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-accent-coral);
-}
-
-.hidden { display: none !important; }
-
-@media (max-width: 480px) {
-  .card-body { padding: 2rem 1.5rem 1.5rem; }
-  .amount-value { font-size: 1.625rem; }
-  .trust-strip { flex-wrap: wrap; gap: 0.5rem; padding: 0.875rem 1.25rem; }
-}
-</style>

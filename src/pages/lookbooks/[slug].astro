@@ -145,7 +145,7 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
               label={productsData.action_label}
               class="w-full max-w-md"
             />
-            <Text variant="caption" class="text-accent-brass font-bold animate-pulse text-[10px] md:text-xs">✨ Exclusive Bundle Pricing Applied</Text>
+            <Text variant="caption" class="text-accent-brass font-bold animate-pulse text-[10px] md:text-xs">{lookbookSettings?.data?.bundle_pricing_label || "✨ Exclusive Bundle Pricing Applied"}</Text>
           </div>
         </div>
       )}
@@ -207,12 +207,3 @@ const storyTitle = lookbookSettings?.data?.narrative_heading || "The Narrative";
   )}
 </EngineLayout>
 
-<style is:global>
-  .prose p {
-    margin-bottom: 2rem;
-  }
-  .quote-marks {
-    position: relative;
-  }
-  [x-cloak] { display: none !important; }
-</style>

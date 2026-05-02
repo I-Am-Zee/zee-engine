@@ -11,22 +11,24 @@ const { images, alt, class: className = "" } = Astro.props;
 ---
 
 <div
-  class={`product-gallery ${className}`}
+  class:list={[`product-gallery`, className]}
   x-data=`{ activeImage: '${images[0]}' }`
 >
   {/* Mobile Layout: Main Image Top, Thumbnails Bottom */}
   <div class="flex flex-col gap-4 lg:hidden">
     <div class="relative aspect-4/5 max-h-[70vh] overflow-hidden rounded-lg bg-(--color-surface)">
-      <img
+      <Image
+        src={images[0]}
         :src="activeImage"
         alt={alt}
         @click={`$dispatch('open-lightbox', { src: activeImage, alt: '${alt}' })`}
         class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in active:scale-[0.98]"
+        ratio="auto"
       />
     </div>
 
     {/* Thumbnails (Mobile - Horizontal Scroll) */}
-    <div class="flex gap-2 overflow-x-auto pb-3 pt-1 px-1">
+    <div class="flex gap-2 overflow-x-auto pb-3 pt-1 px-1 custom-scrollbar">
       {images.map((image) => (
         <button
           type="button"
@@ -46,7 +48,7 @@ const { images, alt, class: className = "" } = Astro.props;
 
   {/* Desktop Layout: Thumbnails Left, Main Image Right */}
   <div class="hidden gap-4 lg:flex lg:flex-row lg:max-h-[85vh]">
-    <div class="flex w-22 shrink-0 flex-col gap-3 overflow-y-auto px-1 py-1">
+    <div class="flex w-22 shrink-0 flex-col gap-3 overflow-y-auto px-1 py-1 custom-scrollbar">
       {images.map((image) => (
         <button
           type="button"
@@ -64,34 +66,14 @@ const { images, alt, class: className = "" } = Astro.props;
     </div>
 
     <div class="relative aspect-4/5 flex-1 overflow-hidden rounded-lg bg-(--color-surface)">
-      <img
+      <Image
+        src={images[0]}
         :src="activeImage"
         alt={alt}
         @click={`$dispatch('open-lightbox', { src: activeImage, alt: '${alt}' })`}
         class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in active:scale-[0.98]"
+        ratio="auto"
       />
     </div>
   </div>
 </div>
-
-<style>
-  /* Custom scrollbar for thumbnails */
-  .product-gallery ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-
-  .product-gallery ::-webkit-scrollbar-track {
-    background: var(--color-surface);
-    border-radius: 2px;
-  }
-
-  .product-gallery ::-webkit-scrollbar-thumb {
-    background: var(--color-border-strong);
-    border-radius: 2px;
-  }
-
-  .product-gallery ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-muted);
-  }
-</style>

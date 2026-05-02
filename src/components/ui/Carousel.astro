@@ -67,26 +67,3 @@ const xDataString = options ? `carousel(${JSON.stringify(options)})` : undefined
 <script>
   import "@splidejs/splide/css";
 </script>
-
-<style is:global>
-  /* Enhance visibility of default pagination dots */
-  .splide__pagination__page {
-    background: rgba(0, 0, 0, 0.4) !important;
-    transform: scale(1.2);
-    transition: all 0.2s ease;
-  }
-  .splide__pagination__page.is-active {
-    background: rgba(0, 0, 0, 0.8) !important;
-    transform: scale(1.5);
-  }
-  
-  /* Enforce localized stacking on native Splide controls to prevent drawer clipping */
-  .splide__arrow {
-    z-index: 20 !important;
-  }
-  .splide__pagination {
-    z-index: 20 !important;
-  }
-</style>
-
-

@@ -75,7 +75,7 @@ const affiliateLinks = p.affiliate_links;
     "relative flex flex-col overflow-hidden rounded-2xl group aspect-2/3",
     "cursor-pointer select-none bg-surface-muted border border-border-subtle/40",
     "shadow-xs motion-soft",
-    "hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-border-subtle/80 hover:-translate-y-1",
+    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-border-subtle/80 hover:-translate-y-1",
     className,
   ]}
   x-data
@@ -137,7 +137,7 @@ const affiliateLinks = p.affiliate_links;
       class="flex items-center justify-center w-9 h-9 rounded-full isolate
              bg-white/50 backdrop-blur-3xl border border-white/60 shadow-md
              transition-all duration-300 ease-out transform-gpu
-             hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
+             hover:bg-white hover:text-(--color-primary) hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed group relative"
       x-data={`{ id: '${id}' }`}
       x-on:click.prevent="$store.wishlist.toggle(id)"
@@ -150,9 +150,9 @@ const affiliateLinks = p.affiliate_links;
 
     <button
       class="flex items-center justify-center w-9 h-9 rounded-full isolate relative
-             bg-white/50 backdrop-blur-3xl border border-white/60 text-text-main shadow-md
+             bg-white/50 backdrop-blur-3xl border border-white/60 text-(--color-text-main) shadow-md
              transition-all duration-300 ease-out transform-gpu
-             hover:bg-white hover:text-primary hover:shadow-lg hover:scale-110
+             hover:bg-white hover:text-(--color-primary) hover:shadow-lg hover:scale-110
              focus-glow cursor-pointer disabled:cursor-not-allowed"
       x-on:click.prevent.stop={isAffiliate ? `$dispatch('engine:affiliate-quick-view', ${JSON.stringify(p)})` : `$dispatch('engine:quick-shop', ${JSON.stringify(p)})`}
       aria-label={"Quick shop " + title}
@@ -176,8 +176,7 @@ const affiliateLinks = p.affiliate_links;
     <Heading
       as="h3"
       color="main"
-      class="line-clamp-1 tracking-tight leading-normal font-semibold"
-      style="font-size: clamp(1rem, 2.5vw, 1.15rem);"
+      class="line-clamp-1 tracking-tight leading-normal font-semibold text-[clamp(1rem,2.5vw,1.15rem)]"
     >
       {title}
     </Heading>
@@ -192,7 +191,3 @@ const affiliateLinks = p.affiliate_links;
     </div>
   </div>
 </article>
-
-<style>
-  [x-cloak] { display: none !important; }
-</style>

@@ -31,27 +31,6 @@ const alignmentMap: Record<string, string> = {
 };
 ---
 
-<style is:inline>
-  /* Atomic display toggles that bypass ALL bundling and scoping */
-  div.force-hide-on-mobile { 
-    display: none !important; 
-  }
-  @media (min-width: 768px) {
-    div.force-hide-on-mobile { 
-      display: block !important; 
-    }
-  }
-  
-  div.force-hide-on-desktop { 
-    display: block !important; 
-  }
-  @media (min-width: 768px) {
-    div.force-hide-on-desktop { 
-      display: none !important; 
-    }
-  }
-</style>
-
 <EngineLayout pageTitle={title}>
   <article class="relative overflow-hidden bg-background">
     
@@ -108,7 +87,7 @@ const alignmentMap: Record<string, string> = {
             
             {/* ── MAGAZINE IMAGE (FLOAT) ── */}
             {(isImageLeft || isImageRight) && image?.url && (
-              <div class={`force-hide-on-mobile w-full md:w-[35%] mb-8 ${isImageLeft ? 'md:float-left md:mr-16' : 'md:float-right md:ml-16'}`}>
+              <div class={`hidden md:block w-full md:w-[35%] mb-8 ${isImageLeft ? 'md:float-left md:mr-16' : 'md:float-right md:ml-16'}`}>
                 <div class="overflow-hidden rounded-sm shadow-2xl">
                   <Image src={image.url} alt={image.alt || "Story visual"} ratio="portrait" />
                 </div>
@@ -121,7 +100,7 @@ const alignmentMap: Record<string, string> = {
             )}
 
             {/* ── CONTENT STACK (FLOWS AROUND FLOAT) ── */}
-            <div class="content-flow leading-relaxed">
+            <div class="content-flow leading-relaxed clear-both md:clear-none">
               {stack.map((item: any, blockIndex: number) => {
                 const { discriminant, value } = item;
                 
@@ -146,7 +125,7 @@ const alignmentMap: Record<string, string> = {
                 return (
                   <>
                     {showImageHere && (
-                      <div class="force-hide-on-desktop w-full mb-12 mt-4 pt-8">
+                      <div class="block md:hidden w-full mb-12 mt-4 pt-8">
                         <div class="overflow-hidden rounded-sm shadow-2xl">
                           <Image 
                             src={image.url} 
@@ -199,7 +178,7 @@ const alignmentMap: Record<string, string> = {
 
               {/* Handle case where image is appended to the end of the mobile stack */}
               {!isNoImage && image?.url && Number(image?.mobileOffset || 0) >= stack.length && (
-                <div class="force-hide-on-desktop w-full mb-12 mt-12 pt-8">
+                <div class="block md:hidden w-full mb-12 mt-12 pt-8">
                   <div class="overflow-hidden rounded-sm shadow-2xl">
                     <Image 
                       src={image.url} 
@@ -226,16 +205,3 @@ const alignmentMap: Record<string, string> = {
 
   </article>
 </EngineLayout>
-
-<style is:global>
-  /* Magazine Flow Specific Wrapping Logic */
-  .content-flow {
-  }
-  
-  /* Prevent content from getting squashed on small screens next to float */
-  @media (max-width: 768px) {
-    .content-flow {
-      clear: both;
-    }
-  }
-</style>
