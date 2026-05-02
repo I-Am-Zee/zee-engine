@@ -9,3 +9,8 @@ social:
     url: "https://facebook.com/zeliavance"
   - platform: "Pinterest"
     url: "https://pinterest.com/zeliavance"
+newsletter_labels:
+  placeholder: "Enter your Gmail address"
+  button_section: "Join the Inner Circle"
+  button_default: "Subscribe"
+  disclaimer: "We only accept Gmail addresses for high-intent delivery."

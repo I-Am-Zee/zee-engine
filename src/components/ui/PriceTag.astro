@@ -26,7 +26,7 @@ const links = affiliateLinks || [];
 
 // SSR Initial state
 const ssrHasSale = salePrice !== undefined && salePrice < price;
-const discountPercent = calculateDiscount(price, salePrice);
+const discountPercent = calculateDiscount(price, salePrice || 0);
 ---
 
 <div 

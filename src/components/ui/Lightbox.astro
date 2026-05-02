@@ -102,6 +102,7 @@ import Image from "../primitives/Image.astro";
     <Image 
       src=""
       :src="imageSrc" 
+      alt=""
       :alt="imageAlt"
       @click="zoom($event)"
       @mousedown="startDrag"

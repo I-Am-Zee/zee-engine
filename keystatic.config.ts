@@ -62,7 +62,7 @@ export default config({
         'page_blog', 
         'page_newsletter_confirm', 
         'page_newsletter_success', 
-        ...(!isAffiliate ? ['page_checkout_razorpay'] : []),
+        'page_checkout_razorpay',
         'page_wishlist_empty'
       ],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
@@ -71,7 +71,9 @@ export default config({
         'settings_brand', 
         'settings_navigation', 
         'settings_marketing', 
-        ...(!isAffiliate ? ['settings_store_checkout', 'settings_shipping'] : ['settings_affiliate']),
+        'settings_store_checkout',
+        'settings_shipping',
+        'settings_affiliate',
         'settings_tracking',
         'settings_blog_taxonomy'
       ],
@@ -100,7 +102,7 @@ export default config({
           options: [
             { label: 'None', value: 'none' },
             { label: 'Standard Link', value: 'link' },
-            ...(!isAffiliate ? [{ label: 'Feature Action (Add-to-Cart)', value: 'feature' }] : [])
+            { label: 'Feature Action (Add-to-Cart)', value: 'feature' }
           ],
           defaultValue: 'none'
         }),
@@ -336,7 +338,7 @@ export default config({
           defaultValue: blogCategories[0]?.value ?? 'Style Guide',
         }),
         tags: fields.array(
-          fields.select({ label: 'Tag', options: blogTags }),
+          fields.select({ label: 'Tag', options: blogTags, defaultValue: blogTags[0]?.value ?? '' }),
           { label: 'Tags', itemLabel: (props) => props.value || 'Select a tag' }
         ),
         isDraft: fields.checkbox({ label: 'Save as Draft', defaultValue: false }),
@@ -517,9 +519,15 @@ export default config({
           }),
           {
             label: 'Social Links',
-            itemLabel: props => props.fields.platform.value || 'New link' 
+            itemLabel: props => props.fields.platform.value || 'New link'
           }
         ),
+        newsletter_labels: fields.object({
+          placeholder: fields.text({ label: 'Email Placeholder', defaultValue: 'Enter your Gmail address' }),
+          button_section: fields.text({ label: 'Button Label (Section)', defaultValue: 'Join the Inner Circle' }),
+          button_default: fields.text({ label: 'Button Label (Default)', defaultValue: 'Subscribe' }),
+          disclaimer: fields.text({ label: 'Disclaimer Text', defaultValue: 'We only accept Gmail addresses for high-intent delivery.' }),
+        }),
       },
     }),
 
@@ -577,33 +585,31 @@ export default config({
         }, { label: 'Announcement Bar 📢' }),
 
         // --- POPUP HUB ---
-        ...(!isAffiliate ? {
-          discount_popup: fields.object({
-            enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
-            trigger: fields.select({
-              label: 'Trigger Mode',
-              options: [
-                { label: 'Timed Delay', value: 'timed' },
-                { label: 'Exit Intent', value: 'exit' },
-              ],
-              defaultValue: 'timed'
-            }),
-            delay_seconds: fields.integer({ 
-              label: 'Delay (Seconds)', 
-              description: 'Only applicable if Trigger Mode is "Timed Delay".',
-              defaultValue: 8 
-            }),
-            title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
-            description: fields.text({ label: 'Description', multiline: true }),
-            coupon_code: fields.text({ label: 'Coupon Code' }),
-            image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/discount.webp' }),
-            cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
-            denylist: fields.array(
-              fields.text({ label: 'Path', description: 'e.g. /checkout' }),
-              { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
-            )
-          }, { label: 'Discount Popup (D2C Only) 🏷️' }),
-        } : {}),
+        discount_popup: fields.object({
+          enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
+          trigger: fields.select({
+            label: 'Trigger Mode',
+            options: [
+              { label: 'Timed Delay', value: 'timed' },
+              { label: 'Exit Intent', value: 'exit' },
+            ],
+            defaultValue: 'timed'
+          }),
+          delay_seconds: fields.integer({ 
+            label: 'Delay (Seconds)', 
+            description: 'Only applicable if Trigger Mode is "Timed Delay".',
+            defaultValue: 8 
+          }),
+          title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
+          description: fields.text({ label: 'Description', multiline: true }),
+          coupon_code: fields.text({ label: 'Coupon Code' }),
+          image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/discount.webp' }),
+          cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
+          denylist: fields.array(
+            fields.text({ label: 'Path', description: 'e.g. /checkout' }),
+            { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
+          )
+        }, { label: 'Discount Popup (D2C Only) 🏷️' }),
 
         newsletter_popup: fields.object({
           enabled: fields.checkbox({ label: 'Enable Newsletter Popup', defaultValue: false }),
@@ -647,46 +653,44 @@ export default config({
     }),
 
     // ── Shipping Logistics (D2C Only) ──────────────────────────────
-    ...(!isAffiliate ? {
-      settings_shipping: singleton({
-        label: 'Shipping Logistics',
-        path: `src/content/${brandId}/settings/shipping`,
-        format: { data: 'yaml' },
-        schema: {
-          free_shipping_threshold: fields.number({ label: 'Free Shipping Threshold (₹)', defaultValue: 3000 }),
-          default_slab: fields.text({ label: 'Default Slab Key', defaultValue: 'small-packaging' }),
-          slabs: fields.object({
-            'small-packaging': fields.object({
-              name: fields.text({ label: 'Slab Name', defaultValue: 'Small Packaging' }),
-              weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 0.5 }),
-              dimensions: fields.object({
-                length: fields.number({ label: 'Length (cm)', defaultValue: 15 }),
-                breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 15 }),
-                height: fields.number({ label: 'Height (cm)', defaultValue: 10 }),
-              })
-            }),
-            'medium-packaging': fields.object({
-              name: fields.text({ label: 'Slab Name', defaultValue: 'Medium Packaging' }),
-              weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 1.0 }),
-              dimensions: fields.object({
-                length: fields.number({ label: 'Length (cm)', defaultValue: 20 }),
-                breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 20 }),
-                height: fields.number({ label: 'Height (cm)', defaultValue: 15 }),
-              })
-            }),
-            'large-packaging': fields.object({
-              name: fields.text({ label: 'Slab Name', defaultValue: 'Large Packaging' }),
-              weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 2.0 }),
-              dimensions: fields.object({
-                length: fields.number({ label: 'Length (cm)', defaultValue: 25 }),
-                breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 25 }),
-                height: fields.number({ label: 'Height (cm)', defaultValue: 20 }),
-              })
-            }),
-          }, { label: 'Shipping Slabs' })
-        },
-      }),
-    } : {}),
+    settings_shipping: singleton({
+      label: 'Shipping Logistics',
+      path: `src/content/${brandId}/settings/shipping`,
+      format: { data: 'yaml' },
+      schema: {
+        free_shipping_threshold: fields.number({ label: 'Free Shipping Threshold (₹)', defaultValue: 3000 }),
+        default_slab: fields.text({ label: 'Default Slab Key', defaultValue: 'small-packaging' }),
+        slabs: fields.object({
+          'small-packaging': fields.object({
+            name: fields.text({ label: 'Slab Name', defaultValue: 'Small Packaging' }),
+            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 0.5 }),
+            dimensions: fields.object({
+              length: fields.number({ label: 'Length (cm)', defaultValue: 15 }),
+              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 15 }),
+              height: fields.number({ label: 'Height (cm)', defaultValue: 10 }),
+            })
+          }),
+          'medium-packaging': fields.object({
+            name: fields.text({ label: 'Slab Name', defaultValue: 'Medium Packaging' }),
+            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 1.0 }),
+            dimensions: fields.object({
+              length: fields.number({ label: 'Length (cm)', defaultValue: 20 }),
+              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 20 }),
+              height: fields.number({ label: 'Height (cm)', defaultValue: 15 }),
+            })
+          }),
+          'large-packaging': fields.object({
+            name: fields.text({ label: 'Slab Name', defaultValue: 'Large Packaging' }),
+            weight_kg: fields.number({ label: 'Weight (kg)', defaultValue: 2.0 }),
+            dimensions: fields.object({
+              length: fields.number({ label: 'Length (cm)', defaultValue: 25 }),
+              breadth: fields.number({ label: 'Breadth (cm)', defaultValue: 25 }),
+              height: fields.number({ label: 'Height (cm)', defaultValue: 20 }),
+            })
+          }),
+        }, { label: 'Shipping Slabs' })
+      },
+    }),
 
     // ── Analytics & Monetization ───────────────────────────────────
     settings_tracking: singleton({
@@ -929,73 +933,69 @@ export default config({
       },
     }),
 
-    // ── Checkout & Payments (D2C Only) ─────────────────────────────
-    ...(!isAffiliate ? {
-      page_checkout_razorpay: singleton({
-        label: 'Checkout: Razorpay Bridge',
-        path: `src/content/${brandId}/pages_content/checkout_razorpay`,
-        format: { data: 'yaml' },
-        schema: {
-          title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
-          subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
-          amount_label: fields.text({ label: 'Amount Label', defaultValue: 'Order Total' }),
-          button_loading: fields.text({ label: 'Button (Loading)', defaultValue: 'Loading…' }),
-          button_ready: fields.text({ label: 'Button (Ready)', defaultValue: 'Pay Now' }),
-          status_opening: fields.text({ label: 'Status (Opening)', defaultValue: 'Opening secure payment window…' }),
-          status_verifying: fields.text({ label: 'Status (Verifying)', defaultValue: 'Confirming your payment…' }),
-          status_confirmed: fields.text({ label: 'Status (Confirmed)', defaultValue: '✓ Payment confirmed! Redirecting…' }),
-          error_expired: fields.text({ label: 'Error (Expired)', defaultValue: 'Unable to load your order. The session may have expired.' }),
-          error_config: fields.text({ label: 'Error (Config)', defaultValue: 'Configuration error — contact support' }),
-          trust_badge_ssl: fields.text({ label: 'Trust: SSL', defaultValue: '256-bit SSL Encryption' }),
-          trust_badge_razorpay: fields.text({ label: 'Trust: Razorpay', defaultValue: 'Powered by Razorpay' }),
-          trust_badge_pci: fields.text({ label: 'Trust: PCI', defaultValue: 'PCI DSS Compliant' }),
-        },
-      }),
+    page_checkout_razorpay: singleton({
+      label: 'Checkout: Razorpay Bridge',
+      path: `src/content/${brandId}/pages_content/checkout_razorpay`,
+      format: { data: 'yaml' },
+      schema: {
+        title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
+        subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
+        amount_label: fields.text({ label: 'Amount Label', defaultValue: 'Order Total' }),
+        button_loading: fields.text({ label: 'Button (Loading)', defaultValue: 'Loading…' }),
+        button_ready: fields.text({ label: 'Button (Ready)', defaultValue: 'Pay Now' }),
+        status_opening: fields.text({ label: 'Status (Opening)', defaultValue: 'Opening secure payment window…' }),
+        status_verifying: fields.text({ label: 'Status (Verifying)', defaultValue: 'Confirming your payment…' }),
+        status_confirmed: fields.text({ label: 'Status (Confirmed)', defaultValue: '✓ Payment confirmed! Redirecting…' }),
+        error_expired: fields.text({ label: 'Error (Expired)', defaultValue: 'Unable to load your order. The session may have expired.' }),
+        error_config: fields.text({ label: 'Error (Config)', defaultValue: 'Configuration error — contact support' }),
+        trust_badge_ssl: fields.text({ label: 'Trust: SSL', defaultValue: '256-bit SSL Encryption' }),
+        trust_badge_razorpay: fields.text({ label: 'Trust: Razorpay', defaultValue: 'Powered by Razorpay' }),
+        trust_badge_pci: fields.text({ label: 'Trust: PCI', defaultValue: 'PCI DSS Compliant' }),
+      },
+    }),
 
-      settings_store_checkout: singleton({
-        label: 'Store & Checkout Settings',
-        path: `src/content/${brandId}/settings/store_checkout`,
-        format: { data: 'yaml' },
-        schema: {
-          roadmap_status: fields.text({
-            label: 'Roadmap & Future Blueprint',
-            description: "### Global Store Configuration (D2C Only)\n\nThis tab is reserved for future checkout routing (Razorpay India vs Stripe Global) and forced manual currency overrides.\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
-            defaultValue: 'Planned / Not Active',
-            validation: { isRequired: true }
-          })
-        },
-      }),
-    } : {
-      settings_affiliate: singleton({
-        label: 'Affiliate & Currency Settings',
-        path: `src/content/${brandId}/settings/affiliate_settings`,
-        format: { data: 'yaml' },
-        schema: {
-          geo_detection_enabled: fields.checkbox({
-            label: 'Enable Soft Region Auto-Detection',
-            description: 'Automatically detects user locale (e.g., matching to India or Global). Users can manually override this preference.',
-            defaultValue: true
+    settings_store_checkout: singleton({
+      label: 'Store & Checkout Settings',
+      path: `src/content/${brandId}/settings/store_checkout`,
+      format: { data: 'yaml' },
+      schema: {
+        roadmap_status: fields.text({
+          label: 'Roadmap & Future Blueprint',
+          description: "### Global Store Configuration (D2C Only)\n\nThis tab is reserved for future checkout routing (Razorpay India vs Stripe Global) and forced manual currency overrides.\n\nFor the technical blueprint regarding Multi-Currency Snipcart processing and Geo-Detection, refer to:\n\n**`.plans/todo/ROADMAP_MULTI_CURRENCY.md`**",
+          defaultValue: 'Planned / Not Active',
+          validation: { isRequired: true }
+        })
+      },
+    }),
+    settings_affiliate: singleton({
+      label: 'Affiliate & Currency Settings',
+      path: `src/content/${brandId}/settings/affiliate_settings`,
+      format: { data: 'yaml' },
+      schema: {
+        geo_detection_enabled: fields.checkbox({
+          label: 'Enable Soft Region Auto-Detection',
+          description: 'Automatically detects user locale (e.g., matching to India or Global). Users can manually override this preference.',
+          defaultValue: true
+        }),
+        preference_expiry_hours: fields.integer({
+          label: 'Region Preference Expiry (Hours)',
+          description: 'How long the user\'s local storage holds their region choice before auto-detecting again.',
+          defaultValue: 24
+        }),
+        regions: fields.array(
+          fields.object({
+            id: fields.text({ label: 'Region ID (e.g. india, usa, uk)', validation: { isRequired: true } }),
+            name: fields.text({ label: 'Display Name', validation: { isRequired: true } }),
+            currency: fields.text({ label: 'Currency Code (e.g. INR, USD)', validation: { isRequired: true } }),
+            locale: fields.text({ label: 'Formatting Locale (e.g. en-IN, en-US)', validation: { isRequired: true } })
           }),
-          preference_expiry_hours: fields.integer({
-            label: 'Region Preference Expiry (Hours)',
-            description: 'How long the user\'s local storage holds their region choice before auto-detecting again.',
-            defaultValue: 24
-          }),
-          regions: fields.array(
-            fields.object({
-              id: fields.text({ label: 'Region ID (e.g. india, usa, uk)', validation: { isRequired: true } }),
-              name: fields.text({ label: 'Display Name', validation: { isRequired: true } }),
-              currency: fields.text({ label: 'Currency Code (e.g. INR, USD)', validation: { isRequired: true } }),
-              locale: fields.text({ label: 'Formatting Locale (e.g. en-IN, en-US)', validation: { isRequired: true } })
-            }),
-            {
-              label: 'Configured Regions',
-              itemLabel: props => `${props.fields.name.value} (${props.fields.id.value})`
-            }
-          ),
-          fallback_region_id: fields.text({ label: 'Fallback Region ID (if detection fails)', defaultValue: 'global' }),
-        }
-      })
+          {
+            label: 'Configured Regions',
+            itemLabel: props => `${props.fields.name.value} (${props.fields.id.value})`
+          }
+        ),
+        fallback_region_id: fields.text({ label: 'Fallback Region ID (if detection fails)', defaultValue: 'global' }),
+      }
     }),
     storefront_weights: singleton({
       label: 'Tag Weights',

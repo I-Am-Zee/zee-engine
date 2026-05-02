@@ -1,3 +1,4 @@
+---
 import { getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import NewsletterConfirmForm from "../../components/features/NewsletterConfirmForm.astro";
@@ -5,7 +6,8 @@ import NewsletterConfirmForm from "../../components/features/NewsletterConfirmFo
 export const prerender = false;
 
 // Load Page content (Hub Strategy)
-const confirmPage = await getEntry('page_newsletter_confirm', 'newsletter_confirm');
+// Corrected: newsletter_confirm is an entry in 'pages_content' collection
+const confirmPage = await getEntry('pages_content', 'newsletter_confirm');
 const hubData = confirmPage?.data || {
   title: "Stay in the Loop",
   description: "Join our inner circle for rare arrivals, seasonal pieces, and the occasional exclusives."

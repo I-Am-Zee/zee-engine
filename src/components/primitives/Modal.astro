@@ -23,13 +23,14 @@ const {
 <div
   x-data={id}
   x-show={isOpen}
-  style="display: none;"
+  x-cloak
   class:list={["fixed inset-0 flex items-center justify-center px-4 z-[110]", className]}
 >
   <!-- Backdrop (Overlay) -->
   <div 
     x-show={isOpen}
     x-transition.opacity.duration.300ms
+    x-cloak
     class="absolute inset-0 bg-black/60 backdrop-blur-sm" 
     @click={closeOnOverlayClick ? onClose : null}
   ></div>
@@ -43,6 +44,7 @@ const {
     x-transition:leave="transition ease-in duration-200"
     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
     x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+    x-cloak
     class:list={[
       "relative bg-white w-full overflow-hidden shadow-2xl rounded-lg z-10",
       maxWidth

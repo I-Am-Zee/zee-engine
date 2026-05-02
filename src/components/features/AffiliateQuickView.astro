@@ -83,7 +83,7 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
             <div class="space-y-8">
               <!-- Product Image -->
               <div class="aspect-square relative overflow-hidden rounded-2xl bg-gray-100 shadow-inner">
-                 <Image :src="product.image" :alt="product.title" class="absolute inset-0 h-full w-full" ratio="auto" />
+                 <Image src="" :src="product.image" alt="" :alt="product.title" class="absolute inset-0 h-full w-full" ratio="auto" />
               </div>
 
               <!-- Product Info -->
@@ -150,9 +150,9 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
   import Alpine from "alpinejs";
 
   // Register behavior if not already registered
-  if (!window.Alpine) {
+  if (!(window as any).Alpine) {
     // This shouldn't happen with our Astro/Alpine setup, but safety first
   }
   
-  Alpine.data("affiliateQuickView", affiliateQuickView);
+  (window as any).Alpine.data("affiliateQuickView", affiliateQuickView);
 </script>

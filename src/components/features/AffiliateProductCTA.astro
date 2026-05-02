@@ -15,18 +15,20 @@ import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 
 interface Props {
-  links: any[];
+  links?: any[]; // Optional if bound via Alpine x-bind:links
   isComingSoon?: boolean;
   size?: "sm" | "md" | "lg";
   class?: string;
+  [key: string]: any; // Allow Alpine attributes
 }
 
-const { links = [], isComingSoon = false, size = "lg", class: className } = Astro.props;
+const { links = [], isComingSoon = false, size = "lg", class: className, ...rest } = Astro.props;
 ---
 
 <div 
-  x-data={`{ links: ${JSON.stringify(links)} }`} 
+  x-data={links.length > 0 ? `{ links: ${JSON.stringify(links)} }` : undefined} 
   class:list={[className]}
+  {...rest}
 >
   <Button
     as="a"

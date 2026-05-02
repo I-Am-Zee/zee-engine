@@ -6,7 +6,8 @@ import Button from "../../components/primitives/Button.astro";
 import Text from "../../components/primitives/Text.astro";
 
 // Load Page content (Hub Strategy)
-const successPage = await getEntry('page_newsletter_success', 'newsletter_success');
+// Corrected: newsletter_success is an entry in 'pages_content' collection
+const successPage = await getEntry('pages_content', 'newsletter_success');
 const hubData = successPage?.data || {
   title: "You're in the Loop",
   description: "Welcome to our inner circle.",
