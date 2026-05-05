@@ -65,7 +65,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
 <EngineLayout pageTitle={headerData.heading}>
   <main x-data={`blogDiscovery('${defaultSort}')`}>
     {/* Section 1: Header & Featured */}
-    <Section as="div" variant="standard" class="pt-8! pb-0!">
+    <Section as="div" variant="standard" class="pb-0!">
       <PageHeader 
         title={headerData.heading} 
         subtitle={headerData.description}

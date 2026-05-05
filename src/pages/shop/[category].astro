@@ -17,6 +17,7 @@ import PageHeader from "../../components/ui/PageHeader.astro";
 import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ComingSoon from "../../components/ui/ComingSoon.astro";
 import EmptyState from "../../components/ui/EmptyState.astro";
+import Section from "../../components/primitives/Section.astro";
 
 
 import { slugify } from "../../scripts/utils/slugify";
@@ -100,10 +101,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 
 <EngineLayout pageTitle={categoryLabel}>
 
-  <div
-    class="mx-auto max-w-7xl px-4 py-12 lg:px-8"
-    x-data="productSorter"
-  >
+  <Section as="div" variant="standard" x-data="productSorter">
     {/* Breadcrumbs */}
     <div class="mb-6">
       <Breadcrumbs
@@ -133,7 +131,9 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <Pagination currentPage={1} totalPages={totalPages} baseUrl={`/shop/${category}`} />
+            <div class="mt-16">
+              <Pagination currentPage={1} totalPages={totalPages} baseUrl={`/shop/${category}`} />
+            </div>
           )}
         </>
       ) : (
@@ -155,6 +155,6 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
       />
     </div>
 
-  </div>
+  </Section>
 </EngineLayout>
 
