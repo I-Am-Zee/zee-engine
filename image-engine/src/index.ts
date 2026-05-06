@@ -1,10 +1,11 @@
 export interface Env {
   IMAGES_BUCKET: R2Bucket;
   ALLOWED_DOMAINS: string;
+  IMAGES_ORIGIN_URL: string;
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
     // Only handle GET and HEAD requests
@@ -73,7 +74,7 @@ export default {
     }
 
     // Connect to the secret origin domain created by the user in the dashboard
-    const originUrl = new URL(`https://vault-x92k-zee.zeliavance.com${url.pathname}`);
+    const originUrl = new URL(`${env.IMAGES_ORIGIN_URL}${url.pathname}`);
     const imageRequest = new Request(originUrl.toString(), request);
     
     return fetch(imageRequest, options);

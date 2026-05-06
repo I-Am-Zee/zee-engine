@@ -15,7 +15,8 @@
 		"nodejs_compat"
 	],
 	"vars": {
-		"ALLOWED_DOMAINS": "[\"zeliavance.com\", \"localhost\"]"
+		"ALLOWED_DOMAINS": "[\"zeliavance.com\", \"localhost\"]",
+		"IMAGES_ORIGIN_URL": "https://vault-x92k-zee.zeliavance.com"
 	},
 	"r2_buckets": [
 		{

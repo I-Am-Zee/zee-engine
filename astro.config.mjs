@@ -11,14 +11,26 @@ import yaml from '@rollup/plugin-yaml';
 import cloudflare from '@astrojs/cloudflare';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { loadEnv } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Load environment variables based on the current mode
+const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
+
+const brandId = env.PUBLIC_BRAND_ID;
+
+if (!brandId) {
+  console.error('\x1b[31m%s\x1b[0m', ' [Engine Error] PUBLIC_BRAND_ID is not set in .env');
+  console.error(' The engine cannot resolve the brand theme without a silo key.');
+  process.exit(1);
+}
+
 // Site URL — set PUBLIC_SITE_URL in .env and Cloudflare Pages dashboard
 // Using production URL because Snipcart crawls product pages to verify prices.
 // For Draft deploys: Add "*.pages.dev" to Snipcart Dashboard > Domains & URLs
-const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
+const siteUrl = env.PUBLIC_SITE_URL || 'http://localhost:4321';
 
 // https://astro.build/config
 export default defineConfig({
@@ -39,7 +51,7 @@ export default defineConfig({
     plugins: [tailwindcss(), yaml()],
     resolve: {
       alias: {
-        '@brand-theme': path.resolve(__dirname, `./src/styles/${process.env.PUBLIC_BRAND_ID}/theme.css`)
+        '@brand-theme': path.resolve(__dirname, `./src/styles/${brandId}/theme.css`)
       }
     },
     server: {
