@@ -1,11 +1,10 @@
-labels:
-  resultsFound: "Found"
-  resultsIn: "in"
-  viewAllAction: "View All Products"
-  filters:
-    all: "Everything"
-    product: "Jewellery"
-    blog: "Stories"
+title: "Search"
+description: "Discover jewellery, stories, and style from the Zelia Vance world."
+placeholder: "Search for rings, care guides, gold..."
+filters:
+  all: "Everything"
+  product: "Jewellery"
+  blog: "Stories"
 empty_states:
   initial:
     heading: "Start typing to search..."

@@ -195,7 +195,7 @@ const blog = defineCollection({
     title: z.string(),
     excerpt: z.string(),
     publishDate: z.date(),
-    author: z.string().default("Zelia Vance Team"),
+    author: z.string().default("Content Team"),
     category: z.enum(
       [blogCategories[0], ...blogCategories.slice(1)],
       {
@@ -275,11 +275,12 @@ const brand = defineCollection({
 
 const authors = defineCollection({
   loader: file(`./src/content/${brandId}/authors.yaml`),
-  schema: z.array(z.object({
+  schema: z.object({
+    id: z.string(),
     name: z.string(),
     avatar: z.string(),
     bio: z.string().optional()
-  }))
+  })
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -300,6 +301,9 @@ const newsletter_variants = defineCollection({
   schema: z.object({
     heading: z.string(),
     description: z.string(),
+    placeholder: z.string().optional(),
+    button_text: z.string().optional(),
+    image: z.string().optional(),
     success_message: z.string().optional(),
   }),
 });

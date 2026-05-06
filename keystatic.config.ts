@@ -60,24 +60,14 @@ export default config({
         'page_trust_section', 
         'page_faq', 
         'page_newsletter_confirm', 
-        'page_newsletter_success', 
-        'page_checkout_razorpay'
+        'page_newsletter_success'
       ],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
       'UI MICROCOPY': ['ui_blog', 'ui_search', 'ui_wishlist'],
       'GENERAL UI': ['lookbook_settings'],
-      'SETTINGS': [
-        'settings_brand', 
-        'settings_navigation', 
-        'settings_footer',
-        'settings_search',
-        'settings_marketing', 
-        'settings_store_checkout',
-        'settings_shipping',
-        'settings_affiliate',
-        'settings_tracking',
-        'settings_blog_taxonomy'
-      ],
+      'SETTINGS': isAffiliate 
+        ? ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_affiliate', 'settings_shipping', 'settings_tracking']
+        : ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_shipping', 'settings_tracking'],
       'PEOPLE': ['authors'],
     }
   },
@@ -133,6 +123,9 @@ export default config({
         }),
         heading: fields.text({ label: 'Heading' }),
         description: fields.text({ label: 'Description', multiline: true }),
+        placeholder: fields.text({ label: 'Email Placeholder', defaultValue: 'Enter your Gmail address' }),
+        button_text: fields.text({ label: 'Button Label', defaultValue: 'Subscribe' }),
+        image: fields.text({ label: 'Editorial Image URL', description: 'Paste the R2 path: /images/newsletter/filename.webp' }),
         success_message: fields.text({ label: 'Success Message' }),
       }
     }),
@@ -499,7 +492,15 @@ export default config({
         name: fields.text({ label: 'Brand Name', validation: { isRequired: true } }),
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
         description: fields.text({ label: 'SEO Description', multiline: true, validation: { isRequired: true } }),
+        primary_color: fields.text({ label: 'Primary Brand Color (Hex)', description: 'e.g. #052b22. Used for Razorpay theme and external UI.', defaultValue: '#052b22' }),
+        tax_hsn_code: fields.text({ label: 'Tax HSN Code', description: 'e.g. 7117 for Costume Jewellery. Used for invoice/logistics sync.', defaultValue: '7117' }),
+        tax_rate: fields.number({ label: 'Tax Rate (Decimal)', description: 'e.g. 0.03 for 3% GST.', defaultValue: 0.03 }),
+        tax_origin_state: fields.text({ label: 'Tax Origin State (for CGST/SGST)', description: 'e.g. Punjab. Used to trigger intra-state tax split.', defaultValue: 'Punjab' }),
+        tax_gstin: fields.text({ label: 'GSTIN Number', description: 'Your business GST registration number.', defaultValue: '03AALFI7890P1ZK' }),
         legal_entity: fields.text({ label: 'Legal Entity Name', description: 'Used for Copyright text at the bottom of the page.', defaultValue: 'I Am Zee' }),
+        contact_email: fields.text({ label: 'Contact Email', description: 'Main public contact address (e.g. hello@brand.com)', validation: { isRequired: true } }),
+        site_url: fields.text({ label: 'Site URL', description: 'The public URL of the website (e.g. https://brand.com)', validation: { isRequired: true } }),
+        feedback_url: fields.text({ label: 'Feedback Form URL', description: 'Tally.so or similar URL for post-delivery feedback.', validation: { isRequired: true } }),
         social: fields.array(
           fields.object({
             platform: fields.select({
@@ -583,55 +584,11 @@ export default config({
       }
     }),
 
-    settings_footer: singleton({
-      label: 'Footer Content',
-      path: `src/content/${brandId}/settings/footer`,
-      format: { data: 'yaml' },
-      schema: {
-        newsletter: fields.object({
-          heading: fields.text({ label: 'Heading' }),
-          description: fields.text({ label: 'Description', multiline: true }),
-          placeholder: fields.text({ label: 'Email Placeholder' }),
-          buttonText: fields.text({ label: 'Button Text' }),
-          image: fields.text({ label: 'Image URL' }),
-        }),
-        column_headers: fields.object({
-          shop: fields.text({ label: 'Shop Column' }),
-          explore: fields.text({ label: 'Explore Column' }),
-          support: fields.text({ label: 'Support Column' }),
-          social: fields.text({ label: 'Social Column' }),
-        }),
-        labels: fields.object({
-          allJewelry: fields.text({ label: 'All Jewelry Link' }),
-          allStories: fields.text({ label: 'All Stories Link' }),
-        }),
-      },
-    }),
-
-    settings_search: singleton({
-      label: 'Search Settings',
-      path: `src/content/${brandId}/settings/search`,
-      format: { data: 'yaml' },
-      schema: {
-        title: fields.text({ label: 'Page Title' }),
-        description: fields.text({ label: 'Description', multiline: true }),
-        placeholder: fields.text({ label: 'Search Placeholder' }),
-      },
-    }),
-
     ui_blog: singleton({
       label: 'Blog UI',
       path: `src/content/${brandId}/settings/ui_blog`,
       format: { data: 'yaml' },
       schema: {
-        labels: fields.object({
-          filterHeading: fields.text({ label: 'Filter Heading' }),
-          allStories: fields.text({ label: 'All Stories Label' }),
-          showAll: fields.text({ label: 'Show All Label' }),
-          itemsFound: fields.text({ label: 'Items Found Label' }),
-          showingFiltered: fields.text({ label: 'Showing Filtered Label' }),
-          readMore: fields.text({ label: 'Read More Label' }),
-        }, { label: 'UI Labels 🏷️' }),
         empty_states: fields.object({
           no_posts: fields.text({ label: 'No Posts Message' }),
           no_results: fields.text({ label: 'No Filter Results Message' }),
@@ -644,16 +601,14 @@ export default config({
       path: `src/content/${brandId}/settings/ui_search`,
       format: { data: 'yaml' },
       schema: {
-        labels: fields.object({
-          resultsFound: fields.text({ label: 'Results Found' }),
-          resultsIn: fields.text({ label: 'Results In' }),
-          viewAllAction: fields.text({ label: 'View All Action Label' }),
-          filters: fields.object({
-            all: fields.text({ label: 'All Filter' }),
-            product: fields.text({ label: 'Product Filter' }),
-            blog: fields.text({ label: 'Blog Filter' }),
-          }, { label: 'Filter Labels' }),
-        }, { label: 'UI Labels 🏷️' }),
+        title: fields.text({ label: 'Page Title' }),
+        description: fields.text({ label: 'Description', multiline: true }),
+        placeholder: fields.text({ label: 'Search Placeholder' }),
+        filters: fields.object({
+          all: fields.text({ label: 'All Filter' }),
+          product: fields.text({ label: 'Product Filter' }),
+          blog: fields.text({ label: 'Blog Filter' }),
+        }, { label: 'Filter Labels' }),
         empty_states: fields.object({
           initial: fields.object({
             heading: fields.text({ label: 'Heading' }),
@@ -745,6 +700,13 @@ export default config({
             { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
           )
         }, { label: 'Newsletter Popup 📧' }),
+
+        // --- TRANSACTIONAL EMAIL COPY ---
+        delivery_email_template: fields.text({ 
+          label: 'Delivery Notification Template (HTML)', 
+          multiline: true,
+          description: 'Use {{brandName}}, {{feedbackUrl}}, and {{newsletterUrl}} as placeholders.'
+        }),
       },
     }),
     // ── Page Content ──────────────────────────────────────────────
@@ -1010,27 +972,6 @@ export default config({
       },
     }),
 
-    page_checkout_razorpay: singleton({
-      label: 'Checkout: Razorpay Bridge',
-      path: `src/content/${brandId}/pages_content/checkout_razorpay`,
-      format: { data: 'yaml' },
-      schema: {
-        title: fields.text({ label: 'Page Title', defaultValue: 'Payment' }),
-        subtitle_loading: fields.text({ label: 'Subtitle (Loading)', defaultValue: 'Connecting securely…' }),
-        amount_label: fields.text({ label: 'Amount Label', defaultValue: 'Order Total' }),
-        button_loading: fields.text({ label: 'Button (Loading)', defaultValue: 'Loading…' }),
-        button_ready: fields.text({ label: 'Button (Ready)', defaultValue: 'Pay Now' }),
-        status_opening: fields.text({ label: 'Status (Opening)', defaultValue: 'Opening secure payment window…' }),
-        status_verifying: fields.text({ label: 'Status (Verifying)', defaultValue: 'Confirming your payment…' }),
-        status_confirmed: fields.text({ label: 'Status (Confirmed)', defaultValue: '✓ Payment confirmed! Redirecting…' }),
-        error_expired: fields.text({ label: 'Error (Expired)', defaultValue: 'Unable to load your order. The session may have expired.' }),
-        error_config: fields.text({ label: 'Error (Config)', defaultValue: 'Configuration error — contact support' }),
-        trust_badge_ssl: fields.text({ label: 'Trust: SSL', defaultValue: '256-bit SSL Encryption' }),
-        trust_badge_razorpay: fields.text({ label: 'Trust: Razorpay', defaultValue: 'Powered by Razorpay' }),
-        trust_badge_pci: fields.text({ label: 'Trust: PCI', defaultValue: 'PCI DSS Compliant' }),
-      },
-    }),
-
     settings_store_checkout: singleton({
       label: 'Store & Checkout Settings',
       path: `src/content/${brandId}/settings/store_checkout`,
@@ -1155,21 +1096,6 @@ export default config({
           {
             label: 'Authors',
             itemLabel: (props) => props.fields.name.value || 'New Author'
-          }
-        )
-      }
-    }),
-
-    settings_blog_taxonomy: singleton({
-      label: 'Blog Taxonomy',
-      path: `src/content/${brandId}/settings/blog-taxonomy`,
-      format: { data: 'yaml' },
-      schema: {
-        categories: fields.array(
-          fields.text({ label: 'Category Name' }),
-          {
-            label: 'Blog Categories',
-            itemLabel: (props) => props.value || 'New Category'
           }
         )
       }

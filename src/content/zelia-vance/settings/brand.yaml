@@ -1,7 +1,15 @@
 name: "Zelia Vance"
 tagline: "Old money look at a fraction of the price"
 description: "Zelia Vance is a premium costume jewellery brand serving modern women. We create elegant, Old Money inspired pieces without the luxury markup. Our Life-Proof signature line is tarnish-free, sweat-proof, and designed for every day."
+primary_color: "#052b22"
+tax_hsn_code: "7117"
+tax_rate: 0.03
+tax_origin_state: "Punjab"
+tax_gstin: "03AALFI7890P1ZK"
 legal_entity: "I Am Zee"
+contact_email: "hello@zeliavance.com"
+site_url: "https://zeliavance.com"
+feedback_url: "https://tally.so/r/pbWyo1"
 social:
   - platform: "Instagram"
     url: "https://instagram.com/zelia.vance"
