@@ -13,7 +13,10 @@ if (!publicToken) {
 const razorpayKeyId = import.meta.env.PUBLIC_RAZORPAY_KEY_ID;
 const siteUrl = Astro.url.origin;
 const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
-const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+if (!brandId) {
+  throw new Error("PUBLIC_BRAND_ID is required for the checkout bridge.");
+}
 
 const brandSettings = await getEntry("settings", "brand");
 const ecommerceSettings = await getEntry("settings", "ecommerce");

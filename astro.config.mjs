@@ -39,7 +39,7 @@ export default defineConfig({
     plugins: [tailwindcss(), yaml()],
     resolve: {
       alias: {
-        '@brand-theme': path.resolve(__dirname, `./src/styles/${process.env.PUBLIC_BRAND_ID || 'zelia-vance'}/theme.css`)
+        '@brand-theme': path.resolve(__dirname, `./src/styles/${process.env.PUBLIC_BRAND_ID}/theme.css`)
       }
     },
     server: {

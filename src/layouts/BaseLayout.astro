@@ -13,7 +13,10 @@ import Lightbox from "../components/ui/Lightbox.astro";
 
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
-const brandId = import.meta.env.PUBLIC_BRAND_ID || "default";
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+if (!brandId) {
+  throw new Error("PUBLIC_BRAND_ID environment variable is missing. The engine requires a brand silo key to resolve content and assets.");
+}
 
 // Dynamic Favicon Strategy: R2 Gateway (Production) -> Local Fallback (Dev)
 const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : "/favicon.svg";
