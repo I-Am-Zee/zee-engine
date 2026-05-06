@@ -5,7 +5,7 @@ export interface Env {
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
     // Only handle GET and HEAD requests
@@ -13,7 +13,21 @@ export default {
       return new Response("Method not allowed", { status: 405 });
     }
 
-    // Security check: Verify Referer if set
+    // ─── CACHE LAYER ────────────────────────────────────────────────────────
+    // We use the full URL as the cache key.
+    // Cloudflare Cache API is per-colo, providing extremely fast response times.
+    const cache = caches.default;
+    const cacheKey = new Request(url.toString(), request);
+    let response = await cache.match(cacheKey);
+
+    if (response) {
+      console.log(`[Cache] HIT: ${url.pathname}`);
+      return response;
+    }
+
+    console.log(`[Cache] MISS: ${url.pathname}`);
+
+    // ─── SECURITY CHECK ─────────────────────────────────────────────────────
     const referer = request.headers.get("Referer");
     if (referer) {
       try {
@@ -41,7 +55,7 @@ export default {
       return new Response("Bad Request", { status: 400 });
     }
 
-    // Parse resizing params
+    // ─── TRANSFORMATION PARAMS ──────────────────────────────────────────────
     let widthStr = url.searchParams.get("w");
     let qualityStr = url.searchParams.get("q");
 
@@ -65,7 +79,7 @@ export default {
       format: "auto",
     };
 
-    // Construct image resize options for Cloudflare fetch
+    // ─── SOURCE FETCH & TRANSFORMATION ──────────────────────────────────────
     const options: any = { cf: { image: imageOptions } };
 
     const object = await env.IMAGES_BUCKET.get(objectKey);
@@ -73,10 +87,29 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
-    // Connect to the secret origin domain created by the user in the dashboard
+    // Connect to the secret origin domain
     const originUrl = new URL(`${env.IMAGES_ORIGIN_URL}${url.pathname}`);
     const imageRequest = new Request(originUrl.toString(), request);
     
-    return fetch(imageRequest, options);
+    // Perform the fetch with Cloudflare Image Resizing
+    response = await fetch(imageRequest, options);
+
+    // ─── CACHE STORAGE ──────────────────────────────────────────────────────
+    // Only cache successful responses.
+    if (response.ok || response.status === 304) {
+      // Reconstruct the response to add cache headers
+      const cacheResponse = new Response(response.body, response);
+      
+      // Cache for 1 year (Standard for immutable assets)
+      cacheResponse.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+      cacheResponse.headers.set("Vary", "Accept"); // Important for 'format: auto'
+      
+      // Use ctx.waitUntil to avoid blocking the response while caching
+      ctx.waitUntil(cache.put(cacheKey, cacheResponse.clone()));
+      
+      return cacheResponse;
+    }
+    
+    return response;
   },
 };
