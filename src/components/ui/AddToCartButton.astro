@@ -11,6 +11,7 @@
  */
 
 import { getSnipcartHTMLAttrs } from "../../config/ecommerce";
+import { getEntry } from "astro:content";
 import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 import Text from "../primitives/Text.astro";
@@ -35,8 +36,12 @@ const {
   ...rest
 } = Astro.props;
 
+// Fetch HSN from brand settings
+const brandEntry = await getEntry("settings", "brand");
+const hsnCode = brandEntry?.data?.tax_hsn_code || "0000";
+
 // Build standardized Snipcart attributes using SSOT logic
-const snipcartAttributes = getSnipcartHTMLAttrs(product);
+const snipcartAttributes = getSnipcartHTMLAttrs(product, hsnCode);
 ---
 
 <Button

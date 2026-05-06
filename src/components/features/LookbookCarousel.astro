@@ -10,17 +10,9 @@ interface Props {
   class?: string;
 }
 
-const { class: className, ...rest } = Astro.props;
-
 // ── Smart Logic: Self-Fetching (Component Hub Strategy) ──
 const lookbooks = await getCollection("lookbooks");
-const lookbookHeader = await getEntry("page_headers", "lookbook-index");
 const lookbookLabels = await getEntry("settings", "lookbook_settings");
-
-const header = {
-  title: lookbookHeader?.data?.title || "Editorial Showcase",
-  subtitle: lookbookHeader?.data?.subtitle || "Explore our latest lifestyle and lookbook collections."
-};
 
 const eyebrowLabel = lookbookLabels?.data?.carousel_eyebrow || "Curated Story";
 const ctaLabel = lookbookLabels?.data?.carousel_cta_label || "Explore Look";
@@ -32,7 +24,7 @@ const ctaLabel = lookbookLabels?.data?.carousel_cta_label || "Explore Look";
       options={{}}
       class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-border-subtle/50"
     >
-      {lookbooks.map((lookbook, index) => (
+      {lookbooks.map((lookbook) => (
         <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full bg-surface-muted">
           {/* Background Image */}
           <div class="absolute inset-0 z-0 overflow-hidden">

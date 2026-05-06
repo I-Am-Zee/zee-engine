@@ -1,13 +1,7 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
-import Navbar from "../../components/features/Navbar.astro";
-import Footer from "../../components/features/Footer.astro";
-import Heading from "../../components/primitives/Heading.astro";
-import Text from "../../components/primitives/Text.astro";
-import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import SmartProductGrid from "../../components/features/SmartProductGrid.astro";
-import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import Section from "../../components/primitives/Section.astro";
 import type { Page, PaginateFunction } from "astro";
@@ -30,7 +24,6 @@ interface Props {
 const { page } = Astro.props;
 const products = page.data;
 import PageHeader from "../../components/ui/PageHeader.astro";
-import { getEntry } from "astro:content";
 
 const shopHeader = await getEntry('page_headers', 'shop-all');
 const data = shopHeader?.data || { 
@@ -42,7 +35,7 @@ const data = shopHeader?.data || {
 
 <EngineLayout pageTitle="Shop All Jewelry">
 
-  <Section as="main" variant="standard" x-data="productSorter">
+  <Section as="main" variant="standard">
     <div class="mb-8">
       <PageHeader 
         title={data.title} 

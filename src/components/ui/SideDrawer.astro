@@ -14,17 +14,23 @@ interface Props {
 
 const { threshold = 3000 } = Astro.props;
 
+import { getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
 import Image from "../primitives/Image.astro";
 import FreeShippingNudge from "../features/FreeShippingNudge.astro";
+
+// Fetch HSN from brand settings
+const brandEntry = await getEntry("settings", "brand");
+const hsnCode = brandEntry?.data?.tax_hsn_code || "0000";
 ---
 
 <div
   id="engine-side-drawer"
   x-data="sideDrawer"
+  data-hsn={hsnCode}
   x-show="isOpen"
   x-effect="document.body.style.overflow = isOpen ? 'hidden' : ''"
   x-cloak

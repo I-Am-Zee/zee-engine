@@ -6,11 +6,7 @@
 
 import { getCollection, getEntry } from "astro:content";
 import EngineLayout from "../../layouts/EngineLayout.astro";
-import Heading from "../../components/primitives/Heading.astro";
-import Text from "../../components/primitives/Text.astro";
-import GlassProductCard from "../../components/ui/GlassProductCard.astro";
 import SmartProductGrid from "../../components/features/SmartProductGrid.astro";
-import FilterSortBar from "../../components/ui/FilterSortBar.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import Pagination from "../../components/ui/Pagination.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
@@ -74,14 +70,6 @@ export async function getStaticPaths() {
   }));
 }
 
-interface Props {
-  products: Awaited<ReturnType<typeof getCollection<"products">>>;
-  categoryLabel: string;
-  categoryDescription: string;
-  isComingSoon: boolean;
-  comingSoonData?: any;
-}
-
 const { category } = Astro.params;
 const { products, categoryLabel, categoryDescription, isComingSoon, comingSoonData } = Astro.props;
 
@@ -101,7 +89,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 
 <EngineLayout pageTitle={categoryLabel}>
 
-  <Section as="div" variant="standard" x-data="productSorter">
+  <Section as="div" variant="standard">
     {/* Breadcrumbs */}
     <div class="mb-6">
       <Breadcrumbs

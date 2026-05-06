@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry, render, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 
 import { mapProduct } from "../../config/ecommerce";
 import type { GetStaticPaths } from 'astro';
@@ -8,16 +8,12 @@ import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
 import Icon from '../../components/primitives/Icon.astro';
 import Button from '../../components/primitives/Button.astro';
-import GlassProductCard from '../../components/ui/GlassProductCard.astro';
-import ProductGrid from '../../components/features/ProductGrid.astro';
 import BuySetButton from '../../components/features/BuySetButton.astro';
 import Image from '../../components/primitives/Image.astro';
-import CompleteTheLook from '../../components/features/CompleteTheLook.astro';
 
 import GalleryCarousel from '../../components/features/GalleryCarousel.astro';
 import ProductCarousel from '../../components/features/ProductCarousel.astro';
 import RelatedLookbooksCarousel from '../../components/features/RelatedLookbooksCarousel.astro';
-import CollectionCard from '../../components/ui/CollectionCard.astro';
 import SectionHeader from '../../components/ui/SectionHeader.astro';
 
 export const getStaticPaths = (async () => {

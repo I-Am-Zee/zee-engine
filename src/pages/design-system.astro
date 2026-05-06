@@ -26,16 +26,15 @@ import GlassProductCard from "../components/ui/GlassProductCard.astro";
 
 // Organisms (Features)
 import Footer from "../components/features/Footer.astro";
-import ProductGrid from "../components/features/ProductGrid.astro";
 ---
 
 <EngineLayout pageTitle="Design System Kitchen Sink">
   <div class="mx-auto max-w-6xl px-4 py-12">
     <!-- Page Header -->
     <div class="mb-12 border-b border-(--color-border-subtle) pb-8">
-      <Heading as="h1" class="mb-4">Design System Kitchen Sink</Heading>
+      <Heading as="h1" class="mb-4">Engine Design System</Heading>
       <Text variant="lead">
-        A comprehensive showcase of all primitive components in the Zelia Vance e-commerce design
+        A comprehensive showcase of all primitive components in the multi-tenant engine's design
         system, built with Astro, TailwindCSS, and atomic design principles.
       </Text>
     </div>
@@ -804,14 +803,14 @@ import ProductGrid from "../components/features/ProductGrid.astro";
         <Text variant="caption" color="muted">• Hover a card on desktop: glass panel expands upward, Quick Shop fades in with a 75ms delay</Text>
         <Text variant="caption" color="muted">• On mobile (&lt;md): Quick Shop is hidden; a shopping bag icon links to the PDP</Text>
         <Text variant="caption" color="muted">• Wishlist heart uses <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">$store.wishlist</code> — same Alpine.js store as ProductCard</Text>
-        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">zeliavance:quick-shop</code> event for any Feature to catch</Text>
+        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">engine:quick-shop</code> event for any Feature to catch</Text>
       </div>
     </section>
 
     <!-- Footer -->
     <footer class="mt-16 border-t border-(--color-border-subtle) pt-8 text-center">
       <Text variant="caption">
-        Design System for Zelia Vance E-commerce | Built with Astro, TailwindCSS & Atomic Design
+        Atomic Design System | Multi-Tenant Engine Core | Built with Astro & TailwindCSS v4
       </Text>
     </footer>
   </div>

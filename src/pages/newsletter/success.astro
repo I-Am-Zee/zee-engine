@@ -8,16 +8,10 @@ import Text from "../../components/primitives/Text.astro";
 // Load Page content (Hub Strategy)
 // Corrected: newsletter_success is an entry in 'pages_content' collection
 const successPage = await getEntry('pages_content', 'newsletter_success');
-const hubData = successPage?.data || {
-  title: "You're in the Loop",
-  description: "Welcome to our inner circle.",
-  heading: "You're in the loop.",
-  message_primary: "From this moment forward, you'll be among the first to hear about new arrivals, seasonal pieces, and things we quietly reserve for people who've been here since the beginning.",
-  message_secondary: "We write rarely. When we do, it means something.",
-  cta_label: "Continue Exploring",
-  cta_link: "/collections",
-  unsubscribe_note: "You can unsubscribe at any time from any email we send."
-};
+if (!successPage) {
+  throw new Error("[Newsletter Success] Page content missing in 'pages_content/newsletter_success'.");
+}
+const hubData = successPage.data;
 ---
 
 <EngineLayout

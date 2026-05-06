@@ -15,39 +15,28 @@ import { slugify } from "../scripts/utils/slugify";
 
 // Load Hero Content (Brand Aware)
 const homeHeroEntry = await getEntry("pages_content", "home");
-const homeHero = homeHeroEntry?.data || {
-  title: "The Permanent Glow.",
-  subtitle: "Designed for the woman who lives without borders.",
-  cta_label_primary: "Shop Now",
-  cta_link_primary: "/shop",
-  cta_label_secondary: "View Lookbooks",
-  cta_link_secondary: "/lookbooks",
-  image: "/images/brand-shots/HeroCheck.jpg"
-};
+if (!homeHeroEntry) {
+  throw new Error("[Homepage] Hero content missing in 'pages_content/home'.");
+}
+const homeHero = homeHeroEntry.data;
 
 // Fetch Trust Section Data
 const trustEntry = await getEntry("pages_content", "trust_section");
+if (!trustEntry) {
+  console.warn("[Homepage] Trust section content missing in 'pages_content/trust_section'.");
+}
 const trustData = trustEntry?.data;
 
 // Load Section Headers (Hub Strategy)
 const categoriesHeader = await getEntry("section_headers", "home-categories");
 const featuredHeader = await getEntry("section_headers", "home-featured");
 
-const catData = categoriesHeader?.data || { 
-  title: "Heading Level 2", 
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  button_mode: "link",
-  action_label: "Action Link",
-  link_url: "/collections"
-};
+if (!categoriesHeader || !featuredHeader) {
+  throw new Error("[Homepage] Section headers 'home-categories' or 'home-featured' missing in 'section_headers'.");
+}
 
-const featData = featuredHeader?.data || { 
-  title: "Heading Level 2", 
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  button_mode: "link",
-  action_label: "Action Link",
-  link_url: "/shop"
-};
+const catData = categoriesHeader.data;
+const featData = featuredHeader.data;
 
 
 // Pre-render at build time
@@ -117,7 +106,7 @@ const categories = collectionsGrid.map((cat: any) => {
       <div class="absolute inset-0 z-0 opacity-60">
         <Image 
           src={homeHero.image} 
-          alt="Luxury Jewelry Hero" 
+          alt="Editorial Collection Hero" 
           class="h-full w-full object-cover object-center brightness-110 opacity-90"
           loading="eager"
           fetchpriority="high"

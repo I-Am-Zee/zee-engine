@@ -133,8 +133,9 @@ export const sideDrawer = () => ({
     this.isSubmitting = true;
 
     try {
+      const hsnCode = (document.getElementById('engine-side-drawer') as HTMLElement)?.dataset.hsn || "0000";
       const payload = itemsToAdd.map((item) => {
-        return getSnipcartJSItem(item, this.selections[item.id]);
+        return getSnipcartJSItem(item, this.selections[item.id], hsnCode);
       });
 
       for (const item of payload) {

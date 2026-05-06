@@ -37,13 +37,13 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY;
 </script>
 
 <!-- Phone Number Validation (for Snipcart checkout) -->
-<script src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
+<script is:inline src="https://unpkg.com/libphonenumber-js@1.11.1/bundle/libphonenumber-js.min.js" defer></script>
 
 <!-- Snipcart Root Container (hidden, required by Snipcart SDK) -->
 <div hidden id="snipcart" data-api-key={snipcartApiKey}></div>
 
 <!-- Snipcart Core JS — async, self-initializing via window.SnipcartSettings -->
-<script async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
+<script is:inline async src="https://cdn.snipcart.com/themes/v3.7.5/default/snipcart.js"></script>
 
 <!-- Snipcart Event Handlers (coupon hydration, session state) -->
 <script src="../../scripts/snipcart-events.ts"></script>

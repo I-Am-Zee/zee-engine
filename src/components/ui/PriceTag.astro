@@ -22,7 +22,6 @@ const {
 } = Astro.props;
 
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
-const links = affiliateLinks || [];
 
 // SSR Initial state
 const ssrHasSale = salePrice !== undefined && salePrice < price;
@@ -63,7 +62,7 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
         as="span" 
         variant="price" 
         class={variant === "compact" ? "text-base md:text-lg" : ""}
-        x-text={`${showPrefix ? "'Approx. ' + " : ""}$store.region.format($store.region.getActiveLink(links)?.salePrice || $store.region.getActiveLink(links)?.price || ${price})`}
+        x-text={`${showPrefix ? "'Approx. ' + " : ""}$store.region.format($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice || $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price || ${price})`}
       >
         {showPrefix && "Approx. "}{formatCurrency(salePrice || price)}
       </Text>
@@ -72,9 +71,9 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
         as="span" 
         variant="price_sale" 
         class:list={[variant === "compact" ? "text-[10px] md:text-xs" : "", !ssrHasSale && "hidden"]} 
-        x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} 
+        x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
         x-cloak
-        x-text={`$store.region.format($store.region.getActiveLink(links)?.price)`}
+        x-text={`$store.region.format($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price)`}
       >
         {formatCurrency(price)}
       </Text>
@@ -87,10 +86,10 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
       intent="coral" 
       size="xs" 
       class:list={[!ssrHasSale && "hidden"]}
-      x-show={`$store.region.getActiveLink(links)?.salePrice !== undefined && $store.region.getActiveLink(links)?.salePrice < $store.region.getActiveLink(links)?.price`} 
+      x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
       x-cloak
     >
-      <span x-text={`Math.round((($store.region.getActiveLink(links)?.price - $store.region.getActiveLink(links)?.salePrice) / $store.region.getActiveLink(links)?.price) * 100)`}>{discountPercent}</span>% OFF
+      <span x-text={`Math.round((($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price - $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice) / $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price) * 100)`}>{discountPercent}</span>% OFF
     </Badge>
   ) : (
     ssrHasSale && discountPercent > 0 && (

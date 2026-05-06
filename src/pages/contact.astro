@@ -22,7 +22,7 @@ const siteData = site?.data;
       <div>
         <Text variant="eyebrow" class="mb-2">Email</Text>
         <Text variant="lead">
-          <a href="mailto:hello@zeliavance.com" class="hover:underline">hello@zeliavance.com</a>
+          <a href={`mailto:${siteData?.contact_email}`} class="hover:underline">{siteData?.contact_email}</a>
         </Text>
       </div>
     </div>

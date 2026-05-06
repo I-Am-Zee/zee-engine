@@ -122,7 +122,7 @@ const formatVariantOptions = (slot: any) => {
 /**
  * Generates an object of data-item-* attributes for Astro HTML buttons.
  */
-export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any) => {
+export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any, hsnCode: string = "0000") => {
   const product = mapProduct(input);
   
   const attrs: Record<string, any> = {
@@ -143,8 +143,8 @@ export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any) =
   
   // Also pass slug in metadata for the order sync API
   attrs["data-item-metadata-slug"] = product.id;
-  // Add HSN code 7117 (Costume Jewellery) for Indian GST webhook processing
-  attrs["data-item-metadata-hsn"] = "7117";
+  // Add HSN code for Indian GST webhook processing
+  attrs["data-item-metadata-hsn"] = hsnCode;
 
   // Process Variants
   [product.variant_1, product.variant_2, product.variant_3].forEach((slot, index) => {
@@ -163,7 +163,7 @@ export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any) =
 /**
  * Generates a clean JSON object for Snipcart's JavaScript API (cart.items.add).
  */
-export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, selections?: Record<string, string>) => {
+export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, selections?: Record<string, string>, hsnCode: string = "0000") => {
   const product = mapProduct(input);
   const customFields: any[] = [];
 
@@ -195,7 +195,7 @@ export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, sele
     metadata: {
       shipping_slab: product.shipping_slab || "",
       slug: product.id,
-      hsn: "7117", // Indian GST classification for Costume Jewellery
+      hsn: hsnCode,
       ...(product.sku && { sku: product.sku })
     },
     hasTaxesIncluded: true,

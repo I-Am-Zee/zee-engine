@@ -8,10 +8,10 @@ export const prerender = false;
 // Load Page content (Hub Strategy)
 // Corrected: newsletter_confirm is an entry in 'pages_content' collection
 const confirmPage = await getEntry('pages_content', 'newsletter_confirm');
-const hubData = confirmPage?.data || {
-  title: "Stay in the Loop",
-  description: "Join our inner circle for rare arrivals, seasonal pieces, and the occasional exclusives."
-};
+if (!confirmPage) {
+  throw new Error("[Newsletter Confirm] Page content missing in 'pages_content/newsletter_confirm'.");
+}
+const hubData = confirmPage.data;
 
 const email = Astro.url.searchParams.get("email") || "";
 ---

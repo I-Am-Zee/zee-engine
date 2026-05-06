@@ -48,9 +48,18 @@ const finalSortOptions = manualOptions || enabledSorts.map((val: string) => ({
     className
   ]}
 >
-  <!-- Count Display -->
+<!-- Count Display -->
   <Text variant="metadata" class="text-text-muted">
-    {`${productCount} ${itemLabel || (context === 'blog' ? "articles" : "products")}`}
+    {/* Reactive Count for Blog (when filteredCount is available in scope) */}
+    {context === 'blog' ? (
+      <span x-cloak>
+        <span x-show="selectedCategories.length > 0" x-text="`${filteredCount} ${itemLabel || 'articles'} found`"></span>
+        <span x-show="selectedCategories.length === 0">{`${productCount} ${itemLabel || "articles"}`}</span>
+      </span>
+    ) : (
+      /* Static Count for Products */
+      `${productCount} ${itemLabel || "products"}`
+    )}
   </Text>
 
   <!-- Sort Dropdown -->

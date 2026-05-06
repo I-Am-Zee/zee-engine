@@ -34,14 +34,14 @@ interface Props {
 
 const { 
   email = "",
-  headingLocked = "One quiet step to join our inner circle.",
-  headingOpen = "Stay in the loop.",
-  descriptionLocked = "We share rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning.",
-  descriptionOpen = "Enter your Gmail below to receive rare updates — new arrivals, seasonal pieces, and the occasional exclusive reserved for people who've been here since the beginning.",
-  emailPlaceholder = "Enter your Gmail address",
+  headingLocked = "Confirm your subscription",
+  headingOpen = "Join the list",
+  descriptionLocked = "",
+  descriptionOpen = "",
+  emailPlaceholder = "Enter your email address",
   emailError = "Please enter a valid Gmail address.",
-  submitLabel = "Yes, stay in the loop",
-  footerNote = "Your email stays private. No spam, no exceptions.\nYou can leave any time via the unsubscribe link in any email."
+  submitLabel = "Join the Loop",
+  footerNote = ""
 } = Astro.props;
 
 const hasEmail = email.length > 0;
