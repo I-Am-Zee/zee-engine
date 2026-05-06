@@ -40,7 +40,7 @@ const options = {
           src={img} 
           alt={`${title} Editorial Detail`} 
           class="w-full h-full object-cover motion-soft group-hover:scale-[1.04]"
-          @click={`$dispatch('open-lightbox', { src: '${img}', alt: '${title} Editorial Detail' })`}
+          @click={`$dispatch('open-lightbox', { src: ${JSON.stringify(img)}, alt: ${JSON.stringify(title + ' Editorial Detail')} })`}
         />
       </div>
     </li>

@@ -15,7 +15,7 @@ const { text, label = "Copy", successLabel = "Copied!", class: className } = Ast
 <div
   x-data={`{
     copied: false,
-    text: '${text}',
+    text: ${JSON.stringify(text)},
     copy() {
       navigator.clipboard.writeText(this.text).then(() => {
         this.copied = true;
@@ -32,6 +32,6 @@ const { text, label = "Copy", successLabel = "Copied!", class: className } = Ast
     class="transition-colors duration-200"
     :class="copied ? 'text-green-600' : 'text-text-muted hover:text-text-main'"
   >
-    <Text variant="label" color="inherit" x-text={`copied ? '${successLabel}' : '${label}'`}></Text>
+    <Text variant="label" color="inherit" x-text={`copied ? ${JSON.stringify(successLabel)} : ${JSON.stringify(label)}`}></Text>
   </Button>
 </div>

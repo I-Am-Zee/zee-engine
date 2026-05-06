@@ -12,7 +12,7 @@ const { images, alt, class: className = "" } = Astro.props;
 
 <div
   class:list={[`product-gallery`, className]}
-  x-data=`{ activeImage: '${images[0]}' }`
+  x-data={`{ activeImage: ${JSON.stringify(images[0])} }`}
 >
   {/* Mobile Layout: Main Image Top, Thumbnails Bottom */}
   <div class="flex flex-col gap-4 lg:hidden">
@@ -21,7 +21,7 @@ const { images, alt, class: className = "" } = Astro.props;
         src={images[0]}
         :src="activeImage"
         alt={alt}
-        @click={`$dispatch('open-lightbox', { src: activeImage, alt: '${alt}' })`}
+        @click={`$dispatch('open-lightbox', { src: activeImage, alt: ${JSON.stringify(alt)} })`}
         class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in active:scale-[0.98]"
         ratio="auto"
       />
@@ -32,9 +32,9 @@ const { images, alt, class: className = "" } = Astro.props;
       {images.map((image) => (
         <button
           type="button"
-          @click={`activeImage = '${image}'`}
+          @click={`activeImage = ${JSON.stringify(image)}`}
           class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) motion-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed border-2 border-transparent"
-          :class={`activeImage === '${image}' ? 'border-accent-brass opacity-100' : 'opacity-40 hover:opacity-80'`}
+          :class={`activeImage === ${JSON.stringify(image)} ? 'border-accent-brass opacity-100' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
             src={image}
@@ -52,9 +52,9 @@ const { images, alt, class: className = "" } = Astro.props;
       {images.map((image) => (
         <button
           type="button"
-          @click={`activeImage = '${image}'`}
+          @click={`activeImage = ${JSON.stringify(image)}`}
           class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) motion-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed border-2 border-transparent"
-          :class={`activeImage === '${image}' ? 'border-accent-brass opacity-100' : 'opacity-40 hover:opacity-80'`}
+          :class={`activeImage === ${JSON.stringify(image)} ? 'border-accent-brass opacity-100' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
             src={image}
@@ -70,7 +70,7 @@ const { images, alt, class: className = "" } = Astro.props;
         src={images[0]}
         :src="activeImage"
         alt={alt}
-        @click={`$dispatch('open-lightbox', { src: activeImage, alt: '${alt}' })`}
+        @click={`$dispatch('open-lightbox', { src: activeImage, alt: ${JSON.stringify(alt)} })`}
         class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in active:scale-[0.98]"
         ratio="auto"
       />
