@@ -20,7 +20,11 @@ export const blogDiscovery = (initialSort = 'latest') => ({
     // Watch for category changes to update the count
     // @ts-ignore
     this.$watch('selectedCategories', () => this.updateFilteredCount());
-    this.updateFilteredCount();
+    
+    // @ts-ignore
+    this.$nextTick(() => {
+      this.updateFilteredCount();
+    });
   },
 
   // Overwrite the sorting init to capture initial state correctly

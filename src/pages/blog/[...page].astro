@@ -9,7 +9,7 @@ import Pagination from "../../components/ui/Pagination.astro";
 import Text from "../../components/primitives/Text.astro";
 import Section from "../../components/primitives/Section.astro";
 import Icon from "../../components/primitives/Icon.astro";
-import type { Page, PaginateFunction } from "astro";
+import type { PaginateFunction } from "astro";
 
 export const prerender = true;
 
@@ -26,21 +26,22 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFunction 
   return paginate(sortedPosts, { pageSize: 8 });
 }
 
-interface Props {
-  page: Page<any>;
-}
-
 const { page } = Astro.props;
 const posts = page.data;
 
 // Pre-fetch all authors for performance
-const authorsEntry = await getEntry('authors', 'authors');
-const authorsList = authorsEntry?.data || [];
+const authors = await getCollection('authors');
 
 // Identify featured post (first post on page 1)
 const isFirstPage = page.currentPage === 1;
 const featuredPost = isFirstPage ? posts[0] : null;
 const remainingPosts = isFirstPage ? posts.slice(1) : posts;
+
+// Helper to find author by name safely
+const findAuthor = (name: string) => {
+  const author = authors.find(a => a.data.name === name);
+  return author ? author.data : authors[0]?.data;
+};
 
 // Load Page Header content
 const headerEntry = await getEntry('page_headers', 'blog-index');
@@ -57,7 +58,8 @@ const emptyState = uiBlog?.data?.empty_states || {
   no_results: "No articles found in the selected categories."
 };
 
-const uiLabel = uiBlog?.data?.labels || {
+// UI Labels are now hardcoded for structural consistency
+const uiLabels = {
   filterHeading: "Filter By Category",
   allStories: "All Stories",
   showAll: "Show All Stories",
@@ -77,7 +79,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
       <PageHeader 
         title={headerData.title} 
         subtitle={headerData.subtitle}
-        align="left"
+        align={headerData.align || "left"}
         class="mb-12"
       />
 
@@ -86,7 +88,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
           <BlogCard 
             post={featuredPost} 
             variant="horizontal" 
-            authorData={authorsList.find((a: any) => a.name === featuredPost.data.author) || authorsList[0]}
+            authorData={findAuthor(featuredPost.data.author)}
             class="shadow-xl! md:min-h-[400px]"
           />
         </div>
@@ -114,14 +116,14 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
         {/* Category Sidebar */}
         <BlogCategoryFilter 
           class="lg:w-64 shrink-0" 
-          labels={uiLabel}
+          labels={uiLabels}
         />
 
         {/* Main Grid */}
         <div class="flex-1">
           <div 
             class="grid gap-8 md:grid-cols-1" 
-            x-ref="blogGrid"
+            x-ref="grid"
           >
             {remainingPosts.map((post) => (
               <div
@@ -139,7 +141,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
                 <BlogCard 
                   post={post} 
                   variant="horizontal" 
-                  authorData={authorsList.find((a: any) => a.name === post.data.author) || authorsList[0]}
+                  authorData={findAuthor(post.data.author)}
                 />
               </div>
             ))}
@@ -159,7 +161,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
               class="group cursor-pointer inline-flex items-center gap-2"
             >
               <Text variant="metadata" class="text-accent-brass border-b border-accent-brass/30 pb-0.5 group-hover:text-primary group-hover:border-primary transition-colors">
-                {uiLabel.showAll}
+                {uiLabels.showAll}
               </Text>
               <Icon name="PhArrowCounterClockwise" class="h-3 w-3 text-accent-brass group-hover:text-primary transition-colors" />
             </button>

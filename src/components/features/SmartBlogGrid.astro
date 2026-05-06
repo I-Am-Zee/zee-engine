@@ -21,7 +21,7 @@ const methodsEntry = await getEntry("settings", "sorting-methods");
 const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
 ---
 
-<div class="smart-blog-grid" x-data={`productSorter('${defaultSort}')`}>
+<div class="smart-blog-grid" x-data={`blogSorter('${defaultSort}')`}>
   <!-- Filter & Sort Bar -->
   <FilterSortBar productCount={posts.length} itemLabel={itemLabel} context="blog" />
 
@@ -47,7 +47,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
     // @ts-ignore
     if (window.Alpine) {
       // @ts-ignore
-      window.Alpine.data("productSorter", (initialSort = 'latest') => gridSort(initialSort));
+      window.Alpine.data("blogSorter", (initialSort = 'latest') => gridSort(initialSort));
     }
   }
 
