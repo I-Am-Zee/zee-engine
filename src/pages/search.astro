@@ -20,24 +20,24 @@ const allPosts = await getCollection("blog", ({ data }) => {
   return import.meta.env.PROD ? data.isDraft !== true : true;
 });
 
-const searchSettings = await getEntry("settings", "search");
 const uiSearch = await getEntry("settings", "ui_search");
 
-const labels = searchSettings?.data || {
+const labels = uiSearch?.data || {
   title: "Search",
-  description: "Discover our world.",
+  description: "Discover our products and stories.",
   placeholder: "Search...",
+  filters: { all: "Everything", product: "Jewellery", blog: "Stories" }
 };
 
 const emptyState = uiSearch?.data?.empty_states || {
-  initial: { heading: "Start typing...", subtext: "" },
-  no_results: { heading: "Nothing found", description: "", cta_label: "View Shop", cta_link: "/shop" }
+  initial: { heading: "Start typing to search...", subtext: "Search our catalog." },
+  no_results: { heading: "Nothing found", description: "Try different keywords.", cta_label: "View All", cta_link: "/shop" }
 };
 
-const uiLabel = uiSearch?.data?.labels || {
+// UI Labels are now hardcoded for structural consistency
+const uiLabels = {
   resultsFound: "Found",
-  resultsIn: "in",
-  filters: { all: "All", product: "Jewellery", blog: "Stories" }
+  resultsSuffix: "results"
 };
 
 // Flatten products for Fuse — serializable plain objects only
@@ -62,11 +62,16 @@ const searchablePosts = allPosts.map(p => ({
 const allSearchable = [...searchablePosts, ...searchableProducts];
 
 // Pre-fetch all authors for BlogCard optimization
-const authorsEntry = await getEntry('authors', 'authors');
-const authorsList = authorsEntry?.data || [];
+const authors = await getCollection('authors');
 
-// Serialise labels.filters for the inline script
-const filterLabels = uiLabel.filters;
+// Helper to find author by name safely
+const findAuthor = (name: string) => {
+  const author = authors.find(a => a.data.name === name);
+  return author ? author.data : authors[0]?.data;
+};
+
+// Serialise filters for the inline script
+const filterLabels = labels.filters;
 ---
 
 <EngineLayout pageTitle={labels.title}>
@@ -99,7 +104,7 @@ const filterLabels = uiLabel.filters;
       {/* Result count — only show when actively searching */}
       <div x-show="query.length >= 2" class="mt-6 h-6" x-transition x-cloak>
         <Text variant="metadata" color="muted" class="tracking-widest">
-          {uiLabel.resultsFound}&nbsp;<span class="font-bold text-(--color-text-main)" x-text="totalCount"></span>&nbsp;results
+          {uiLabels.resultsFound}&nbsp;<span class="font-bold text-(--color-text-main)" x-text="totalCount"></span>&nbsp;{uiLabels.resultsSuffix}
         </Text>
       </div>
     </div>
@@ -107,17 +112,17 @@ const filterLabels = uiLabel.filters;
     {/* ── Content-Type Chips ──────────────────────────────── */}
     <div x-show="query.length >= 2" x-transition class="mb-16 flex items-center justify-center gap-3 flex-wrap" x-cloak>
       <FilterChip
-        label={uiLabel.filters.all}
+        label={labels.filters.all}
         isActive="activeType === 'all'"
         onClick="setType('all')"
       />
       <FilterChip
-        label={uiLabel.filters.product}
+        label={labels.filters.product}
         isActive="activeType === 'product'"
         onClick="setType('product')"
       />
       <FilterChip
-        label={uiLabel.filters.blog}
+        label={labels.filters.blog}
         isActive="activeType === 'blog'"
         onClick="setType('blog')"
       />
@@ -151,7 +156,7 @@ const filterLabels = uiLabel.filters;
           <div class="h-px flex-1 bg-linear-to-r from-transparent to-(--color-border-subtle)"></div>
           <div class="flex items-center gap-2 px-4">
             <Icon name="PhDiamond" class="h-4 w-4 text-(--color-primary) opacity-50" />
-            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{uiLabel.filters.product}</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{labels.filters.product}</span>
           </div>
           <div class="h-px flex-1 bg-linear-to-l from-transparent to-(--color-border-subtle)"></div>
         </div>
@@ -182,7 +187,7 @@ const filterLabels = uiLabel.filters;
           <div class="h-px flex-1 bg-linear-to-r from-transparent to-(--color-border-subtle)"></div>
           <div class="flex items-center gap-2 px-4">
             <Icon name="PhBookOpenText" class="h-4 w-4 text-(--color-primary) opacity-50" />
-            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{uiLabel.filters.blog}</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{labels.filters.blog}</span>
           </div>
           <div class="h-px flex-1 bg-linear-to-l from-transparent to-(--color-border-subtle)"></div>
         </div>
@@ -199,7 +204,7 @@ const filterLabels = uiLabel.filters;
               <BlogCard 
                 post={post} 
                 variant="horizontal" 
-                authorData={authorsList.find((a: any) => a.name === post.data.author) || authorsList[0]}
+                authorData={findAuthor(post.data.author)}
                 class="h-full"
               />
             </div>
