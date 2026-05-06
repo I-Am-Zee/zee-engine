@@ -45,16 +45,24 @@ const remainingPosts = isFirstPage ? posts.slice(1) : posts;
 // Load Page Header content
 const headerEntry = await getEntry('page_headers', 'blog-index');
 const headerData = headerEntry?.data || {
-  heading: "The Journal",
-  description: "Stories, style guides, and care tips.",
-  labels: {
-    filterHeading: "Filter By Category",
-    allStories: "All Stories",
-    showAll: "Show All Stories",
-    noResults: "No articles found.",
-    itemsFound: "found",
-    showingFiltered: "Showing"
-  }
+  title: "The Journal",
+  subtitle: "Stories, style guides, and care tips.",
+};
+
+// Load Centralized UI Content
+const uiBlog = await getEntry("settings", "ui_blog");
+
+const emptyState = uiBlog?.data?.empty_states || {
+  no_posts: "Our stories are being penned. Coming soon.",
+  no_results: "No articles found in the selected categories."
+};
+
+const uiLabel = uiBlog?.data?.labels || {
+  filterHeading: "Filter By Category",
+  allStories: "All Stories",
+  showAll: "Show All Stories",
+  itemsFound: "found",
+  showingFiltered: "Showing filtered"
 };
 
 // Default sort for FilterSortBar
@@ -62,13 +70,13 @@ const methodsEntry = await getEntry("settings", "sorting-methods");
 const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
 ---
 
-<EngineLayout pageTitle={headerData.heading}>
+<EngineLayout pageTitle={headerData.title}>
   <main x-data={`blogDiscovery('${defaultSort}')`}>
     {/* Section 1: Header & Featured */}
     <Section as="div" variant="standard" class="pb-0!">
       <PageHeader 
-        title={headerData.heading} 
-        subtitle={headerData.description}
+        title={headerData.title} 
+        subtitle={headerData.subtitle}
         align="left"
         class="mb-12"
       />
@@ -106,7 +114,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
         {/* Category Sidebar */}
         <BlogCategoryFilter 
           class="lg:w-64 shrink-0" 
-          labels={headerData.labels}
+          labels={uiLabel}
         />
 
         {/* Main Grid */}
@@ -143,7 +151,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
               <Icon name="PhMagnifyingGlass" size="4rem" weight="thin" />
             </div>
             <Text variant="body" class="text-text-muted mb-4">
-              {headerData.labels.noResults}
+              {emptyState.no_results}
             </Text>
             <button 
               type="button"
@@ -151,7 +159,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
               class="group cursor-pointer inline-flex items-center gap-2"
             >
               <Text variant="metadata" class="text-accent-brass border-b border-accent-brass/30 pb-0.5 group-hover:text-primary group-hover:border-primary transition-colors">
-                {headerData.labels.showAll}
+                {uiLabel.showAll}
               </Text>
               <Icon name="PhArrowCounterClockwise" class="h-3 w-3 text-accent-brass group-hover:text-primary transition-colors" />
             </button>

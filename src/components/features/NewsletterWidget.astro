@@ -28,7 +28,6 @@ interface Props {
 
 const { 
   variant = 'section', 
-  brand = 'zelia-vance', 
   hideHeading = false,
   hideDisclaimer = false,
   class: className,
@@ -44,6 +43,15 @@ const copy = entry?.data || {
   heading: "Heading Level 2",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   success_message: "Success Notification Text"
+};
+
+// Fetch global brand labels for the form fields
+const brandEntry = await getEntry('settings', 'brand');
+const labels = brandEntry?.data?.newsletter_labels || {
+  placeholder: "Enter your Gmail address",
+  button_section: "Join the Inner Circle",
+  button_default: "Subscribe",
+  disclaimer: "We only accept Gmail addresses for high-intent delivery."
 };
 
 const isSection = variant === 'section';
@@ -104,8 +112,8 @@ const isModal = variant === 'modal';
     ]}>
       <NewsletterForm
         id={`${uid}-form`}
-        placeholder="Enter your Gmail address"
-        buttonText={isSection || isModal ? "Join the Inner Circle" : "Subscribe"}
+        placeholder={labels.placeholder}
+        buttonText={isSection || isModal ? labels.button_section : labels.button_default}
         layout={isModal ? "col" : "row"}
       />
       {!hideDisclaimer && (
@@ -117,7 +125,7 @@ const isModal = variant === 'modal';
             isFooter && "text-left"
           ]}
         >
-          We only accept Gmail addresses for high-intent delivery.
+          {labels.disclaimer}
         </Text>
       )}
     </div>

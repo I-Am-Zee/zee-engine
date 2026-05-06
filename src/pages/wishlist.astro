@@ -20,9 +20,9 @@ import EmptyState from "../components/ui/EmptyState.astro";
 // Fetch all products - filtering will happen client-side with Alpine
 const allProducts = await getCollection("products");
 
-// Fetch Empty State Content (Page Content Strategy)
-const emptyStateEntry = await getEntry("pages_content", "wishlist_empty");
-const emptyState = emptyStateEntry?.data || {
+// Fetch Empty State Content (Centralized Strategy)
+const uiWishlist = await getEntry("settings", "ui_wishlist");
+const emptyState = uiWishlist?.data?.empty_states || {
   heading: "Your Wishlist is Empty",
   description: "Save your favorite pieces to view them later. Start exploring our collection!",
   cta_label: "Explore Collection",

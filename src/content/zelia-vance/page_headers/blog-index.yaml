@@ -1,9 +1,4 @@
-heading: "The Zelia Vance Journal"
-description: "Style stories, care guides, and the art of wearing less, better."
-labels:
-  filterHeading: "Filter By Category"
-  allStories: "All Stories"
-  showAll: "Show All Stories"
-  noResults: "No articles found in the selected categories."
-  itemsFound: "found"
-  showingFiltered: "Showing filtered"
+id: "blog-index"
+title: "The Zelia Vance Journal"
+subtitle: "Style stories, care guides, and the art of wearing less, better."
+align: "center"

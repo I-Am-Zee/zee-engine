@@ -9,7 +9,7 @@ import { getEntry } from "astro:content";
 
 export async function getBrandSettings() {
   const brandId = import.meta.env.PUBLIC_BRAND_ID;
-  const brandEntry = await getEntry("settings" as any, `${brandId}/brand`);
+  const brandEntry = await getEntry("settings" as any, "brand");
   
   if (!brandEntry) {
     return {

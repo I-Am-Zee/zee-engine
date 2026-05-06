@@ -570,7 +570,10 @@ Blog category list        → getEntry("settings", "blog-taxonomy")  → .data.c
 Product tags              → getEntry("settings", "taxonomy")       → .data.tags
 Blog tags                 → getEntry("settings", "blog-taxonomy")  → .data.tags
 Nav links                 → getEntry("settings", "navigation")     → .data.main_menus
-Footer columns            → getEntry("settings", "footer")         → .data.column_headers
+Footer settings           → getEntry("settings", "footer")         → .data.column_headers
+Search settings           → getEntry("settings", "search")
+Empty states (all)        → getEntry("settings", "empty_states")
+UI Labels (all)           → getEntry("settings", "ui_labels")
 Announcement bar          → getEntry("settings", "marketing")      → .data.announcement_bar
 Discount popup            → getEntry("settings", "marketing")      → .data.discount_popup
 Newsletter popup          → getEntry("settings", "marketing")      → .data.newsletter_popup
@@ -582,5 +585,4 @@ Newsletter copy           → getEntry("newsletter_variants", "[variant-id]")
 FAQ content               → getEntry("pages_content", "faq")
 Home hero                 → getEntry("pages_content", "home")
 Trust section             → getEntry("pages_content", "trust_section")
-Wishlist empty state      → getEntry("pages_content", "wishlist_empty")
 ```

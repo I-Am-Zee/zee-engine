@@ -43,7 +43,7 @@ const isRemote = (typeof src === "string" && (src.startsWith("http") || src.star
 const resolveSrc = (path: string) => {
   if (!path) return "";
   const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
-  const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
+  const brandId = import.meta.env.PUBLIC_BRAND_ID;
   
   if (path.startsWith("http")) return path;
   

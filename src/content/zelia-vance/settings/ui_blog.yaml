@@ -1,0 +1,10 @@
+labels:
+  filterHeading: "Filter By Category"
+  allStories: "All Stories"
+  showAll: "Show All Stories"
+  itemsFound: "found"
+  showingFiltered: "Showing filtered"
+  readMore: "Read"
+empty_states:
+  no_posts: "Our stories are being penned. Coming soon."
+  no_results: "No articles found in the selected categories."

@@ -36,8 +36,8 @@ if (!authorData) {
 }
 
 // Fetch labels
-const blogPage = await getEntry("pages_content", "blog");
-const readMoreLabel = blogPage?.data?.read_more || "Read";
+const uiBlog = await getEntry("settings", "ui_blog");
+const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
 
 const formattedDate = new Intl.DateTimeFormat('en-IN', {
   year: 'numeric',

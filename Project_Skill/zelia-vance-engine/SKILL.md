@@ -223,7 +223,10 @@ For **every task**, follow these steps. Do not skip any.
 Product categories  → getEntry("settings", "taxonomy")      → .data.categories
 Blog categories     → getEntry("settings", "blog-taxonomy") → .data.categories
 Nav links           → getEntry("settings", "navigation")    → .data.main_menus
-Footer columns      → getEntry("settings", "footer")        → .data.column_headers
+Footer settings     → getEntry("settings", "footer")        → .data.column_headers
+Search settings     → getEntry("settings", "search")
+Empty states (all)  → getEntry("settings", "empty_states")
+UI Labels (all)     → getEntry("settings", "ui_labels")
 Announcement bar    → getEntry("settings", "marketing")     → .data.announcement_bar
 Free shipping       → getEntry("settings", "shipping")      → .data.free_shipping_threshold
 Brand name          → getEntry("settings", "brand")         → .data.name

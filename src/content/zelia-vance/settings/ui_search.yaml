@@ -1,0 +1,17 @@
+labels:
+  resultsFound: "Found"
+  resultsIn: "in"
+  viewAllAction: "View All Products"
+  filters:
+    all: "Everything"
+    product: "Jewellery"
+    blog: "Stories"
+empty_states:
+  initial:
+    heading: "Start typing to search..."
+    subtext: "Jewellery, stories, care guides — all in one place."
+  no_results:
+    heading: "Nothing found"
+    description: "Try different keywords or browse our collections."
+    cta_label: "View All Products"
+    cta_link: "/shop"

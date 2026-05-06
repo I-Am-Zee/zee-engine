@@ -9,6 +9,11 @@ import keystatic from '@keystatic/astro';
 import yaml from '@rollup/plugin-yaml';
 
 import cloudflare from '@astrojs/cloudflare';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Site URL — set PUBLIC_SITE_URL in .env and Cloudflare Pages dashboard
 // Using production URL because Snipcart crawls product pages to verify prices.
@@ -32,6 +37,11 @@ export default defineConfig({
   
   vite: {
     plugins: [tailwindcss(), yaml()],
+    resolve: {
+      alias: {
+        '@brand-theme': path.resolve(__dirname, `./src/styles/${process.env.PUBLIC_BRAND_ID || 'zelia-vance'}/theme.css`)
+      }
+    },
     server: {
       allowedHosts: ['dev.zeliavance.com']
     },

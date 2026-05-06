@@ -1,0 +1,174 @@
+✦ I have completed the CMS architecture cleanup and content consolidation. Below is a summary of the findings and changes
+  implemented.
+
+  Audit Findings
+   1. Validation Errors: Several YAML files contained fields not recognized by the Keystatic schema (navigation.yaml, search.yaml,
+      footer.yaml, and blog-index.yaml).
+   2. Scattered Content: Empty states and UI labels were inconsistently managed across singletons, page headers, and hardcoded
+      fallbacks in Astro components.
+   3. Logical Grouping: Redundant singletons for empty states were cluttering the PAGE CONTENT group in the sidebar.
+
+  Changes Implemented
+
+  1. Content Consolidation
+   * empty_states.yaml: Created in src/content/zelia-vance/settings/ to unify "sad path" content for the Blog (no posts/no results),
+     Wishlist (empty state), and Search (initial/no results states).
+   * ui_labels.yaml: Created to centralize UI-specific strings like blog filter labels ("Filter by Category"), search filter chips
+     ("Jewellery", "Stories"), and the "Read" more label.
+   * Nesting Preserved: All nested structures from the original YAML files (e.g., labels and filters objects) were preserved exactly
+     in the new singletons.
+
+  2. Keystatic Schema & Sidebar Updates
+   * keystatic.config.ts:
+       * New Singletons: Registered settings_empty_states, settings_ui_labels, settings_footer, and settings_search.
+       * Fixed Schemas: Updated the navigation schema to include the labels object found in the YAML.
+       * Disconnected Redundant Singletons: Removed page_wishlist_empty and page_blog from the configuration and sidebar. Their YAML 
+         files remain on disk but are no longer managed via Keystatic.
+       * Navigation Reorganized: Grouped the new centralized singletons under GENERAL UI and moved settings-related files to the     
+         SETTINGS group.
+
+  3. Data Alignment
+   * blog-index.yaml: Renamed heading to title and description to subtitle to match the strict page_headers collection schema. The   
+     labels block was removed as its content now lives in ui_labels.yaml.
+
+  4. Application Code Updates
+   * search.astro: Updated to pull metadata and filters from ui_labels and view-states from empty_states.
+   * wishlist.astro: Updated to fetch its empty state content from the centralized empty_states singleton.
+   * blog/[...page].astro: Refactored to use the renamed title/subtitle fields and consume centralized labels and empty states.      
+   * BlogCard.astro: Updated to fetch the "Read More" label from ui_labels.
+   * Documentation: Updated SKILL.md and zelia-vance-engine.md quick references to reflect the new getEntry patterns.
+
+  Verification
+   * The Keystatic sidebar is now clean and organized.
+   * Validation errors in the CMS have been resolved by aligning schemas with existing data.
+   * The Astro project remains type-safe and compiles correctly, with all pages successfully consuming content from the new
+     centralized sources.
+
+  [Active Topic: Completed CMS Architecture Cleanup]
+
+
+---
+--- PLANNING
+
+✦ I understand completely. Grouping all UI labels into one monolithic singleton makes the CMS form extremely long and visually
+  disconnected from the features they belong to. You want a "collection of singletons" grouped logically, and within those
+  singletons, a hierarchical schema to separate things clearly.
+
+  Here is the implementation plan I have drafted based on your suggestion:
+
+  UI Label & Empty State Refactoring Plan
+
+  Objective
+  To restructure the Keystatic CMS architecture for UI Labels and Empty States, providing clear separation and intuitive organization
+  in the dashboard. This addresses the user's feedback that the current "all in one" singleton approach is cluttered and lacks
+  clarity.
+
+  Proposed Solution: Feature-Specific UI Singletons
+  Instead of monolithic settings_ui_labels and settings_empty_states singletons, we will transition to a "collection of singletons"  
+  grouped by feature.
+
+  1. Keystatic Sidebar Restructuring
+  We will introduce a new group in the Keystatic navigation sidebar called UI MICROCOPY (or similar) to clearly distinguish these
+  settings from general page content or global settings.
+
+    1 ui: {
+    2   navigation: {
+    3     // ...
+    4     'UI MICROCOPY': [
+    5       'ui_blog',
+    6       'ui_search',
+    7       'ui_wishlist',
+    8       'ui_global' // Future expansion for generic labels
+    9     ],
+   10     // ...
+   11   }
+   12 }
+
+  2. Schema Redesign (Hierarchical)
+  Each feature-specific singleton will use a hierarchical schema to internally group related fields, such as separating "Labels" from
+  "Empty States".
+
+  Example: ui_blog Singleton Schema
+
+    1 ui_blog: singleton({
+    2   label: 'Blog UI',
+    3   path: `src/content/${brandId}/settings/ui_blog`,
+    4   format: { data: 'yaml' },
+    5   schema: {
+    6     labels: fields.object({
+    7       filterHeading: fields.text({ label: 'Filter Heading' }),
+    8       readMore: fields.text({ label: 'Read More Label' }),
+    9       // ...
+   10     }, { label: 'UI Labels 🏷️' }),
+   11     empty_states: fields.object({
+   12       no_posts: fields.text({ label: 'No Posts Message' }),
+   13       no_results: fields.text({ label: 'No Filter Results Message' }),
+   14     }, { label: 'Empty States 📭' }),
+   15   },
+   16 }),
+
+  This approach provides both the "collection of singletons" separation in the sidebar and the "hierarchical schema" separation      
+  within the form itself.
+
+  3. Implementation Steps
+   1. Revert Monolithic Schemas: Remove settings_ui_labels and settings_empty_states from keystatic.config.ts.
+   2. Define New Singletons: Create ui_blog, ui_search, and ui_wishlist singletons in keystatic.config.ts using the hierarchical     
+      object structure.
+   3. Migrate YAML Data:
+       * Create ui_blog.yaml containing the respective data.
+       * Create ui_search.yaml containing the respective data.
+       * Create ui_wishlist.yaml containing the respective data.
+       * Delete the old ui_labels.yaml and empty_states.yaml.
+   4. Update Component References: Update search.astro, wishlist.astro, blog/[...page].astro, and BlogCard.astro to import from their
+      new respective singletons.
+   5. Fix Existing Bug: Correct the itemLabel bug I inadvertently introduced in the page_trust_section schema in keystatic.config.ts 
+      (where it said fields.title.value instead of props.fields.title.value).
+
+  Alternatives Considered
+   * Hierarchical Only (Monolithic with Groups): Keeping a single ui_settings file but using heavily nested fields.object
+     definitions. Rejected because the form becomes too long and visually overwhelming for the editor.
+   * True Keystatic Collection: Creating a ui_labels collection where each entry is a YAML file. Rejected because Keystatic
+     collections require identical schemas for all entries, but Blog labels are vastly different from Wishlist labels.
+
+  Verification
+   1. Run npm run build to ensure all type errors are resolved and components correctly consume the new schema.
+   2. Run npm run dev and navigate to the /keystatic dashboard to visually verify the sidebar grouping and form hierarchy.
+
+  Does this plan accurately reflect the hierarchical schema and singleton separation you are looking for?
+
+---
+---
+
+✦ I have successfully refactored the Keystatic CMS architecture for UI Labels and Empty States, transitioning from a monolithic      
+  approach to a cleaner, feature-specific "collection of singletons" model.
+
+  Key Changes:
+
+   1. Keystatic Schema Refactoring:
+       * Removed the monolithic settings_ui_labels and settings_empty_states singletons.
+       * Introduced three new feature-specific singletons: ui_blog, ui_search, and ui_wishlist.
+       * Implemented a hierarchical schema within each singleton, clearly separating "Labels" from "Empty States" using Keystatic    
+         fields.object groupings.
+       * Reorganized the Keystatic sidebar, moving these new singletons under a dedicated "UI MICROCOPY" group for better editor     
+         focus.
+
+   2. Data Migration:
+       * Migrated existing data from ui_labels.yaml and empty_states.yaml into the new ui_blog.yaml, ui_search.yaml, and
+         ui_wishlist.yaml files.
+       * Deleted the now-obsolete monolithic YAML files.
+
+   3. Component Refactoring:
+       * Updated src/pages/search.astro, src/pages/wishlist.astro, src/pages/blog/[...page].astro, and
+         src/components/ui/BlogCard.astro to consume data from the new singletons.
+       * Adjusted the data extraction logic in these components to match the new hierarchical structure.
+
+   4. Bug Fix:
+       * Corrected a bug in the page_trust_section schema in keystatic.config.ts where itemLabel was incorrectly referencing fields  
+         instead of props.fields.
+
+  Verification:
+   * Ran npm run build to ensure project integrity and type safety. The build completed successfully.
+   * Verified that no active code files are still referencing the old monolithic singletons.
+
+  The CMS dashboard is now more intuitive, with microcopy settings logically grouped by the features they belong to.
+

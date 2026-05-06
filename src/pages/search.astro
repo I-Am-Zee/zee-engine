@@ -16,14 +16,27 @@ import EmptyState from "../components/ui/EmptyState.astro";
 
 // Load content and settings
 const allProducts = await getCollection("products");
-const allPosts = await getCollection("blog", ({ data }) => !data.isDraft);
+const allPosts = await getCollection("blog", ({ data }) => {
+  return import.meta.env.PROD ? data.isDraft !== true : true;
+});
+
 const searchSettings = await getEntry("settings", "search");
+const uiSearch = await getEntry("settings", "ui_search");
+
 const labels = searchSettings?.data || {
   title: "Search",
   description: "Discover our world.",
   placeholder: "Search...",
-  initialState: { heading: "Start typing...", subtext: "" },
-  labels: { resultsFound: "Found", resultsIn: "in", nothingFound: "Nothing found", nothingFoundSub: "", viewAllAction: "View Shop" },
+};
+
+const emptyState = uiSearch?.data?.empty_states || {
+  initial: { heading: "Start typing...", subtext: "" },
+  no_results: { heading: "Nothing found", description: "", cta_label: "View Shop", cta_link: "/shop" }
+};
+
+const uiLabel = uiSearch?.data?.labels || {
+  resultsFound: "Found",
+  resultsIn: "in",
   filters: { all: "All", product: "Jewellery", blog: "Stories" }
 };
 
@@ -37,7 +50,6 @@ const searchableProducts = allProducts.map(p => ({
   slug: p.id,
 }));
 
-// Flatten blog posts for Fuse — serializable plain objects only
 const searchablePosts = allPosts.map(p => ({
   type: "blog",
   title: p.data.title,
@@ -54,7 +66,7 @@ const authorsEntry = await getEntry('authors', 'authors');
 const authorsList = authorsEntry?.data || [];
 
 // Serialise labels.filters for the inline script
-const filterLabels = labels.filters;
+const filterLabels = uiLabel.filters;
 ---
 
 <EngineLayout pageTitle={labels.title}>
@@ -87,7 +99,7 @@ const filterLabels = labels.filters;
       {/* Result count — only show when actively searching */}
       <div x-show="query.length >= 2" class="mt-6 h-6" x-transition x-cloak>
         <Text variant="metadata" color="muted" class="tracking-widest">
-          {labels.labels.resultsFound}&nbsp;<span class="font-bold text-(--color-text-main)" x-text="totalCount"></span>&nbsp;results
+          {uiLabel.resultsFound}&nbsp;<span class="font-bold text-(--color-text-main)" x-text="totalCount"></span>&nbsp;results
         </Text>
       </div>
     </div>
@@ -95,17 +107,17 @@ const filterLabels = labels.filters;
     {/* ── Content-Type Chips ──────────────────────────────── */}
     <div x-show="query.length >= 2" x-transition class="mb-16 flex items-center justify-center gap-3 flex-wrap" x-cloak>
       <FilterChip
-        label={labels.filters.all}
+        label={uiLabel.filters.all}
         isActive="activeType === 'all'"
         onClick="setType('all')"
       />
       <FilterChip
-        label={labels.filters.product}
+        label={uiLabel.filters.product}
         isActive="activeType === 'product'"
         onClick="setType('product')"
       />
       <FilterChip
-        label={labels.filters.blog}
+        label={uiLabel.filters.blog}
         isActive="activeType === 'blog'"
         onClick="setType('blog')"
       />
@@ -116,8 +128,8 @@ const filterLabels = labels.filters;
       <div class="mb-8 opacity-5 flex justify-center scale-150">
         <Icon name="PhMagnifyingGlass" size="5rem" weight="thin" class="text-text-muted" />
       </div>
-      <Heading as="h3" color="muted" class="font-light tracking-tight">{labels.initialState.heading}</Heading>
-      <Text variant="paragraph" color="muted" class="mt-2 opacity-60">{labels.initialState.subtext}</Text>
+      <Heading as="h3" color="muted" class="font-light tracking-tight">{emptyState.initial.heading}</Heading>
+      <Text variant="paragraph" color="muted" class="mt-2 opacity-60">{emptyState.initial.subtext}</Text>
     </div>
 
     {/* ── Results Container ────────────────────────────────── */}
@@ -127,9 +139,9 @@ const filterLabels = labels.filters;
       <div x-show="totalCount === 0" class="py-16" x-transition x-cloak>
         <EmptyState
           icon="PhMagnifyingGlass"
-          heading={labels.labels.nothingFound}
-          description={labels.labels.nothingFoundSub || "Try different keywords or check your spelling."}
-          action={{ label: labels.labels.viewAllAction, href: "/shop" }}
+          heading={emptyState.no_results.heading}
+          description={emptyState.no_results.description || "Try different keywords or check your spelling."}
+          action={{ label: emptyState.no_results.cta_label, href: emptyState.no_results.cta_link }}
         />
       </div>
 
@@ -139,7 +151,7 @@ const filterLabels = labels.filters;
           <div class="h-px flex-1 bg-linear-to-r from-transparent to-(--color-border-subtle)"></div>
           <div class="flex items-center gap-2 px-4">
             <Icon name="PhDiamond" class="h-4 w-4 text-(--color-primary) opacity-50" />
-            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{labels.filters.product}</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{uiLabel.filters.product}</span>
           </div>
           <div class="h-px flex-1 bg-linear-to-l from-transparent to-(--color-border-subtle)"></div>
         </div>
@@ -170,7 +182,7 @@ const filterLabels = labels.filters;
           <div class="h-px flex-1 bg-linear-to-r from-transparent to-(--color-border-subtle)"></div>
           <div class="flex items-center gap-2 px-4">
             <Icon name="PhBookOpenText" class="h-4 w-4 text-(--color-primary) opacity-50" />
-            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{labels.filters.blog}</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-(--color-text-main) opacity-80">{uiLabel.filters.blog}</span>
           </div>
           <div class="h-px flex-1 bg-linear-to-l from-transparent to-(--color-border-subtle)"></div>
         </div>
@@ -264,4 +276,3 @@ const filterLabels = labels.filters;
   import Fuse from "fuse.js";
   (window as any).Fuse = Fuse;
 </script>
-

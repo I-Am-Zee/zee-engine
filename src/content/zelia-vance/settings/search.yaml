@@ -1,16 +1,3 @@
 title: "Search"
 description: "Discover jewellery, stories, and style from the Zelia Vance world."
 placeholder: "Search for rings, care guides, gold..."
-initialState:
-  heading: "Start typing to search..."
-  subtext: "Jewellery, stories, care guides — all in one place."
-labels:
-  resultsFound: "Found"
-  resultsIn: "in"
-  nothingFound: "Nothing found"
-  nothingFoundSub: "Try different keywords or browse our collections."
-  viewAllAction: "View All Products"
-filters:
-  all: "Everything"
-  product: "Jewellery"
-  blog: "Stories"

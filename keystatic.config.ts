@@ -59,17 +59,18 @@ export default config({
         'page_home_carousel',
         'page_trust_section', 
         'page_faq', 
-        'page_blog', 
         'page_newsletter_confirm', 
         'page_newsletter_success', 
-        'page_checkout_razorpay',
-        'page_wishlist_empty'
+        'page_checkout_razorpay'
       ],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
+      'UI MICROCOPY': ['ui_blog', 'ui_search', 'ui_wishlist'],
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': [
         'settings_brand', 
         'settings_navigation', 
+        'settings_footer',
+        'settings_search',
         'settings_marketing', 
         'settings_store_checkout',
         'settings_shipping',
@@ -569,7 +570,117 @@ export default config({
             itemLabel: (props) => props.fields.label.value || 'New link'
           }
         ),
+        labels: fields.object({
+          shop: fields.text({ label: 'Shop', defaultValue: 'Shop' }),
+          allJewelry: fields.text({ label: 'All Jewelry', defaultValue: 'All Jewelry' }),
+          search: fields.text({ label: 'Search', defaultValue: 'Search' }),
+          wishlist: fields.text({ label: 'Wishlist', defaultValue: 'Wishlist' }),
+          cart: fields.text({ label: 'Cart', defaultValue: 'Cart' }),
+          account: fields.text({ label: 'Account', defaultValue: 'Account' }),
+          menu: fields.text({ label: 'Menu', defaultValue: 'Menu' }),
+          close: fields.text({ label: 'Close', defaultValue: 'Close' }),
+        }),
       }
+    }),
+
+    settings_footer: singleton({
+      label: 'Footer Content',
+      path: `src/content/${brandId}/settings/footer`,
+      format: { data: 'yaml' },
+      schema: {
+        newsletter: fields.object({
+          heading: fields.text({ label: 'Heading' }),
+          description: fields.text({ label: 'Description', multiline: true }),
+          placeholder: fields.text({ label: 'Email Placeholder' }),
+          buttonText: fields.text({ label: 'Button Text' }),
+          image: fields.text({ label: 'Image URL' }),
+        }),
+        column_headers: fields.object({
+          shop: fields.text({ label: 'Shop Column' }),
+          explore: fields.text({ label: 'Explore Column' }),
+          support: fields.text({ label: 'Support Column' }),
+          social: fields.text({ label: 'Social Column' }),
+        }),
+        labels: fields.object({
+          allJewelry: fields.text({ label: 'All Jewelry Link' }),
+          allStories: fields.text({ label: 'All Stories Link' }),
+        }),
+      },
+    }),
+
+    settings_search: singleton({
+      label: 'Search Settings',
+      path: `src/content/${brandId}/settings/search`,
+      format: { data: 'yaml' },
+      schema: {
+        title: fields.text({ label: 'Page Title' }),
+        description: fields.text({ label: 'Description', multiline: true }),
+        placeholder: fields.text({ label: 'Search Placeholder' }),
+      },
+    }),
+
+    ui_blog: singleton({
+      label: 'Blog UI',
+      path: `src/content/${brandId}/settings/ui_blog`,
+      format: { data: 'yaml' },
+      schema: {
+        labels: fields.object({
+          filterHeading: fields.text({ label: 'Filter Heading' }),
+          allStories: fields.text({ label: 'All Stories Label' }),
+          showAll: fields.text({ label: 'Show All Label' }),
+          itemsFound: fields.text({ label: 'Items Found Label' }),
+          showingFiltered: fields.text({ label: 'Showing Filtered Label' }),
+          readMore: fields.text({ label: 'Read More Label' }),
+        }, { label: 'UI Labels 🏷️' }),
+        empty_states: fields.object({
+          no_posts: fields.text({ label: 'No Posts Message' }),
+          no_results: fields.text({ label: 'No Filter Results Message' }),
+        }, { label: 'Empty States 📭' }),
+      },
+    }),
+
+    ui_search: singleton({
+      label: 'Search UI',
+      path: `src/content/${brandId}/settings/ui_search`,
+      format: { data: 'yaml' },
+      schema: {
+        labels: fields.object({
+          resultsFound: fields.text({ label: 'Results Found' }),
+          resultsIn: fields.text({ label: 'Results In' }),
+          viewAllAction: fields.text({ label: 'View All Action Label' }),
+          filters: fields.object({
+            all: fields.text({ label: 'All Filter' }),
+            product: fields.text({ label: 'Product Filter' }),
+            blog: fields.text({ label: 'Blog Filter' }),
+          }, { label: 'Filter Labels' }),
+        }, { label: 'UI Labels 🏷️' }),
+        empty_states: fields.object({
+          initial: fields.object({
+            heading: fields.text({ label: 'Heading' }),
+            subtext: fields.text({ label: 'Subtext' }),
+          }),
+          no_results: fields.object({
+            heading: fields.text({ label: 'Heading' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+            cta_label: fields.text({ label: 'Button Label' }),
+            cta_link: fields.text({ label: 'Button Link' }),
+          }),
+        }, { label: 'Empty States 📭' }),
+      },
+    }),
+
+    ui_wishlist: singleton({
+      label: 'Wishlist UI',
+      path: `src/content/${brandId}/settings/ui_wishlist`,
+      format: { data: 'yaml' },
+      schema: {
+        empty_states: fields.object({
+          heading: fields.text({ label: 'Heading' }),
+          description: fields.text({ label: 'Description', multiline: true }),
+          cta_label: fields.text({ label: 'Button Label' }),
+          cta_link: fields.text({ label: 'Button Link' }),
+        }, { label: 'Empty States 📭' }),
+      },
     }),
 
     // ── Marketing & Conversion ─────────────────────────────────────
@@ -787,18 +898,6 @@ export default config({
       }
     }),
 
-    page_wishlist_empty: singleton({
-      label: 'Wishlist Page (Empty)',
-      path: `src/content/${brandId}/pages_content/wishlist_empty`,
-      format: { data: 'yaml' },
-      schema: {
-        heading: fields.text({ label: 'Heading' }),
-        description: fields.text({ label: 'Description', multiline: true }),
-        cta_label: fields.text({ label: 'Button Label' }),
-        cta_link: fields.text({ label: 'Button Link' }),
-      }
-    }),
-
     collections_grid: singleton({
       label: 'Featured Collections Grid',
       path: `src/content/${brandId}/collections_grid/data`,
@@ -847,28 +946,6 @@ export default config({
           }
         ),
       }
-    }),
-
-    page_blog: singleton({
-      label: 'Blog Page',
-      path: `src/content/${brandId}/pages_content/blog`,
-      format: { data: 'yaml' },
-      schema: {
-        title: fields.text({ label: 'Page Title', defaultValue: 'The Journal' }),
-        subtitle: fields.text({ 
-          label: 'Subtitle', 
-          defaultValue: 'Style notes, care guides, and the stories behind our collections.',
-          multiline: true 
-        }),
-        empty_state: fields.text({ 
-          label: 'Empty State Message', 
-          defaultValue: 'Our stories are being penned. Coming soon.' 
-        }),
-        read_more: fields.text({ 
-          label: 'Read More Label', 
-          defaultValue: 'Read' 
-        }),
-      },
     }),
 
     page_newsletter_confirm: singleton({
