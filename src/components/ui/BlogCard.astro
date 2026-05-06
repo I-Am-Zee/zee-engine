@@ -5,7 +5,7 @@
  * Premium editorial card for blog posts.
  * Consistent with GlassProductCard design system.
  */
-import { getEntry, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 import Image from "../primitives/Image.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
@@ -28,8 +28,8 @@ const readTime = calculateReadTime(post.body || "");
 // Only fetch if not provided as a prop
 let authorData = propAuthorData;
 if (!authorData) {
-  const authorsEntry = await getEntry("authors", "authors");
-  const authorsList = authorsEntry?.data || [];
+  const authors = await getCollection("authors");
+  const authorsList = authors.map(a => a.data);
   authorData = Array.isArray(authorsList) 
     ? (authorsList.find((a: any) => a.name === authorName) || authorsList[0])
     : null;
