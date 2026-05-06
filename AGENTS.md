@@ -394,7 +394,7 @@ A "Source → Processor → Consumer" pipeline is fully active:
 | `SHIPROCKET_WEBHOOK_TOKEN` | Webhook auth token (`ZeliaVance_Secure_Deploy_2026`)  |
 | `MAILERLITE_API_KEY`       | MailerLite API v3 key                                 |
 | `MAILERLITE_GROUP_ID`      | MailerLite Newsletter group ID (`183469983098995840`) |
-| `IMAGE_GATEWAY_URL`        | Cloudflare Worker URL for image serving (pending)     |
+| `PUBLIC_IMAGE_GATEWAY_URL`  | Cloudflare Worker URL for image serving (`https://assets.zeliavance.com`) |
 
 ---
 

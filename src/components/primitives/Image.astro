@@ -39,32 +39,31 @@ if (!src && !rest[':src']) return null;
 // Remote if it's a string starting with http or /, or if it has an Alpine :src attribute
 const isRemote = (typeof src === "string" && (src.startsWith("http") || src.startsWith("/"))) || !!rest[':src'];
 
-// Logic to resolve R2 paths through the gateway
-const resolveSrc = (path: string) => {
+const resolveSrc = (path: string, width?: number) => {
   if (!path) return "";
   const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
   const brandId = import.meta.env.PUBLIC_BRAND_ID;
   
   if (path.startsWith("http")) return path;
   
+  let resolvedPath = path;
   if (path.startsWith("/")) {
     // Transform path: /images/products/photo.jpg -> /zelia-vance/products/photo.jpg
-    // This aligns local public paths with the R2 multi-tenant structure
     const r2Path = path.replace(/^\/images\//, `/${brandId}/`);
-    
-    // If the path was transformed, prepend the gateway
-    if (r2Path !== path) {
-      return `${gateway}${r2Path}`;
-    }
-    
-    // If it's a root path but not in /images/ (unlikely for assets), still prefix with brandId
-    return `${gateway}/${brandId}${path}`;
+    resolvedPath = r2Path !== path ? r2Path : `/${brandId}${path}`;
   }
   
-  return path;
+  const url = `${gateway}${resolvedPath.startsWith("/") ? "" : "/"}${resolvedPath}`;
+  return width ? `${url}?w=${width}` : url;
 };
 
 const finalSrc = isRemote && typeof src === "string" ? resolveSrc(src) : (src || "");
+
+// Generate srcset for remote images if it's a gateway URL
+const remoteWidths = widths || [400, 800, 1200];
+const srcset = (isRemote && typeof src === "string" && finalSrc.includes(import.meta.env.PUBLIC_IMAGE_GATEWAY_URL))
+  ? remoteWidths.map(w => `${resolveSrc(src, w)} ${w}w`).join(", ")
+  : undefined;
 
 const aspectClasses = {
   portrait: "aspect-2/3",
@@ -79,12 +78,13 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
 {isRemote ? (
   <img
     src={finalSrc}
+    srcset={srcset}
+    sizes={sizes || "(max-width: 800px) 100vw, 800px"}
     alt={alt}
     loading={loading}
     class={combinedClasses}
     decoding={decoding}
     fetchpriority={fetchpriority}
-    sizes={sizes}
     draggable={draggable}
     onload="this.style.opacity=1"
     style="opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;"
