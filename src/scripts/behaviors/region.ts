@@ -20,8 +20,9 @@ export const regionStore = {
   },
 
   async checkAndDetect() {
-    const savedRegion = localStorage.getItem('zeliavance_region');
-    const savedExpiry = localStorage.getItem('zeliavance_region_expiry');
+    const brandId = document.body.dataset.brandId || 'zelia-vance';
+    const savedRegion = localStorage.getItem(`${brandId}_region`);
+    const savedExpiry = localStorage.getItem(`${brandId}_region_expiry`);
     const now = new Date().getTime();
 
     if (savedRegion && savedExpiry && now < Number(savedExpiry)) {
@@ -71,10 +72,11 @@ export const regionStore = {
   },
 
   save(region: string) {
+    const brandId = document.body.dataset.brandId || 'zelia-vance';
     // 24 hour expiry (1000 * 60 * 60 * 24 = 86400000)
     const expiryDate = new Date().getTime() + 86400000;
-    localStorage.setItem('zeliavance_region', region);
-    localStorage.setItem('zeliavance_region_expiry', expiryDate.toString());
+    localStorage.setItem(`${brandId}_region`, region);
+    localStorage.setItem(`${brandId}_region_expiry`, expiryDate.toString());
   },
 
   format(price: number) {

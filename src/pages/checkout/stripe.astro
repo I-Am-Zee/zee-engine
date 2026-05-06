@@ -35,12 +35,15 @@ const siteUrl = Astro.url.origin || import.meta.env.PUBLIC_SITE_URL;
 const stripeConfigured = !!stripePublishableKey;
 
 const brandSettings = await getEntry("settings", "brand");
-const brandName = brandSettings?.data?.name || "Our Boutique";
+if (!brandSettings) {
+  throw new Error("[Stripe Checkout] 'settings/brand' not found.");
+}
+const brandName = brandSettings.data.name;
 ---
 
 <CheckoutLayout pageTitle="Secure Checkout">
   {stripeConfigured && (
-    <script slot="head" src="https://js.stripe.com/v3/"></script>
+    <script is:inline slot="head" src="https://js.stripe.com/v3/"></script>
   )}
 
   <div class="w-full max-w-[480px]">

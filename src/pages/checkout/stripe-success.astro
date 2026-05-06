@@ -16,7 +16,10 @@ const paymentIntentId = Astro.url.searchParams.get('payment_intent');
 const siteUrl = import.meta.env.DEPLOY_PRIME_URL || import.meta.env.PUBLIC_SITE_URL || Astro.url.origin;
 
 const brandSettings = await getEntry("settings", "brand");
-const brandName = brandSettings?.data?.name || "Our Boutique";
+if (!brandSettings) {
+  throw new Error("[Stripe Success] 'settings/brand' not found.");
+}
+const brandName = brandSettings.data.name;
 ---
 
 <CheckoutLayout pageTitle="Order Confirmed">

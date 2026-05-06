@@ -53,14 +53,14 @@ function initSnipcartLogic() {
     const currentVal = metadata.subscribeToNewsletter;
 
     if (currentVal === undefined) {
-      console.log('[Zelia Vance] Fresh session detected: Auto-checking newsletter.');
+      console.log('[Engine] Fresh session detected: Auto-checking newsletter.');
       checkbox.checked = true;
       checkbox.setAttribute('data-autochecked', 'true');
       // Sync it with Snipcart's Vue engine
       checkbox.dispatchEvent(new Event('change', { bubbles: true }));
       checkbox.dispatchEvent(new Event('input', { bubbles: true }));
     } else {
-      console.log('[Zelia Vance] Existing session found: Respecting manual choice.');
+      console.log('[Engine] Existing session found: Respecting manual choice.');
       checkbox.setAttribute('data-autochecked', 'true'); // Don't touch it again
     }
   };
@@ -68,7 +68,7 @@ function initSnipcartLogic() {
   // The 'Patrol': Watch for Snipcart re-renders
   const checkoutContainer = document.querySelector('#snipcart');
   if (checkoutContainer) {
-    const observer = new MutationObserver((mutations) => {
+    const observer = new MutationObserver((_) => {
       // Small delay to let Snipcart/Vue settle after a DOM change
       setTimeout(autoCheckNewsletter, 100);
     });

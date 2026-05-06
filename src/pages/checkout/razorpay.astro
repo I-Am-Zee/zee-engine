@@ -19,20 +19,19 @@ if (!brandId) {
 }
 
 const brandSettings = await getEntry("settings", "brand");
-const ecommerceSettings = await getEntry("settings", "ecommerce");
-const checkoutPage = await getEntry("pages_content", "checkout_razorpay");
+if (!brandSettings) {
+  throw new Error("[Razorpay Bridge] 'settings/brand' not found. Please ensure content is initialized.");
+}
 
-// Hub Strategy: Fallbacks
-const brandName = brandSettings?.data?.name || "Our Boutique";
-// Use CSS variable instead of raw hex if possible, but Razorpay theme needs a string. 
-// We'll use the token value but from our system if available.
-const brandColor = brandSettings?.data?.primary_color || "#052b22"; 
+const brandName = brandSettings.data.name;
+const brandColor = brandSettings.data.primary_color;
+if (!brandColor) {
+  throw new Error("[Razorpay Bridge] 'primary_color' not found in brand settings.");
+}
 
-const currencyCode = ecommerceSettings?.data?.currency_code || "INR";
-const currencySymbol = ecommerceSettings?.data?.currency_symbol || "₹";
-const locale = ecommerceSettings?.data?.locale || "en-IN";
+const currencySymbol = "₹";
 
-const hubData = checkoutPage?.data || {
+const hubData = {
   title: "Payment",
   subtitle_loading: "Connecting securely…",
   amount_label: "Order Total",
@@ -53,7 +52,7 @@ const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : 
 
 <CheckoutLayout pageTitle={hubData.title}>
   <!-- Razorpay SDK injected into <head> via named slot -->
-  <script slot="head" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script is:inline slot="head" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <!-- ── Checkout Card ── -->
   <div class="w-full max-w-[460px] bg-(--color-surface) border border-(--color-border-subtle) rounded-xs overflow-hidden">
@@ -109,8 +108,8 @@ const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : 
     siteUrl, 
     brandName, 
     brandColor,
-    currencyCode,
-    locale,
+    currencyCode: "INR",
+    locale: "en-IN",
     hubData,
     faviconUrl
   }} is:inline>

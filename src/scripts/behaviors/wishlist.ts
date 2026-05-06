@@ -4,7 +4,8 @@ export const wishlistStore = {
   items: [] as string[],
 
   init() {
-    const saved = localStorage.getItem('zeliavance_wishlist');
+    const brandId = document.body.dataset.brandId || 'zelia-vance';
+    const saved = localStorage.getItem(`${brandId}_wishlist`);
     if (saved) {
       try {
         this.items = JSON.parse(saved);
@@ -41,7 +42,8 @@ export const wishlistStore = {
   },
 
   save() {
-    localStorage.setItem('zeliavance_wishlist', JSON.stringify(this.items));
+    const brandId = document.body.dataset.brandId || 'zelia-vance';
+    localStorage.setItem(`${brandId}_wishlist`, JSON.stringify(this.items));
   },
 
   get count() {

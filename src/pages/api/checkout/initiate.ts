@@ -19,18 +19,6 @@ interface InitiateRequest {
   customerName?: string;
 }
 
-interface RazorpayOrderResponse {
-  id: string;
-  entity: string;
-  amount: number;
-  amount_paid: number;
-  amount_due: number;
-  currency: string;
-  receipt: string;
-  status: string;
-  created_at: number;
-}
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body: InitiateRequest = await request.json();

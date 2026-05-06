@@ -84,8 +84,9 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
       <script is:inline define:vars={{ defaultRegionId }}>
         // Synchronous Zero-CLS Pre-hydration
         try {
-          const savedRegion = localStorage.getItem('zeliavance_region');
-          const savedExpiry = localStorage.getItem('zeliavance_region_expiry');
+          const brandId = document.documentElement.dataset.brandId;
+          const savedRegion = localStorage.getItem(`${brandId}_region`);
+          const savedExpiry = localStorage.getItem(`${brandId}_region_expiry`);
           const now = new Date().getTime();
           
           if (savedRegion && savedExpiry && now < Number(savedExpiry)) {
@@ -100,7 +101,7 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     )}
     <slot name="head" />
   </head>
-  <body class="flex flex-col min-h-screen" data-regions={isAffiliate ? JSON.stringify(affiliateSettings?.data?.regions || []) : undefined}>
+  <body class="flex flex-col min-h-screen" data-brand-id={brandId} data-regions={isAffiliate ? JSON.stringify(affiliateSettings?.data?.regions || []) : undefined}>
     <AnnouncementBar announcement={announcement_bar} threshold={threshold} />
     <Navbar />
 

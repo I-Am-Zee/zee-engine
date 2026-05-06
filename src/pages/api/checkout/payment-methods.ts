@@ -133,24 +133,6 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
-/**
- * Validate the Snipcart public token
- * This confirms the request is genuinely from Snipcart
- */
-async function validateSnipcartToken(publicToken: string): Promise<boolean> {
-  try {
-    const response = await fetch(
-      `https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?publicToken=${publicToken}`
-    );
-    return response.ok;
-  } catch (error) {
-    console.error('[payment-methods] Token validation error:', error);
-    // In development, you might want to skip validation
-    // return true; // Uncomment for debugging
-    return false;
-  }
-}
-
 // Also handle GET for debugging
 export const GET: APIRoute = async () => {
   return new Response(JSON.stringify({ 
