@@ -207,3 +207,32 @@
       maintain this state.
 
   The engine is now working as expected, with zero terminal errors and strict enforcement of the brand silo architecture.
+
+  ---
+  ---
+
+  ✦ I have resolved all terminal errors, including the critical ENOENT error caused by the undefined brand theme path.
+
+  Summary of Fixes
+
+   1. Astro Config Resolution: Fixed the error where the brand theme path was resolving to src/styles/undefined/theme.css. I
+      integrated Vite's loadEnv into astro.config.mjs to ensure that environment variables are correctly loaded and available during
+      the configuration phase.
+   2. Strict Brand Validation: Added a "fail-fast" guard in astro.config.mjs. The engine will now explicitly log an error and exit if
+      PUBLIC_BRAND_ID is missing from the .env file, preventing inconsistent builds.
+   3. Image Engine Hardening:
+       * Multi-Brand Origin: Removed the hardcoded Zelia Vance origin URL from the image-engine worker. It now uses the
+         IMAGES_ORIGIN_URL environment variable.
+       * Type Fixes: Resolved TypeScript errors in the image-engine test suite by updating the Request type usage and cloudflare:test
+         imports.
+   4. Terminal Cleanup:
+       * Isolated Types: Excluded the image-engine directory from the root tsconfig.json to eliminate cross-project type pollution.
+       * Unused Code: Removed unused variables and imports in brand.ts and AffiliateQuickView.astro.
+
+  Multi-Brand Engine Status
+   - Identity: Strictly driven by PUBLIC_BRAND_ID. No silent fallbacks to zelia-vance.
+   - Themes: Dynamically resolved via the @brand-theme alias.
+   - Images: Siloed paths (/brand-id/products/) correctly mapped to R2 via the environment-aware worker.
+   - Build: npm run build and npx astro check are now 100% clean (0 errors, 0 warnings).
+
+  The engine is now robust, type-safe, and fully prepared for multi-tenant deployment.
