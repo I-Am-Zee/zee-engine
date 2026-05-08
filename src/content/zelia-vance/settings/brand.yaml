@@ -5,6 +5,7 @@ primary_color: "#052b22"
 tax_hsn_code: "7117"
 tax_rate: 0.03
 tax_origin_state: "Punjab"
+tax_origin_state_code: "PB"
 tax_gstin: "03AALFI7890P1ZK"
 legal_entity: "I Am Zee"
 contact_email: "hello@zeliavance.com"

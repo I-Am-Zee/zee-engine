@@ -131,7 +131,7 @@ export const POST: APIRoute = async ({ request }) => {
         if (!brandData) throw new Error("[Logistics Webhook] 'settings/brand' not found.");
         
         const brandName = brandData.name;
-        const feedbackUrl = brandData.feedback_url || "https://tally.so";
+        const feedbackUrl = brandData.feedback_url || "";
         const siteUrl = brandData.site_url || "";
         const newsletterUrl = `${siteUrl}/newsletter/confirm?email=${encodeURIComponent(order.email)}`;
 

@@ -496,6 +496,7 @@ export default config({
         tax_hsn_code: fields.text({ label: 'Tax HSN Code', description: 'e.g. 7117 for Costume Jewellery. Used for invoice/logistics sync.', defaultValue: '7117' }),
         tax_rate: fields.number({ label: 'Tax Rate (Decimal)', description: 'e.g. 0.03 for 3% GST.', defaultValue: 0.03 }),
         tax_origin_state: fields.text({ label: 'Tax Origin State (for CGST/SGST)', description: 'e.g. Punjab. Used to trigger intra-state tax split.', defaultValue: 'Punjab' }),
+        tax_origin_state_code: fields.text({ label: 'Tax Origin State Code (ISO Abbreviation)', description: 'e.g. PB for Punjab. Must be the 2-letter ISO state code, not the full name. Used for province matching in the tax engine.', defaultValue: 'PB' }),
         tax_gstin: fields.text({ label: 'GSTIN Number', description: 'Your business GST registration number.', defaultValue: '03AALFI7890P1ZK' }),
         legal_entity: fields.text({ label: 'Legal Entity Name', description: 'Used for Copyright text at the bottom of the page.', defaultValue: 'I Am Zee' }),
         contact_email: fields.text({ label: 'Contact Email', description: 'Main public contact address (e.g. hello@brand.com)', validation: { isRequired: true } }),

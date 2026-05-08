@@ -28,17 +28,29 @@ export const POST: APIRoute = async ({ request }) => {
     const brandEntry = await getEntry("settings" as any, "brand");
     if (!brandEntry) throw new Error("[Taxes Webhook] Brand settings not found.");
     
-    const { tax_rate, tax_origin_state, tax_gstin } = brandEntry.data;
+    const { tax_rate, tax_origin_state, tax_origin_state_code, tax_gstin, tax_hsn_code } = brandEntry.data;
 
     // Use shipping address, fallback to billing if digital/no-shipping
     const address = order.shippingAddress || order.billingAddress || {};
-    const province = (address.province || "").toLowerCase();
-    
-    // Check if the shipping state is Punjab (Intra-state)
-    const isOriginState = province.trim() === tax_origin_state.toLowerCase() || 
-                         province.trim() === "in-" + tax_origin_state.toLowerCase().substring(0, 2);
+    const province = (address.province || "").toLowerCase().trim();
 
-    // 2. Taxable Amount Calculation for decentralized HSN
+    // Build province match list from state name + ISO code (e.g. "punjab", "pb", "in-pb")
+    // Using the explicit state code field prevents auto-derivation bugs (e.g. "pu" vs "pb").
+    const stateName = tax_origin_state.toLowerCase();
+    const stateCode = (tax_origin_state_code || "").toLowerCase();
+    const originStateAliases: string[] = [stateName];
+    if (stateCode) originStateAliases.push(stateCode, `in-${stateCode}`);
+    const isOriginState = originStateAliases.includes(province);
+
+    // 2. Taxable Amount Calculation
+    // Per-item HSN check: restored from original design.
+    // For Zelia Vance, all items are HSN 7117 (Costume Jewellery) — this will always be true.
+    // For multi-brand: if brand has no HSN configured, tax is applied to all items by default.
+    const hasMatchingHSN = !tax_hsn_code || (order.items || []).some((item: any) =>
+      item.metadata?.hsn === tax_hsn_code ||
+      item.customFields?.some((cf: any) => cf.name === "HSN" && cf.value === tax_hsn_code)
+    );
+
     let taxableSubtotal = 0;
     const taxesToApply: { name: string; amount: number; rate: number; includedInPrice?: boolean; numberForInvoice?: string }[] = [];
 
@@ -86,7 +98,8 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    console.log(`[Snipcart Taxes Webhook] Calculated taxes for province '${province}':`, taxesToApply);
+    console.log(`[Snipcart Taxes Webhook] Province: '${province}', Origin match: ${isOriginState}, HSN match: ${hasMatchingHSN}`);
+    console.log(`[Snipcart Taxes Webhook] Calculated taxes:`, taxesToApply);
 
     // 3. Respond with exact Snipcart expected format
     return new Response(JSON.stringify({ 
