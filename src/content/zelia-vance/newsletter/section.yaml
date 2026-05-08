@@ -1,4 +1,7 @@
 id: "section"
 heading: "Join the Inner Circle"
 description: "Zelia Vance exists because the 'Old Money' look shouldn't require an 'Old Money' bank account. Period. Join us for early access to new drops and mindful Milestones."
+placeholder: "Enter your Gmail address"
+button_text: "Join Now"
+disclaimer: "We only accept Gmail addresses for high-intent delivery."
 success_message: "Welcome to the Inner Circle. Keep an eye on your inbox."

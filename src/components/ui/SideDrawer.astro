@@ -22,9 +22,9 @@ import Button from "../primitives/Button.astro";
 import Image from "../primitives/Image.astro";
 import FreeShippingNudge from "../features/FreeShippingNudge.astro";
 
-// Fetch HSN from brand settings
-const brandEntry = await getEntry("settings", "brand");
-const hsnCode = brandEntry?.data?.tax_hsn_code || "0000";
+// Fetch default HSN from legal-taxonomy settings
+const legalTaxonomyEntry = await getEntry("settings", "legal-taxonomy");
+const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
 ---
 
 <div

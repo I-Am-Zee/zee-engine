@@ -30,6 +30,7 @@ export interface ZeliaProduct {
   variant_1?: any;
   variant_2?: any;
   variant_3?: any;
+  hsn_override?: string;
   // Affiliate Fields (Multi-Region)
   affiliate_links?: Array<{
     region: string;
@@ -66,6 +67,7 @@ export const mapProduct = (input: any): ZeliaProduct => {
       variant_1: input.data.variant_1,
       variant_2: input.data.variant_2,
       variant_3: input.data.variant_3,
+      hsn_override: input.data.hsn_override,
       affiliate_links: input.data.affiliate_links || [],
     };
   } else {
@@ -82,6 +84,7 @@ export const mapProduct = (input: any): ZeliaProduct => {
       variant_1: input.variant_1,
       variant_2: input.variant_2,
       variant_3: input.variant_3,
+      hsn_override: input.hsn_override,
       affiliate_links: input.affiliate_links || [],
     };
   }
@@ -144,7 +147,7 @@ export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any, h
   // Also pass slug in metadata for the order sync API
   attrs["data-item-metadata-slug"] = product.id;
   // Add HSN code for Indian GST webhook processing
-  attrs["data-item-metadata-hsn"] = hsnCode;
+  attrs["data-item-metadata-hsn"] = product.hsn_override || hsnCode;
 
   // Process Variants
   [product.variant_1, product.variant_2, product.variant_3].forEach((slot, index) => {
@@ -195,7 +198,7 @@ export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, sele
     metadata: {
       shipping_slab: product.shipping_slab || "",
       slug: product.id,
-      hsn: hsnCode,
+      hsn: product.hsn_override || hsnCode,
       ...(product.sku && { sku: product.sku })
     },
     hasTaxesIncluded: true,

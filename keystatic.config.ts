@@ -38,6 +38,18 @@ const blogCategories = (blogTaxonomyJson.categories || []).map((c: string) => ({
 }));
 const blogTags = (blogTaxonomyJson.tags || []).map((t: string) => ({ label: t, value: t }));
 
+// ── Legal Taxonomy (Dynamic via Glob) ───────────────────
+const legalTaxFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/legal-taxonomy.yaml', { eager: true });
+const legalTaxJson = legalTaxFiles[`./src/content/${brandId}/settings/legal-taxonomy.yaml`]?.default || { tax_classes: [] };
+
+const hsnOptions = [
+  { label: `Default — ${legalTaxJson.tax_classes[0]?.label || 'Standard'} (${(legalTaxJson.tax_classes[0]?.rate || 0) * 100}% GST)`, value: '' },
+  ...legalTaxJson.tax_classes.map((tc: any) => ({
+    label: `${tc.hsn} — ${tc.label} (${tc.rate * 100}%)`,
+    value: tc.hsn
+  }))
+];
+
 
 // ── Shipping Slabs (Dynamic via Glob) ───────────────────
 const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, slab]: [string, any]) => ({
@@ -67,7 +79,7 @@ export default config({
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': isAffiliate 
         ? ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_affiliate', 'settings_shipping', 'settings_tracking']
-        : ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_shipping', 'settings_tracking'],
+        : ['settings_brand', 'settings_legal', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_shipping', 'settings_tracking'],
       'PEOPLE': ['authors'],
     }
   },
@@ -125,8 +137,9 @@ export default config({
         description: fields.text({ label: 'Description', multiline: true }),
         placeholder: fields.text({ label: 'Email Placeholder', defaultValue: 'Enter your Gmail address' }),
         button_text: fields.text({ label: 'Button Label', defaultValue: 'Subscribe' }),
-        image: fields.text({ label: 'Editorial Image URL', description: 'Paste the R2 path: /images/newsletter/filename.webp' }),
+        disclaimer: fields.text({ label: 'Disclaimer Text', defaultValue: 'We only accept Gmail addresses for high-intent delivery.' }),
         success_message: fields.text({ label: 'Success Message' }),
+        image: fields.text({ label: 'Editorial Image URL', description: 'Paste the R2 path: /images/newsletter/filename.webp' }),
       }
     }),
     // ── Products ──────────────────────────────────────────────────
@@ -213,6 +226,12 @@ export default config({
           }),
           price: fields.number({ label: 'Price (₹)', validation: { isRequired: true, min: 1 } }),
           salePrice: fields.number({ label: 'Sale Price (₹)', description: 'Must be lower than regular price. Leave empty if not on sale.', validation: { isRequired: false, min: 1 } }),
+          hsn_override: fields.select({
+            label: 'Tax Class (HSN)',
+            description: 'Leave as Default for standard products. Only change if this product has a different GST rate.',
+            options: hsnOptions,
+            defaultValue: ''
+          }),
 
           // ── D2C: Snipcart Variants ──
           variant_1: fields.object({
@@ -493,12 +512,6 @@ export default config({
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
         description: fields.text({ label: 'SEO Description', multiline: true, validation: { isRequired: true } }),
         primary_color: fields.text({ label: 'Primary Brand Color (Hex)', description: 'e.g. #052b22. Used for Razorpay theme and external UI.', defaultValue: '#052b22' }),
-        tax_hsn_code: fields.text({ label: 'Tax HSN Code', description: 'e.g. 7117 for Costume Jewellery. Used for invoice/logistics sync.', defaultValue: '7117' }),
-        tax_rate: fields.number({ label: 'Tax Rate (Decimal)', description: 'e.g. 0.03 for 3% GST.', defaultValue: 0.03 }),
-        tax_origin_state: fields.text({ label: 'Tax Origin State (for CGST/SGST)', description: 'e.g. Punjab. Used to trigger intra-state tax split.', defaultValue: 'Punjab' }),
-        tax_origin_state_code: fields.text({ label: 'Tax Origin State Code (ISO Abbreviation)', description: 'e.g. PB for Punjab. Must be the 2-letter ISO state code, not the full name. Used for province matching in the tax engine.', defaultValue: 'PB' }),
-        tax_gstin: fields.text({ label: 'GSTIN Number', description: 'Your business GST registration number.', defaultValue: '03AALFI7890P1ZK' }),
-        legal_entity: fields.text({ label: 'Legal Entity Name', description: 'Used for Copyright text at the bottom of the page.', defaultValue: 'I Am Zee' }),
         contact_email: fields.text({ label: 'Contact Email', description: 'Main public contact address (e.g. hello@brand.com)', validation: { isRequired: true } }),
         site_url: fields.text({ label: 'Site URL', description: 'The public URL of the website (e.g. https://brand.com)', validation: { isRequired: true } }),
         feedback_url: fields.text({ label: 'Feedback Form URL', description: 'Tally.so or similar URL for post-delivery feedback.', validation: { isRequired: true } }),
@@ -525,12 +538,18 @@ export default config({
             itemLabel: props => props.fields.platform.value || 'New link'
           }
         ),
-        newsletter_labels: fields.object({
-          placeholder: fields.text({ label: 'Email Placeholder', defaultValue: 'Enter your Gmail address' }),
-          button_section: fields.text({ label: 'Button Label (Section)', defaultValue: 'Join the Inner Circle' }),
-          button_default: fields.text({ label: 'Button Label (Default)', defaultValue: 'Subscribe' }),
-          disclaimer: fields.text({ label: 'Disclaimer Text', defaultValue: 'We only accept Gmail addresses for high-intent delivery.' }),
-        }),
+      },
+    }),
+
+    settings_legal: singleton({
+      label: 'Legal Settings',
+      path: `src/content/${brandId}/settings/legal`,
+      format: { data: 'yaml' },
+      schema: {
+        legal_entity: fields.text({ label: 'Legal Entity Name', description: 'e.g. I Am Zee. Used for Copyright text at the bottom of the page.', defaultValue: 'I Am Zee' }),
+        gstin: fields.text({ label: 'GSTIN Number', description: 'Your business GST registration number.', defaultValue: '03AALFI7890P1ZK' }),
+        tax_origin_state: fields.text({ label: 'Tax Origin State (for CGST/SGST)', description: 'e.g. Punjab. Used to trigger intra-state tax split.', defaultValue: 'Punjab' }),
+        tax_origin_state_code: fields.text({ label: 'Tax Origin State Code (ISO Abbreviation)', description: 'e.g. PB for Punjab. Must be the 2-letter ISO state code, not the full name. Used for province matching in the tax engine.', defaultValue: 'PB' }),
       },
     }),
 

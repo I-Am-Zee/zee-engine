@@ -39,20 +39,13 @@ const uid = customId || `newsletter-${variant}-${Math.random().toString(36).subs
 
 // Each variant is its own file: footer.yaml, modal.yaml, section.yaml, sidebar.yaml
 const entry = await getEntry('newsletter_variants', variant);
-const copy = entry?.data || {
-  heading: "Heading Level 2",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  success_message: "Success Notification Text"
-};
+const copy = entry?.data;
 
-// Fetch global brand labels for the form fields
-const brandEntry = await getEntry('settings', 'brand');
-const labels = brandEntry?.data?.newsletter_labels || {
-  placeholder: "Enter your Gmail address",
-  button_section: "Join the Inner Circle",
-  button_default: "Subscribe",
-  disclaimer: "We only accept Gmail addresses for high-intent delivery."
-};
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+
+if (!copy) {
+  throw new Error(`[NewsletterWidget] Could not load content for variant: ${variant}. Check src/content/${brandId}/newsletter/${variant}.yaml`);
+}
 
 const isSection = variant === 'section';
 const isFooter = variant === 'footer';
@@ -112,11 +105,11 @@ const isModal = variant === 'modal';
     ]}>
       <NewsletterForm
         id={`${uid}-form`}
-        placeholder={labels.placeholder}
-        buttonText={isSection || isModal ? labels.button_section : labels.button_default}
+        placeholder={copy.placeholder}
+        buttonText={copy.button_text}
         layout={isModal ? "col" : "row"}
       />
-      {!hideDisclaimer && (
+      {!hideDisclaimer && copy.disclaimer && (
         <Text 
           variant="caption" 
           class:list={[
@@ -125,7 +118,7 @@ const isModal = variant === 'modal';
             isFooter && "text-left"
           ]}
         >
-          {labels.disclaimer}
+          {copy.disclaimer}
         </Text>
       )}
     </div>

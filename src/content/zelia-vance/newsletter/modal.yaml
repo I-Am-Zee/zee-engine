@@ -1,4 +1,7 @@
 id: "modal"
 heading: "Unlock 10% Off"
 description: "Join the Zelia Vance family today and get a secret code for your first 'Life-Proof' Signature piece."
+placeholder: "Enter your Gmail address"
+button_text: "Get My Code"
+disclaimer: "We only accept Gmail addresses for high-intent delivery."
 success_message: "Check your email for the code!"

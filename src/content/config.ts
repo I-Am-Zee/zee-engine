@@ -51,6 +51,24 @@ try {
   console.warn("Could not load blog categories from blog-taxonomy, using defaults.");
 }
 
+// ─── Legal Taxonomy (HSN Codes) ─────────────────────────────────────────────
+const legalTaxonomyPath = `./src/content/${brandId}/settings/legal-taxonomy.yaml`;
+var hsnCodes: [string, ...string[]] = [""]; // Empty string is "Default"
+try {
+  if (fs.existsSync(legalTaxonomyPath)) {
+    const fileContents = fs.readFileSync(legalTaxonomyPath, "utf8");
+    const parsed = yaml.parse(fileContents);
+    if (parsed && Array.isArray(parsed.tax_classes)) {
+      const parsedHsn = parsed.tax_classes.map((tc: any) => tc.hsn).filter(Boolean);
+      if (parsedHsn.length > 0) {
+        hsnCodes = ["", ...parsedHsn] as [string, ...string[]];
+      }
+    }
+  }
+} catch (e) {
+  console.warn("Could not load HSN codes from legal-taxonomy, using defaults.");
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // PRODUCTS COLLECTION
 // ═══════════════════════════════════════════════════════════════════════════
@@ -78,6 +96,10 @@ const products = defineCollection({
         (val) => val === undefined || val > 0,
         "Sale price must be valid if provided"
       ),
+    
+    hsn_override: import.meta.env.PUBLIC_AFFILIATE === "true"
+      ? z.string().optional()
+      : z.enum(hsnCodes).optional().default(""),
 
     // MOLECULE: Product Media
     image: z.string().min(1, "Featured image is required"),
@@ -303,6 +325,7 @@ const newsletter_variants = defineCollection({
     description: z.string(),
     placeholder: z.string().optional(),
     button_text: z.string().optional(),
+    disclaimer: z.string().optional(),
     image: z.string().optional(),
     success_message: z.string().optional(),
   }),

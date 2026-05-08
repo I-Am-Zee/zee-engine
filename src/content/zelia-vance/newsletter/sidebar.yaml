@@ -1,4 +1,7 @@
 id: "sidebar"
 heading: "Don't miss a drop"
 description: "Our Signatures sell out fast. Be the first to know."
+placeholder: "Enter your Gmail address"
+button_text: "Subscribe"
+disclaimer: "We only accept Gmail addresses for high-intent delivery."
 success_message: "Subscribed!"
