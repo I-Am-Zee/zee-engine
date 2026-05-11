@@ -62,13 +62,13 @@ const searchablePosts = allPosts.map(p => ({
 const allSearchable = [...searchablePosts, ...searchableProducts];
 
 // Pre-fetch all authors for BlogCard optimization
-const authorsEntry = await getEntry('authors', 'authors');
-const authorsList = authorsEntry?.data?.authors || [];
+const allAuthors = await getCollection('authors');
+const authorsMap = Object.fromEntries(allAuthors.map(a => [a.id, a.data]));
+const defaultAuthor = allAuthors[0]?.data;
 
-// Helper to find author by name safely
-const findAuthor = (name: string) => {
-  const found = authorsList.find((a) => a.name === name);
-  return found ?? authorsList[0];
+// Helper to find author by slug safely
+const findAuthor = (slug: string) => {
+  return authorsMap[slug] ?? defaultAuthor;
 };
 
 const readMoreLabel = uiSearch?.data?.labels?.readMore || "Read";

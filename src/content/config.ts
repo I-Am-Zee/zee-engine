@@ -1,5 +1,5 @@
 import { defineCollection, z } from "astro:content";
-import { glob, file } from "astro/loaders";
+import { glob } from "astro/loaders";
 import fs from "node:fs";
 import yaml from "yaml";
 
@@ -225,7 +225,7 @@ const blog = defineCollection({
     title: z.string(),
     excerpt: z.string(),
     publishDate: z.date(),
-    author: z.string().default("Content Team"),
+    author: z.string().default("zee-team"),
     category: z.enum(
       [blogCategories[0], ...blogCategories.slice(1)],
       {
@@ -305,21 +305,15 @@ const brand = defineCollection({
 });
 
 const authors = defineCollection({
-  loader: file(`./src/content/${brandId}/authors.yaml`),
-  schema: z.union([
-    z.object({
-      authors: z.array(z.object({
-        name: z.string(),
-        avatar: z.string().optional(),
-        bio: z.string().optional(),
-      }))
-    }),
-    z.array(z.object({
-      name: z.string(),
-      avatar: z.string().optional(),
-      bio: z.string().optional(),
-    })).transform(arr => ({ authors: arr }))
-  ])
+  loader: glob({
+    pattern: "**/*.{yml,yaml,json}",
+    base: `./src/content/${brandId}/authors`,
+  }),
+  schema: z.object({
+    name: z.string(),
+    avatar: z.string().optional(),
+    bio: z.string().optional(),
+  })
 });
 
 // ═══════════════════════════════════════════════════════════════════════════

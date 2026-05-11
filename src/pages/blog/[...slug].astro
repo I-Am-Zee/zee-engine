@@ -19,9 +19,8 @@ const { title, excerpt, publishDate, author, image, tags } = post.data;
 const { Content } = await render(post);
 
 // Fetch author data for bio
-const authorsEntry = await getEntry('authors', 'authors');
-const authorsList = authorsEntry?.data?.authors || [];
-const authorData = authorsList.find((a) => a.name === author);
+const authorEntry = await getEntry('authors', author);
+const authorData = authorEntry?.data;
 
 const formattedDate = new Intl.DateTimeFormat('en-IN', {
   year: 'numeric',
@@ -48,7 +47,7 @@ const breadcrumbItems = [
       <div class="mb-6 flex items-center justify-center gap-4 text-xs font-bold tracking-widest uppercase text-text-muted">
         <time datetime={publishDate.toISOString()}>{formattedDate}</time>
         <span class="h-1.5 w-1.5 rounded-full bg-primary/30"></span>
-        <span>{author}</span>
+        <span>{authorData?.name || author}</span>
       </div>
       
       <Heading as="h1" class="mb-8 leading-tight">

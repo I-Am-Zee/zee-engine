@@ -343,7 +343,7 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         excerpt: fields.text({ label: 'Excerpt', multiline: true, validation: { isRequired: true } }),
         publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: true } }),
-        author: fields.text({ label: 'Author', defaultValue: 'Content Team' }),
+        author: fields.relationship({ label: 'Author', collection: 'authors', validation: { isRequired: true } }),
         image: fields.text({ label: 'Cover Image URL', validation: { isRequired: true } }),
         category: fields.select({
           label: 'Category',
@@ -358,6 +358,19 @@ export default config({
         isDraft: fields.checkbox({ label: 'Save as Draft', defaultValue: false }),
         content: fields.mdx({ label: 'Content' }),
       },
+    }),
+
+    // ── Authors ───────────────────────────────────────────────────
+    authors: collection({
+      label: 'Authors',
+      slugField: 'name',
+      path: `src/content/${brandId}/authors/*`,
+      format: { data: 'yaml' },
+      schema: {
+        name: fields.slug({ name: { label: 'Name' } }),
+        avatar: fields.text({ label: 'Avatar Path', description: 'e.g. /images/authors/zee.jpg' }),
+        bio: fields.text({ label: 'Short Bio', multiline: true }),
+      }
     }),
 
     // ── Legal Pages ───────────────────────────────────────────────
@@ -1129,25 +1142,6 @@ export default config({
             defaultValue: 'latest'
           })
         }, { label: 'Blog Page' })
-      }
-    }),
-
-    authors: singleton({
-      label: 'Author Registry',
-      path: `src/content/${brandId}/authors`,
-      format: { data: 'yaml' },
-      schema: {
-        authors: fields.array(
-          fields.object({
-            name: fields.text({ label: 'Name' }),
-            avatar: fields.text({ label: 'Avatar Path', description: 'e.g. /images/authors/zee.jpg' }),
-            bio: fields.text({ label: 'Short Bio', multiline: true }),
-          }),
-          {
-            label: 'Authors',
-            itemLabel: (props) => props.fields.name.value || 'New Author'
-          }
-        )
       }
     }),
   },

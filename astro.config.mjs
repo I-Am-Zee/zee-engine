@@ -54,7 +54,16 @@ export default defineConfig({
         '@brand-theme': path.resolve(__dirname, `./src/styles/${brandId}/theme.css`),
         'yjs': path.resolve(__dirname, './node_modules/yjs/dist/yjs.mjs')
       },
-      dedupe: ['yjs', 'react', 'react-dom']
+      dedupe: [
+        'yjs', 
+        'react', 
+        'react-dom', 
+        'prosemirror-state', 
+        'prosemirror-tables', 
+        'prosemirror-view', 
+        'prosemirror-model', 
+        'prosemirror-transform'
+      ]
     },
     server: {
       allowedHosts: ['dev.zeliavance.com']
@@ -66,6 +75,11 @@ export default defineConfig({
         'react-dom', 
         'yjs',
         'y-prosemirror',
+        'prosemirror-state',
+        'prosemirror-tables',
+        'prosemirror-view',
+        'prosemirror-model',
+        'prosemirror-transform',
         '@keystatic/core',
         '@keystatic/core/ui', 
         '@keystatic/core/renderer',
