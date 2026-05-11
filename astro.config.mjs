@@ -51,8 +51,10 @@ export default defineConfig({
     plugins: [tailwindcss(), yaml()],
     resolve: {
       alias: {
-        '@brand-theme': path.resolve(__dirname, `./src/styles/${brandId}/theme.css`)
-      }
+        '@brand-theme': path.resolve(__dirname, `./src/styles/${brandId}/theme.css`),
+        'yjs': path.resolve(__dirname, './node_modules/yjs/dist/yjs.mjs')
+      },
+      dedupe: ['yjs', 'react', 'react-dom']
     },
     server: {
       allowedHosts: ['dev.zeliavance.com']
@@ -62,6 +64,8 @@ export default defineConfig({
       include: [
         'react', 
         'react-dom', 
+        'yjs',
+        'y-prosemirror',
         '@keystatic/core',
         '@keystatic/core/ui', 
         '@keystatic/core/renderer',

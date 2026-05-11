@@ -23,15 +23,16 @@ const { class: className } = Astro.props;
 
 // Fetch Data
 const siteSettings = await getEntry("settings", "brand");
+const legalSettings = await getEntry("settings", "legal");
 const navigationEntry = await getEntry("settings", "navigation");
 const taxonomy = await getEntry("settings", "taxonomy");
 const newsletterVariant = await getEntry("newsletter_variants", "footer");
 
 const brandName = siteSettings?.data?.name;
-const legalEntity = siteSettings?.data?.legal_entity;
+const legalEntity = legalSettings?.data?.legal_entity;
 
 if (!brandName || !legalEntity) {
-  throw new Error("[Footer] Brand configuration missing in 'settings/brand'. name and legal_entity are required.");
+  throw new Error("[Footer] Configuration missing. 'name' (in brand.yaml) and 'legal_entity' (in legal.yaml) are required.");
 }
 
 const socialLinks: any[] = siteSettings?.data?.social || [];

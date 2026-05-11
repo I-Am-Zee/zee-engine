@@ -24,6 +24,7 @@ if (!brandId) {
 // ─── Product Taxonomy ───────────────────────────────────────────────────────
 const taxonomyPath = `./src/content/${brandId}/settings/taxonomy.yaml`;
 var brandCategories: [string, ...string[]] = ["Rings", "Earrings", "Necklaces", "Bracelets", "Jewellery Sets"];
+var brandTags: [string, ...string[]] = ["diamond", "gold", "pvd-coated"]; // Minimal defaults
 try {
   if (fs.existsSync(taxonomyPath)) {
     const fileContents = fs.readFileSync(taxonomyPath, 'utf8');
@@ -31,14 +32,18 @@ try {
     if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
       brandCategories = parsed.categories as [string, ...string[]];
     }
+    if (parsed && Array.isArray(parsed.tags) && parsed.tags.length > 0) {
+      brandTags = parsed.tags as [string, ...string[]];
+    }
   }
 } catch (e) {
-  console.warn("Could not load product categories from taxonomy, using defaults.");
+  console.warn("Could not load product taxonomy from settings, using defaults.");
 }
 
 // ─── Blog Taxonomy (Separate from Products) ──────────────────────────────────
 const blogTaxonomyPath = `./src/content/${brandId}/settings/blog-taxonomy.yaml`;
 var blogCategories: [string, ...string[]] = ["Style Guide", "Behind the Scenes", "Care Tips", "Trend Report", "Jewellery 101", "Gift Guide"];
+var blogTags: [string, ...string[]] = ["styling", "care-guide", "life-proof"]; // Minimal defaults
 try {
   if (fs.existsSync(blogTaxonomyPath)) {
     const fileContents = fs.readFileSync(blogTaxonomyPath, 'utf8');
@@ -46,9 +51,12 @@ try {
     if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
       blogCategories = parsed.categories as [string, ...string[]];
     }
+    if (parsed && Array.isArray(parsed.tags) && parsed.tags.length > 0) {
+      blogTags = parsed.tags as [string, ...string[]];
+    }
   }
 } catch (e) {
-  console.warn("Could not load blog categories from blog-taxonomy, using defaults.");
+  console.warn("Could not load blog taxonomy from settings, using defaults.");
 }
 
 // ─── Legal Taxonomy (HSN Codes) ─────────────────────────────────────────────
@@ -118,7 +126,7 @@ const products = defineCollection({
         }),
       }
     ),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.enum([brandTags[0], ...brandTags.slice(1)])).optional(),
     badges: z.array(z.string()).optional(),
 
     // MOLECULE: Content
@@ -225,7 +233,7 @@ const blog = defineCollection({
       }
     ),
     image: z.string().min(1, "Cover image is required for all blog posts"),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.enum([blogTags[0], ...blogTags.slice(1)])).optional(),
     isDraft: z.boolean().default(false),
   }),
 });

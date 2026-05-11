@@ -209,7 +209,9 @@ All content lives under `src/content/{brandId}/`.
 ### Critical Settings Files (in `settings/`)
 | File | Key in `getEntry("settings", ...)` | Contains |
 |---|---|---|
-| `brand.yaml` | `"brand"` | Name, tagline, description, legal_entity, social links |
+| `brand.yaml` | `"brand"` | Name, tagline, description, social links |
+| `legal.yaml` | `"legal"` | Legal entity name, GSTIN, tax origin state/code |
+| `legal-taxonomy.yaml` | `"legal-taxonomy"` | HSN codes and GST rates |
 | `navigation.yaml` | `"navigation"` | main_menus, support_links, legal_links |
 | `taxonomy.yaml` | `"taxonomy"` | Product categories, tags, badges |
 | `blog-taxonomy.yaml` | `"blog-taxonomy"` | Blog categories and tags (SEPARATE from product taxonomy) |

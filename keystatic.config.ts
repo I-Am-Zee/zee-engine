@@ -71,6 +71,7 @@ export default config({
         'page_home_carousel',
         'page_trust_section', 
         'page_faq', 
+        'page_contact',
         'page_newsletter_confirm', 
         'page_newsletter_success'
       ],
@@ -512,7 +513,6 @@ export default config({
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
         description: fields.text({ label: 'SEO Description', multiline: true, validation: { isRequired: true } }),
         primary_color: fields.text({ label: 'Primary Brand Color (Hex)', description: 'e.g. #052b22. Used for Razorpay theme and external UI.', defaultValue: '#052b22' }),
-        contact_email: fields.text({ label: 'Contact Email', description: 'Main public contact address (e.g. hello@brand.com)', validation: { isRequired: true } }),
         site_url: fields.text({ label: 'Site URL', description: 'The public URL of the website (e.g. https://brand.com)', validation: { isRequired: true } }),
         feedback_url: fields.text({ label: 'Feedback Form URL', description: 'Tally.so or similar URL for post-delivery feedback.', validation: { isRequired: true } }),
         social: fields.array(
@@ -878,6 +878,22 @@ export default config({
           }
         )
       }
+    }),
+
+    page_contact: singleton({
+      label: 'Contact Page',
+      path: `src/content/${brandId}/pages_content/contact`,
+      format: { data: 'yaml' },
+      schema: {
+        headline: fields.text({ label: 'Headline', validation: { isRequired: true } }),
+        subheadline: fields.text({ label: 'Subheadline', multiline: true }),
+        email: fields.text({ label: 'Contact Email', validation: { isRequired: true } }),
+        support_note: fields.text({ label: 'Support Note', multiline: true }),
+        hours: fields.text({ label: 'Business Hours' }),
+        trust_signal_title: fields.text({ label: 'Trust Signal Title', defaultValue: 'Personal Touch' }),
+        trust_signal_text: fields.text({ label: 'Trust Signal Quote', multiline: true }),
+        trust_signal_author: fields.text({ label: 'Trust Signal Author', defaultValue: 'The Zee Team' }),
+      },
     }),
 
     collections_grid: singleton({

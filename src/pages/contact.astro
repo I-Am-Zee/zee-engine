@@ -1,30 +1,144 @@
 ---
 import { getEntry } from "astro:content";
+import { z } from "astro:content";
 import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
+import Section from "../components/primitives/Section.astro";
+import Icon from "../components/primitives/Icon.astro";
+import Link from "../components/primitives/Link.astro";
+
+/**
+ * Contact Page
+ * 
+ * Drives all contact information from pages_content/contact.yaml.
+ * Minimal, elegant, and trust-focused design.
+ */
 
 export const prerender = true;
 
-// Fetch Title from Content Layer
-const site = await getEntry("settings", "brand");
-const siteData = site?.data;
+// Define local schema for type safety
+const ContactSchema = z.object({
+  headline: z.string(),
+  subheadline: z.string().optional(),
+  email: z.string(),
+  support_note: z.string().optional(),
+  hours: z.string().optional(),
+  trust_signal_title: z.string().optional(),
+  trust_signal_text: z.string().optional(),
+  trust_signal_author: z.string().optional(),
+});
+
+// Fetch Brand Identity (for SEO)
+const siteSettings = await getEntry("settings", "brand");
+const siteData = siteSettings?.data;
+
+// Fetch Page Content
+const contactEntry = await getEntry("pages_content", "contact");
+const parsedContent = ContactSchema.safeParse(contactEntry?.data);
+
+const content = parsedContent.success ? parsedContent.data : {
+  headline: "Get in Touch",
+  subheadline: "We're here to help.",
+  email: "hello@zeliavance.com",
+  support_note: "For order issues, use support@zeliavance.com",
+  hours: "Mon–Sat, 10am–6pm IST",
+  trust_signal_title: "Personal Touch",
+  trust_signal_text: "We believe jewellery is personal, and so should be your experience with us.",
+  trust_signal_author: "The Zee Team",
+};
+
+const brandName = siteData?.name || "Zelia Vance";
 ---
 
-<EngineLayout pageTitle="Contact Us">
-  <main class="mx-auto max-w-3xl px-4 py-16 md:py-24 text-center">
-    <Heading as="h1" class="mb-6">Contact Us</Heading>
-    <Text variant="lead" color="muted" class="mb-8">
-      {siteData?.description}
-    </Text>
-    
-    <div class="space-y-6">
-      <div>
-        <Text variant="eyebrow" class="mb-2">Email</Text>
-        <Text variant="lead">
-          <a href={`mailto:${siteData?.contact_email}`} class="hover:underline">{siteData?.contact_email}</a>
-        </Text>
+<EngineLayout 
+  title={`${content.headline} | ${brandName}`}
+  description={siteData?.description}
+>
+  <main>
+    {/* --- Hero / Header Section --- */}
+    <Section variant="hero" class="bg-(--color-surface-muted)/30 border-b border-(--color-border-subtle)/50">
+      <div class="max-w-3xl">
+        <Heading as="h1" class="mb-4 sm:mb-6 text-4xl sm:text-5xl lg:text-6xl tracking-tight">
+          {content.headline}
+        </Heading>
+        {content.subheadline && (
+          <Text variant="lead" color="muted" class="leading-relaxed">
+            {content.subheadline}
+          </Text>
+        )}
       </div>
-    </div>
+    </Section>
+
+    {/* --- Contact Details Section --- */}
+    <Section variant="standard">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
+        {/* Left Column: Direct Contact */}
+        <div class="space-y-12">
+          {/* Email Block */}
+          <div class="group">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="p-3 rounded-full bg-(--color-surface-muted) border border-(--color-border-subtle) group-hover:border-(--color-primary)/30 transition-colors">
+                <Icon name="PhEnvelopeSimple" class="h-6 w-6 text-(--color-primary)" />
+              </div>
+              <Heading as="h3" class="text-xl uppercase tracking-wider text-[0.8rem]">Email Us</Heading>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <Link href={`mailto:${content.email}`} variant="plain" class="text-xl sm:text-2xl hover:text-(--color-primary) transition-colors">
+                  {content.email}
+                </Link>
+                {content.support_note && (
+                  <Text variant="caption" color="muted" class="mt-2 block italic opacity-80">
+                    {content.support_note}
+                  </Text>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Business Hours Block */}
+          {content.hours && (
+            <div class="group pt-8 border-t border-(--color-border-subtle)/50">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="p-3 rounded-full bg-(--color-surface-muted) border border-(--color-border-subtle)">
+                  <Icon name="PhClock" class="h-6 w-6 text-(--color-primary)" />
+                </div>
+                <Heading as="h3" class="text-xl uppercase tracking-wider text-[0.8rem]">Availability</Heading>
+              </div>
+              <Text variant="body" class="text-lg">
+                {content.hours}
+              </Text>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Experience Note / Trust Signal */}
+        <div class="bg-(--color-surface-muted)/50 p-8 lg:p-12 rounded-sm border border-(--color-border-subtle) relative overflow-hidden flex flex-col justify-center">
+          <div class="relative z-10">
+            {content.trust_signal_title && (
+              <Heading as="h4" class="mb-4 italic text-(--color-primary)/80">{content.trust_signal_title}</Heading>
+            )}
+            {content.trust_signal_text && (
+              <Text variant="body" class="text-lg leading-relaxed italic">
+                "{content.trust_signal_text}"
+              </Text>
+            )}
+            {content.trust_signal_author && (
+              <div class="mt-8 flex items-center gap-3">
+                <div class="h-[1px] w-12 bg-(--color-primary)/30"></div>
+                <Text variant="caption" color="muted" class="uppercase tracking-widest text-[0.6rem]">{content.trust_signal_author}</Text>
+              </div>
+            )}
+          </div>
+          
+          {/* Subtle decorative element */}
+          <div class="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+            <Icon name="PhStar" size={200} weight="fill" />
+          </div>
+        </div>
+      </div>
+    </Section>
   </main>
 </EngineLayout>
