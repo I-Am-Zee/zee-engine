@@ -1,0 +1,61 @@
+title: Contact
+isDraft: false
+hero:
+  heading: "Talk to Zee."
+  text: "A sizing question, a style dilemma, an order concern — we read every message."
+  isImmersive: false
+sections:
+  - layout: no-image
+    alignment: left
+    stack:
+      - discriminant: text
+        value:
+          type: eyebrow
+          content: General Inquiry
+          italic: false
+      - discriminant: heading
+        value:
+          type: h2
+          content: Got something to ask?
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: >-
+            Sizing, styling, product questions, or just a curiosity — Zee reads
+            every message personally.
+          italic: false
+      - discriminant: button
+        value:
+          label: Send a Message
+          action_type: modal
+          embed_url: PLACEHOLDER_GENERAL
+    image:
+      shape: vertical
+  - layout: no-image
+    alignment: left
+    stack:
+      - discriminant: text
+        value:
+          type: eyebrow
+          content: "Order & Support"
+          italic: false
+      - discriminant: heading
+        value:
+          type: h2
+          content: Something went wrong?
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: >-
+            A damaged piece, a delayed delivery, a return request — tell us what
+            happened and we'll sort it.
+          italic: false
+      - discriminant: button
+        value:
+          label: Report an Issue
+          action_type: modal
+          embed_url: PLACEHOLDER_SUPPORT
+    image:
+      shape: vertical

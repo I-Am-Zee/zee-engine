@@ -443,6 +443,7 @@ export default config({
                   type: fields.select({
                     label: 'Size',
                     options: [
+                      { label: 'H1 (Hero/Main)', value: 'h1' },
                       { label: 'H2 (Large)', value: 'h2' },
                       { label: 'H3 (Medium)', value: 'h3' },
                       { label: 'H4 (Small)', value: 'h4' },
@@ -470,6 +471,28 @@ export default config({
                   }),
                   content: fields.text({ label: 'Text Content', multiline: true }),
                   italic: fields.checkbox({ label: 'Italic Styling', defaultValue: false }),
+                }),
+              },
+              button: {
+                label: 'Button',
+                schema: fields.object({
+                  label: fields.text({ label: 'Button Label', description: 'Text shown on the button' }),
+                  action_type: fields.select({
+                    label: 'Action Type',
+                    options: [
+                      { label: 'Navigate to Link', value: 'link' },
+                      { label: 'Open Form Modal', value: 'modal' },
+                    ],
+                    defaultValue: 'modal',
+                  }),
+                  url: fields.url({
+                    label: 'URL',
+                    description: 'Required when Action Type is "Navigate to Link"',
+                  }),
+                  embed_url: fields.text({
+                    label: 'Tally Form ID',
+                    description: 'The form ID from your Tally.so embed URL (e.g. wMQkAb). Required when Action Type is "Open Form Modal".',
+                  }),
                 }),
               },
             }, { label: 'Content Stack' }),
@@ -905,22 +928,6 @@ export default config({
           }
         )
       }
-    }),
-
-    page_contact: singleton({
-      label: 'Contact Page',
-      path: `src/content/${brandId}/pages_content/contact`,
-      format: { data: 'yaml' },
-      schema: {
-        headline: fields.text({ label: 'Headline', validation: { isRequired: true } }),
-        subheadline: fields.text({ label: 'Subheadline', multiline: true }),
-        email: fields.text({ label: 'Contact Email', validation: { isRequired: true } }),
-        support_note: fields.text({ label: 'Support Note', multiline: true }),
-        hours: fields.text({ label: 'Business Hours' }),
-        trust_signal_title: fields.text({ label: 'Trust Signal Title', defaultValue: 'Personal Touch' }),
-        trust_signal_text: fields.text({ label: 'Trust Signal Quote', multiline: true }),
-        trust_signal_author: fields.text({ label: 'Trust Signal Author', defaultValue: 'The Zee Team' }),
-      },
     }),
 
     collections_grid: singleton({

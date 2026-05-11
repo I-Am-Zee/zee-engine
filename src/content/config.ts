@@ -262,10 +262,11 @@ const brand = defineCollection({
   schema: z.object({
     title: z.string(),
     isDraft: z.boolean().default(false),
+
     hero: z.object({
-      heading: z.string(),
-      text: z.string(),
-      image: z.string(),
+      heading: z.string().optional(),
+      text: z.string().optional(),
+      image: z.string().optional(),
       isImmersive: z.boolean().default(false),
     }).optional(),
     sections: z.array(
@@ -288,6 +289,15 @@ const brand = defineCollection({
                 type: z.string(),
                 content: z.string(),
                 italic: z.boolean(),
+              }),
+            }),
+            z.object({
+              discriminant: z.literal('button'),
+              value: z.object({
+                label: z.string(),
+                action_type: z.enum(['link', 'modal']),
+                url: z.string().url().optional(),
+                embed_url: z.string().optional(),
               }),
             }),
           ])

@@ -237,4 +237,9 @@
     font-family: inherit;
     line-height: inherit;
   }
+
+  /* ─── Alpine.js Utilities ─── */
+  [x-cloak] { 
+    display: none !important; 
+  }
 }
