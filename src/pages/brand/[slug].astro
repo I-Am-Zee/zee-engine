@@ -78,6 +78,7 @@ const alignmentMap: Record<string, string> = {
         const isImageRight = layout === 'image-right';
         const isNoImage = layout === 'no-image';
         const alignmentClass = alignmentMap[alignment] || 'text-left';
+        const imageRatio = image?.shape === 'square' ? 'square' : 'portrait';
 
         return (
           <section 
@@ -89,7 +90,7 @@ const alignmentMap: Record<string, string> = {
             {(isImageLeft || isImageRight) && image?.url && (
               <div class={`hidden md:block w-full md:w-[35%] mb-8 ${isImageLeft ? 'md:float-left md:mr-16' : 'md:float-right md:ml-16'}`}>
                 <div class="overflow-hidden rounded-sm shadow-2xl">
-                  <Image src={image.url} alt={image.alt || "Story visual"} ratio="portrait" />
+                  <Image src={image.url} alt={image.alt || "Story visual"} ratio={imageRatio} class="w-full" />
                 </div>
                 {image.caption && (
                   <Text variant="caption" color="muted" class="mt-4 italic block text-center">
@@ -130,8 +131,8 @@ const alignmentMap: Record<string, string> = {
                           <Image 
                             src={image.url} 
                             alt={image.alt || "Story visual"} 
-                            ratio="portrait" 
-                            class="max-h-[70vh]"
+                            ratio={imageRatio} 
+                            class="w-full max-h-[70vh]"
                           />
                         </div>
                         {image.caption && (
@@ -183,8 +184,8 @@ const alignmentMap: Record<string, string> = {
                     <Image 
                       src={image.url} 
                       alt={image.alt || "Story visual"} 
-                      ratio="portrait" 
-                      class="max-h-[70vh]"
+                      ratio={imageRatio} 
+                      class="w-full max-h-[70vh]"
                     />
                   </div>
                   {image.caption && (

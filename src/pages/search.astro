@@ -62,13 +62,16 @@ const searchablePosts = allPosts.map(p => ({
 const allSearchable = [...searchablePosts, ...searchableProducts];
 
 // Pre-fetch all authors for BlogCard optimization
-const authors = await getCollection('authors');
+const authorsEntry = await getEntry('authors', 'authors');
+const authorsList = authorsEntry?.data?.authors || [];
 
 // Helper to find author by name safely
 const findAuthor = (name: string) => {
-  const author = authors.find(a => a.data.name === name);
-  return author ? author.data : authors[0]?.data;
+  const found = authorsList.find((a) => a.name === name);
+  return found ?? authorsList[0];
 };
+
+const readMoreLabel = uiSearch?.data?.labels?.readMore || "Read";
 
 // Serialise filters for the inline script
 const filterLabels = labels.filters;
@@ -205,6 +208,7 @@ const filterLabels = labels.filters;
                 post={post} 
                 variant="horizontal" 
                 authorData={findAuthor(post.data.author)}
+                readMoreLabel={readMoreLabel}
                 class="h-full"
               />
             </div>

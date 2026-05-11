@@ -296,6 +296,7 @@ const brand = defineCollection({
           url: z.string().optional(),
           alt: z.string().optional(),
           caption: z.string().optional(),
+          shape: z.enum(['square', 'vertical']).optional(),
           mobileOffset: z.number().optional(),
         }).optional(),
       })
@@ -305,12 +306,20 @@ const brand = defineCollection({
 
 const authors = defineCollection({
   loader: file(`./src/content/${brandId}/authors.yaml`),
-  schema: z.object({
-    id: z.string(),
-    name: z.string(),
-    avatar: z.string(),
-    bio: z.string().optional()
-  })
+  schema: z.union([
+    z.object({
+      authors: z.array(z.object({
+        name: z.string(),
+        avatar: z.string().optional(),
+        bio: z.string().optional(),
+      }))
+    }),
+    z.array(z.object({
+      name: z.string(),
+      avatar: z.string().optional(),
+      bio: z.string().optional(),
+    })).transform(arr => ({ authors: arr }))
+  ])
 });
 
 // ═══════════════════════════════════════════════════════════════════════════

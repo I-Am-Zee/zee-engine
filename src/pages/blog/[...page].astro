@@ -31,17 +31,18 @@ const posts = page.data;
 
 // Pre-fetch all authors for performance
 const authors = await getCollection('authors');
-
-// Identify featured post (first post on page 1)
-const isFirstPage = page.currentPage === 1;
-const featuredPost = isFirstPage ? posts[0] : null;
-const remainingPosts = isFirstPage ? posts.slice(1) : posts;
+const authorsEntry = authors[0];
+const authorsList = authorsEntry?.data?.authors || [];
 
 // Helper to find author by name safely
 const findAuthor = (name: string) => {
-  const author = authors.find(a => a.data.name === name);
-  return author ? author.data : authors[0]?.data;
+  const found = authorsList.find((a) => a.name === name);
+  return found ?? authorsList[0];
 };
+
+const isFirstPage = page.currentPage === 1;
+const featuredPost = isFirstPage ? posts[0] : null;
+const remainingPosts = isFirstPage ? posts.slice(1) : posts;
 
 // Load Page Header content
 const headerEntry = await getEntry('page_headers', 'blog-index');
@@ -70,6 +71,7 @@ const uiLabels = {
 // Default sort for FilterSortBar
 const methodsEntry = await getEntry("settings", "sorting-methods");
 const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
+const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
 ---
 
 <EngineLayout pageTitle={headerData.title}>
@@ -89,6 +91,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
             post={featuredPost} 
             variant="horizontal" 
             authorData={findAuthor(featuredPost.data.author)}
+            readMoreLabel={readMoreLabel}
             class="shadow-xl! md:min-h-[400px]"
           />
         </div>
@@ -142,6 +145,7 @@ const defaultSort = methodsEntry?.data?.blog?.default_sort || 'latest';
                   post={post} 
                   variant="horizontal" 
                   authorData={findAuthor(post.data.author)}
+                  readMoreLabel={readMoreLabel}
                 />
               </div>
             ))}

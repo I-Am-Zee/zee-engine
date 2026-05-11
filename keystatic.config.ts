@@ -465,6 +465,15 @@ export default config({
               url: fields.text({ label: 'Image URL/Path' }),
               alt: fields.text({ label: 'Alt Text' }),
               caption: fields.text({ label: 'Visible Caption' }),
+              shape: fields.select({
+                label: 'Image Shape',
+                description: 'Portrait fills more vertical space alongside long text. Square works better when text is short.',
+                options: [
+                  { label: 'Portrait (Vertical)', value: 'vertical' },
+                  { label: 'Square', value: 'square' },
+                ],
+                defaultValue: 'vertical',
+              }),
               mobileOffset: fields.integer({ 
                 label: 'Image After (Block #)', 
                 defaultValue: 0 
@@ -592,15 +601,12 @@ export default config({
           }
         ),
         labels: fields.object({
-          shop: fields.text({ label: 'Shop', defaultValue: 'Shop' }),
-          allJewelry: fields.text({ label: 'All Jewelry', defaultValue: 'All Jewelry' }),
-          search: fields.text({ label: 'Search', defaultValue: 'Search' }),
-          wishlist: fields.text({ label: 'Wishlist', defaultValue: 'Wishlist' }),
-          cart: fields.text({ label: 'Cart', defaultValue: 'Cart' }),
-          account: fields.text({ label: 'Account', defaultValue: 'Account' }),
-          menu: fields.text({ label: 'Menu', defaultValue: 'Menu' }),
-          close: fields.text({ label: 'Close', defaultValue: 'Close' }),
-        }),
+          allJewelry: fields.text({
+            label: 'Shop — "All [Category]" Label',
+            description: 'The label for the link that shows all products in the shop dropdown. Change this to match what this brand sells (e.g. "All Handbags", "All Watches").',
+            defaultValue: 'All Jewelry',
+          }),
+        }, { label: 'Custom Nav Labels 🏷️' }),
       }
     }),
 
@@ -609,6 +615,14 @@ export default config({
       path: `src/content/${brandId}/settings/ui_blog`,
       format: { data: 'yaml' },
       schema: {
+        labels: fields.object({
+          filterHeading: fields.text({ label: 'Filter Section Heading', defaultValue: 'Filter By Category' }),
+          allStories: fields.text({ label: '"All Stories" Label', defaultValue: 'All Stories' }),
+          showAll: fields.text({ label: '"Show All" Button Text', defaultValue: 'Show All Stories' }),
+          itemsFound: fields.text({ label: '"found" Suffix (e.g. "12 found")', defaultValue: 'found' }),
+          showingFiltered: fields.text({ label: '"Showing filtered" Prefix', defaultValue: 'Showing filtered' }),
+          readMore: fields.text({ label: '"Read" Link Label', defaultValue: 'Read' }),
+        }, { label: 'Blog Filter Labels 🏷️' }),
         empty_states: fields.object({
           no_posts: fields.text({ label: 'No Posts Message' }),
           no_results: fields.text({ label: 'No Filter Results Message' }),

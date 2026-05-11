@@ -29,16 +29,20 @@ const brandName = brandSettings?.data?.name;
 const navigationData = navigationEntry?.data || { 
   main_menus: [], 
   support_links: [],
-  labels: {
-    shop: "Shop",
-    allJewelry: "All Jewelry",
-    search: "Search",
-    wishlist: "Wishlist",
-    cart: "Cart",
-    account: "Account",
-    menu: "Menu",
-    close: "Close"
-  }
+  labels: {}
+};
+
+// Generic nav labels are hardcoded — universal across all brands.
+// Only allJewelry is brand-specific and CMS-editable (e.g. "All Handbags" for Brand B).
+const labels = {
+  shop: 'Shop',
+  allJewelry: (navigationData as any).labels?.allJewelry ?? 'All Jewelry',
+  search: 'Search',
+  wishlist: 'Wishlist',
+  cart: 'Cart',
+  account: 'Account',
+  menu: 'Menu',
+  close: 'Close',
 };
 
 const shopCategoryItems: NavItem[] = categories.map((cat: string) => ({
@@ -50,10 +54,10 @@ const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
 
 const dynamicNavigation: NavItem[] = [
   {
-    label: navigationData.labels.shop,
+    label: labels.shop,
     href: "/shop",
     items: [
-      { label: navigationData.labels.allJewelry, href: "/shop" },
+      { label: labels.allJewelry, href: "/shop" },
       ...shopCategoryItems
     ],
   },
@@ -94,10 +98,10 @@ const dynamicNavigation: NavItem[] = [
 
     {/* Desktop Actions - Hidden on mobile */}
     <div class="hidden items-center gap-4 md:flex">
-      <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label={navigationData.labels.search}>
+      <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label={labels.search}>
         <Icon name="PhMagnifyingGlass" />
       </Button>
-      <Button as="a" href="/wishlist" type="ghost" variant="icon-only" size="sm" class="relative" aria-label={navigationData.labels.wishlist}>
+      <Button as="a" href="/wishlist" type="ghost" variant="icon-only" size="sm" class="relative" aria-label={labels.wishlist}>
         <Icon name="PhHeart" />
         <span
           x-data
@@ -114,11 +118,11 @@ const dynamicNavigation: NavItem[] = [
             variant="icon-only"
             size="sm"
             class="snipcart-customer-signin"
-            aria-label={navigationData.labels.account}
+            aria-label={labels.account}
           >
             <Icon name="PhUser" />
           </Button>
-          <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label={navigationData.labels.cart}>
+          <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label={labels.cart}>
             <Button type="ghost" variant="icon-only" size="sm" as="span">
               <Icon name="PhShoppingCart" />
             </Button>
@@ -134,11 +138,11 @@ const dynamicNavigation: NavItem[] = [
       x-data="{ mobileMenuOpen: false }"
       x-effect="mobileMenuOpen ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden')"
     >
-      <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label={navigationData.labels.search}>
+      <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" aria-label={labels.search}>
         <Icon name="PhMagnifyingGlass" />
       </Button>
       { !isAffiliate && (
-        <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label={navigationData.labels.cart}>
+        <button class="snipcart-checkout relative cursor-pointer disabled:cursor-not-allowed" aria-label={labels.cart}>
           <Button type="ghost" variant="icon-only" size="sm" as="span">
             <Icon name="PhShoppingCart" />
           </Button>
@@ -147,7 +151,7 @@ const dynamicNavigation: NavItem[] = [
       )}
 
       {/* Mobile Menu Toggle */}
-      <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = true" aria-label={navigationData.labels.menu}>
+      <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = true" aria-label={labels.menu}>
         <Icon name="PhList" />
       </Button>
 
@@ -185,7 +189,7 @@ const dynamicNavigation: NavItem[] = [
               {/* Drawer Header */}
               <div class="flex items-center justify-between border-b border-border-subtle px-4 py-4">
                 <Logo variant="full" brandName={brandName} />
-                <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false" aria-label={navigationData.labels.close}>
+                <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false" aria-label={labels.close}>
                   <Icon name="PhX" />
                 </Button>
               </div>
@@ -245,7 +249,7 @@ const dynamicNavigation: NavItem[] = [
               {/* Drawer Footer */}
               <div class="border-t border-border-subtle px-4 py-4">
                 <div class="flex items-center gap-4">
-                  <Button as="a" href="/wishlist" type="ghost" variant="icon-only" size="sm" class="relative" aria-label={navigationData.labels.wishlist}>
+                  <Button as="a" href="/wishlist" type="ghost" variant="icon-only" size="sm" class="relative" aria-label={labels.wishlist}>
                     <Icon name="PhHeart" />
                     <span
                       x-show="$store.wishlist.count > 0"
@@ -260,7 +264,7 @@ const dynamicNavigation: NavItem[] = [
                       variant="icon-only"
                       size="sm"
                       class="snipcart-customer-signin"
-                      aria-label={navigationData.labels.account}
+                      aria-label={labels.account}
                     >
                       <Icon name="PhUser" />
                     </Button>

@@ -5,7 +5,7 @@
  * Premium editorial card for blog posts.
  * Consistent with GlassProductCard design system.
  */
-import { getCollection, getEntry, type CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import Image from "../primitives/Image.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
@@ -15,29 +15,27 @@ import { calculateReadTime } from "../../scripts/utils/reading-time";
 
 interface Props {
   post: CollectionEntry<"blog">;
-  authorData?: any; // Optional: pre-fetched author data
+  authorData?: {
+    name: string;
+    avatar?: string;
+    bio?: string;
+  };
+  readMoreLabel?: string;
   variant?: "horizontal" | "vertical";
   class?: string;
 }
 
-const { post, authorData: propAuthorData, variant = "horizontal", class: className } = Astro.props;
+const { 
+  post, 
+  authorData, 
+  readMoreLabel = "Read",
+  variant = "horizontal", 
+  class: className 
+} = Astro.props;
+
 const { title, excerpt, publishDate, image, author: authorName, category } = post.data;
 
 const readTime = calculateReadTime(post.body || "");
-
-// Only fetch if not provided as a prop
-let authorData = propAuthorData;
-if (!authorData) {
-  const authors = await getCollection("authors");
-  const authorsList = authors.map(a => a.data);
-  authorData = Array.isArray(authorsList) 
-    ? (authorsList.find((a: any) => a.name === authorName) || authorsList[0])
-    : null;
-}
-
-// Fetch labels
-const uiBlog = await getEntry("settings", "ui_blog");
-const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
 
 const formattedDate = new Intl.DateTimeFormat('en-IN', {
   year: 'numeric',
@@ -145,12 +143,12 @@ const isHorizontal = variant === "horizontal";
           <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle) bg-surface-muted ring-2 ring-white ring-offset-2 ring-offset-surface-muted/10 shadow-xs">
             <Image 
               src={authorData?.avatar || "/images/authors/placeholder.jpg"} 
-              alt={authorName}
+              alt={authorData?.name || authorName}
               class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </div>
           <div class="flex flex-col">
-            <Text variant="label" weight="semibold" color="main" class="text-xs leading-none mb-1">{authorName}</Text>
+            <Text variant="label" weight="semibold" color="main" class="text-xs leading-none mb-1">{authorData?.name || authorName}</Text>
             <Text variant="metadata" class="text-[9px] opacity-50 uppercase tracking-wider">{readTime}</Text>
           </div>
         </div>

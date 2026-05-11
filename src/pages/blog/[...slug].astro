@@ -20,8 +20,8 @@ const { Content } = await render(post);
 
 // Fetch author data for bio
 const authorsEntry = await getEntry('authors', 'authors');
-const authorsList: any[] = (authorsEntry?.data as any)?.authors || [];
-const authorData = authorsList.find((a: any) => a.name === author);
+const authorsList = authorsEntry?.data?.authors || [];
+const authorData = authorsList.find((a) => a.name === author);
 
 const formattedDate = new Intl.DateTimeFormat('en-IN', {
   year: 'numeric',
