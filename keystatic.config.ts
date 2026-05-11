@@ -20,32 +20,32 @@ const shippingFiles: Record<string, any> = import.meta.glob('./src/content/*/set
 const taxonomyJson = taxonomyFiles[`./src/content/${brandId}/settings/taxonomy.yaml`]?.default || { categories: [], tags: [], badges: [] };
 const shippingJson = shippingFiles[`./src/content/${brandId}/settings/shipping.yaml`]?.default || { slabs: {} };
 
-const brandCategories = (taxonomyJson.categories || []).map((c: string) => ({
-  label: c.charAt(0).toUpperCase() + c.slice(1),
+const brandCategories = (taxonomyJson.categories || []).map((c: any) => ({
+  label: typeof c === 'string' ? c.charAt(0).toUpperCase() + c.slice(1) : String(c),
   value: c
 }));
 
-const brandTags = (taxonomyJson.tags || []).map((t: string) => ({ label: t, value: t }));
-const brandBadges = (taxonomyJson.badges || []).map((b: string) => ({ label: b, value: b }));
+const brandTags = (taxonomyJson.tags || []).map((t: any) => ({ label: String(t), value: String(t) }));
+const brandBadges = (taxonomyJson.badges || []).map((b: any) => ({ label: String(b), value: String(b) }));
 
 // ── Blog Taxonomy (Separate from product taxonomy) ─────────────────────────
 const blogTaxonomyFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/blog-taxonomy.yaml', { eager: true });
 const blogTaxonomyJson = blogTaxonomyFiles[`./src/content/${brandId}/settings/blog-taxonomy.yaml`]?.default || { categories: [], tags: [] };
 
-const blogCategories = (blogTaxonomyJson.categories || []).map((c: string) => ({
-  label: c,
-  value: c,
+const blogCategories = (blogTaxonomyJson.categories || []).map((c: any) => ({
+  label: String(c),
+  value: String(c),
 }));
-const blogTags = (blogTaxonomyJson.tags || []).map((t: string) => ({ label: t, value: t }));
+const blogTags = (blogTaxonomyJson.tags || []).map((t: any) => ({ label: String(t), value: String(t) }));
 
 // ── Legal Taxonomy (Dynamic via Glob) ───────────────────
 const legalTaxFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/legal-taxonomy.yaml', { eager: true });
 const legalTaxJson = legalTaxFiles[`./src/content/${brandId}/settings/legal-taxonomy.yaml`]?.default || { tax_classes: [] };
 
 const hsnOptions = [
-  { label: `Default — ${legalTaxJson.tax_classes[0]?.label || 'Standard'} (${(legalTaxJson.tax_classes[0]?.rate || 0) * 100}% GST)`, value: '' },
+  { label: `Default — ${legalTaxJson.tax_classes?.[0]?.label || 'Standard'} (${(legalTaxJson.tax_classes?.[0]?.rate || 0) * 100}% GST)`, value: '' },
   ...legalTaxJson.tax_classes.map((tc: any) => ({
-    label: `${tc.hsn} — ${tc.label} (${tc.rate * 100}%)`,
+    label: `${tc.hsn} — ${tc.label} (${(tc.rate || 0) * 100}%)`,
     value: tc.hsn
   }))
 ];
@@ -53,7 +53,7 @@ const hsnOptions = [
 
 // ── Shipping Slabs (Dynamic via Glob) ───────────────────
 const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, slab]: [string, any]) => ({
-  label: `${slab.name} (${slab.dimensions.length}×${slab.dimensions.breadth}×${slab.dimensions.height}cm, ${slab.weight_kg}kg)`,
+  label: `${slab.name || key} (${slab.dimensions?.length || 0}×${slab.dimensions?.breadth || 0}×${slab.dimensions?.height || 0}cm, ${slab.weight_kg || 0}kg)`,
   value: key,
 }));
 
@@ -71,7 +71,6 @@ export default config({
         'page_home_carousel',
         'page_trust_section', 
         'page_faq', 
-        'page_contact',
         'page_newsletter_confirm', 
         'page_newsletter_success'
       ],
@@ -397,12 +396,11 @@ export default config({
     }),
     brand: collection({
       label: 'Brand Stories',
-      slugField: 'slug',
+      slugField: 'title',
       path: `src/content/${brandId}/brand/*`,
       format: { data: 'yaml' },
       schema: {
-        title: fields.text({ label: 'Internal Title (Used as Page Eyebrow)' }),
-        slug: fields.text({ label: 'Slug' }),
+        title: fields.slug({ name: { label: 'Title (Used as Page Eyebrow)' } }),
         isDraft: fields.checkbox({ label: 'Draft Mode', defaultValue: false }),
         
         // --- THE HERO (SINGLETON PER PAGE) ---

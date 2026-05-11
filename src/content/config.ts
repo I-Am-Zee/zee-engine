@@ -296,7 +296,7 @@ const brand = defineCollection({
               value: z.object({
                 label: z.string(),
                 action_type: z.enum(['link', 'modal']),
-                url: z.string().url().optional(),
+                url: z.string().optional(),
                 embed_url: z.string().optional(),
               }),
             }),
