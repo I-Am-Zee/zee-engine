@@ -1,9 +1,14 @@
 ---
 /**
  * BlogCard - UI Molecule
- * 
+ *
  * Premium editorial card for blog posts.
- * Consistent with GlassProductCard design system.
+ * variant="featured" — three responsive layouts matching editorial mockup:
+ *   mobile  (<640px)  : portrait tall, full-bleed image, content overlaid
+ *   tablet  (640-1024): stacked split — image top, light content below
+ *   desktop (>1024px) : wide cinematic, full-bleed image, content overlaid
+ *
+ * variant="horizontal" | "vertical" — standard card variants.
  */
 import type { CollectionEntry } from "astro:content";
 import Image from "../primitives/Image.astro";
@@ -21,16 +26,16 @@ interface Props {
     bio?: string;
   };
   readMoreLabel?: string;
-  variant?: "horizontal" | "vertical";
+  variant?: "horizontal" | "vertical" | "featured";
   class?: string;
 }
 
-const { 
-  post, 
-  authorData, 
+const {
+  post,
+  authorData,
   readMoreLabel = "Read",
-  variant = "horizontal", 
-  class: className 
+  variant = "horizontal",
+  class: className
 } = Astro.props;
 
 const { title, excerpt, publishDate, image, author: authorName, category } = post.data;
@@ -44,121 +49,310 @@ const formattedDate = new Intl.DateTimeFormat('en-IN', {
 }).format(publishDate);
 
 const postUrl = `/blog/${post.id.replace(/\.[^/.]+$/, "")}`;
+const isFeatured = variant === "featured";
 const isHorizontal = variant === "horizontal";
 ---
 
-<article 
-  class:list={[
-    "group relative flex motion-soft",
-    "bg-surface rounded-2xl h-full",
-    "shadow-xs",
-    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1",
-    className
-  ]}
->
-  {/* The clickable surface MUST be top-level to cover everything */}
-  <a href={postUrl} class="absolute inset-0 z-30 focus-glow rounded-2xl" aria-label={`Read more about ${title}`}></a>
- 
-  {/* CONTENT LAYER - Unified layout wrapper */}
-  <div class:list={[
-    "relative z-10 flex-1 flex rounded-2xl overflow-hidden motion-soft",
-    "border border-(--color-border-subtle)/40",
-    "group-hover:border-(--color-border-subtle)/80",
-    isHorizontal ? "flex-col md:flex-row" : "flex-col"
-  ]}>
-    
-    {/* 1. IMAGE SECTION */}
-    <div class:list={[
-      "relative overflow-hidden shrink-0 bg-surface-muted self-stretch",
-      isHorizontal 
-        ? "w-full md:w-[45%] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none min-h-[280px]" 
-        : "w-full aspect-[16/10] rounded-t-2xl"
-    ]}>
-      {/* Subtle overlay to enhance image contrast on light modes */}
-      <div class="absolute inset-0 z-10 pointer-events-none bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      
-      <div class="absolute inset-0">
-        <Image 
-          src={image} 
-          alt={title}
-          class="h-full w-full object-cover motion-soft group-hover:scale-[1.04]"
-        />
-      </div>
-      
-      {/* Category Overlay for Vertical or Mobile Horizontal */}
+{isFeatured ? (
+  /* ─────────────────────────────────────────────────────────────
+     FEATURED VARIANT
+     - Mobile  : portrait, image fills card, text overlaid
+     - Tablet  : stacked (image top, light content below)
+     - Desktop : wide cinematic, image fills card, text overlaid
+  ───────────────────────────────────────────────────────────── */
+  <article
+    class:list={[
+      "group relative overflow-hidden rounded-2xl motion-soft bg-(--color-surface)",
+      "shadow-xs hover:shadow-sm hover:-translate-y-1",
+      "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
+      /* Mobile: portrait, full-overlay mode */
+      "h-[80svh] min-h-[480px] max-h-[720px]",
+      /* Tablet: auto height, stacked light card */
+      "sm:h-auto sm:flex sm:flex-col sm:hover:-translate-y-0.5",
+      /* Desktop: wide cinematic, back to full-overlay */
+      "lg:block lg:h-[58vh] lg:min-h-[560px] lg:max-h-[680px]",
+      "lg:bg-transparent lg:shadow-none lg:border-none lg:hover:translate-y-0",
+      className
+    ]}
+  >
+    {/* Clickable surface */}
+    <a href={postUrl} class="absolute inset-0 z-30 focus-glow rounded-2xl" aria-label={`Read: ${title}`}></a>
+
+    {/* ── IMAGE LAYER ──────────────────────────────────────────
+        Mobile+Desktop : absolute inset-0 (fills entire card)
+        Tablet         : relative, aspect-[16/9] (natural flow)
+    ──────────────────────────────────────────────────────── */}
+    <div
+      class="overflow-hidden z-0
+             absolute inset-0
+             sm:relative sm:inset-auto sm:w-full sm:aspect-[16/9] sm:max-h-[380px]
+             lg:absolute lg:inset-0 lg:w-auto lg:h-auto lg:max-h-none lg:aspect-auto"
+    >
+      <Image
+        src={image}
+        alt={title}
+        class="h-full w-full object-cover motion-soft group-hover:scale-[1.03]"
+      />
+
+      {/* Gradient scrim — visible on desktop, hidden on tablet. Mobile uses glass backdrop instead. */}
+      <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/5 hidden lg:block" />
+
+      {/* Mobile+Tablet Top Left Badge */}
       {category && (
-        <div class:list={[
-          "absolute z-10 top-5 left-5",
-          isHorizontal ? "md:hidden" : ""
-        ]}>
-          <Badge intent="surface" size="xs" class="shadow-xs backdrop-blur-md bg-white/80! border-white/40!">{category}</Badge>
+        <div class="absolute top-5 left-5 z-10 lg:hidden">
+          <Badge intent="accent" size="xs">
+            {category}
+          </Badge>
         </div>
       )}
+    </div>
 
-      {/* Floating Read Post Indicator */}
-      <div class="absolute bottom-5 right-5 z-20 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 hidden md:block">
-        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-primary shadow-xl border border-white/50">
-          <Icon name="PhArrowRight" class="h-5 w-5" />
+    {/* ── OVERLAY CONTENT (Mobile + Desktop) ───────────────────
+        Hidden on tablet via sm:hidden, re-shown on lg:flex
+    ──────────────────────────────────────────────────────── */}
+    <div
+      class:list={[
+        "absolute inset-0 z-10 flex flex-col justify-end sm:hidden lg:flex lg:p-10",
+        "lg:justify-between"
+      ]}
+    >
+      {/* Top row: Desktop Only category + date */}
+      <div class="hidden lg:flex items-center justify-between gap-3">
+        {category && (
+          <Badge intent="inverse" class="px-3 py-1.5 font-bold tracking-[0.2em]">
+            {category}
+          </Badge>
+        )}
+        <Badge 
+          intent="inverse" 
+          class="ml-auto px-3 py-1.5 font-bold tracking-[0.18em]"
+        >
+          {formattedDate}
+        </Badge>
+      </div>
+
+      {/* Bottom content block — Glass backdrop on mobile */}
+      <div
+        class:list={[
+          "motion-soft p-6 pb-8 bg-black/40 backdrop-blur-lg lg:p-0 lg:bg-transparent lg:backdrop-blur-none",
+          "translate-y-1.5 group-hover:translate-y-0"
+        ]}
+      >
+        {/* Eyebrow: Featured Story (Mobile Only) */}
+        <div class="mb-3 lg:hidden">
+          <Text variant="eyebrow" color="inverse" class="opacity-80">
+            Featured Story
+          </Text>
+        </div>
+
+        <Heading
+          as="h2"
+          size="h3"
+          color="inverse"
+          class="mb-4 drop-shadow-sm"
+        >
+          {title}
+        </Heading>
+
+        <Text
+          variant="paragraph"
+          color="inverse"
+          class="mb-6 opacity-80 line-clamp-2"
+        >
+          {excerpt}
+        </Text>
+
+        {/* Full width divider below title and excerpt */}
+        <div class="h-px w-full bg-white/20 mb-6" />
+
+        {/* Author row */}
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-white/40 shadow-sm bg-white/10">
+            <Image
+              src={authorData?.avatar || "/images/authors/placeholder.jpg"}
+              alt={authorData?.name || authorName}
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <div class="flex flex-col">
+            <Text variant="label" weight="semibold" color="inverse" class="mb-1">
+              {authorData?.name || authorName}
+            </Text>
+            <div class="flex items-center gap-1.5 opacity-60">
+              <Text variant="metadata" color="inverse">
+                {readTime}
+              </Text>
+              <span class="h-0.5 w-0.5 rounded-full bg-white/40"></span>
+              <Text variant="metadata" color="inverse">
+                {formattedDate}
+              </Text>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    {/* 2. CONTENT SECTION */}
-    <div class:list={[
-      "flex flex-1 flex-col p-6 sm:p-8 lg:p-10",
-      isHorizontal 
-        ? "rounded-b-2xl md:rounded-r-2xl md:rounded-bl-none" 
-        : "rounded-b-2xl"
-    ]}>
-      {/* Header Info */}
-      <div class="flex items-center justify-between mb-4">
-        {isHorizontal && category && (
-          <div class="hidden md:block">
-            <Badge intent="surface" size="xs" class="bg-surface-muted! border-border-subtle/50!">{category}</Badge>
-          </div>
-        )}
-        <Text variant="metadata" color="muted" class="text-[10px] font-bold tracking-[0.2em] uppercase opacity-60">
-          {formattedDate}
-        </Text>
-      </div>
+    {/* ── TABLET CONTENT (in-flow, below image) ─────────────────
+        Hidden on mobile, shown sm → hidden lg
+    ──────────────────────────────────────────────────────── */}
+    <div class="hidden sm:flex lg:hidden flex-col p-7 pb-8">
 
-      {/* Title */}
-      <Heading 
-        as="h3" 
-        size={isHorizontal ? "h3" : "h4"} 
-        class="mb-4 transition-colors duration-500 group-hover:text-primary leading-tight line-clamp-2"
+      <Heading
+        as="h2"
+        size="h2"
+        class="mb-5 leading-[1.2] line-clamp-3 group-hover:text-(--color-primary) transition-colors duration-500"
       >
         {title}
       </Heading>
 
-      {/* Excerpt */}
-      <Text variant="paragraph" color="muted" class="mb-8 line-clamp-3 text-sm leading-relaxed max-w-prose opacity-80 group-hover:opacity-100 transition-opacity">
-        {excerpt}
-      </Text>
-
-      {/* Footer Info: Author & Read Time */}
-      <div class="mt-auto flex items-center justify-between pt-6 border-t border-(--color-border-subtle)/30">
-        <div class="flex items-center gap-3">
-          {/* Author Avatar with Ring */}
-          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle) bg-surface-muted ring-2 ring-white ring-offset-2 ring-offset-surface-muted/10 shadow-xs">
-            <Image 
-              src={authorData?.avatar || "/images/authors/placeholder.jpg"} 
+      {/* Metadata row: WORDS BY · Date · Read time */}
+      <div class="flex items-center gap-2 flex-wrap mt-auto pt-5 border-t border-(--color-border-subtle)/30">
+        <Text variant="metadata" class="tracking-[0.2em] opacity-60">
+          Words by
+        </Text>
+        <div class="flex items-center gap-2">
+          <div class="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle)">
+            <Image
+              src={authorData?.avatar || "/images/authors/placeholder.jpg"}
               alt={authorData?.name || authorName}
-              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              class="h-full w-full object-cover"
             />
           </div>
-          <div class="flex flex-col">
-            <Text variant="label" weight="semibold" color="main" class="text-xs leading-none mb-1">{authorData?.name || authorName}</Text>
-            <Text variant="metadata" class="text-[9px] opacity-50 uppercase tracking-wider">{readTime}</Text>
-          </div>
+          <Text variant="label" weight="semibold" class="text-xs">
+            {authorData?.name || authorName}
+          </Text>
         </div>
-
-        {/* Mobile Read More Link */}
-        <div class="md:hidden flex items-center gap-1 text-primary">
-          <Text variant="label" weight="bold" class="text-[10px] uppercase tracking-widest">{readMoreLabel}</Text>
-          <Icon name="PhArrowRight" class="h-3 w-3" />
+        <span class="text-(--color-border-subtle) opacity-50 select-none">·</span>
+        <Text variant="metadata" class="tracking-[0.12em] opacity-60">
+          {formattedDate}
+        </Text>
+        <span class="text-(--color-border-subtle) opacity-50 select-none">·</span>
+        <div class="flex items-center gap-1 text-(--color-text-muted) opacity-60">
+          <Icon name="PhClock" class="h-3 w-3 shrink-0" />
+          <Text variant="metadata" class="tracking-[0.12em]">
+            {readTime}
+          </Text>
         </div>
       </div>
     </div>
-  </div>
-</article>
+
+  </article>
+
+) : (
+  /* ─────────────────────────────────────────────────────────────
+     STANDARD VARIANTS: horizontal | vertical
+  ───────────────────────────────────────────────────────────── */
+  <article
+    class:list={[
+      "group relative flex motion-soft",
+      "bg-(--color-surface) rounded-2xl h-full",
+      "shadow-xs hover:shadow-sm hover:-translate-y-1",
+      className
+    ]}
+  >
+    {/* Clickable surface */}
+    <a href={postUrl} class="absolute inset-0 z-30 focus-glow rounded-2xl" aria-label={`Read more about ${title}`}></a>
+
+    {/* Layout wrapper */}
+    <div
+      class:list={[
+        "relative z-10 flex-1 flex rounded-2xl overflow-hidden motion-soft",
+        "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
+        isHorizontal ? "flex-col md:flex-row" : "flex-col"
+      ]}
+    >
+
+      {/* 1. IMAGE SECTION */}
+      <div
+        class:list={[
+          "relative overflow-hidden shrink-0 bg-(--color-surface-muted) self-stretch",
+          isHorizontal
+            ? "w-full md:w-[42%] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none min-h-[220px] md:aspect-[16/10]"
+            : "w-full aspect-[16/10] rounded-t-2xl"
+        ]}
+      >
+        <div class="absolute inset-0 z-10 pointer-events-none bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div class="absolute inset-0">
+          <Image src={image} alt={title} class="h-full w-full object-cover motion-soft group-hover:scale-[1.04]" />
+        </div>
+
+        {category && (
+          <div
+            class:list={[
+              "absolute z-10 top-4 left-4 sm:top-5 sm:left-5",
+              isHorizontal ? "md:hidden" : ""
+            ]}
+          >
+            <Badge intent="surface" size="xs" class="shadow-xs backdrop-blur-md font-bold">{category}</Badge>
+          </div>
+        )}
+
+        <div class="absolute bottom-5 right-5 z-20 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 hidden md:block">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-(--color-primary) shadow-sm border border-white/50">
+            <Icon name="PhArrowRight" class="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* 2. CONTENT SECTION */}
+      <div
+        class:list={[
+          "flex flex-1 flex-col p-5 sm:p-7 lg:p-10",
+          isHorizontal ? "rounded-b-2xl md:rounded-r-2xl md:rounded-bl-none" : "rounded-b-2xl"
+        ]}
+      >
+        <div class="flex items-center justify-between mb-4">
+          {isHorizontal && category && (
+            <div class="hidden md:block">
+              <Badge intent="surface" size="xs" class="bg-(--color-surface-muted) border-(--color-border-subtle)/50 font-bold">{category}</Badge>
+            </div>
+          )}
+          <Text variant="metadata" color="muted" class="text-[10px] font-bold tracking-[0.2em] uppercase opacity-60">
+            {formattedDate}
+          </Text>
+        </div>
+
+        <Heading as="h3" size={isHorizontal ? "h3" : "h4"} class="mb-4 transition-colors duration-500 group-hover:text-(--color-primary) leading-tight line-clamp-2">
+          {title}
+        </Heading>
+
+        <Text
+          variant="paragraph"
+          color="muted"
+          class:list={[
+            "mb-8 text-sm leading-relaxed max-w-prose opacity-80 group-hover:opacity-100 transition-opacity",
+            isHorizontal ? "line-clamp-3" : "line-clamp-2"
+          ]}
+        >
+          {excerpt}
+        </Text>
+
+        {/* Footer: author + read time */}
+        <div class="mt-auto flex items-center justify-between pt-6 border-t border-(--color-border-subtle)/30">
+          <div class="flex items-center gap-3">
+            {/* Avatar — static, no hover scale */}
+            <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-(--color-border-subtle) bg-(--color-surface-muted) ring-2 ring-white ring-offset-2 ring-offset-(--color-surface-muted)/10 shadow-xs">
+              <Image
+                src={authorData?.avatar || "/images/authors/placeholder.jpg"}
+                alt={authorData?.name || authorName}
+                class="h-full w-full object-cover"
+              />
+            </div>
+            <div class="flex flex-col">
+              <Text variant="label" weight="semibold" color="main" class="text-xs leading-none mb-1">
+                {authorData?.name || authorName}
+              </Text>
+              <Text variant="metadata" class="text-[9px] opacity-50 uppercase tracking-wider">{readTime}</Text>
+            </div>
+          </div>
+
+          <div class="md:hidden flex items-center gap-1 text-(--color-primary)">
+            <Text variant="label" weight="bold" class="text-[10px] uppercase tracking-widest">{readMoreLabel}</Text>
+            <Icon name="PhArrowRight" class="h-3 w-3" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+)}

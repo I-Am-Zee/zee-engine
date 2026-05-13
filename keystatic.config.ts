@@ -649,6 +649,7 @@ export default config({
       path: `src/content/${brandId}/settings/ui_blog`,
       format: { data: 'yaml' },
       schema: {
+        featured_post: fields.relationship({ label: 'Featured Post', collection: 'blog' }),
         labels: fields.object({
           filterHeading: fields.text({ label: 'Filter Section Heading', defaultValue: 'Filter By Category' }),
           allStories: fields.text({ label: '"All Stories" Label', defaultValue: 'All Stories' }),

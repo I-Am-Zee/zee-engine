@@ -39,9 +39,29 @@ const findAuthor = (slug: string) => {
   return authorsMap[slug] ?? defaultAuthor;
 };
 
+// Load Centralized UI Content
+const uiBlog = await getEntry("settings", "ui_blog");
+
 const isFirstPage = page.currentPage === 1;
-const featuredPost = isFirstPage ? posts[0] : null;
-const remainingPosts = isFirstPage ? posts.slice(1) : posts;
+
+// Resolve Featured Post from CMS or fallback to newest
+let featuredPost = null;
+if (isFirstPage) {
+  const featuredPostId = uiBlog?.data?.featured_post;
+  if (featuredPostId) {
+    const allBlogPosts = await getCollection("blog");
+    featuredPost = allBlogPosts.find(p => p.id === featuredPostId);
+  }
+  // Fallback to newest if none selected or found
+  if (!featuredPost) {
+    featuredPost = posts[0];
+  }
+}
+
+// Ensure the featured post doesn't appear twice if it's in the current page results
+const remainingPosts = isFirstPage 
+  ? posts.filter(p => p.id !== featuredPost?.id)
+  : posts;
 
 // Load Page Header content
 const headerEntry = await getEntry('page_headers', 'blog-index');
@@ -49,9 +69,6 @@ const headerData = headerEntry?.data || {
   title: "The Journal",
   subtitle: "Stories, style guides, and care tips.",
 };
-
-// Load Centralized UI Content
-const uiBlog = await getEntry("settings", "ui_blog");
 
 const emptyState = uiBlog?.data?.empty_states || {
   no_posts: "Our stories are being penned. Coming soon.",
@@ -76,22 +93,20 @@ const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
 <EngineLayout pageTitle={headerData.title}>
   <main x-data={`blogDiscovery('${defaultSort}')`}>
     {/* Section 1: Header & Featured */}
-    <Section as="div" variant="standard" class="pb-0!">
+    <Section variant="standard">
       <PageHeader 
         title={headerData.title} 
         subtitle={headerData.subtitle}
         align={headerData.align || "left"}
-        class="mb-12"
       />
 
       {isFirstPage && featuredPost && (
-        <div class="mb-20">
+        <div class="mt-12 md:mt-16">
           <BlogCard 
             post={featuredPost} 
-            variant="horizontal" 
+            variant="featured" 
             authorData={findAuthor(featuredPost.data.author)}
             readMoreLabel={readMoreLabel}
-            class="shadow-xl! md:min-h-[400px]"
           />
         </div>
       )}
@@ -113,7 +128,7 @@ const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
     </Section>
 
     {/* Section 3: Sidebar & Grid */}
-    <Section variant="standard" class="pt-8!">
+    <Section variant="standard">
       <div class="flex flex-col lg:flex-row gap-12">
         {/* Category Sidebar */}
         <BlogCategoryFilter 
@@ -124,7 +139,7 @@ const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
         {/* Main Grid */}
         <div class="flex-1">
           <div 
-            class="grid gap-8 md:grid-cols-1" 
+            class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-1" 
             x-ref="grid"
           >
             {remainingPosts.map((post) => (
