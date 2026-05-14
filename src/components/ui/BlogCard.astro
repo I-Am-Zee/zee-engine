@@ -65,8 +65,12 @@ const isHorizontal = variant === "horizontal";
       "group relative overflow-hidden rounded-2xl motion-soft bg-(--color-surface)",
       "shadow-xs hover:shadow-sm hover:-translate-y-1",
       "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
-      /* Unified Layout: portrait, full-overlay mode with bottom glass content */
+      /* Responsive Layout: 
+         Mobile/Tablet: Portrait Overlay (full width)
+         Desktop (lg): Cinematic Billboard with Floating Glass Panel
+      */
       "h-[80svh] min-h-[520px] max-h-[800px]",
+      "lg:h-[58vh] lg:min-h-[560px] lg:max-h-[680px]",
       className
     ]}
   >
@@ -74,7 +78,7 @@ const isHorizontal = variant === "horizontal";
     <a href={postUrl} class="absolute inset-0 z-30 focus-glow rounded-2xl" aria-label={`Read: ${title}`}></a>
 
     {/* ── IMAGE LAYER ──────────────────────────────────────────
-        Fills entire card across all breakpoints.
+        Fills entire card.
     ──────────────────────────────────────────────────────── */}
     <div class="overflow-hidden z-0 absolute inset-0">
       <Image
@@ -83,12 +87,15 @@ const isHorizontal = variant === "horizontal";
         class="h-full w-full object-cover motion-soft group-hover:scale-[1.03]"
       />
 
-      {/* Subtle top-down scrim for light images */}
+      {/* Subtle top-down scrim */}
       <div class="absolute inset-0 bg-linear-to-b from-black/20 via-transparent to-transparent" />
+      
+      {/* Desktop side scrim — helps blend the floating panel if the image is too busy on the left */}
+      <div class="absolute inset-y-0 left-0 w-1/3 bg-linear-to-r from-black/20 to-transparent hidden lg:block" />
 
-      {/* Top Left Category Badge (All breakpoints) */}
+      {/* Top Left Category Badge */}
       {category && (
-        <div class="absolute top-6 left-6 z-10">
+        <div class="absolute top-6 left-6 z-10 lg:top-10 lg:left-10">
           <Badge intent="accent" size="xs" class="shadow-sm">
             {category}
           </Badge>
@@ -96,14 +103,21 @@ const isHorizontal = variant === "horizontal";
       )}
     </div>
 
-    {/* ── OVERLAY CONTENT (Unified Look) ───────────────────────
-        Bottom-anchored glass box for all breakpoints.
+    {/* ── OVERLAY CONTENT (Floating Glass Panel Concept) ────────
+        Bottom-anchored for mobile/tablet.
+        Floating bottom-left panel for desktop (lg).
     ──────────────────────────────────────────────────────── */}
-    <div class="absolute inset-0 z-10 flex flex-col justify-end">
-      {/* Bottom content block — Glass backdrop */}
+    <div class="absolute inset-0 z-10 flex flex-col justify-end lg:p-10">
+      {/* 
+          Glass content block:
+          - Mobile/Tablet: Full width at bottom
+          - Desktop (lg): Floating card, max-width, rounded, offset
+      */}
       <div
         class:list={[
-          "motion-soft p-6 pb-8 md:p-10 md:pb-12 bg-black/40 backdrop-blur-lg",
+          "motion-soft bg-black/40 backdrop-blur-lg",
+          "p-6 pb-8 md:p-10 md:pb-12",
+          "lg:max-w-2xl lg:rounded-3xl lg:border lg:border-white/10 lg:shadow-2xl",
           "translate-y-1.5 group-hover:translate-y-0"
         ]}
       >
@@ -118,7 +132,7 @@ const isHorizontal = variant === "horizontal";
           as="h2"
           size="h3"
           color="inverse"
-          class="mb-4 drop-shadow-sm max-w-4xl"
+          class="mb-4 drop-shadow-sm leading-tight lg:text-3xl"
         >
           {title}
         </Heading>
@@ -126,7 +140,7 @@ const isHorizontal = variant === "horizontal";
         <Text
           variant="paragraph"
           color="inverse"
-          class="mb-8 opacity-80 line-clamp-3 md:line-clamp-none max-w-3xl"
+          class="mb-8 opacity-80 line-clamp-3 md:line-clamp-none"
         >
           {excerpt}
         </Text>
