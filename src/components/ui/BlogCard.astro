@@ -65,13 +65,8 @@ const isHorizontal = variant === "horizontal";
       "group relative overflow-hidden rounded-2xl motion-soft bg-(--color-surface)",
       "shadow-xs hover:shadow-sm hover:-translate-y-1",
       "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
-      /* Mobile: portrait, full-overlay mode */
-      "h-[80svh] min-h-[480px] max-h-[720px]",
-      /* Tablet: auto height, stacked light card */
-      "sm:h-auto sm:flex sm:flex-col sm:hover:-translate-y-0.5",
-      /* Desktop: wide cinematic, back to full-overlay */
-      "lg:block lg:h-[58vh] lg:min-h-[560px] lg:max-h-[680px]",
-      "lg:bg-transparent lg:shadow-none lg:border-none lg:hover:translate-y-0",
+      /* Unified Layout: portrait, full-overlay mode with bottom glass content */
+      "h-[80svh] min-h-[520px] max-h-[800px]",
       className
     ]}
   >
@@ -79,68 +74,42 @@ const isHorizontal = variant === "horizontal";
     <a href={postUrl} class="absolute inset-0 z-30 focus-glow rounded-2xl" aria-label={`Read: ${title}`}></a>
 
     {/* ── IMAGE LAYER ──────────────────────────────────────────
-        Mobile+Desktop : absolute inset-0 (fills entire card)
-        Tablet         : relative, aspect-[16/9] (natural flow)
+        Fills entire card across all breakpoints.
     ──────────────────────────────────────────────────────── */}
-    <div
-      class="overflow-hidden z-0
-             absolute inset-0
-             sm:relative sm:inset-auto sm:w-full sm:aspect-[16/9] sm:max-h-[380px]
-             lg:absolute lg:inset-0 lg:w-auto lg:h-auto lg:max-h-none lg:aspect-auto"
-    >
+    <div class="overflow-hidden z-0 absolute inset-0">
       <Image
         src={image}
         alt={title}
         class="h-full w-full object-cover motion-soft group-hover:scale-[1.03]"
       />
 
-      {/* Gradient scrim — visible on desktop, hidden on tablet. Mobile uses glass backdrop instead. */}
-      <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/5 hidden lg:block" />
+      {/* Subtle top-down scrim for light images */}
+      <div class="absolute inset-0 bg-linear-to-b from-black/20 via-transparent to-transparent" />
 
-      {/* Mobile+Tablet Top Left Badge */}
+      {/* Top Left Category Badge (All breakpoints) */}
       {category && (
-        <div class="absolute top-5 left-5 z-10 lg:hidden">
-          <Badge intent="accent" size="xs">
+        <div class="absolute top-6 left-6 z-10">
+          <Badge intent="accent" size="xs" class="shadow-sm">
             {category}
           </Badge>
         </div>
       )}
     </div>
 
-    {/* ── OVERLAY CONTENT (Mobile + Desktop) ───────────────────
-        Hidden on tablet via sm:hidden, re-shown on lg:flex
+    {/* ── OVERLAY CONTENT (Unified Look) ───────────────────────
+        Bottom-anchored glass box for all breakpoints.
     ──────────────────────────────────────────────────────── */}
-    <div
-      class:list={[
-        "absolute inset-0 z-10 flex flex-col justify-end sm:hidden lg:flex lg:p-10",
-        "lg:justify-between"
-      ]}
-    >
-      {/* Top row: Desktop Only category + date */}
-      <div class="hidden lg:flex items-center justify-between gap-3">
-        {category && (
-          <Badge intent="inverse" class="px-3 py-1.5 font-bold tracking-[0.2em]">
-            {category}
-          </Badge>
-        )}
-        <Badge 
-          intent="inverse" 
-          class="ml-auto px-3 py-1.5 font-bold tracking-[0.18em]"
-        >
-          {formattedDate}
-        </Badge>
-      </div>
-
-      {/* Bottom content block — Glass backdrop on mobile */}
+    <div class="absolute inset-0 z-10 flex flex-col justify-end">
+      {/* Bottom content block — Glass backdrop */}
       <div
         class:list={[
-          "motion-soft p-6 pb-8 bg-black/40 backdrop-blur-lg lg:p-0 lg:bg-transparent lg:backdrop-blur-none",
+          "motion-soft p-6 pb-8 md:p-10 md:pb-12 bg-black/40 backdrop-blur-lg",
           "translate-y-1.5 group-hover:translate-y-0"
         ]}
       >
-        {/* Eyebrow: Featured Story (Mobile Only) */}
-        <div class="mb-3 lg:hidden">
-          <Text variant="eyebrow" color="inverse" class="opacity-80">
+        {/* Eyebrow: Featured Story */}
+        <div class="mb-4">
+          <Text variant="eyebrow" color="inverse" class="opacity-90">
             Featured Story
           </Text>
         </div>
@@ -149,7 +118,7 @@ const isHorizontal = variant === "horizontal";
           as="h2"
           size="h3"
           color="inverse"
-          class="mb-4 drop-shadow-sm"
+          class="mb-4 drop-shadow-sm max-w-4xl"
         >
           {title}
         </Heading>
@@ -157,17 +126,17 @@ const isHorizontal = variant === "horizontal";
         <Text
           variant="paragraph"
           color="inverse"
-          class="mb-6 opacity-80 line-clamp-2"
+          class="mb-8 opacity-80 line-clamp-3 md:line-clamp-none max-w-3xl"
         >
           {excerpt}
         </Text>
 
         {/* Full width divider below title and excerpt */}
-        <div class="h-px w-full bg-white/20 mb-6" />
+        <div class="h-px w-full bg-white/20 mb-8" />
 
         {/* Author row */}
-        <div class="flex items-center gap-3">
-          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-white/40 shadow-sm bg-white/10">
+        <div class="flex items-center gap-4">
+          <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/40 shadow-sm bg-white/10">
             <Image
               src={authorData?.avatar || "/images/authors/placeholder.jpg"}
               alt={authorData?.name || authorName}
@@ -175,14 +144,14 @@ const isHorizontal = variant === "horizontal";
             />
           </div>
           <div class="flex flex-col">
-            <Text variant="label" weight="semibold" color="inverse" class="mb-1">
+            <Text variant="label" weight="semibold" color="inverse" class="mb-1 text-base">
               {authorData?.name || authorName}
             </Text>
-            <div class="flex items-center gap-1.5 opacity-60">
+            <div class="flex items-center gap-2 opacity-70">
               <Text variant="metadata" color="inverse">
                 {readTime}
               </Text>
-              <span class="h-0.5 w-0.5 rounded-full bg-white/40"></span>
+              <span class="h-1 w-1 rounded-full bg-white/40"></span>
               <Text variant="metadata" color="inverse">
                 {formattedDate}
               </Text>
@@ -192,10 +161,10 @@ const isHorizontal = variant === "horizontal";
       </div>
     </div>
 
-    {/* ── TABLET CONTENT (in-flow, below image) ─────────────────
-        Hidden on mobile, shown sm → hidden lg
+    {/* ── TABLET CONTENT (DEPRECATED) ──────────────────────────
+        Hidden across all breakpoints as overlay look is unified.
     ──────────────────────────────────────────────────────── */}
-    <div class="hidden sm:flex lg:hidden flex-col p-7 pb-8">
+    <div class="hidden flex-col p-7 pb-8">
 
       <Heading
         as="h2"
