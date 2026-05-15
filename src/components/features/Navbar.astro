@@ -71,7 +71,10 @@ const dynamicNavigation: NavItem[] = [
   x-data={`{ scrolled: false, isTransparent: ${isTransparent}, mobileMenuOpen: false }`}
   x-init="scrolled = (window.pageYOffset > (window.innerHeight - 80))"
   @scroll.window="scrolled = (window.pageYOffset > (window.innerHeight - 80))"
-  class="relative z-[100]"
+  class:list={[
+    "z-[100]",
+    isTransparent ? "relative" : "contents"
+  ]}
 >
   {/* ── Announcement Bar: Always static at the top ── */}
   <AnnouncementBar announcement={announcement_bar} threshold={threshold} />
