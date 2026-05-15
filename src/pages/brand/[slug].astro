@@ -79,7 +79,7 @@ const alignmentMap: Record<string, string> = {
             {/* ── MAGAZINE IMAGE (FLOAT) ── */}
             {(isImageLeft || isImageRight) && image?.url && (
               <div class={`hidden md:block w-full md:w-[35%] mb-8 ${isImageLeft ? 'md:float-left md:mr-16' : 'md:float-right md:ml-16'}`}>
-                <div class="overflow-hidden rounded-sm shadow-2xl">
+                <div class="overflow-hidden rounded-xs shadow-2xl">
                   <Image src={image.url} alt={image.alt || "Story visual"} ratio={imageRatio} class="w-full" />
                 </div>
                 {image.caption && (
@@ -117,7 +117,7 @@ const alignmentMap: Record<string, string> = {
                   <>
                     {showImageHere && (
                       <div class="block md:hidden w-full mb-12 mt-4 pt-8">
-                        <div class="overflow-hidden rounded-sm shadow-2xl">
+                        <div class="overflow-hidden rounded-xs shadow-2xl">
                           <Image 
                             src={image.url} 
                             alt={image.alt || "Story visual"} 
@@ -233,7 +233,7 @@ const alignmentMap: Record<string, string> = {
               {/* Handle case where image is appended to the end of the mobile stack */}
               {!isNoImage && image?.url && Number(image?.mobileOffset || 0) >= stack.length && (
                 <div class="block md:hidden w-full mb-12 mt-12 pt-8">
-                  <div class="overflow-hidden rounded-sm shadow-2xl">
+                  <div class="overflow-hidden rounded-xs shadow-2xl">
                     <Image 
                       src={image.url} 
                       alt={image.alt || "Story visual"} 

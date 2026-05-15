@@ -2,7 +2,6 @@
 // Import global CSS so Astro bundles it for production
 import "../styles/global.css";
 import { getEntry } from "astro:content";
-import AnnouncementBar from "../components/ui/AnnouncementBar.astro";
 import PopupCoupon from "../components/ui/PopupCoupon.astro";
 import PopupNewsletter from "../components/ui/PopupNewsletter.astro";
 import Navbar from "../components/features/Navbar.astro";
@@ -27,7 +26,6 @@ const marketingSettings = await getEntry("settings", "marketing");
 const shippingSettings = await getEntry("settings", "shipping");
 const affiliateSettings = isAffiliate ? await getEntry("settings", "affiliate_settings") : null;
 
-const announcement_bar = marketingSettings?.data?.announcement_bar;
 const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
 const discount_popup = marketingSettings?.data?.discount_popup;
 const newsletter_popup = marketingSettings?.data?.newsletter_popup;

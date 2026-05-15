@@ -63,7 +63,7 @@ const isHorizontal = variant === "horizontal";
   <article
     class:list={[
       "group relative overflow-hidden rounded-2xl motion-soft bg-(--color-surface)",
-      "shadow-xs hover:shadow-sm hover:-translate-y-1",
+      "shadow-xs hover:shadow-xs hover:-translate-y-1",
       "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
       /* Responsive Layout: 
          Mobile/Tablet: Portrait Overlay (full width)
@@ -96,7 +96,7 @@ const isHorizontal = variant === "horizontal";
       {/* Top Left Category Badge */}
       {category && (
         <div class="absolute top-6 left-6 z-10 lg:top-10 lg:left-10">
-          <Badge intent="accent" size="xs" class="shadow-sm">
+          <Badge intent="accent" size="xs" class="shadow-xs">
             {category}
           </Badge>
         </div>
@@ -132,7 +132,7 @@ const isHorizontal = variant === "horizontal";
           as="h2"
           size="h3"
           color="inverse"
-          class="mb-4 drop-shadow-sm leading-tight lg:text-3xl"
+          class="mb-4 drop-shadow-xs leading-tight lg:text-3xl"
         >
           {title}
         </Heading>
@@ -150,7 +150,7 @@ const isHorizontal = variant === "horizontal";
 
         {/* Author row */}
         <div class="flex items-center gap-4">
-          <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/40 shadow-sm bg-white/10">
+          <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/40 shadow-xs bg-white/10">
             <Image
               src={authorData?.avatar || "/images/authors/placeholder.jpg"}
               alt={authorData?.name || authorName}
@@ -229,7 +229,7 @@ const isHorizontal = variant === "horizontal";
     class:list={[
       "group relative flex motion-soft",
       "bg-(--color-surface) rounded-2xl h-full",
-      "shadow-xs hover:shadow-sm hover:-translate-y-1",
+      "shadow-xs hover:shadow-xs hover:-translate-y-1",
       className
     ]}
   >
@@ -271,7 +271,7 @@ const isHorizontal = variant === "horizontal";
         )}
 
         <div class="absolute bottom-5 right-5 z-20 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 hidden md:block">
-          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-(--color-background) text-(--color-primary) shadow-sm border border-(--color-background)/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-(--color-background) text-(--color-primary) shadow-xs border border-(--color-background)/50">
             <Icon name="PhArrowRight" class="h-5 w-5" />
           </div>
         </div>

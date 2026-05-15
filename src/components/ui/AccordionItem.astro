@@ -13,7 +13,7 @@ const { title, id, class: className } = Astro.props;
 <div class:list={["border-b border-border-subtle py-4 md:py-6", className]}>
   <button
     type="button"
-    class="flex w-full items-center justify-between text-left transition-colors hover:text-text-muted rounded-sm focus-glow"
+    class="flex w-full items-center justify-between text-left transition-colors hover:text-text-muted rounded-xs focus-glow"
     @click={`activeAccordion = activeAccordion === '${id}' ? null : '${id}'`}
   >
     <Text as="span" variant="lead" class="font-serif">{title}</Text>
