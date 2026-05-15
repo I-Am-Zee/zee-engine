@@ -7,6 +7,8 @@ import Accordion from "../components/ui/Accordion.astro";
 import AccordionItem from "../components/ui/AccordionItem.astro";
 import Icon from "../components/primitives/Icon.astro";
 
+import Breadcrumbs from "../components/ui/Breadcrumbs.astro";
+
 export const prerender = true;
 
 // Fetch FAQ Content
@@ -16,9 +18,16 @@ const {
   subtitle = "Our most common queries answered.", 
   categories = [] 
 } = faqEntry?.data || {};
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: heading, current: true },
+];
 ---
 
 <EngineLayout pageTitle={heading}>
+  <Breadcrumbs items={breadcrumbItems} />
+
   <main class="mx-auto max-w-4xl px-4 py-16 md:py-24">
     <div class="text-center mb-16">
       <Heading as="h1" class="mb-4 text-4xl md:text-5xl">{heading}</Heading>
@@ -31,13 +40,13 @@ const {
       {categories.map((category: any, catIndex: number) => (
         <section>
           <div class="flex items-center gap-3 mb-8">
-             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10">
+             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-primary)/5 text-(--color-primary) border border-(--color-primary)/10">
                 <Icon name={category.icon || "PhInfo"} size={20} />
               </div>
-            <Heading as="h3" class="uppercase tracking-widest text-sm text-text-muted">{category.title}</Heading>
+            <Heading as="h3" class="uppercase tracking-widest text-sm text-(--color-text-muted)">{category.title}</Heading>
           </div>
 
-          <div class="bg-surface p-6 md:p-10 rounded-3xl shadow-xs border border-border-subtle">
+          <div class="bg-(--color-surface) p-6 md:p-10 rounded-3xl shadow-xs border border-(--color-border-subtle)">
             <Accordion>
               {category.questions.map((q: any, qIndex: number) => (
                 <AccordionItem 

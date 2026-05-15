@@ -7,6 +7,9 @@ import Image from '../../components/primitives/Image.astro';
 import Button from '../../components/primitives/Button.astro';
 import Icon from '../../components/primitives/Icon.astro';
 
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import EditorialHero from '../../components/ui/EditorialHero.astro';
+
 export async function getStaticPaths() {
   const brandPages = await getCollection('brand');
   return brandPages
@@ -27,6 +30,12 @@ const { page } = Astro.props;
 const { hero, sections = [], title } = page.data;
 const hasHeroImage = !!(hero?.image);
 
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "Brand", current: false },
+  { label: title, current: true },
+];
+
 const alignmentMap: Record<string, string> = {
   left: 'text-left',
   center: 'text-center',
@@ -35,61 +44,16 @@ const alignmentMap: Record<string, string> = {
 ---
 
 <EngineLayout pageTitle={title}>
-  <article class="relative overflow-hidden bg-background">
-    
-    {/* ── CINEMATIC HERO — with full-bleed image (e.g. About page) ── */}
-    {hero && hero.image && (
-      <header class="relative w-full h-[60vh] md:h-[80vh] bg-black overflow-hidden">
-        <Image
-          src={hero.image}
-          alt={hero.heading || title}
-          class="absolute inset-0 w-full h-full object-cover brightness-50"
-          loading="eager"
-          fetchpriority="high"
-        />
-        <div class="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
-        
-        {/* Title Overlay */}
-        <div class="absolute bottom-0 left-0 right-0 p-8 md:p-20 text-white">
-          <div class="mx-auto max-w-7xl px-4 lg:px-8">
-            <Text variant="eyebrow" class="text-accent-brass mb-4">{title}</Text>
-            
-            {hero.heading && (
-              <Heading as="h1" size="h2" color="inverse" class="mb-6">
-                {hero.heading}
-              </Heading>
-            )}
-            
-            {hero.text && (
-              <p class="text-lg md:text-2xl max-w-2xl font-light italic leading-relaxed text-gray-200 opacity-90 border-l-2 border-accent-brass/50 pl-6 py-2">
-                {hero.text}
-              </p>
-            )}
-          </div>
-        </div>
-      </header>
-    )}
+  <Breadcrumbs items={breadcrumbItems} />
 
-    {/* ── SIMPLE HERO — no image (e.g. Contact page) ── */}
-    {hero && !hero.image && (hero.heading || hero.text) && (
-      <header class="bg-(--color-surface-muted)/40 border-b border-(--color-border-subtle)/50 py-14 md:py-24">
-        <div class="mx-auto max-w-4xl px-4 lg:px-8">
-          <Text variant="eyebrow" color="muted" class="uppercase tracking-widest mb-4 block font-semibold">
-            {title}
-          </Text>
-          {hero.heading && (
-            <Heading as="h1" class="mb-5 tracking-tight">
-              {hero.heading}
-            </Heading>
-          )}
-          {hero.text && (
-            <Text variant="lead" color="muted" class="leading-relaxed max-w-2xl">
-              {hero.text}
-            </Text>
-          )}
-        </div>
-      </header>
-    )}
+  <article class="relative overflow-hidden bg-(--color-background)">
+    
+    <EditorialHero 
+      title={hero?.heading || title}
+      image={hero?.image}
+      description={hero?.text}
+      eyebrow={title}
+    />
 
     {/* ── STORY BODY (LUXURY MAGAZINE FLOW) ── */}
     <div class={`mx-auto px-4 lg:px-8 py-12 md:py-20 ${hasHeroImage ? 'max-w-7xl' : 'max-w-4xl'}`}>

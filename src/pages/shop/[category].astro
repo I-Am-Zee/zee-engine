@@ -89,17 +89,15 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover stunning 
 
 <EngineLayout pageTitle={categoryLabel}>
 
-  <Section as="div" variant="standard">
-    {/* Breadcrumbs */}
-    <div class="mb-6">
-      <Breadcrumbs
+  <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
           { label: "Shop", href: "/shop" },
           { label: categoryLabel },
         ]}
       />
-    </div>
+
+  <Section as="div" variant="standard">
 
     {/* Page Header */}
     <PageHeader 

@@ -83,8 +83,9 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Discover curated p
 
 <EngineLayout pageTitle={`${formattedTagName} Collection`}>
 
+  <Breadcrumbs items={breadcrumbItems} />
+
   <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-    <Breadcrumbs items={breadcrumbItems} />
 
     <div class="mt-6 mb-8">
       <PageHeader 

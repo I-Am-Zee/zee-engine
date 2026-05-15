@@ -3,8 +3,8 @@ isDraft: false
 hero:
   heading: Old Money Looks, Modern World Soul.
   text: >-
-    "Zelia Vance exists because the 'Old Money' look shouldn't require an 'Old
-    Money' bank account. Period."
+    Zelia Vance exists because the 'Old Money' look shouldn't require an 'Old
+    Money' bank account. Period.
   image: /images/brand-shots/HeroCheck.jpg
   isImmersive: false
 sections:

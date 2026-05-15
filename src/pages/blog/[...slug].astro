@@ -6,6 +6,8 @@ import Text from "../../components/primitives/Text.astro";
 import Image from "../../components/primitives/Image.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
+import EditorialHero from "../../components/ui/EditorialHero.astro";
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
@@ -36,81 +38,58 @@ const breadcrumbItems = [
 ---
 
 <EngineLayout pageTitle={title}>
-  <article class="mx-auto max-w-7xl px-4 py-16 md:py-24 lg:px-8">
-    {/* Navigation */}
-    <div class="mb-12">
-      <Breadcrumbs items={breadcrumbItems} />
-    </div>
+  <Breadcrumbs items={breadcrumbItems} />
 
-    {/* Header */}
-    <header class="mx-auto mb-16 max-w-3xl text-center">
-      <div class="mb-6 flex items-center justify-center gap-4 text-xs font-bold tracking-widest uppercase text-text-muted">
-        <time datetime={publishDate.toISOString()}>{formattedDate}</time>
-        <span class="h-1.5 w-1.5 rounded-full bg-primary/30"></span>
-        <span>{authorData?.name || author}</span>
-      </div>
-      
-      <Heading as="h1" class="mb-8 leading-tight">
-        {title}
-      </Heading>
-      
-      <Text variant="lead" color="muted" class="italic">
-        "{excerpt}"
-      </Text>
-    </header>
+  {/* Cinematic Hero */}
+  <EditorialHero
+    title={title}
+    image={image}
+    description={excerpt}
+    eyebrow={post.data.category}
+    metadata={[formattedDate, authorData?.name || author]}
+  />
 
-    {/* Featured Image */}
-    <div class="mb-16 aspect-video overflow-hidden rounded-3xl border border-border-subtle/30 shadow-2xl">
-      <Image 
-        src={image} 
-        alt={title}
-        class="h-full w-full object-cover"
-        loading="eager"
-      />
-    </div>
-
+  <article class="mx-auto max-w-3xl px-4 py-16 md:py-24 lg:px-8">
     {/* Content */}
-    <div class="mx-auto max-w-3xl">
-      <div class="prose prose-zelia prose-lg max-w-none 
-                  prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
-                  prose-p:leading-relaxed prose-p:text-text-main/90
-                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-text-main prose-strong:font-bold
-                  prose-blockquote:border-l-primary prose-blockquote:bg-surface prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-xl prose-blockquote:italic
-                  prose-img:rounded-2xl prose-img:shadow-lg">
-        <Content />
-      </div>
-
-      {/* Footer Tags */}
-      {tags && tags.length > 0 && (
-        <div class="mt-16 pt-8 border-t border-border-subtle/30 flex flex-wrap gap-2">
-          {tags.map(tag => (
-            <span class="px-4 py-2 bg-surface rounded-full text-xs font-medium text-text-muted border border-border-subtle/50 hover:border-primary/30 transition-colors cursor-default">
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Author Bio */}
-      {authorData && (
-        <div class="mt-16 rounded-3xl bg-surface p-8 border border-border-subtle/30 flex flex-col sm:flex-row items-center gap-6">
-          <div class="h-20 w-20 shrink-0 rounded-full bg-primary/10 overflow-hidden flex items-center justify-center text-primary font-bold text-2xl border border-primary/20">
-            {authorData.avatar ? (
-              <Image src={authorData.avatar} alt={authorData.name} class="w-full h-full object-cover" />
-            ) : (
-              authorData.name.charAt(0)
-            )}
-          </div>
-          <div class="text-center sm:text-left">
-            <Text variant="small" color="muted" class="mb-1 uppercase tracking-widest font-bold">Written By</Text>
-            <Heading as="h4" class="mb-2">{authorData.name}</Heading>
-            <Text variant="paragraph" color="muted" class="text-sm">
-              {authorData.bio || `Curating the latest stories and style guides for our journal.`}
-            </Text>
-          </div>
-        </div>
-      )}
+    <div class="prose prose-zelia prose-lg max-w-none 
+                prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
+                prose-p:leading-relaxed prose-p:text-(--color-text-main)/90
+                prose-a:text-(--color-primary) prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-(--color-text-main) prose-strong:font-bold
+                prose-blockquote:border-l-primary prose-blockquote:bg-(--color-surface) prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-xl prose-blockquote:italic
+                prose-img:rounded-2xl prose-img:shadow-lg">
+      <Content />
     </div>
+
+    {/* Footer Tags */}
+    {tags && tags.length > 0 && (
+      <div class="mt-16 pt-8 border-t border-(--color-border-subtle)/30 flex flex-wrap gap-2">
+        {tags.map(tag => (
+          <span class="px-4 py-2 bg-(--color-surface) rounded-full text-xs font-medium text-(--color-text-muted) border border-(--color-border-subtle)/50 hover:border-(--color-primary)/30 transition-colors cursor-default">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
+
+    {/* Author Bio */}
+    {authorData && (
+      <div class="mt-16 rounded-3xl bg-(--color-surface) p-8 border border-(--color-border-subtle)/30 flex flex-col sm:flex-row items-center gap-6">
+        <div class="h-20 w-20 shrink-0 rounded-full bg-(--color-primary)/10 overflow-hidden flex items-center justify-center text-(--color-primary) font-bold text-2xl border border-(--color-primary)/20">
+          {authorData.avatar ? (
+            <Image src={authorData.avatar} alt={authorData.name} class="w-full h-full object-cover" />
+          ) : (
+            authorData.name.charAt(0)
+          )}
+        </div>
+        <div class="text-center sm:text-left">
+          <Text variant="small" color="muted" class="mb-1 uppercase tracking-widest font-bold">Written By</Text>
+          <Heading as="h4" class="mb-2">{authorData.name}</Heading>
+          <Text variant="paragraph" color="muted" class="text-sm">
+            {authorData.bio || `Curating the latest stories and style guides for our journal.`}
+          </Text>
+        </div>
+      </div>
+    )}
   </article>
 </EngineLayout>

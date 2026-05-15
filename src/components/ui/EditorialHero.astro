@@ -1,0 +1,103 @@
+---
+/**
+ * EditorialHero - UI Molecule
+ * 
+ * A cinematic, full-bleed hero section used for Lookbooks and Blog posts.
+ * Provides a darkened image background with a structured text overlay.
+ */
+import Image from "../primitives/Image.astro";
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  title: string;
+  image?: string;
+  description?: string;
+  eyebrow?: string;
+  metadata?: string[];
+  class?: string;
+}
+
+const { title, image, description, eyebrow, metadata, class: className } = Astro.props;
+const hasImage = !!image;
+---
+
+<div class:list={[
+  "relative w-full overflow-hidden",
+  hasImage ? "h-[60vh] md:h-[80vh] bg-black" : "bg-(--color-surface-muted)/40 border-b border-(--color-border-subtle)/50 py-14 md:py-24",
+  className
+]}>
+  {hasImage && (
+    <>
+      <Image
+        src={image}
+        alt={title}
+        class="absolute inset-0 w-full h-full object-cover brightness-50"
+        loading="eager"
+        fetchpriority="high"
+        ratio="auto"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent"></div>
+    </>
+  )}
+  
+  <!-- Content Overlay / Container -->
+  <div class:list={[
+    hasImage ? "absolute bottom-0 left-0 right-0 py-8 md:py-20 text-white" : "relative"
+  ]}>
+    <div class="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+      {/* Eyebrow & Metadata Line */}
+      {(eyebrow || (metadata && metadata.length > 0)) && (
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 mb-6">
+          {eyebrow && (
+            <Text variant="eyebrow" class={hasImage ? "text-white! brightness-125" : ""}>
+              {eyebrow}
+            </Text>
+          )}
+          
+          {eyebrow && metadata && metadata.length > 0 && (
+            <span class:list={["hidden md:inline text-sm select-none mx-1", hasImage ? "opacity-30" : "text-(--color-text-muted)/30"]}>•</span>
+          )}
+          
+          {metadata && metadata.length > 0 && (
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+              {metadata.map((item, index) => (
+                <div class="flex items-center gap-4">
+                  <Text variant="metadata" class={hasImage ? "text-white! opacity-80 tracking-[0.2em]" : "tracking-[0.2em]"}>
+                    {item}
+                  </Text>
+                  {index < metadata.length - 1 && (
+                    <span class:list={["text-xs select-none", hasImage ? "opacity-30" : "text-(--color-text-muted)/30"]}>•</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Main Title */}
+      <Heading 
+        as="h1" 
+        color={hasImage ? "inverse" : "main"} 
+        class="mb-6 leading-[1.1]!"
+      >
+        {title}
+      </Heading>
+      
+      {/* Excerpt / Description */}
+      {description && (
+        <Text 
+          variant="lead" 
+          color={hasImage ? "inverse" : "muted"} 
+          class:list={[
+            "max-w-3xl py-2",
+            hasImage ? "italic opacity-90 border-l-2 border-(--color-accent-brass)/50 pl-6" : "leading-relaxed"
+          ]}
+        >
+          {hasImage ? `"${description}"` : description}
+        </Text>
+      )}
+    </div>
+  </div>
+</div>

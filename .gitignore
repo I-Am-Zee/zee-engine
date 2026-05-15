@@ -44,5 +44,5 @@ public/images/billing/.wrangler/
 *.py
 .env
 
-TEMP_TALK.txt
-temp_continue_information.txt
+# TEMP_TALK.txt
+# conversation_log.txt

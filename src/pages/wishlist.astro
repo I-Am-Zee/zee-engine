@@ -17,6 +17,8 @@ import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
 
+import Breadcrumbs from "../components/ui/Breadcrumbs.astro";
+
 // Fetch all products - filtering will happen client-side with Alpine
 const allProducts = await getCollection("products");
 
@@ -28,6 +30,11 @@ const emptyState = uiWishlist?.data?.empty_states || {
   cta_label: "Explore Collection",
   cta_link: "/shop"
 };
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "My Wishlist", current: true },
+];
 ---
 
 <EngineLayout pageTitle="My Wishlist">
@@ -35,9 +42,9 @@ const emptyState = uiWishlist?.data?.empty_states || {
   <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8" x-data="{ isLoaded: false }" x-init="setTimeout(() => isLoaded = true, 150)">
     {/* Page Header */}
     <div class="mb-8 border-b border-(--color-border-subtle) pb-6">
-      <Heading as="h1" class="mb-2 text-text-main font-serif">My Wishlist</Heading>
+      <Heading as="h1" class="mb-2 text-(--color-text-main) font-serif">My Wishlist</Heading>
       <Text variant="paragraph" color="muted">
-        <span x-text="$store.wishlist.count" class="font-bold text-text-main">0</span> saved items
+        <span x-text="$store.wishlist.count" class="font-bold text-(--color-text-main)">0</span> saved items
       </Text>
     </div>
 
@@ -47,14 +54,14 @@ const emptyState = uiWishlist?.data?.empty_states || {
       {/* Loading State - Solid background prevents ghosting/mixing with content */}
       <div 
         x-show="!isLoaded" 
-        class="absolute inset-0 flex items-center justify-center bg-background z-20"
+        class="absolute inset-0 flex items-center justify-center bg-(--color-background) z-20"
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         x-cloak
       >
         <div class="flex flex-col items-center gap-4">
-          <Icon name="PhCircleNotch" class="h-10 w-10 animate-spin text-accent-brass" />
+          <Icon name="PhCircleNotch" class="h-10 w-10 animate-spin text-(--color-accent-brass)" />
           <Text variant="caption" class="tracking-widest uppercase opacity-50">Loading Collection</Text>
         </div>
       </div>
@@ -91,7 +98,7 @@ const emptyState = uiWishlist?.data?.empty_states || {
           </ProductGrid>
 
           {/* Clear All Button */}
-          <div class="mt-12 flex justify-center border-t border-border-subtle pt-12">
+          <div class="mt-12 flex justify-center border-t border-(--color-border-subtle) pt-12">
             <Button
               type="ghost"
               @click="if(confirm('Clear all saved items?')) { $store.wishlist.items = []; $store.wishlist.save(); }"
