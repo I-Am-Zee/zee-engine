@@ -125,6 +125,7 @@ const dynamicNavigation: NavItem[] = [
   {/* ── State 2: Solid Airy Cream (Standard & Scrolled Home) ── */}
   <div
     x-show="scrolled || !isTransparent"
+    x-cloak={isTransparent}
     x-transition:enter="motion-soft transform"
     x-transition:enter-start="-translate-y-full"
     x-transition:enter-end="translate-y-0"
