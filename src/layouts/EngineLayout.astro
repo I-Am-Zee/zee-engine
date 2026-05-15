@@ -11,20 +11,17 @@ import AffiliateEngine from "../components/features/AffiliateEngine.astro";
 import TrackingScripts from "../components/features/TrackingScripts.astro";
 
 interface Props {
-  pageTitle?: string;
   title?: string;
+  pageTitle?: string;
   description?: string;
+  hideHeader?: boolean;
 }
 
-const { pageTitle, title, description } = Astro.props;
-
-// Determine Engine Mode
-// PUBLIC_AFFILIATE="true" -> Affiliate Mode
-// PUBLIC_AFFILIATE="false" (or missing) -> Brand Mode (D2C)
+const { title, pageTitle, description, hideHeader = false } = Astro.props;
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 ---
 
-<BaseLayout pageTitle={pageTitle} title={title} description={description}>
+<BaseLayout title={title} pageTitle={pageTitle} description={description} hideHeader={hideHeader}>
   {/* Inject tracking scripts into the head */}
   <TrackingScripts slot="head" />
 

@@ -1,6 +1,7 @@
 ---
 import Link from "../primitives/Link.astro";
 import Text from "../primitives/Text.astro";
+import Section from "../primitives/Section.astro";
 
 interface BreadcrumbItem {
   label: string;
@@ -15,33 +16,45 @@ interface Props {
 const { items, class: className, ...rest } = Astro.props;
 ---
 
-<nav class:list={["bg-(--color-surface) border-b border-(--color-border-subtle)/30 py-4 w-full", className]} aria-label="Breadcrumb" {...rest}>
-  <div class="mx-auto max-w-7xl px-4 lg:px-8">
-    <ol class="flex items-center gap-x-2 whitespace-nowrap overflow-x-auto scrollbar-hide snap-x snap-mandatory [mask-image:linear-gradient(to_right,black_90%,transparent_100%)] pr-12">
-      {
-        items.map((item, index) => (
-          <li class="flex items-center gap-2 shrink-0 snap-start">
-            {index > 0 && <span class="text-(--color-text-muted)/30 select-none text-[10px]">/</span>}
-            {item.href && index < items.length - 1 ? (
-              <Link 
-                href={item.href} 
-                variant="plain" 
-                class="text-(--color-text-muted)! hover:text-(--color-text-main)! transition-colors duration-200 shrink-0 text-[10px] uppercase tracking-widest font-semibold no-underline!"
-              >
-                {item.label}
-              </Link>
-            ) : index < items.length - 1 ? (
-              <Text as="span" variant="metadata" color="muted" weight="medium" class="shrink-0">
+<Section 
+  as="nav" 
+  variant="standard" 
+  py="py-0"
+  class={`bg-(--color-surface) border-b border-(--color-border-subtle)/30 ${className || ""}`}
+  containerClass="py-4"
+  aria-label="Breadcrumb" 
+  {...rest}
+>
+  <ol class="flex items-center gap-x-2 whitespace-nowrap overflow-x-auto scrollbar-hide snap-x snap-mandatory [mask-image:linear-gradient(to_right,black_90%,transparent_100%)] pr-12">
+    {
+      items.map((item, index) => (
+        <li class="flex items-center gap-2 shrink-0 snap-start">
+          {index > 0 && (
+            <Text variant="metadata" color="muted" class="opacity-30 select-none">
+              /
+            </Text>
+          )}
+          {item.href && index < items.length - 1 ? (
+            <Link 
+              href={item.href} 
+              variant="plain" 
+              class="text-(--color-text-muted)! hover:text-(--color-text-main)! transition-colors duration-200 shrink-0 no-underline!"
+            >
+              <Text as="span" variant="metadata" weight="semibold" color="inherit">
                 {item.label}
               </Text>
-            ) : (
-              <Text as="span" variant="metadata" color="main" weight="bold" class="shrink-0">
-                {item.label}
-              </Text>
-            )}
-          </li>
-        ))
-      }
-    </ol>
-  </div>
-</nav>
+            </Link>
+          ) : index < items.length - 1 ? (
+            <Text variant="metadata" color="muted" weight="medium" class="shrink-0">
+              {item.label}
+            </Text>
+          ) : (
+            <Text variant="metadata" color="main" weight="bold" class="shrink-0">
+              {item.label}
+            </Text>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</Section>

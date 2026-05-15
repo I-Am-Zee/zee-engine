@@ -5,12 +5,15 @@ import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
 import Button from "../components/primitives/Button.astro";
 import Image from "../components/primitives/Image.astro";
+import Section from "../components/primitives/Section.astro";
 import ProductCarousel from "../components/features/ProductCarousel.astro";
 
 import LookbookCarousel from "../components/features/LookbookCarousel.astro";
 import TrustSection from "../components/ui/TrustSection.astro";
 import CategoryCarousel from "../components/features/CategoryCarousel.astro";
 import SectionHeader from "../components/ui/SectionHeader.astro";
+import Navbar from "../components/features/Navbar.astro";
+import AnnouncementBar from "../components/ui/AnnouncementBar.astro";
 import { slugify } from "../scripts/utils/slugify";
 
 // Load Hero Content (Brand Aware)
@@ -38,6 +41,11 @@ if (!categoriesHeader || !featuredHeader) {
 const catData = categoriesHeader.data;
 const featData = featuredHeader.data;
 
+// Fetch Marketing Settings for Announcement Bar
+const marketingSettings = await getEntry("settings", "marketing");
+const shippingSettings = await getEntry("settings", "shipping");
+const announcement_bar = marketingSettings?.data?.announcement_bar;
+const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
 
 // Pre-render at build time
 export const prerender = true;
@@ -99,40 +107,41 @@ const categories = collectionsGrid.map((cat: any) => {
 });
 ---
 
-<EngineLayout>
+<EngineLayout hideHeader={true}>
+  <Navbar isTransparent={true} />
+  
   <main>
     {/* Hero Section */}
-    <section class="relative h-[90vh] overflow-hidden bg-white">
-      <div class="absolute inset-0 z-0 opacity-60">
-        <Image 
-          src={homeHero.image} 
-          alt="Editorial Collection Hero" 
-          class="h-full w-full object-cover object-center brightness-110 opacity-90"
-          loading="eager"
-          fetchpriority="high"
-        />
-      </div>
-      <div class="absolute inset-0 z-0 bg-linear-to-b from-white/70 via-white/30 to-white/90"></div>
-      
-      <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 text-center">
-        <Heading as="h1" color="main" class="mb-6" set:html={homeHero.title} />
-        <Text variant="lead" color="main" class="mb-10 max-w-2xl opacity-90">
-          {homeHero.subtitle}
-        </Text>
-        <div class="flex flex-col sm:flex-row justify-center gap-4 w-full px-8 md:px-0">
-          <Button as="a" href={homeHero.cta_link_primary} size="lg" type="primary" class="w-full sm:w-auto text-center justify-center">
-            {homeHero.cta_label_primary}
-          </Button>
-          <Button as="a" href={homeHero.cta_link_secondary} size="lg" type="ghost" class="w-full sm:w-auto text-center justify-center text-black! bg-white/40! hover:bg-white/60!">
-            {homeHero.cta_label_secondary}
-          </Button>
+      <Section variant="hero" class="relative bg-black min-h-screen flex items-center overflow-hidden !py-24 md:!py-32">
+        <div class="absolute inset-0 z-0">
+          <Image 
+            src={homeHero.image} 
+            alt="Editorial Collection Hero" 
+            class="h-full w-full object-cover object-center brightness-60"
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
-      </div>
-    </section>
+        <div class="absolute inset-0 z-0 bg-linear-to-b from-black/60 via-transparent to-black/80"></div>
+        
+        <div class="relative z-10 flex h-full w-full flex-col items-center justify-center text-center px-4 mt-8 md:mt-0">
+          <Heading as="h1" color="inverse" class="mb-6 drop-shadow-sm text-4xl md:text-6xl lg:text-7xl" set:html={homeHero.title} />
+          <Text variant="lead" color="inverse" class="mb-10 max-w-2xl opacity-90 drop-shadow-sm text-lg md:text-xl">
+            {homeHero.subtitle}
+          </Text>
+          <div class="flex flex-col sm:flex-row justify-center gap-4 w-full max-w-md mx-auto px-4 md:px-0">
+            <Button as="a" href={homeHero.cta_link_primary} size="lg" type="primary" class="w-full sm:w-auto text-center justify-center">
+              {homeHero.cta_label_primary}
+            </Button>
+            <Button as="a" href={homeHero.cta_link_secondary} size="lg" type="ghost" class="w-full sm:w-auto text-center justify-center text-white! border border-white/40! bg-white/10! hover:bg-white/20!">
+              {homeHero.cta_label_secondary}
+            </Button>
+          </div>
+        </div>
+      </Section>
 
-    {/* Categories Section */}
-    <section class="bg-background py-16 md:py-24 px-4 lg:px-8">
-      <div class="mx-auto max-w-7xl">
+      {/* Categories Section */}
+      <Section variant="standard" class="bg-(--color-background)">
         <SectionHeader 
           title={catData.title} 
           subtitle={catData.subtitle}
@@ -142,12 +151,10 @@ const categories = collectionsGrid.map((cat: any) => {
         />
         
         <CategoryCarousel categories={categories} />
-      </div>
-    </section>
+      </Section>
 
-    {/* Featured Products */}
-    <section class="bg-surface py-16 md:py-24 px-4 lg:px-8">
-      <div class="mx-auto max-w-7xl">
+      {/* Featured Products */}
+      <Section variant="standard" class="bg-(--color-surface)">
         <SectionHeader 
           title={featData.title} 
           subtitle={featData.subtitle}
@@ -157,14 +164,13 @@ const categories = collectionsGrid.map((cat: any) => {
         />
         
         <ProductCarousel products={featuredProducts} columns={4} />
-      </div>
-    </section>
+      </Section>
 
-    {/* Lookbook Carousel Feature */}
-    <LookbookCarousel />
+      {/* Lookbook Carousel Feature */}
+      <LookbookCarousel />
 
-    {/* Trust Section */}
-    <TrustSection {...trustData} />
+      {/* Trust Section */}
+      <TrustSection {...trustData} />
 
-  </main>
+    </main>
 </EngineLayout>

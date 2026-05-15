@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import EngineLayout from '../../layouts/EngineLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
+import Section from '../../components/primitives/Section.astro';
 
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 
@@ -32,7 +33,7 @@ const breadcrumbItems = [
 <EngineLayout pageTitle={page.data.title}>
   <Breadcrumbs items={breadcrumbItems} />
 
-  <article class="mx-auto max-w-4xl px-4 py-16 md:py-32">
+  <Section as="article" py="py-16 md:py-32" containerClass="max-w-4xl">
     <div class="text-center mb-16 md:mb-24">
       <Text variant="eyebrow" class="text-(--color-accent-brass) mb-4 block">Legal Center</Text>
       <Heading as="h1" class="mb-6">{page.data.title}</Heading>
@@ -51,5 +52,5 @@ const breadcrumbItems = [
     <div class="prose prose-zelia mx-auto max-w-none">
       <Content />
     </div>
-  </article>
+  </Section>
 </EngineLayout>

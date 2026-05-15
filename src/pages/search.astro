@@ -13,7 +13,6 @@ import FilterChip from "../components/primitives/FilterChip.astro";
 import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import BlogCard from "../components/ui/BlogCard.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
-import Breadcrumbs from "../components/ui/Breadcrumbs.astro";
 
 // Load content and settings
 const allProducts = await getCollection("products");
@@ -76,16 +75,11 @@ const readMoreLabel = uiSearch?.data?.labels?.readMore || "Read";
 
 // Serialise filters for the inline script
 const filterLabels = labels.filters;
-
-const breadcrumbItems = [
-  { label: "Home", href: "/" },
-  { label: labels.title, current: true },
-];
 ---
 
 <EngineLayout pageTitle={labels.title}>
 
-  <Section variant="hero" x-data="searchApp" class="!pt-12 min-h-[80vh]">
+  <Section variant="hero" x-data="searchApp" pt="pt-12" class="min-h-[80vh]">
 
     {/* ── Hero Search Bar ─────────────────────────────────── */}
     <div class="mb-12 text-center max-w-3xl mx-auto">

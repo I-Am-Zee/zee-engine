@@ -1,11 +1,7 @@
 ---
 /**
  * AnnouncementBar - UI Molecule
- *
- * Top-of-page marketing banner controlled from CMS.
- * Reads from site.yml settings.
- *
- * @component Molecule (ui/)
+ * Supports Airy Cream theme.
  */
 
 import Icon from "../primitives/Icon.astro";
@@ -18,29 +14,23 @@ interface Props {
 
 const { announcement, threshold = 3000 } = Astro.props;
 
-// Dynamic text: Replace {{threshold}} placeholder
 let displayText = announcement?.text || "";
 if (displayText.includes("{{threshold}}")) {
   displayText = displayText.replace("{{threshold}}", threshold.toLocaleString('en-IN'));
 }
 
-// Don't render if not enabled or no text
 const show = announcement?.enabled && announcement?.text;
 ---
 
 {
   show && (
     <div
-      class:list={[
-        "relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 text-center",
-        announcement.bg_color || "bg-surface border-b border-border-subtle",
-        announcement.text_color || "text-text-main",
-      ]}
+      class={`relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 text-center ${announcement.bg_color || "bg-(--color-surface-muted) border-b border-(--color-border-subtle)"} ${announcement.text_color || "text-(--color-text-main)"}`}
     >
       {announcement.link ? (
         <a
           href={announcement.link}
-          class="flex items-center gap-2 hover:underline underline-offset-2"
+          class="flex items-center gap-2 hover:underline underline-offset-2 text-inherit"
         >
           <Text variant="caption" weight="medium" color="inherit">{displayText}</Text>
           <Icon name="PhArrowRight" size={14} />

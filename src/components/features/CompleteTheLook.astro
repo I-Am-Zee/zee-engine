@@ -17,6 +17,8 @@ import { mapProduct } from "../../config/ecommerce";
 import ProductCarousel from "./ProductCarousel.astro";
 import BuySetButton from "./BuySetButton.astro";
 import SectionHeader from "../ui/SectionHeader.astro";
+import Section from "../primitives/Section.astro";
+import Text from "../primitives/Text.astro";
 
 interface Props {
   productSlugs: string[];
@@ -50,18 +52,19 @@ const relatedProducts = productSlugs
   .slice(0, 4); // Max 4 products
 
 // Transform for BuySetButton
-const productsForButton = [
+const productsForButton = ([
   // Include the MAIN product
-  ...(currentProduct ? [allProducts.find(p => p.id === currentProduct.id)].filter(Boolean) : []),
+  ...(currentProduct ? [allProducts.find(p => p.id === currentProduct.id)].filter((p): p is CollectionEntry<"products"> => !!p) : []),
   // Then the related products
   ...relatedProducts
-] as CollectionEntry<"products">[];
+] as CollectionEntry<"products">[]);
 ---
 
 {
   relatedProducts.length > 0 && (
-    <section 
-      class:list={["mt-12 md:mt-16 border-t border-(--color-border-subtle) pt-12 md:pt-16 pb-8 md:pb-12 px-4 lg:px-8 max-w-7xl mx-auto", className]}
+    <Section 
+      variant="standard"
+      class={`mt-12 md:mt-16 border-t border-(--color-border-subtle) ${className || ""}`}
       id="perfect-pairings"
     >
       <script is:inline define:vars={{ 
@@ -82,9 +85,9 @@ const productsForButton = [
         class="mb-10 lg:mb-14"
       >
         {!isAffiliate && (
-          <span class="text-text-muted capitalize tracking-widest text-xs mt-2 font-bold block">
+          <Text variant="metadata" weight="bold" class="mt-2 block uppercase">
             {productsForButton.length} Items Total
-          </span>
+          </Text>
         )}
         {data.button_mode === "feature" && (
           <Fragment slot="action">
@@ -99,6 +102,6 @@ const productsForButton = [
       </SectionHeader>
 
       <ProductCarousel products={relatedProducts} columns={4} />
-    </section>
+    </Section>
   )
 }

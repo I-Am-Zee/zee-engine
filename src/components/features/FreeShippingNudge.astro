@@ -10,6 +10,9 @@
  * @component Feature (features/)
  */
 
+import Text from "../primitives/Text.astro";
+import Icon from "../primitives/Icon.astro";
+
 interface Props {
   threshold?: number; // Free shipping threshold (default ₹10,000)
   class?: string;
@@ -63,21 +66,19 @@ const { threshold = 10000, class: className } = Astro.props;
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
     </svg>
     <div class="flex-1">
-      <p class="text-sm font-semibold text-(--color-text-main) m-0">🎉 Free shipping unlocked!</p>
-      <p class="text-xs text-(--color-text-muted) mt-0.5 m-0">Your order ships at no extra cost</p>
+      <Text variant="label" weight="semibold" color="main" class="m-0 block">🎉 Free shipping unlocked!</Text>
+      <Text variant="caption" color="muted" class="mt-0.5 m-0 block">Your order ships at no extra cost</Text>
     </div>
   </div>
 
   <!-- Progress: Motivation state -->
   <div x-show="!isQualified" class="flex flex-col gap-2" x-cloak>
     <div class="flex items-center justify-between">
-      <p class="text-[0.8125rem] font-medium text-(--color-text-muted) m-0">
-        <span class="font-bold text-(--color-accent-brass)" x-text="`₹${amountNeeded.toLocaleString('en-IN')}`"></span>
+      <Text variant="caption" weight="medium" color="muted" class="m-0">
+        <Text as="span" variant="caption" weight="bold" color="accent" x-text="`₹${amountNeeded.toLocaleString('en-IN')}`"></Text>
         away from free shipping
-      </p>
-      <svg class="w-5 h-5 shrink-0 text-(--color-accent-brass)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-      </svg>
+      </Text>
+      <Icon name="PhTruck" class="h-5 w-5 shrink-0 text-(--color-accent-brass)" />
     </div>
 
     <!-- Progress Bar -->
@@ -85,9 +86,9 @@ const { threshold = 10000, class: className } = Astro.props;
       <div class="h-full bg-linear-to-r from-(--color-primary) to-(--color-accent-brass) rounded-xs transition-[width] duration-500 ease-out" :style="`width: ${progressPercent}%`"></div>
     </div>
 
-    <p class="text-[0.6875rem] text-(--color-text-muted) m-0 tracking-tight">
-      Free shipping on orders above ₹<span x-text="threshold.toLocaleString('en-IN')"></span>
-    </p>
+    <Text variant="metadata" color="muted" class="m-0 tracking-tight">
+      Free shipping on orders above ₹<Text as="span" variant="metadata" color="inherit" x-text="threshold.toLocaleString('en-IN')"></Text>
+    </Text>
   </div>
 
 </div>

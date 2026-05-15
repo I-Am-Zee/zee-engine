@@ -7,6 +7,7 @@ import EngineLayout from "../../layouts/EngineLayout.astro";
 import Heading from "../../components/primitives/Heading.astro";
 import Text from "../../components/primitives/Text.astro";
 import Badge from "../../components/primitives/Badge.astro";
+import Section from "../../components/primitives/Section.astro";
 
 import PriceTag from "../../components/ui/PriceTag.astro";
 import RatingStars from "../../components/ui/RatingStars.astro";
@@ -77,14 +78,15 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
 
 <EngineLayout pageTitle={product.data.title}>
   <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Shop", href: "/shop" },
-          { label: product.data.title, current: true },
-        ]}
-      />
+    items={[
+      { label: "Home", href: "/" },
+      { label: "Shop", href: "/shop" },
+      { label: product.data.title },
+    ]}
+  />
 
-  <div x-data={`{ 
+  <div
+    x-data={`{ 
     showStickyCart: false,
     error: '',
     errorTimer: null,
@@ -113,204 +115,210 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
       this.error = '';
       if(this.errorTimer) clearTimeout(this.errorTimer);
     }
-  }`} 
-  @scroll.window="showStickyCart = window.scrollY > 500 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
-  @change="if($event.target.closest('fieldset')) { error = ''; if(errorTimer) clearTimeout(errorTimer); }"
+  }`}
+    @scroll.window="showStickyCart = window.scrollY > 500 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
+    @change="if($event.target.closest('fieldset')) { error = ''; if(errorTimer) clearTimeout(errorTimer); }"
   >
-    <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
-      {/* Left Column - Gallery (Sticky on Desktop) */}
-      <div class="lg:sticky lg:top-24 lg:col-span-7 lg:self-start">
-        <ProductGallery images={galleryImages} alt={product.data.title} />
-      </div>
-
-      {/* Right Column - Product Info */}
-      <div class="lg:col-span-5 lg:pl-12">
-        {/* Header Zone: Badges, Title, Price, Urgency */}
-        <div class="mb-8">
-          {/* Badges */}
-          {
-            badges.length > 0 && (
-              <div class="mb-4 flex flex-wrap gap-2">
-                {sortedBadges.map((badge) => (
-                  <Badge intent={getBadgeIntent(badge)} size="sm">
-                    {badge}
-                  </Badge>
-                ))}
-              </div>
-            )
-          }
-
-          {/* Title */}
-          <Heading as="h1" class="mb-4">
-            {product.data.title}
-          </Heading>
-
-          {/* Price + Urgency Row */}
-          <div class="mb-4">
-            <PriceTag 
-              price={product.data.price} 
-              salePrice={product.data.salePrice} 
-              affiliateLinks={isAffiliate ? product.data.affiliate_links : undefined} 
-              showPrefix={true}
-            />
-          </div>
-
-          {isAffiliate && (
-            <div class="mb-6 max-w-sm">
-              <Text variant="metadata" class="italic opacity-60 leading-relaxed">
-                *Prices and availability are accurate at time of posting and are subject to change on partner platforms.
-              </Text>
-            </div>
-          )}
-
-          {/* Rating */}
-          {
-            product.data.rating && product.data.rating > 0 && (
-              <div class="flex items-center gap-2">
-                <RatingStars rating={product.data.rating} />
-                <Text variant="metadata">({product.data.rating.toFixed(1)} out of 5)</Text>
-              </div>
-            )
-          }
+    <Section variant="standard">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+        {/* Left Column - Gallery (Sticky on Desktop) */}
+        <div class="lg:sticky lg:top-24 lg:col-span-7 lg:self-start">
+          <ProductGallery images={galleryImages} alt={product.data.title} />
         </div>
 
-        {/* Description Zone */}
-        <div class="my-8">
-          <Text variant="paragraph">
-            {product.data.description}
-          </Text>
-        </div>
-
-        {/* Options Zone - Object-based Variant Slots */}
-        {
-          (product.data.variant_1 || product.data.variant_2 || product.data.variant_3) && (
-            <div class="mt-4 space-y-4">
-              {product.data.variant_1?.name && product.data.variant_1?.values && (
-                <OptionSelector
-                  legend={product.data.variant_1.name}
-                  options={product.data.variant_1.values.split(",").map((v) => v.trim())}
-                  name={product.data.variant_1.name}
-                />
-              )}
-              {product.data.variant_2?.name && product.data.variant_2?.values && (
-                <OptionSelector
-                  legend={product.data.variant_2.name}
-                  options={product.data.variant_2.values.split(",").map((v) => v.trim())}
-                  name={product.data.variant_2.name}
-                />
-              )}
-              {product.data.variant_3?.name && product.data.variant_3?.values && (
-                <OptionSelector
-                  legend={product.data.variant_3.name}
-                  options={product.data.variant_3.values.split(",").map((v) => v.trim())}
-                  name={product.data.variant_3.name}
-                />
-              )}
-            </div>
-          )
-        }
-
-        {/* Action Zone: Quantity + Add to Cart */}
-        <div class="mt-10 space-y-6">
-          {/* Coming Soon Countdown */}
-          {
-            isComingSoon && publishDate && (
-              <div class="rounded-lg border border-(--color-accent-amber)/20 bg-(--color-accent-amber)/10 p-4 text-center">
-                <Text variant="label" class="mb-1 text-amber-600">
-                  Dropping Soon
-                </Text>
-                <div
-                  class="text-lg font-semibold text-amber-700"
-                  id="countdown"
-                  data-release={publishDate.toISOString()}
-                >
-                  {publishDate.toLocaleDateString("en-IN", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                  })}
+        {/* Right Column - Product Info */}
+        <div class="lg:col-span-5 lg:pl-12">
+          {/* Header Zone: Badges, Title, Price, Urgency */}
+          <div class="mb-8">
+            {/* Badges */}
+            {
+              badges.length > 0 && (
+                <div class="mb-4 flex flex-wrap gap-2">
+                  {sortedBadges.map((badge) => (
+                    <Badge intent={getBadgeIntent(badge)} size="sm">
+                      {badge}
+                    </Badge>
+                  ))}
                 </div>
-              </div>
-            )
-          }
+              )
+            }
 
-          {/* Quantity Selector - Hidden for Affiliate Mode */}
-          {
-            !isComingSoon && !isAffiliate && (
-              <div class="flex items-center gap-3">
-                <Text variant="label">
-                  {" "}
-                  Quantity:{" "}
-                </Text>
-                <QuantitySelector initial={1} min={1} max={10} />
-              </div>
-            )
-          }
+            {/* Title */}
+            <Heading as="h1" class="mb-4">
+              {product.data.title}
+            </Heading>
 
-          <template x-if="error">
-            <div x-show="error" x-transition x-cloak class="mt-6 bg-(--color-accent-coral)/10 border border-(--color-accent-coral)/20 text-(--color-accent-coral) px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-xs">
-              <span x-text="error"></span>
-            </div>
-          </template>
-
-          <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
-            {isAffiliate ? (
-              <AffiliateProductCTA 
-                links={product.data.affiliate_links || []} 
-                isComingSoon={!!isComingSoon} 
-                class="w-full sm:flex-1 h-13" 
+            {/* Price + Urgency Row */}
+            <div class="mb-4">
+              <PriceTag
+                price={product.data.price}
+                salePrice={product.data.salePrice}
+                affiliateLinks={isAffiliate ? product.data.affiliate_links : undefined}
+                showPrefix={true}
               />
-            ) : (
-              <AddToCartButton
-                product={product}
-                size="lg"
-                class="w-full sm:flex-1 whitespace-nowrap h-13"
-                disabled={!!isComingSoon}
-                @click="validateAdd($event)"
-              >
-                {isComingSoon ? "Coming Soon" : "Add to Cart"}
-              </AddToCartButton>
-            )}
+            </div>
 
-            {/* Wishlist Button - Uses global store */}
-            <WishlistButton productId={product.id} variant="with-label" size="lg" class="h-13" />
+            {
+              isAffiliate && (
+                <div class="mb-6 max-w-sm">
+                  <Text variant="metadata" class="italic opacity-60 leading-relaxed">
+                    *Prices and availability are accurate at time of posting and are subject to change on partner platforms.
+                  </Text>
+                </div>
+              )
+            }
+
+            {/* Rating */}
+            {
+              product.data.rating && product.data.rating > 0 && (
+                <div class="flex items-center gap-2">
+                  <RatingStars rating={product.data.rating} />
+                  <Text variant="metadata">({product.data.rating.toFixed(1)} out of 5)</Text>
+                </div>
+              )
+            }
+          </div>
+
+          {/* Description Zone */}
+          <div class="my-8">
+            <Text variant="paragraph">
+              {product.data.description}
+            </Text>
+          </div>
+
+          {/* Options Zone - Object-based Variant Slots */}
+          {
+            (product.data.variant_1 || product.data.variant_2 || product.data.variant_3) && (
+              <div class="mt-4 space-y-4">
+                {product.data.variant_1?.name && product.data.variant_1?.values && (
+                  <OptionSelector
+                    legend={product.data.variant_1.name}
+                    options={product.data.variant_1.values.split(",").map((v) => v.trim())}
+                    name={product.data.variant_1.name}
+                  />
+                )}
+                {product.data.variant_2?.name && product.data.variant_2?.values && (
+                  <OptionSelector
+                    legend={product.data.variant_2.name}
+                    options={product.data.variant_2.values.split(",").map((v) => v.trim())}
+                    name={product.data.variant_2.name}
+                  />
+                )}
+                {product.data.variant_3?.name && product.data.variant_3?.values && (
+                  <OptionSelector
+                    legend={product.data.variant_3.name}
+                    options={product.data.variant_3.values.split(",").map((v) => v.trim())}
+                    name={product.data.variant_3.name}
+                  />
+                )}
+              </div>
+            )
+          }
+
+          {/* Action Zone: Quantity + Add to Cart */}
+          <div class="mt-10 space-y-6">
+            {/* Coming Soon Countdown */}
+            {
+              isComingSoon && publishDate && (
+                <div class="rounded-lg border border-(--color-accent-brass)/20 bg-(--color-accent-brass)/10 p-4 text-center">
+                  <Text variant="label" color="accent" class="mb-1">
+                    Dropping Soon
+                  </Text>
+                  <div
+                    class="text-lg font-semibold text-(--color-accent-brass)"
+                    id="countdown"
+                    data-release={publishDate.toISOString()}
+                  >
+                    {publishDate.toLocaleDateString("en-IN", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </div>
+                </div>
+              )
+            }
+
+            {/* Quantity Selector - Hidden for Affiliate Mode */}
+            {
+              !isComingSoon && !isAffiliate && (
+                <div class="flex items-center gap-3">
+                  <Text variant="label"> Quantity: </Text>
+                  <QuantitySelector initial={1} min={1} max={10} />
+                </div>
+              )
+            }
+
+            <template x-if="error">
+              <div
+                x-show="error"
+                x-transition
+                x-cloak
+                class="mt-6 bg-(--color-accent-coral)/10 border border-(--color-accent-coral)/20 text-(--color-accent-coral) px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-xs"
+              >
+                <span x-text="error" />
+              </div>
+            </template>
+
+            <div class="product-actions-row flex flex-col gap-4 sm:flex-row sm:items-stretch mt-6">
+              {
+                isAffiliate ? (
+                  <AffiliateProductCTA
+                    links={product.data.affiliate_links || []}
+                    isComingSoon={!!isComingSoon}
+                    class="w-full sm:flex-1 h-13"
+                  />
+                ) : (
+                  <AddToCartButton
+                    product={product}
+                    size="lg"
+                    class="w-full sm:flex-1 whitespace-nowrap h-13"
+                    disabled={!!isComingSoon}
+                    @click="validateAdd($event)"
+                  >
+                    {isComingSoon ? "Coming Soon" : "Add to Cart"}
+                  </AddToCartButton>
+                )
+              }
+
+              {/* Wishlist Button - Uses global store */}
+              <WishlistButton productId={product.id} variant="with-label" size="lg" class="h-13" />
+            </div>
+          </div>
+
+          {/* Divider */}
+          <hr class="my-12 border-(--color-border-subtle)" />
+
+          {/* Details Zone: The Story (Markdown Content) */}
+          <div class="product-story prose prose-zelia max-w-none">
+            <Content />
           </div>
         </div>
-
-        {/* Divider */}
-        <hr class="my-12 border-(--color-border-subtle)" />
-
-        {/* Details Zone: The Story (Markdown Content) */}
-        <div class="product-story prose prose-zelia max-w-none">
-          <Content />
-        </div>
       </div>
-    </div>
 
-    {/* Complete the Look (Related Products) */}
-    {
-      product.data.related_products && product.data.related_products.length > 0 && (
-        <CompleteTheLook
-          productSlugs={product.data.related_products}
-          currentProduct={{
-            id: product.id,
-            title: product.data.title,
-            price: product.data.price || 0,
-            salePrice: product.data.salePrice,
-            image: product.data.image,
-          }}
-        />
-      )
-    }
+      {/* Complete the Look (Related Products) */}
+      {
+        product.data.related_products && product.data.related_products.length > 0 && (
+          <CompleteTheLook
+            productSlugs={product.data.related_products}
+            currentProduct={{
+              id: product.id,
+              title: product.data.title,
+              price: product.data.price || 0,
+              salePrice: product.data.salePrice,
+              image: product.data.image,
+            }}
+          />
+        )
+      }
 
-    {/* You May Also Like (Algorithmic Recommendations) */}
-    <RelatedProducts 
-      title={crossSellTitle}
-      subtitle={crossSellSubtitle}
-      products={crossSellProducts}
-    />
-  </div>
+      {/* You May Also Like (Algorithmic Recommendations) */}
+      <RelatedProducts
+        title={crossSellTitle}
+        subtitle={crossSellSubtitle}
+        products={crossSellProducts}
+      />
+    </Section>
 
     {/* Sticky Mobile Add to Cart Bar */}
     <div
@@ -321,38 +329,39 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
       x-transition:leave="transition ease-in duration-200 transform"
       x-transition:leave-start="translate-y-0 opacity-100"
       x-transition:leave-end="translate-y-full opacity-0"
-      class="fixed right-0 bottom-0 left-0 border-t border-(--color-border-subtle) bg-white/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50"
+      class="fixed right-0 bottom-0 left-0 border-t border-(--color-border-subtle) bg-(--color-background)/95 p-4 backdrop-blur-sm lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50"
       x-cloak
     >
       <div class="mx-auto flex max-w-lg items-center gap-3">
         <div class="flex-1 min-w-0">
           <Text variant="paragraph" weight="semibold" class="truncate block">{product.data.title}</Text>
-          <PriceTag 
-            price={product.data.price} 
-            salePrice={product.data.salePrice} 
+          <PriceTag
+            price={product.data.price}
+            salePrice={product.data.salePrice}
             affiliateLinks={isAffiliate ? product.data.affiliate_links : undefined}
           />
         </div>
-        {isAffiliate ? (
-          <AffiliateProductCTA 
-            links={product.data.affiliate_links || []} 
-            isComingSoon={!!isComingSoon} 
-            size="md"
-            class="shrink-0 flex items-center" 
-          />
-        ) : (
-          <AddToCartButton
-            product={product}
-            size="md"
-            disabled={!!isComingSoon}
-            class="shrink-0"
-            @click="validateAdd($event)"
-          >
-            {isComingSoon ? "Soon" : "Add"}
-          </AddToCartButton>
-        )}
+        {
+          isAffiliate ? (
+            <AffiliateProductCTA
+              links={product.data.affiliate_links || []}
+              isComingSoon={!!isComingSoon}
+              size="md"
+              class="shrink-0 flex items-center"
+            />
+          ) : (
+            <AddToCartButton
+              product={product}
+              size="md"
+              disabled={!!isComingSoon}
+              class="shrink-0"
+              @click="validateAdd($event)"
+            >
+              {isComingSoon ? "Soon" : "Add"}
+            </AddToCartButton>
+          )
+        }
       </div>
     </div>
   </div>
 </EngineLayout>
-

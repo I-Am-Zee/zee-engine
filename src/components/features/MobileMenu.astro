@@ -1,0 +1,61 @@
+---
+import Logo from "../primitives/Logo.astro";
+import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
+import Text from "../primitives/Text.astro";
+import type { NavItem } from "../../types/navigation";
+
+interface Props {
+  brandName: string;
+  dynamicNavigation: NavItem[];
+}
+
+const { brandName, dynamicNavigation } = Astro.props;
+---
+
+<template x-teleport="body">
+  <div class="relative z-[110]">
+    <div x-show="mobileMenuOpen" x-transition.opacity class="fixed inset-0 bg-black/20 backdrop-blur-sm" @click="mobileMenuOpen = false" x-cloak></div>
+    <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="fixed inset-y-0 right-0 w-full max-w-sm overflow-y-auto bg-(--color-background) shadow-xl border-l border-(--color-border-subtle)" x-cloak>
+      <div class="flex h-full flex-col text-(--color-text-main)" x-data="{ activeAccordion: null }">
+        <div class="flex items-center justify-between border-b border-(--color-border-subtle) px-4 py-4">
+          <Logo variant="full" brandName={brandName} color="black" />
+          <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = false" class="text-(--color-text-main)! hover:bg-black/5!"><Icon name="PhX" /></Button>
+        </div>
+        <nav class="flex-1 px-4 py-6">
+          <ul class="space-y-1">
+            {dynamicNavigation.map((mItem) => (
+              <li>
+                {mItem.items && mItem.items.length > 0 ? (
+                  <div>
+                    <button 
+                      type="button" 
+                      class="flex w-full items-center justify-between rounded-md px-3 py-3 transition-colors hover:bg-black/5 cursor-pointer text-left" 
+                      @click={`activeAccordion = activeAccordion === '${mItem.label}' ? null : '${mItem.label}'`}
+                    >
+                      <Text variant="paragraph" weight="medium" color="main">{mItem.label}</Text>
+                      <Icon name="PhCaretDown" class="h-4 w-4 transition-transform duration-200" :class={`activeAccordion === '${mItem.label}' ? 'rotate-180' : ''`} />
+                    </button>
+                    <ul x-show={`activeAccordion === '${mItem.label}'`} x-collapse class="mt-1 ml-4 space-y-1" x-cloak>
+                      {(mItem.items || []).map((mSub) => (
+                        <li>
+                          <a href={mSub.href} class="block rounded-md px-3 py-2 transition-colors hover:bg-black/5 text-(--color-text-muted) hover:text-(--color-text-main)">
+                            <Text variant="caption" color="inherit">{mSub.label}</Text>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <a href={mItem.href} class="block rounded-md px-3 py-3 transition-colors hover:bg-black/5 text-left">
+                    <Text variant="paragraph" weight="medium" color="main">{mItem.label}</Text>
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</template>

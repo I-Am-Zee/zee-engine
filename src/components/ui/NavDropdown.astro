@@ -1,7 +1,6 @@
 ---
 /**
  * NavDropdown - Desktop navigation dropdown
- * Shows sub-links when hovering over parent nav item
  */
 
 import Icon from "../primitives/Icon.astro";
@@ -12,9 +11,10 @@ interface Props {
   trigger: string;
   items: NavItem[];
   class?: string;
+  dark?: boolean;
 }
 
-const { trigger, items, class: className, ...rest } = Astro.props;
+const { trigger, items, class: className, dark = false, ...rest } = Astro.props;
 ---
 
 <div
@@ -24,10 +24,12 @@ const { trigger, items, class: className, ...rest } = Astro.props;
   @mouseleave="isOpen = false"
   {...rest}
 >
-  {/* Trigger button */}
   <button
     type="button"
-    class="inline-flex items-center gap-1 rounded-md px-3 py-2 transition-all duration-200 hover:text-(--color-text-muted) focus-glow outline-none cursor-pointer disabled:cursor-not-allowed"
+    class:list={[
+      "inline-flex items-center gap-1 rounded-md px-3 py-2 transition-all duration-200 focus-glow outline-none cursor-pointer disabled:cursor-not-allowed",
+      dark ? "text-white hover:text-white/70" : "text-(--color-text-main) hover:text-(--color-text-muted)"
+    ]}
     @click="isOpen = !isOpen"
     :aria-expanded="isOpen"
   >
@@ -41,7 +43,6 @@ const { trigger, items, class: className, ...rest } = Astro.props;
     />
   </button>
 
-  {/* Dropdown panel */}
   <div
     x-show="isOpen"
     x-transition:enter="transition ease-out duration-300 transform"
@@ -50,17 +51,23 @@ const { trigger, items, class: className, ...rest } = Astro.props;
     x-transition:leave="transition ease-in duration-200 transform"
     x-transition:leave-start="opacity-100 scale-100 translate-y-0"
     x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-    class="absolute top-full left-0 mt-1 min-w-[180px] rounded-xl border border-border-subtle/60 bg-background p-2 shadow-2xl z-[60]"
+    class:list={[
+      "absolute top-full left-0 mt-1 min-w-[200px] rounded-xl border p-2 shadow-2xl z-[60]",
+      dark ? "bg-(--color-primary) border-white/10 text-white" : "bg-background border-border-subtle/60 text-(--color-text-main)"
+    ]}
     x-cloak
   >
     {
-      items.map((item) => (
+      items.map((ddItem) => (
         <a
-          href={item.href}
-          class="block rounded-md px-3 py-2 transition-colors duration-150 hover:bg-surface"
+          href={ddItem.href}
+          class:list={[
+            "block rounded-md px-3 py-2 transition-colors duration-150",
+            dark ? "hover:bg-white/5" : "hover:bg-surface"
+          ]}
         >
-          <Text variant="paragraph" color="inherit">
-            {item.label}
+          <Text variant="caption" color="inherit">
+            {ddItem.label}
           </Text>
         </a>
       ))

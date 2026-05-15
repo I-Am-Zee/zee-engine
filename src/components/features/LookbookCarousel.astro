@@ -5,6 +5,7 @@ import Text from "../primitives/Text.astro";
 import Button from "../primitives/Button.astro";
 import Carousel from "../ui/Carousel.astro";
 import Image from "../primitives/Image.astro";
+import Section from "../primitives/Section.astro";
 
 interface Props {
   class?: string;
@@ -18,14 +19,14 @@ const eyebrowLabel = lookbookLabels?.data?.carousel_eyebrow || "Curated Story";
 const ctaLabel = lookbookLabels?.data?.carousel_cta_label || "Explore Look";
 ---
 
-<section class="relative bg-surface/30 py-32 px-4 lg:px-8 overflow-hidden">
-  <div class="relative mx-auto max-w-7xl h-150 sm:h-140 md:h-175">
+<Section variant="standard" class={`relative bg-(--color-surface)/30 overflow-hidden ${Astro.props.class || ""}`}>
+  <div class="relative h-150 sm:h-140 md:h-175">
     <Carousel 
       options={{}}
-      class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-border-subtle/50"
+      class="h-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-(--color-border-subtle)/50"
     >
       {lookbooks.map((lookbook) => (
-        <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full bg-surface-muted">
+        <li class="splide__slide shrink-0 w-full m-0 relative list-none h-full bg-(--color-surface-muted)">
           {/* Background Image */}
           <div class="absolute inset-0 z-0 overflow-hidden">
             <Image 
@@ -43,9 +44,9 @@ const ctaLabel = lookbookLabels?.data?.carousel_cta_label || "Explore Look";
           {/* Luxury Glassmorphic Content Card */}
           <div class="absolute inset-0 z-10 flex items-center justify-center p-4 pb-14 md:p-12">
             <div 
-              class="lookbook-card max-w-2xl w-full bg-surface/60 backdrop-blur-xl border border-white/30 p-8 md:p-16 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center motion-soft"
+              class="lookbook-card max-w-2xl w-full bg-(--color-surface)/60 backdrop-blur-xl border border-white/30 p-8 md:p-16 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] text-center flex flex-col items-center motion-soft"
             >
-              <Text variant="eyebrow" class="mb-6 inline-block border-b border-accent-brass/40 pb-2 [text-shadow:0.5px_0.5px_0px_rgba(5,43,34,0.3)] [box-shadow:0_0.5px_0_0_rgba(5,43,34,0.2)]">
+              <Text variant="eyebrow" class="mb-6 inline-block border-b border-(--color-accent-brass)/40 pb-2 [text-shadow:0.5px_0.5px_0px_rgba(5,43,34,0.3)] [box-shadow:0_0.5px_0_0_rgba(5,43,34,0.2)]">
                 {eyebrowLabel}
               </Text>
               
@@ -76,11 +77,11 @@ const ctaLabel = lookbookLabels?.data?.carousel_cta_label || "Explore Look";
           <button 
             @click={`goTo(${index})`}
             class="h-1 transition-all duration-500 rounded-full cursor-pointer disabled:cursor-not-allowed"
-            x-bind:class={`currentIndex === ${index} ? 'w-10 bg-accent-brass' : 'w-2 bg-white/40 hover:bg-white/60'`}
+            x-bind:class={`currentIndex === ${index} ? 'w-10 bg-(--color-accent-brass)' : 'w-2 bg-white/40 hover:bg-white/60'`}
             title={`Go to slide ${index + 1}`}
           ></button>
         ))}
       </div>
     </Carousel>
   </div>
-</section>
+</Section>

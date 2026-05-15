@@ -161,12 +161,12 @@ const isHorizontal = variant === "horizontal";
             <Text variant="label" weight="semibold" color="inverse" class="mb-1 text-base">
               {authorData?.name || authorName}
             </Text>
-            <div class="flex items-center gap-2 opacity-70">
-              <Text variant="metadata" color="inverse">
+            <div class="flex items-center gap-2">
+              <Text variant="metadata" color="inverse" class="opacity-70">
                 {readTime}
               </Text>
-              <span class="h-1 w-1 rounded-full bg-white/40"></span>
-              <Text variant="metadata" color="inverse">
+              <Text variant="metadata" color="inverse" class="opacity-40 select-none">·</Text>
+              <Text variant="metadata" color="inverse" class="opacity-70">
                 {formattedDate}
               </Text>
             </div>
@@ -190,7 +190,7 @@ const isHorizontal = variant === "horizontal";
 
       {/* Metadata row: WORDS BY · Date · Read time */}
       <div class="flex items-center gap-2 flex-wrap mt-auto pt-5 border-t border-(--color-border-subtle)/30">
-        <Text variant="metadata" class="tracking-[0.2em] opacity-60">
+        <Text variant="metadata" color="muted" class="tracking-[0.2em] opacity-60">
           Words by
         </Text>
         <div class="flex items-center gap-2">
@@ -205,11 +205,11 @@ const isHorizontal = variant === "horizontal";
             {authorData?.name || authorName}
           </Text>
         </div>
-        <span class="text-(--color-border-subtle) opacity-50 select-none">·</span>
-        <Text variant="metadata" class="tracking-[0.12em] opacity-60">
+        <Text variant="metadata" color="muted" class="opacity-40 select-none">·</Text>
+        <Text variant="metadata" color="muted" class="tracking-[0.12em] opacity-60">
           {formattedDate}
         </Text>
-        <span class="text-(--color-border-subtle) opacity-50 select-none">·</span>
+        <Text variant="metadata" color="muted" class="opacity-40 select-none">·</Text>
         <div class="flex items-center gap-1 text-(--color-text-muted) opacity-60">
           <Icon name="PhClock" class="h-3 w-3 shrink-0" />
           <Text variant="metadata" class="tracking-[0.12em]">
@@ -271,7 +271,7 @@ const isHorizontal = variant === "horizontal";
         )}
 
         <div class="absolute bottom-5 right-5 z-20 translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 hidden md:block">
-          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-(--color-primary) shadow-sm border border-white/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-(--color-background) text-(--color-primary) shadow-sm border border-(--color-background)/50">
             <Icon name="PhArrowRight" class="h-5 w-5" />
           </div>
         </div>
@@ -290,7 +290,7 @@ const isHorizontal = variant === "horizontal";
               <Badge intent="surface" size="xs" class="bg-(--color-surface-muted) border-(--color-border-subtle)/50 font-bold">{category}</Badge>
             </div>
           )}
-          <Text variant="metadata" color="muted" class="text-[10px] font-bold tracking-[0.2em] uppercase opacity-60">
+          <Text variant="metadata" color="muted" class="opacity-60">
             {formattedDate}
           </Text>
         </div>

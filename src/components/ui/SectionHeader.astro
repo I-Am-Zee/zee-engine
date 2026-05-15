@@ -1,6 +1,7 @@
 ---
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
+import Link from "../primitives/Link.astro";
 
 interface Props {
   title: string;
@@ -21,7 +22,7 @@ const { title, subtitle, align = "center", class: className = "", actionLabel, l
         {title}
       </Heading>
       {subtitle && (
-        <Text class:list={["max-w-[45rem] italic text-text-muted text-sm md:text-base", align === "center" ? "mx-auto" : ""]}>
+        <Text variant="caption" color="muted" italic class:list={["max-w-[45rem]", align === "center" ? "mx-auto" : ""]}>
           {subtitle}
         </Text>
       )}
@@ -34,9 +35,12 @@ const { title, subtitle, align = "center", class: className = "", actionLabel, l
           <slot name="action" />
         ) : (
           /* Premium Standard Link Style */
-          <a href={linkUrl} class="group flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-black hover:text-accent-brass transition-all whitespace-nowrap">
-            {actionLabel} <span class="group-hover:translate-x-2 transition-transform inline-block">&rarr;</span>
-          </a>
+          <Link href={linkUrl!} class="group flex items-center gap-2">
+            <Text variant="label" weight="black" class="group-hover:text-(--color-accent-brass) transition-colors">
+              {actionLabel}
+            </Text>
+            <span class="group-hover:translate-x-2 transition-transform inline-block text-xs">&rarr;</span>
+          </Link>
         )}
       </div>
     )}

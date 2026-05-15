@@ -8,6 +8,7 @@
 import Image from "../primitives/Image.astro";
 import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
+import Section from "../primitives/Section.astro";
 
 interface Props {
   title: string;
@@ -22,11 +23,10 @@ const { title, image, description, eyebrow, metadata, class: className } = Astro
 const hasImage = !!image;
 ---
 
-<div class:list={[
-  "relative w-full overflow-hidden",
-  hasImage ? "h-[60vh] md:h-[80vh] bg-black" : "bg-(--color-surface-muted)/40 border-b border-(--color-border-subtle)/50 py-14 md:py-24",
-  className
-]}>
+<Section 
+  variant={hasImage ? "full" : "hero"} 
+  class={`relative w-full overflow-hidden ${hasImage ? "h-[60vh] md:h-[80vh] bg-black" : "bg-(--color-surface-muted)/40 border-b border-(--color-border-subtle)/50"} ${className || ""}`}
+>
   {hasImage && (
     <>
       <Image
@@ -42,10 +42,8 @@ const hasImage = !!image;
   )}
   
   <!-- Content Overlay / Container -->
-  <div class:list={[
-    hasImage ? "absolute bottom-0 left-0 right-0 py-8 md:py-20 text-white" : "relative"
-  ]}>
-    <div class="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+  <div class={hasImage ? "absolute bottom-0 left-0 right-0 py-8 md:py-20 text-white" : "relative"}>
+    <div class={hasImage ? "mx-auto max-w-7xl px-4 lg:px-8" : ""}>
       {/* Eyebrow & Metadata Line */}
       {(eyebrow || (metadata && metadata.length > 0)) && (
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 mb-6">
@@ -56,7 +54,7 @@ const hasImage = !!image;
           )}
           
           {eyebrow && metadata && metadata.length > 0 && (
-            <span class:list={["hidden md:inline text-sm select-none mx-1", hasImage ? "opacity-30" : "text-(--color-text-muted)/30"]}>•</span>
+            <Text variant="metadata" color="muted" class={`hidden md:inline select-none mx-1 ${hasImage ? "text-white! opacity-30" : "opacity-30"}`}>•</Text>
           )}
           
           {metadata && metadata.length > 0 && (
@@ -67,7 +65,7 @@ const hasImage = !!image;
                     {item}
                   </Text>
                   {index < metadata.length - 1 && (
-                    <span class:list={["text-xs select-none", hasImage ? "opacity-30" : "text-(--color-text-muted)/30"]}>•</span>
+                    <Text variant="metadata" color="muted" class={hasImage ? "text-white! opacity-30" : "opacity-30"}>•</Text>
                   )}
                 </div>
               ))}
@@ -90,14 +88,11 @@ const hasImage = !!image;
         <Text 
           variant="lead" 
           color={hasImage ? "inverse" : "muted"} 
-          class:list={[
-            "max-w-3xl py-2",
-            hasImage ? "italic opacity-90 border-l-2 border-(--color-accent-brass)/50 pl-6" : "leading-relaxed"
-          ]}
+          class={`max-w-3xl py-2 ${hasImage ? "italic opacity-90 border-l-2 border-(--color-accent-brass)/50 pl-6" : "leading-relaxed"}`}
         >
           {hasImage ? `"${description}"` : description}
         </Text>
       )}
     </div>
   </div>
-</div>
+</Section>

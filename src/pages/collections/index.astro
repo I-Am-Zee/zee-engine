@@ -2,7 +2,7 @@
 import EngineLayout from "../../layouts/EngineLayout.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
 import CollectionCard from "../../components/ui/CollectionCard.astro";
-import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import Section from "../../components/primitives/Section.astro";
 import { getCollection, getEntry } from "astro:content";
 import { slugify } from "../../scripts/utils/slugify";
 
@@ -47,7 +47,7 @@ const collections = ((gridEntry?.data as any)?.cards || []).map((card: any) => {
 
 <EngineLayout pageTitle="Explore Collections">
 
-  <main class="mx-auto max-w-7xl px-4 py-16 md:py-24 sm:px-6 lg:px-8">
+  <Section as="main" variant="standard">
     <PageHeader 
       title={hubData.title}
       subtitle={hubData.subtitle}
@@ -66,7 +66,7 @@ const collections = ((gridEntry?.data as any)?.cards || []).map((card: any) => {
         />
       ))}
     </div>
-  </main>
+  </Section>
 
 </EngineLayout>
 

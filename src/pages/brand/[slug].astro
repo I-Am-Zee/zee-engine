@@ -6,6 +6,7 @@ import Text from '../../components/primitives/Text.astro';
 import Image from '../../components/primitives/Image.astro';
 import Button from '../../components/primitives/Button.astro';
 import Icon from '../../components/primitives/Icon.astro';
+import Section from '../../components/primitives/Section.astro';
 
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import EditorialHero from '../../components/ui/EditorialHero.astro';
@@ -46,7 +47,7 @@ const alignmentMap: Record<string, string> = {
 <EngineLayout pageTitle={title}>
   <Breadcrumbs items={breadcrumbItems} />
 
-  <article class="relative overflow-hidden bg-(--color-background)">
+  <Section as="article" variant="full" class="bg-(--color-background)">
     
     <EditorialHero 
       title={hero?.heading || title}
@@ -56,7 +57,7 @@ const alignmentMap: Record<string, string> = {
     />
 
     {/* ── STORY BODY (LUXURY MAGAZINE FLOW) ── */}
-    <div class={`mx-auto px-4 lg:px-8 py-12 md:py-20 ${hasHeroImage ? 'max-w-7xl' : 'max-w-4xl'}`}>
+    <div class="story-body">
       {sections.map((section: any) => {
         const { layout, alignment = 'left', stack = [], image } = section;
         
@@ -67,8 +68,11 @@ const alignmentMap: Record<string, string> = {
         const imageRatio = image?.shape === 'square' ? 'square' : 'portrait';
 
         return (
-          <section 
-            class={`relative py-12 md:py-20 clear-both ${alignmentClass}`}
+          <Section 
+            as="section"
+            variant="full"
+            class={`relative clear-both ${alignmentClass}`}
+            containerClass={`mx-auto px-4 lg:px-8 py-12 md:py-20 ${hasHeroImage ? 'max-w-7xl' : 'max-w-4xl'}`}
             data-layout={layout}
           >
             
@@ -248,10 +252,10 @@ const alignmentMap: Record<string, string> = {
 
             {/* Clear floats for the next section */}
             <div class="clear-both" />
-          </section>
+          </Section>
         )
       })}
     </div>
 
-  </article>
+  </Section>
 </EngineLayout>

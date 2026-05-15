@@ -17,8 +17,6 @@ import GlassProductCard from "../components/ui/GlassProductCard.astro";
 import ProductGrid from "../components/features/ProductGrid.astro";
 import EmptyState from "../components/ui/EmptyState.astro";
 
-import Breadcrumbs from "../components/ui/Breadcrumbs.astro";
-
 // Fetch all products - filtering will happen client-side with Alpine
 const allProducts = await getCollection("products");
 
@@ -30,11 +28,6 @@ const emptyState = uiWishlist?.data?.empty_states || {
   cta_label: "Explore Collection",
   cta_link: "/shop"
 };
-
-const breadcrumbItems = [
-  { label: "Home", href: "/" },
-  { label: "My Wishlist", current: true },
-];
 ---
 
 <EngineLayout pageTitle="My Wishlist">

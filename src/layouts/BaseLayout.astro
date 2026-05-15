@@ -36,12 +36,14 @@ interface Props {
   pageTitle?: string;
   title?: string; // Legacy support
   description?: string;
+  hideHeader?: boolean;
 }
 
 const {
   pageTitle,
   title,
   description = brandSettings?.data?.description,
+  hideHeader = false,
 } = Astro.props;
 
 const brandName = brandSettings?.data?.name;
@@ -102,8 +104,9 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     <slot name="head" />
   </head>
   <body class="flex flex-col min-h-screen" data-brand-id={brandId} data-regions={isAffiliate ? JSON.stringify(affiliateSettings?.data?.regions || []) : undefined}>
-    <AnnouncementBar announcement={announcement_bar} threshold={threshold} />
-    <Navbar />
+    {!hideHeader && (
+      <Navbar />
+    )}
 
     <main class="grow">
       {/* Engine Scripts (BrandEngine or AffiliateEngine) will be injected here by EngineLayout */}
@@ -123,6 +126,3 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     <Lightbox />
   </body>
 </html>
-
-
-

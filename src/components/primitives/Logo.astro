@@ -16,7 +16,13 @@ const {
 
 const brandMark = brandName.charAt(0).toUpperCase();
 
-const textColor = color === "white" ? "text-white" : "text-(--color-text-main)";
+const colorMap = {
+  black: "text-(--color-text-main)",
+  white: "text-(--color-text-inverse)",
+  inverse: "text-(--color-text-inverse)"
+};
+
+const textColor = colorMap[color as keyof typeof colorMap] || colorMap.black;
 ---
 
 {variant === "full" ? (

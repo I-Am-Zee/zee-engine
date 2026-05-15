@@ -14,13 +14,17 @@ interface Props {
   buttonText?: string;
   layout?: 'row' | 'col';
   class?: string;
+  inputClass?: string;
+  buttonType?: "primary" | "secondary" | "neutral" | "ghost";
 }
 
 const { 
   placeholder = "Your email...", 
   buttonText = "Subscribe", 
   layout = 'row',
-  class: className, 
+  class: className,
+  inputClass = "",
+  buttonType = "primary",
   ...rest 
 } = Astro.props;
 ---
@@ -45,26 +49,32 @@ const {
       x-model="email"
       @input="hideEmailError"
       @blur="validateEmail"
-      class="w-full h-11"
+      class={`w-full h-11 ${inputClass}`}
     />
-    <p 
+    <Text 
+      as="p"
+      variant="caption"
+      color="coral"
+      weight="medium"
       data-email-error 
-      class="text-xs text-red-500 font-medium"
       x-show="emailError"
       x-cloak
     >
       Enter valid Gmail address
-    </p>
-    <p 
-      class="text-xs text-red-500 font-medium"
+    </Text>
+    <Text 
+      as="p"
+      variant="caption"
+      color="coral"
+      weight="medium"
       x-show="formError"
       x-cloak
     >
       Failed to subscribe. Try again.
-    </p>
+    </Text>
   </div>
-  <Button type="primary" class="h-11" :disabled="isSubmitting">
-    <Text variant="label" color="inverse" x-text="submitLabel">{buttonText}</Text>
+  <Button type={buttonType} class="h-11" :disabled="isSubmitting">
+    <Text variant="label" color={buttonType === 'primary' ? 'inverse' : 'main'} x-text="submitLabel">{buttonText}</Text>
   </Button>
 </form>
 
