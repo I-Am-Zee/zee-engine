@@ -124,14 +124,14 @@ const dynamicNavigation: NavItem[] = [
 
   {/* ── State 2: Solid Airy Cream (Standard & Scrolled Home) ── */}
   <div
-    x-show="scrolled || !isTransparent"
-    x-cloak={isTransparent}
-    x-transition:enter="motion-soft transform"
-    x-transition:enter-start="-translate-y-full"
-    x-transition:enter-end="translate-y-0"
-    x-transition:leave="motion-soft transform"
-    x-transition:leave-start="translate-y-0"
-    x-transition:leave-end="-translate-y-full"
+    x-show={isTransparent ? "scrolled" : undefined}
+    x-cloak={isTransparent ? true : undefined}
+    x-transition:enter={isTransparent ? "motion-soft transform" : undefined}
+    x-transition:enter-start={isTransparent ? "-translate-y-full" : undefined}
+    x-transition:enter-end={isTransparent ? "translate-y-0" : undefined}
+    x-transition:leave={isTransparent ? "motion-soft transform" : undefined}
+    x-transition:leave-start={isTransparent ? "translate-y-0" : undefined}
+    x-transition:leave-end={isTransparent ? "-translate-y-full" : undefined}
     class:list={[
       "w-full z-[100]",
       isTransparent ? "fixed top-0" : "sticky top-0"

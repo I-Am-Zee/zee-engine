@@ -7,6 +7,7 @@ import Image from "../../components/primitives/Image.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import EditorialHero from "../../components/ui/EditorialHero.astro";
+import TableOfContents from "../../components/features/TableOfContents.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -18,7 +19,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { title, excerpt, publishDate, author, image, tags } = post.data;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+
+const tocHeadings = headings.filter(h => h.depth <= 3);
 
 // Fetch author data for bio
 const authorEntry = await getEntry('authors', author);
@@ -49,47 +52,56 @@ const breadcrumbItems = [
     metadata={[formattedDate, authorData?.name || author]}
   />
 
-  <article class="mx-auto max-w-3xl px-4 py-16 md:py-24 lg:px-8">
-    {/* Content */}
-    <div class="prose prose-zelia prose-lg max-w-none 
-                prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
-                prose-p:leading-relaxed prose-p:text-(--color-text-main)/90
-                prose-a:text-(--color-primary) prose-a:no-underline hover:prose-a:underline
-                prose-strong:text-(--color-text-main) prose-strong:font-bold
-                prose-blockquote:border-l-primary prose-blockquote:bg-(--color-surface) prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-xl prose-blockquote:italic
-                prose-img:rounded-2xl prose-img:shadow-lg">
-      <Content />
-    </div>
-
-    {/* Footer Tags */}
-    {tags && tags.length > 0 && (
-      <div class="mt-16 pt-8 border-t border-(--color-border-subtle)/30 flex flex-wrap gap-2">
-        {tags.map(tag => (
-          <span class="px-4 py-2 bg-(--color-surface) rounded-full text-xs font-medium text-(--color-text-muted) border border-(--color-border-subtle)/50 hover:border-(--color-primary)/30 transition-colors cursor-default">
-            #{tag}
-          </span>
-        ))}
+  <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-[1fr_300px] lg:gap-16 lg:items-start px-4 lg:px-8">
+    {/* Article Column */}
+    <article id="blog-content" class="py-16 md:py-24 max-w-3xl mx-auto lg:mx-0 lg:max-w-none">
+      {/* Content */}
+      <div class="prose prose-zelia prose-lg max-w-none 
+                  prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
+                  prose-p:leading-relaxed prose-p:text-(--color-text-main)/90
+                  prose-a:text-(--color-primary) prose-a:no-underline
+                  prose-strong:text-(--color-text-main) prose-strong:font-bold
+                  prose-blockquote:border-l-primary prose-blockquote:bg-(--color-surface) prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-xl prose-blockquote:italic
+                  prose-img:rounded-2xl prose-img:shadow-lg">
+        <Content />
       </div>
-    )}
 
-    {/* Author Bio */}
-    {authorData && (
-      <div class="mt-16 rounded-3xl bg-(--color-surface) p-8 border border-(--color-border-subtle)/30 flex flex-col sm:flex-row items-center gap-6">
-        <div class="h-20 w-20 shrink-0 rounded-full bg-(--color-primary)/10 overflow-hidden flex items-center justify-center text-(--color-primary) font-bold text-2xl border border-(--color-primary)/20">
-          {authorData.avatar ? (
-            <Image src={authorData.avatar} alt={authorData.name} class="w-full h-full object-cover" />
-          ) : (
-            authorData.name.charAt(0)
-          )}
+      {/* Footer Tags */}
+      {tags && tags.length > 0 && (
+        <div class="mt-16 pt-8 border-t border-(--color-border-subtle)/30 flex flex-wrap gap-2">
+          {tags.map(tag => (
+            <span class="px-4 py-2 bg-(--color-surface) rounded-full text-xs font-medium text-(--color-text-muted) border border-(--color-border-subtle)/50 hover:border-(--color-primary)/30 transition-colors cursor-default">
+              #{tag}
+            </span>
+          ))}
         </div>
-        <div class="text-center sm:text-left">
-          <Text variant="small" color="muted" class="mb-1 uppercase tracking-widest font-bold">Written By</Text>
-          <Heading as="h4" class="mb-2">{authorData.name}</Heading>
-          <Text variant="paragraph" color="muted" class="text-sm">
-            {authorData.bio || `Curating the latest stories and style guides for our journal.`}
-          </Text>
+      )}
+
+      {/* Author Bio */}
+      {authorData && (
+        <div class="mt-16 rounded-3xl bg-(--color-surface) p-8 border border-(--color-border-subtle)/30 flex flex-col sm:flex-row items-center gap-6">
+          <div class="h-20 w-20 shrink-0 rounded-full bg-(--color-primary)/10 overflow-hidden flex items-center justify-center text-(--color-primary) font-bold text-2xl border border-(--color-primary)/20">
+            {authorData.avatar ? (
+              <Image src={authorData.avatar} alt={authorData.name} class="w-full h-full object-cover" />
+            ) : (
+              authorData.name.charAt(0)
+            )}
+          </div>
+          <div class="text-center sm:text-left">
+            <Text variant="small" color="muted" class="mb-1 uppercase tracking-widest font-bold">Written By</Text>
+            <Heading as="h4" class="mb-2">{authorData.name}</Heading>
+            <Text variant="paragraph" color="muted" class="text-sm">
+              {authorData.bio || `Curating the latest stories and style guides for our journal.`}
+            </Text>
+          </div>
         </div>
-      </div>
-    )}
-  </article>
+      )}
+    </article>
+
+    {/* Sidebar Column: Locked to 300px on desktop */}
+    <aside class="lg:sticky lg:top-28 lg:mt-24 pb-20">
+      {tocHeadings.length > 1 && <TableOfContents headings={tocHeadings} />}
+    </aside>
+  </div>
 </EngineLayout>
+

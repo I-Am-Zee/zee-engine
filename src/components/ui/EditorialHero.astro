@@ -25,24 +25,24 @@ const hasImage = !!image;
 
 <Section 
   variant={hasImage ? "full" : "hero"} 
-  class={`relative w-full overflow-hidden ${hasImage ? "h-[60vh] md:h-[80vh] bg-black" : "bg-(--color-surface-muted)/40 border-b border-(--color-border-subtle)/50"} ${className || ""}`}
+  class={`relative w-full overflow-hidden ${hasImage ? "flex flex-col justify-end min-h-[60vh] md:min-h-[80vh] bg-black" : "bg-(--color-surface-muted)/40 border-b border-(--color-border-subtle)/50"} ${className || ""}`}
 >
   {hasImage && (
     <>
       <Image
         src={image}
         alt={title}
-        class="absolute inset-0 w-full h-full object-cover brightness-50"
+        class="absolute inset-0 w-full h-full object-cover brightness-50 z-0"
         loading="eager"
         fetchpriority="high"
         ratio="auto"
       />
-      <div class="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent"></div>
+      <div class="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent z-0"></div>
     </>
   )}
   
   <!-- Content Overlay / Container -->
-  <div class={hasImage ? "absolute bottom-0 left-0 right-0 py-8 md:py-20 text-white" : "relative"}>
+  <div class={hasImage ? "relative z-10 py-8 md:py-20 text-white w-full" : "relative"}>
     <div class={hasImage ? "mx-auto max-w-7xl px-4 lg:px-8" : ""}>
       {/* Eyebrow & Metadata Line */}
       {(eyebrow || (metadata && metadata.length > 0)) && (
