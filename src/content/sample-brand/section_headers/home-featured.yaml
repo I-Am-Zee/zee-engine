@@ -1,0 +1,6 @@
+id: "home-featured"
+title: "Featured Samples"
+subtitle: "Our handpicked selections."
+button_mode: "link"
+action_label: "Shop All"
+link_url: "/shop"

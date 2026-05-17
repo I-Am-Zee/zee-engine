@@ -1,0 +1,29 @@
+title: About Sample Brand
+isDraft: false
+hero:
+  heading: Sample Brand Philosophy.
+  text: This is a sample brand story to demonstrate the multi-tenant engine.
+  image: /images/placeholder.jpg
+  isImmersive: false
+sections:
+  - layout: image-right
+    alignment: left
+    stack:
+      - discriminant: text
+        value:
+          type: eyebrow
+          content: OUR STORY
+          italic: false
+      - discriminant: heading
+        value:
+          type: h2
+          content: The Sample Beginning
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: Once upon a time in a sample world...
+          italic: false
+    image:
+      url: /images/placeholder.jpg
+      shape: vertical

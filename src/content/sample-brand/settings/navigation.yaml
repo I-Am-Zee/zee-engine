@@ -1,0 +1,17 @@
+main_menus:
+  - label: "Collections"
+    href: "/shop"
+    items:
+      - label: "All Items"
+        href: "/shop"
+      - label: "New Arrivals"
+        href: "/shop?tag=new"
+  - label: "Our Story"
+    href: "/brand/about"
+support_links:
+  - label: "FAQ"
+    href: "/faq"
+  - label: "Contact"
+    href: "/contact"
+labels:
+  allJewelry: "Explore All"

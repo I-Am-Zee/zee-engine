@@ -1,0 +1,6 @@
+id: "home-categories"
+title: "Shop by Mood"
+subtitle: "Curated categories."
+button_mode: "link"
+action_label: "All Collections"
+link_url: "/collections"

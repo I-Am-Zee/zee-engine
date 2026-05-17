@@ -1,0 +1,23 @@
+title: About Sample Affiliate
+isDraft: false
+hero:
+  heading: Our Curated World.
+  text: We find the best products so you don't have to.
+  image: /images/placeholder.jpg
+  isImmersive: false
+sections:
+  - layout: no-image
+    alignment: left
+    stack:
+      - discriminant: heading
+        value:
+          type: h2
+          content: The Affiliate Mission
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: We partner with leading brands to bring you curated collections.
+          italic: false
+    image:
+      shape: vertical

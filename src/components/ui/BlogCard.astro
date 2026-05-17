@@ -62,7 +62,7 @@ const isHorizontal = variant === "horizontal";
   ───────────────────────────────────────────────────────────── */
   <article
     class:list={[
-      "group relative overflow-hidden rounded-2xl motion-soft bg-(--color-surface)",
+      "group relative overflow-hidden rounded-2xl transition-all duration-300 ease-out bg-(--color-surface)",
       "shadow-xs hover:shadow-xs hover:-translate-y-1",
       "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
       /* Responsive Layout: 
@@ -115,7 +115,7 @@ const isHorizontal = variant === "horizontal";
       */}
       <div
         class:list={[
-          "motion-soft bg-black/40 backdrop-blur-lg",
+          "transition-all duration-300 ease-out bg-black/40 backdrop-blur-lg",
           "p-6 pb-8 md:p-10 md:pb-12",
           "lg:max-w-2xl lg:rounded-3xl lg:border lg:border-white/10 lg:shadow-2xl",
           "translate-y-1.5 group-hover:translate-y-0"
@@ -227,7 +227,7 @@ const isHorizontal = variant === "horizontal";
   ───────────────────────────────────────────────────────────── */
   <article
     class:list={[
-      "group relative flex motion-soft",
+      "group relative flex transition-all duration-300 ease-out",
       "bg-(--color-surface) rounded-2xl h-full",
       "shadow-xs hover:shadow-xs hover:-translate-y-1",
       className
@@ -239,7 +239,7 @@ const isHorizontal = variant === "horizontal";
     {/* Layout wrapper */}
     <div
       class:list={[
-        "relative z-10 flex-1 flex rounded-2xl overflow-hidden motion-soft",
+        "relative z-10 flex-1 flex rounded-2xl overflow-hidden transition-all duration-300 ease-out",
         "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
         isHorizontal ? "flex-col md:flex-row" : "flex-col"
       ]}

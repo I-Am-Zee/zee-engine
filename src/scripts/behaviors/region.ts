@@ -20,7 +20,11 @@ export const regionStore = {
   },
 
   async checkAndDetect() {
-    const brandId = document.body.dataset.brandId || 'zelia-vance';
+    const brandId = document.body.dataset.brandId;
+    if (!brandId) {
+      console.warn('[RegionBehavior] brandId missing from body dataset.');
+      return;
+    }
     const savedRegion = localStorage.getItem(`${brandId}_region`);
     const savedExpiry = localStorage.getItem(`${brandId}_region_expiry`);
     const now = new Date().getTime();
@@ -72,7 +76,9 @@ export const regionStore = {
   },
 
   save(region: string) {
-    const brandId = document.body.dataset.brandId || 'zelia-vance';
+    const brandId = document.body.dataset.brandId;
+    if (!brandId) return;
+    
     // 24 hour expiry (1000 * 60 * 60 * 24 = 86400000)
     const expiryDate = new Date().getTime() + 86400000;
     localStorage.setItem(`${brandId}_region`, region);

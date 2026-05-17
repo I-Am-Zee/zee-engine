@@ -1,0 +1,8 @@
+id: "sidebar"
+heading: "Don't miss a drop"
+description: "Sample news delivered daily."
+placeholder: "Enter your email"
+button_text: "Join"
+disclaimer: "Gmail only."
+success_message: "Subscribed!"
+image: "/images/placeholder.jpg"

@@ -1,0 +1,10 @@
+name: "Sample Affiliate"
+tagline: "Curating the Best in Modern Living"
+description: "Sample Affiliate is your trusted guide to the best products across the web. We research, test, and recommend only the highest quality items from our partner networks."
+legal_entity: "Affiliate Media Group"
+site_url: "https://affiliate.example.com"
+social:
+  - platform: "Instagram"
+    url: "https://instagram.com/sampleaffiliate"
+  - platform: "Facebook"
+    url: "https://facebook.com/sampleaffiliate"

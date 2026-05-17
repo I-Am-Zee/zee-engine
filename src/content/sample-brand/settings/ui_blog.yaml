@@ -1,0 +1,10 @@
+labels:
+  filterHeading: "Filter"
+  allStories: "All"
+  showAll: "View All"
+  itemsFound: "found"
+  showingFiltered: "Filtered"
+  readMore: "Read"
+empty_states:
+  no_posts: "Coming soon."
+  no_results: "No results."

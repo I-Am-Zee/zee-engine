@@ -1,0 +1,29 @@
+/* ─── Sample Brand — Modern Minimalist Color System ─── */
+@theme {
+  --font-sans-serif: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "Courier New", monospace;
+
+  --color-primary: #1a1a1a;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f3f4f6;
+  --color-secondary-foreground: #1a1a1a;
+  --color-ghost-hover: #f9fafb;
+
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f3f4f6;
+
+  --color-text-main: #1a1a1a;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+
+  --color-border-subtle: #e5e7eb;
+  --color-border-strong: #374151;
+  --color-ring: #1a1a1a;
+  --color-ring-glow: rgba(26, 26, 26, 0.2);
+
+  --color-accent-coral: #ef4444;
+  --color-accent-brass: #d97706;
+  --color-accent-emerald: #10b981;
+}

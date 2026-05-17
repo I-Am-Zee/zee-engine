@@ -1,0 +1,10 @@
+free_shipping_threshold: 3000
+default_slab: "small-packaging"
+slabs:
+  small-packaging:
+    name: "Small Pouch"
+    weight_kg: 0.5
+    dimensions:
+      length: 15
+      breadth: 15
+      height: 5

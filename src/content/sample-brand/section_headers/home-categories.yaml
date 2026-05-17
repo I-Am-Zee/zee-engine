@@ -1,0 +1,6 @@
+id: "home-categories"
+title: "The Style Index"
+subtitle: "Map of our world."
+button_mode: "link"
+action_label: "All Collections"
+link_url: "/collections"

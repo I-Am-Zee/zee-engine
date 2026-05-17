@@ -1,0 +1,11 @@
+announcement_bar:
+  enabled: true
+  text: "Discover our curated collection of tech essentials."
+  link: "/shop"
+discount_popup:
+  enabled: false
+newsletter_popup:
+  enabled: true
+  title: "Join the Curator's List"
+  description: "Get weekly updates on the best products we've found."
+  button_text: "Subscribe"

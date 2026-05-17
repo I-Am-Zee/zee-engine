@@ -1,0 +1,29 @@
+/* ─── Sample Affiliate — Tech-Forward Color System ─── */
+@theme {
+  --font-sans-serif: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "Courier New", monospace;
+
+  --color-primary: #0f172a; /* Slate 900 */
+  --color-primary-foreground: #f8fafc;
+  --color-secondary: #e2e8f0;
+  --color-secondary-foreground: #0f172a;
+  --color-ghost-hover: #f1f5f9;
+
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+
+  --color-text-main: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #ffffff;
+
+  --color-border-subtle: #cbd5e1;
+  --color-border-strong: #475569;
+  --color-ring: #3b82f6; /* Blue 500 */
+  --color-ring-glow: rgba(59, 130, 246, 0.2);
+
+  --color-accent-coral: #f43f5e;
+  --color-accent-brass: #d97706;
+  --color-accent-emerald: #10b981;
+}

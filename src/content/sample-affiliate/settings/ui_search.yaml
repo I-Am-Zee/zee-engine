@@ -1,0 +1,16 @@
+title: "Search Curated"
+description: "Find your next favorite piece."
+placeholder: "Search tech, luxury, style..."
+filters:
+  all: "All"
+  product: "Products"
+  blog: "Articles"
+empty_states:
+  initial:
+    heading: "What are you looking for?"
+    subtext: "Search our curated index."
+  no_results:
+    heading: "No matches"
+    description: "Try different keywords."
+    cta_label: "View All"
+    cta_link: "/shop"

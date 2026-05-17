@@ -1,0 +1,12 @@
+geo_detection_enabled: true
+preference_expiry_hours: 24
+regions:
+  - id: india
+    name: India
+    currency: INR
+    locale: en-IN
+  - id: global
+    name: Global / USA
+    currency: USD
+    locale: en-US
+fallback_region_id: global

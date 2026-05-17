@@ -1,0 +1,10 @@
+products:
+  enabled_sorts:
+    - latest
+    - price-asc
+    - price-desc
+  default_sort: latest
+blog:
+  enabled_sorts:
+    - latest
+  default_sort: latest

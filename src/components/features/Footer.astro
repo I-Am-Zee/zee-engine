@@ -28,12 +28,8 @@ const navigationEntry = await getEntry("settings", "navigation");
 const taxonomy = await getEntry("settings", "taxonomy");
 const newsletterVariant = await getEntry("newsletter_variants", "footer");
 
-const brandName = siteSettings?.data?.name;
-const legalEntity = legalSettings?.data?.legal_entity;
-
-if (!brandName || !legalEntity) {
-  throw new Error("[Footer] Configuration missing.");
-}
+const brandName = siteSettings?.data?.name || "Brand";
+const legalEntity = legalSettings?.data?.legal_entity || (siteSettings?.data as any)?.legal_entity || brandName;
 
 const socialLinks: any[] = siteSettings?.data?.social || [];
 const copyright = `Copyright © ${new Date().getFullYear()} ${legalEntity}. All rights reserved.`;

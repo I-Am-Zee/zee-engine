@@ -19,12 +19,35 @@ const __dirname = path.dirname(__filename);
 // Load environment variables based on the current mode
 const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
 
-const brandId = env.PUBLIC_BRAND_ID;
+const rawBrandId = env.PUBLIC_BRAND_ID;
+const isAffiliate = env.PUBLIC_AFFILIATE === 'true';
 
-if (!brandId) {
-  console.error('\x1b[31m%s\x1b[0m', ' [Engine Error] PUBLIC_BRAND_ID is not set in .env');
-  console.error(' The engine cannot resolve the brand theme without a silo key.');
+let brandId = rawBrandId;
+const brandContentPath = path.resolve(__dirname, `./src/content/${brandId}`);
+
+if (!brandId || !path.resolve(brandContentPath)) {
+  const fallbackId = isAffiliate ? 'sample-affiliate' : 'sample-brand';
+  if (rawBrandId) {
+    console.warn('\x1b[33m%s\x1b[0m', ` [Engine Warning] Brand directory for "${rawBrandId}" not found at ${brandContentPath}.`);
+  } else {
+    console.warn('\x1b[33m%s\x1b[0m', ' [Engine Warning] PUBLIC_BRAND_ID is not set in .env.');
+  }
+  console.warn('\x1b[33m%s\x1b[0m', ` Falling back to "${fallbackId}" content and theme.`);
+  brandId = fallbackId;
+}
+
+// Final check for the resolved brand directory
+if (!fs.existsSync(path.resolve(__dirname, `./src/content/${brandId}`))) {
+  console.error('\x1b[31m%s\x1b[0m', ` [Engine Fatal] Resolved brandId "${brandId}" directory not found. Please ensure sample directories exist.`);
   process.exit(1);
+}
+
+// Resolve theme path with a safety check
+let themePath = path.resolve(__dirname, `./src/styles/${brandId}/theme.css`);
+if (!fs.existsSync(themePath)) {
+  const fallbackTheme = isAffiliate ? 'sample-affiliate' : 'sample-brand';
+  console.warn('\x1b[33m%s\x1b[0m', ` [Engine Warning] Theme not found for "${brandId}". Falling back to "${fallbackTheme}" theme.`);
+  themePath = path.resolve(__dirname, `./src/styles/${fallbackTheme}/theme.css`);
 }
 
 // Site URL — set PUBLIC_SITE_URL in .env and Cloudflare Pages dashboard
@@ -51,7 +74,7 @@ export default defineConfig({
     plugins: [tailwindcss(), yaml()],
     resolve: {
       alias: {
-        '@brand-theme': path.resolve(__dirname, `./src/styles/${brandId}/theme.css`),
+        '@brand-theme': themePath,
         'yjs': path.resolve(__dirname, './node_modules/yjs/dist/yjs.mjs')
       },
       dedupe: [

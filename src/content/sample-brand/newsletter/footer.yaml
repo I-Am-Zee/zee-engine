@@ -1,0 +1,8 @@
+id: "footer"
+heading: "Stay in the loop"
+description: "Get updates on new sample drops."
+placeholder: "Enter your email"
+button_text: "Join"
+disclaimer: "We only accept Gmail."
+success_message: "You're in!"
+image: "/images/placeholder.jpg"

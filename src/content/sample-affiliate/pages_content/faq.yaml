@@ -1,0 +1,8 @@
+heading: "Affiliate FAQ"
+subtitle: "How we work."
+categories:
+  - title: "Partnerships"
+    icon: "PhHandshake"
+    questions:
+      - question: "How do you choose products?"
+        answer: "Based on quality and value."

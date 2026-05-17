@@ -1,0 +1,16 @@
+title: "Search Sample"
+description: "Find what you're looking for."
+placeholder: "Search..."
+filters:
+  all: "Everything"
+  product: "Items"
+  blog: "Stories"
+empty_states:
+  initial:
+    heading: "Search our store"
+    subtext: "Start typing."
+  no_results:
+    heading: "No luck"
+    description: "Try again."
+    cta_label: "Shop All"
+    cta_link: "/shop"

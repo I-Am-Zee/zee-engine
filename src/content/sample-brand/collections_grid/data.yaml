@@ -1,0 +1,7 @@
+cards:
+  - title: Sample Collection
+    slug: sample-category
+    description: A curated selection of sample products.
+    image: /images/placeholder.jpg
+    type: category
+    is_coming_soon: false

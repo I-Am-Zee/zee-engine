@@ -1,0 +1,8 @@
+id: "section"
+heading: "The Journal"
+description: "Subscribe to our curated blog."
+placeholder: "Email"
+button_text: "Subscribe"
+disclaimer: "Gmail only."
+success_message: "In!"
+image: "/images/placeholder.jpg"

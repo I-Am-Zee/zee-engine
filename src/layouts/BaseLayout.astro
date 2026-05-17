@@ -12,9 +12,13 @@ import Lightbox from "../components/ui/Lightbox.astro";
 
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
-const brandId = import.meta.env.PUBLIC_BRAND_ID;
+
+const rawBrandId = import.meta.env.PUBLIC_BRAND_ID;
+let brandId = rawBrandId;
+
+// Fallback logic (must match astro.config.mjs and content/config.ts)
 if (!brandId) {
-  throw new Error("PUBLIC_BRAND_ID environment variable is missing. The engine requires a brand silo key to resolve content and assets.");
+  brandId = isAffiliate ? 'sample-affiliate' : 'sample-brand';
 }
 
 // Dynamic Favicon Strategy: R2 Gateway (Production) -> Local Fallback (Dev)

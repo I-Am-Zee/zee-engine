@@ -1,0 +1,6 @@
+id: "pdp-upsell"
+title: "Complete Your Selection"
+subtitle: "Items that pair well."
+button_mode: "link"
+action_label: "View All"
+link_url: "/shop"

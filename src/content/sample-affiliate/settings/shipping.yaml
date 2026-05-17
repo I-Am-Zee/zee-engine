@@ -1,0 +1,10 @@
+free_shipping_threshold: 0
+default_slab: "standard"
+slabs:
+  standard:
+    name: "Standard Delivery"
+    weight_kg: 1
+    dimensions:
+      length: 20
+      breadth: 20
+      height: 10

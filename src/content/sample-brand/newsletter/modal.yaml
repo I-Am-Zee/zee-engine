@@ -1,0 +1,8 @@
+id: "modal"
+heading: "Unlock 10% Off"
+description: "Join the sample family."
+placeholder: "Enter your email"
+button_text: "Get Code"
+disclaimer: "Gmail only."
+success_message: "Check your inbox."
+image: "/images/placeholder.jpg"

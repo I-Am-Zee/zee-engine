@@ -1,0 +1,8 @@
+title: "Welcome!"
+description: "You're subscribed."
+heading: "Success!"
+message_primary: "Welcome to the family."
+message_secondary: "We'll be in touch."
+cta_label: "Explore"
+cta_link: "/shop"
+unsubscribe_note: "Unsubscribe anytime."

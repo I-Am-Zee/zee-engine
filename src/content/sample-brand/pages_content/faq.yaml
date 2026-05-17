@@ -1,0 +1,8 @@
+heading: "Questions?"
+subtitle: "Find answers here."
+categories:
+  - title: "General"
+    icon: "PhInfo"
+    questions:
+      - question: "What is this?"
+        answer: "This is a sample FAQ."

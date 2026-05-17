@@ -1,0 +1,9 @@
+main_heading: "Quality You Can Trust"
+hero_image: "/images/placeholder.jpg"
+markers:
+  - title: "Premium Materials"
+    description: "Only the best for our samples."
+    icon: "PhCheck"
+  - title: "Fast Shipping"
+    description: "Sample speed delivery."
+    icon: "PhTruck"

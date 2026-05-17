@@ -1,0 +1,10 @@
+announcement_bar:
+  enabled: true
+  text: "Welcome to Sample Brand — Experience Timeless Elegance"
+  link: "/shop"
+  bg_color: "bg-black"
+  text_color: "text-white"
+discount_popup:
+  enabled: false
+newsletter_popup:
+  enabled: false

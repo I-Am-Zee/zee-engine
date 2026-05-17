@@ -1,0 +1,5 @@
+empty_states:
+  heading: "Empty Wishlist"
+  description: "Add items."
+  cta_label: "Shop"
+  cta_link: "/shop"

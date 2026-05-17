@@ -1,0 +1,6 @@
+id: "lookbook-products"
+title: "Curated Selection"
+subtitle: "Items featured in this look."
+button_mode: "link"
+action_label: "View All"
+link_url: "/shop"

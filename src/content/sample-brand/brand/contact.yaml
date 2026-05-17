@@ -1,0 +1,27 @@
+title: Contact Us
+isDraft: false
+hero:
+  heading: Get in touch.
+  text: We'd love to hear from you.
+  isImmersive: false
+sections:
+  - layout: no-image
+    alignment: center
+    stack:
+      - discriminant: heading
+        value:
+          type: h2
+          content: Send us a message
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: Use the form below or email us directly at support@samplebrand.com
+          italic: false
+      - discriminant: button
+        value:
+          label: Open Contact Form
+          action_type: modal
+          embed_url: wMQkAb
+    image:
+      shape: square

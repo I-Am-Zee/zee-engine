@@ -1,27 +1,28 @@
-### Master Audit Findings & Fixes - Final Report
-*Commit Range: eb5510f -> 0be35b1 + Fixes applied*
+# Multi-Tenant Architecture: Master Game Plan
 
-**1. Tailwind v4 Syntax Violations (FIXED)**
+[DONE] Chunk 1: CSS & Prose Abstraction
+[DONE] Chunk 2: Non-Affiliate Sample Content Generation
+[DONE] Chunk 3: Affiliate Sample Content Generation
+[DONE] Chunk 4: Engine Fallback Logic
+[DONE] Chunk 5: Final Multi-Tenant Stability Audit
 
-*   **Deprecated `shadow-sm` (Now `shadow-xs`)**
-    *   `src/components/features/Navbar.astro` (Fixed)
-    *   `src/components/ui/BlogCard.astro` (Fixed 6 instances, including `drop-shadow-xs`)
-    *   `src/pages/index.astro` (Fixed `drop-shadow-xs`)
+# Starter Template Structural Parity Plan
 
-*   **Deprecated `rounded-sm` (Now `rounded-xs`)**
-    *   `src/components/features/Footer.astro` (Fixed)
-    *   `src/components/primitives/Link.astro` (Fixed)
-    *   `src/components/ui/AccordionItem.astro` (Fixed)
-    *   `src/pages/brand/[slug].astro` (Fixed 3 instances)
+[DONE] Chunk 6: `sample-brand` Structural Expansion
+- Mirrored the exact directory structure of `zelia-vance`.
+- Populated all folders with generic sample files (`brand`, `collections_grid`, `newsletter`, `page_headers`, `section_headers`, `storefront`, `lookbooks`).
+- Verified D2C schema compliance for sample products.
 
-*   **Tailwind v4 Prefix Modifiers (!important)**
-    *   `src/pages/index.astro`: Moved `!py-24` and `!py-32` to `py-24!` and `py-32!` (Fixed).
-    *   All other detected instances in `Navbar.astro` and `Footer.astro` were already correctly using postfix syntax.
+[DONE] Chunk 7: `sample-affiliate` Structural Expansion
+- Mirrored directory structure into `sample-affiliate`.
+- Populated with affiliate-specific placeholders.
+- Verified Affiliate schema compliance for sample products (affiliate_links, no price/variants).
+- Implemented `affiliate_settings.yaml` for geo-detection.
 
-**2. Codebase Integrity (Verified)**
-*   **CSS Token Syntax:** All files verified to use the new `bg-(--token)` syntax.
-*   **Opacity Modifiers:** All files verified to use the slash modifier (e.g., `/50`).
-*   **Layer Isolation:** Features/Pages verified to contain no `<style>` blocks.
-*   **Atomic Design:** UI/Features correctly utilize Primitives (Heading, Text, Image, Icon).
+[DONE] Chunk 8: Verification & Cleanup
+- Successfully ran `npm run build` for both `sample-brand` and `sample-affiliate` environments.
+- Fixed schema mismatches and missing entries discovered during the build process.
 
-**Conclusion:** The codebase is now 100% compliant with the Tailwind v4 syntax mandates and Atomic Design rules. Integrity has been verified through a successful production build (`npm run build`) and type check (`npx astro check`).
+[DONE] Chunk 9: Multi-Tenant Prose Cleanup
+- Removed '.prose-zelia' and cleaned up blog template to rely on global '.prose' block.
+- Verified zelia-vance build is 100% clean without content-layer warnings.

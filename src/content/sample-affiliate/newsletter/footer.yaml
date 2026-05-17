@@ -1,0 +1,8 @@
+id: "footer"
+heading: "Affiliate Updates"
+description: "Get the latest curated deals."
+placeholder: "Email"
+button_text: "Join"
+disclaimer: "Gmail only."
+success_message: "Welcome!"
+image: "/images/placeholder.jpg"

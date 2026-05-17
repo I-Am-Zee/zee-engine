@@ -1,0 +1,7 @@
+navigation:
+  - label: "Home"
+    link: "/"
+  - label: "Shop"
+    link: "/shop"
+  - label: "Blog"
+    link: "/blog"

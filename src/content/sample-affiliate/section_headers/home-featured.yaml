@@ -1,0 +1,6 @@
+id: "home-featured"
+title: "Editor's Choice"
+subtitle: "The best of the best."
+button_mode: "link"
+action_label: "Shop Now"
+link_url: "/shop"

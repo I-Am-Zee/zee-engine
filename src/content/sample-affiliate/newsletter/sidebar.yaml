@@ -1,0 +1,8 @@
+id: "sidebar"
+heading: "News"
+description: "Affiliate news."
+placeholder: "Email"
+button_text: "Join"
+disclaimer: "Gmail only."
+success_message: "Done!"
+image: "/images/placeholder.jpg"

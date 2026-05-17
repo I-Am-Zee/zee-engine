@@ -7,14 +7,19 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
-const brandId = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_BRAND_ID) || (typeof process !== 'undefined' && process.env?.PUBLIC_BRAND_ID);
+let brandId = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_BRAND_ID) || (typeof process !== 'undefined' && process.env?.PUBLIC_BRAND_ID);
 const isAffiliate = ((typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_AFFILIATE) || (typeof process !== 'undefined' && process.env?.PUBLIC_AFFILIATE)) === 'true';
-
-if (!brandId) throw new Error('[Keystatic] PUBLIC_BRAND_ID is not set in environment.');
 
 // ── Tags, Badges & Categories (Dynamic via Vite Glob) ─────────────────────────
 // Using import.meta.glob for browser-safe dynamic imports in Vite/ESM
 const taxonomyFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/taxonomy.yaml', { eager: true });
+
+// Resolve brandId fallback if missing or invalid
+const brandExists = brandId && Object.keys(taxonomyFiles).some(k => k.includes(`/src/content/${brandId}/`));
+if (!brandId || !brandExists) {
+  brandId = isAffiliate ? 'sample-affiliate' : 'sample-brand';
+}
+
 const shippingFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/shipping.yaml', { eager: true });
 
 const taxonomyJson = taxonomyFiles[`./src/content/${brandId}/settings/taxonomy.yaml`]?.default || { categories: [], tags: [], badges: [] };

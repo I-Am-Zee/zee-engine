@@ -1,0 +1,9 @@
+main_heading: "Curated Trust"
+hero_image: "/images/placeholder.jpg"
+markers:
+  - title: "Expert Reviews"
+    description: "We test every product."
+    icon: "PhCheck"
+  - title: "Partner Savings"
+    description: "Best deals guaranteed."
+    icon: "PhTag"

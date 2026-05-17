@@ -1,0 +1,4 @@
+tax_classes:
+  - hsn: "7117"
+    rate: 0.03
+    label: "Costume Jewellery"

@@ -33,7 +33,7 @@ const { images, alt, class: className = "" } = Astro.props;
         <button
           type="button"
           @click={`activeImage = ${JSON.stringify(image)}`}
-          class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) motion-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed border-2 border-transparent"
+          class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed border-2 border-transparent"
           :class={`activeImage === ${JSON.stringify(image)} ? 'border-accent-brass opacity-100' : 'opacity-40 hover:opacity-80'`}
         >
           <Image
@@ -53,7 +53,7 @@ const { images, alt, class: className = "" } = Astro.props;
         <button
           type="button"
           @click={`activeImage = ${JSON.stringify(image)}`}
-          class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) motion-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed border-2 border-transparent"
+          class="aspect-4/5 w-20 shrink-0 overflow-hidden rounded-md bg-(--color-surface) transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-ring) cursor-pointer disabled:cursor-not-allowed border-2 border-transparent"
           :class={`activeImage === ${JSON.stringify(image)} ? 'border-accent-brass opacity-100' : 'opacity-40 hover:opacity-80'`}
         >
           <Image

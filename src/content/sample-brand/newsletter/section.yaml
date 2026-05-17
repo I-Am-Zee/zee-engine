@@ -1,0 +1,8 @@
+id: "section"
+heading: "Join the Inner Circle"
+description: "Be the first to know about sample arrivals."
+placeholder: "Enter your email"
+button_text: "Subscribe"
+disclaimer: "Gmail only."
+success_message: "Welcome!"
+image: "/images/placeholder.jpg"

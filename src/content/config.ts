@@ -9,14 +9,14 @@ import yaml from "yaml";
 // If this is not set, the engine stops immediately with a clear error.
 // Set this in your .env file: PUBLIC_BRAND_ID="zelia-vance"
 // ─────────────────────────────────────────────────────────────────────────────
-const brandId = import.meta.env.PUBLIC_BRAND_ID;
-if (!brandId) {
-  throw new Error(
-    "\n\n[Engine Error] PUBLIC_BRAND_ID is not set.\n" +
-    "The engine cannot start without knowing which brand to serve.\n" +
-    "Add PUBLIC_BRAND_ID=\"your-brand-id\" to your .env file.\n" +
-    "See .plans/BRAND-SETUP-GUIDE.md for instructions.\n"
-  );
+const rawBrandId = import.meta.env.PUBLIC_BRAND_ID;
+const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
+
+let brandId = rawBrandId;
+if (!brandId || !fs.existsSync(`./src/content/${brandId}`)) {
+  const fallbackId = isAffiliate ? "sample-affiliate" : "sample-brand";
+  console.warn(`\x1b[33m[Engine Warning]\x1b[0m PUBLIC_BRAND_ID ("${brandId}") invalid or missing. Falling back to "${fallbackId}".`);
+  brandId = fallbackId;
 }
 
 

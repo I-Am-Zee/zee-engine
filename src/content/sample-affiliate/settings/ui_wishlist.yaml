@@ -1,0 +1,5 @@
+empty_states:
+  heading: "Wishlist is Empty"
+  description: "Save items to compare later."
+  cta_label: "Explore"
+  cta_link: "/shop"
