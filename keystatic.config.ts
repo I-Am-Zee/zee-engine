@@ -135,7 +135,13 @@ export default config({
         id: fields.slug({ 
           name: { 
             label: 'Variant ID', 
-            description: 'Internal identifier (footer, modal, section, sidebar). DO NOT CHANGE unless you know what you are doing.' 
+            description: 'Internal identifier (footer, modal, section, sidebar). DO NOT CHANGE unless you know what you are doing.',
+            validation: {
+              pattern: {
+                regex: /^(footer|modal|section|sidebar)$/,
+                message: 'You cannot change this ID. It must be footer, modal, section, or sidebar.'
+              }
+            }
           } 
         }),
         heading: fields.text({ label: 'Heading' }),

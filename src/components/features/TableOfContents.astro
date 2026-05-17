@@ -43,16 +43,17 @@ const nestedHeadings = nestHeadings(headings);
 
         {h2.children.length > 0 && (
           <ul 
-            class="mt-2 space-y-2 overflow-hidden transition-all duration-500 ease-in-out max-h-0 opacity-0 group-[.is-active-group]/h2-item:max-h-[500px] group-[.is-active-group]/h2-item:opacity-100"
+            class="mt-2 space-y-2 overflow-hidden transition-all duration-500 ease-in-out max-h-0 opacity-0 group-[.is-active-group]/h2-item:max-h-[500px] group-[.is-active-group]/h2-item:opacity-100 lg:max-h-none lg:opacity-100"
           >
             {h2.children.map((h3) => (
               <li>
                 <a
                   href={`#${h3.slug}`}
                   class:list={[
-                    "block transition-all duration-200 pl-8 py-0.5 text-[0.85rem] text-(--color-text-muted)/70",
+                    "block transition-all duration-200 pl-8 py-0.5 text-[0.85rem] text-(--color-text-muted)/60",
                     "hover:text-(--color-primary)",
-                    "data-[toc-active=true]:text-(--color-primary) data-[toc-active=true]:font-semibold"
+                    "lg:group-[.is-active-group]/h2-item:text-(--color-text-muted)/90",
+                    "data-[toc-active=true]:text-(--color-primary)! data-[toc-active=true]:font-semibold"
                   ]}
                 >
                   {h3.text}

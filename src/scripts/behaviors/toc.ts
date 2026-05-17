@@ -8,12 +8,9 @@
 
 export function initTOC() {
   const content = document.getElementById('blog-content');
-  const mobileBar = document.getElementById('toc-mobile-bar');
-  
   if (!content) return;
 
-  const headings = Array.from(content.querySelectorAll('h2, h3'));
-  // Filter links that are specifically TOC links (targeting blog content headings)
+  const headings = Array.from(content.querySelectorAll('h2, h3')) as HTMLElement[];
   const tocLinks = Array.from(document.querySelectorAll('a[href^="#"]')).filter(link => {
     const href = link.getAttribute('href');
     return href && headings.some(h => `#${h.id}` === href);
@@ -21,69 +18,78 @@ export function initTOC() {
 
   if (headings.length === 0) return;
 
-  const activeHeadings = new Set<string>();
-
-  // 1. Heading IntersectionObserver
-  const headingObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const id = entry.target.id;
-      if (entry.isIntersecting) {
-        activeHeadings.add(id);
-      } else {
-        activeHeadings.delete(id);
-      }
-    });
-
-    // Topmost intersecting wins pattern
+  function updateActiveState() {
+    // Threshold is 15% of viewport height
+    const threshold = window.innerHeight * 0.15;
     let currentId = '';
-    for (const heading of headings) {
-      if (activeHeadings.has(heading.id)) {
-        currentId = heading.id;
+
+    // Find the last heading that is above the threshold
+    for (let i = headings.length - 1; i >= 0; i--) {
+      const rect = headings[i].getBoundingClientRect();
+      if (rect.top <= threshold) {
+        currentId = headings[i].id;
         break;
       }
     }
 
+    // Default to first heading if none passed the threshold but we are scrolled
+    if (!currentId && window.scrollY > 200) {
+      currentId = headings[0].id;
+    }
+
     if (currentId) {
       tocLinks.forEach((link) => {
-        const isActive = link.getAttribute('href') === `#${currentId}`;
+        const href = link.getAttribute('href');
+        const isActive = href === `#${currentId}`;
         const parentLi = link.closest('li[data-toc-group]');
         const h2Slug = parentLi?.getAttribute('data-toc-group');
 
         if (isActive) {
           link.setAttribute('data-toc-active', 'true');
-          
-          // If this is an H2, it's the active group
-          if (parentLi && link.getAttribute('href') === `#${h2Slug}`) {
-            // Remove active group from others
-            document.querySelectorAll('li[data-toc-group]').forEach(el => el.classList.remove('is-active-group'));
-            parentLi.classList.add('is-active-group');
-          }
         } else {
           link.removeAttribute('data-toc-active');
         }
 
-        // Special case: If an H3 is active, ensure its parent H2 is marked as active-group
-        // We find the heading in our headings array to check its depth
-        const currentHeading = headings.find(h => h.id === currentId);
-        if (currentHeading?.tagName === 'H3') {
-           // Find the li that contains this link
-           const h3ParentLi = link.closest('li[data-toc-group]');
-           if (h3ParentLi && link.getAttribute('href') === `#${currentId}`) {
+        // If this link's target is either the current active H2 
+        // OR the current active H3 belongs to this H2's group
+        if (parentLi) {
+          const isH2Active = currentId === h2Slug;
+          const isH3ActiveChild = headings.find(h => h.id === currentId)?.tagName === 'H3' && 
+                                 link.getAttribute('href') === `#${currentId}`;
+          
+          if (isH2Active || isH3ActiveChild) {
+            // Remove active group from others first to avoid multiple expands
+            // But only if we are actually changing groups
+            if (!parentLi.classList.contains('is-active-group')) {
               document.querySelectorAll('li[data-toc-group]').forEach(el => el.classList.remove('is-active-group'));
-              h3ParentLi.classList.add('is-active-group');
-           }
+              parentLi.classList.add('is-active-group');
+            }
+          }
         }
       });
+    } else {
+      // Clear all active states if at the very top
+      tocLinks.forEach(link => link.removeAttribute('data-toc-active'));
+      document.querySelectorAll('li[data-toc-group]').forEach(el => el.classList.remove('is-active-group'));
     }
-  }, {
-    // Offset to trigger when heading is roughly at the top half of the screen
-    rootMargin: "0px 0px -55% 0px",
-    threshold: 0
-  });
+  }
 
-  headings.forEach((h) => headingObserver.observe(h));
+  // Use Scroll listener for precision (throttled)
+  let isScrolling = false;
+  window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        updateActiveState();
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
+  }, { passive: true });
 
-  // 2. Article boundary IntersectionObserver (for mobile bar visibility)
+  // Initial check
+  updateActiveState();
+
+  // Mobile bar visibility logic (still better as IntersectionObserver)
   const mobileTrigger = document.getElementById('toc-mobile-trigger');
   if (mobileTrigger) {
     const articleObserver = new IntersectionObserver((entries) => {
