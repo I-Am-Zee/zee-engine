@@ -97,11 +97,9 @@ export default config({
       path: `src/content/${brandId}/section_headers/*`,
       format: { data: 'yaml' },
       schema: {
-        id: fields.slug({ 
-          name: { 
-            label: 'Section Identifier', 
-            description: 'INTERNAL ONLY: Changing this will break the connection to the layout.' 
-          } 
+        id: fields.text({ 
+          label: 'Section Identifier', 
+          description: 'INTERNAL ONLY: Changing this will break the connection to the layout.' 
         }),
         title: fields.text({ label: 'Heading / Title' }),
         subtitle: fields.text({ label: 'Subtitle / Description', multiline: true }),
@@ -132,17 +130,15 @@ export default config({
       path: `src/content/${brandId}/newsletter/*`,
       format: { data: 'yaml' },
       schema: {
-        id: fields.slug({ 
-          name: { 
-            label: 'Variant ID', 
-            description: 'Internal identifier (footer, modal, section, sidebar). DO NOT CHANGE unless you know what you are doing.',
-            validation: {
-              pattern: {
-                regex: /^(footer|modal|section|sidebar)$/,
-                message: 'You cannot change this ID. It must be footer, modal, section, or sidebar.'
-              }
+        id: fields.text({ 
+          label: 'Variant ID', 
+          description: 'Internal identifier (footer, modal, section, sidebar). DO NOT CHANGE unless you know what you are doing.',
+          validation: {
+            pattern: {
+              regex: /^(footer|modal|section|sidebar)$/,
+              message: 'You cannot change this ID. It must be footer, modal, section, or sidebar.'
             }
-          } 
+          }
         }),
         heading: fields.text({ label: 'Heading' }),
         description: fields.text({ label: 'Description', multiline: true }),
@@ -541,8 +537,9 @@ export default config({
       path: `src/content/${brandId}/page_headers/*`,
       format: { data: 'yaml' },
       schema: {
-        id: fields.slug({ name: { label: 'Page Identifier', description: 'Internal slug used to map this content to a page.' } }),
+        id: fields.text({ label: 'Page Identifier', description: 'Internal slug used to map this content to a page.' }),
         title: fields.text({ label: 'Page Title (H1)' }),
+
         subtitle: fields.text({ label: 'Page Subtitle / Intro', multiline: true }),
         align: fields.select({
           label: 'Header Alignment',
