@@ -1,28 +1,212 @@
-# Multi-Tenant Architecture: Master Game Plan
+# ASSET AUDIT REPORT — Zelia Vance Engine
+# Generated: 2026-05-19
 
-[DONE] Chunk 1: CSS & Prose Abstraction
-[DONE] Chunk 2: Non-Affiliate Sample Content Generation
-[DONE] Chunk 3: Affiliate Sample Content Generation
-[DONE] Chunk 4: Engine Fallback Logic
-[DONE] Chunk 5: Final Multi-Tenant Stability Audit
+---
 
-# Starter Template Structural Parity Plan
+## FINDING 1: The Image.astro Primitive — How It Actually Routes
 
-[DONE] Chunk 6: `sample-brand` Structural Expansion
-- Mirrored the exact directory structure of `zelia-vance`.
-- Populated all folders with generic sample files (`brand`, `collections_grid`, `newsletter`, `page_headers`, `section_headers`, `storefront`, `lookbooks`).
-- Verified D2C schema compliance for sample products.
+`Image.astro` has smart routing logic (lines 42-58):
 
-[DONE] Chunk 7: `sample-affiliate` Structural Expansion
-- Mirrored directory structure into `sample-affiliate`.
-- Populated with affiliate-specific placeholders.
-- Verified Affiliate schema compliance for sample products (affiliate_links, no price/variants).
-- Implemented `affiliate_settings.yaml` for geo-detection.
+- If src starts with `/images/`, it STRIPS the `/images/` prefix and prepends `/${brandId}/`.
+- It then builds the full URL using `PUBLIC_IMAGE_GATEWAY_URL`.
+- In DEV mode (no gateway), it falls back to the local `/images/` folder.
 
-[DONE] Chunk 8: Verification & Cleanup
-- Successfully ran `npm run build` for both `sample-brand` and `sample-affiliate` environments.
-- Fixed schema mismatches and missing entries discovered during the build process.
+Example transformation:
+  - Input:  /images/products/gold-ring.jpg
+  - Output: https://assets.zeliavance.com/zelia-vance/products/gold-ring.jpg
 
-[DONE] Chunk 9: Multi-Tenant Prose Cleanup
-- Removed '.prose-zelia' and cleaned up blog template to rely on global '.prose' block.
-- Verified zelia-vance build is 100% clean without content-layer warnings.
+This is working correctly and is already multi-tenant aware.
+HOWEVER: This ONLY works for paths going through `Image.astro`.
+Plain `<img>` tags (like in snipcart-templates.html) are NOT processed by this.
+
+---
+
+## FINDING 2: The CartToast — Image Routing Status
+
+File: src/components/ui/CartToast.astro (Line 110-118)
+
+```
+<Image
+  src=""
+  :src="productImage"
+  alt="Product"
+  ratio="auto"
+/>
+```
+
+The `productImage` value here comes from Snipcart's `item.added` event.
+Snipcart sends the `image` field from the product's `data-item-image` attribute,
+which is set on the Add to Cart button from the product YAML.
+
+STATUS: Correctly uses `Image.astro`, so it will route through the R2 gateway
+in production. But the data source is the product YAML's image field — if that
+image path is correctly formatted as `/images/products/...`, the toast will work.
+If the product YAML has an absolute R2 URL already, Image.astro will skip transformation.
+
+NO ACTION NEEDED — architecture is correct.
+
+---
+
+## FINDING 3: The SideDrawer — Image Routing Status
+
+File: src/components/ui/SideDrawer.astro
+- Line 101-108: Main item summary image (upsell mode)
+- Line 164-171: Product list images (upsell/quick-shop/master-set)
+
+Both use:
+```
+<Image
+  src=""
+  :src="item.image"
+  ratio="auto"
+/>
+```
+
+The `:src` is Alpine-bound at runtime from the JS data injected by side-drawer.ts behavior.
+The image data flows from the product YAML. Same routing logic applies.
+
+STATUS: Correctly uses `Image.astro`. Works correctly IF product YAML images are
+formatted as `/images/products/...`.
+
+NO ACTION NEEDED — architecture is correct.
+
+---
+
+## FINDING 4: The Snipcart Cart Summary — Image Routing Status
+
+File: public/snipcart-templates.html
+
+Snipcart renders its own cart sidebar using its own Vue-based templates.
+The cart thumbnail image is rendered by Snipcart's own JS from the `data-item-image`
+attribute on your Add To Cart buttons in product YAML.
+
+Snipcart does NOT go through `Image.astro`. It renders the image URL directly.
+Whatever string is in `data-item-image` is what appears in the cart sidebar thumbnail.
+
+If that string is `/images/products/...`, Snipcart will request it from your Astro server,
+which serves local files in dev. In production (Cloudflare Pages), there are no local files —
+so the cart thumbnails will be BROKEN unless the `data-item-image` value is a full absolute URL.
+
+🔴 ACTION NEEDED: Product YAML `image` fields that are used for Snipcart's
+`data-item-image` must be FULL absolute R2 URLs (e.g., https://assets.zeliavance.com/...)
+in production, not relative `/images/...` paths.
+
+This means the image field in your product YAML must carry the full URL.
+`Image.astro` can handle both — but Snipcart cannot.
+
+---
+
+## FINDING 5: The Favicon — Current State
+
+BaseLayout.astro (Line 25):
+  Production: `${gateway}/${brandId}/assets/brand/favicon.svg`
+              = https://assets.zeliavance.com/zelia-vance/assets/brand/favicon.svg
+  Dev Fallback: `/favicon.svg` (public/favicon.svg)
+
+razorpay.astro (Line 50): Same logic.
+
+YOUR OBSERVATION IS CORRECT:
+The favicon is fetched from R2 in production via path `zelia-vance/assets/brand/favicon.svg`.
+In dev, it falls back to `public/favicon.svg` (which currently exists and has 426 bytes).
+The fallback exists and is valid.
+
+However: The R2 path `zelia-vance/assets/brand/favicon.svg` must exist in your R2 bucket.
+Currently, this file lives at: `public/images/zelia-vance/assets/brand/favicon.svg` locally.
+In R2, the structure must be: `zee-media-production/zelia-vance/assets/brand/favicon.svg`
+
+STATUS: Logic is correct. R2 bucket path must be verified to have this file.
+
+---
+
+## FINDING 6: The Logo — Current State
+
+File: src/components/primitives/Logo.astro
+
+The Logo is ENTIRELY text-based — it renders the brand name as styled text using CSS.
+It has NO image file dependency whatsoever. There is no logo SVG or PNG being loaded.
+
+YOUR OBSERVATION IS CORRECT:
+For a real multi-brand engine, Logo.astro should support image-based logos with variants:
+- logo_horizontal.svg
+- logo_vertical.svg
+- logo_mark.svg (icon only)
+- logo_wordmark.svg (text only)
+
+These should live at R2 path: `zelia-vance/assets/brand/logo_horizontal.svg` etc.
+And Logo.astro should be updated to fetch from: `${gateway}/${brandId}/assets/brand/logo_*.svg`
+with a text-based fallback for dev or when no image is found.
+
+🟡 FUTURE WORK: Logo.astro needs to be upgraded to support image-based logos.
+
+---
+
+## FINDING 7: Billing SVGs — Current State and Problem
+
+snipcart-templates.html references:
+- /images/billing/apple-pay.svg   (Line 208)
+- /images/billing/google-pay.svg  (Line 211)
+- /images/billing/visa.svg        (Line 214)
+- /images/billing/mastercard.svg  (Line 217)
+
+BUT: public/images/billing/ does NOT EXIST as a directory.
+
+The billing SVGs are currently located at:
+- public/images/zelia-vance/assets/billing/apple-pay.svg  ✅
+- public/images/zelia-vance/assets/billing/google-pay.svg ✅
+- public/images/zelia-vance/assets/billing/mastercard.svg ✅
+- (visa.svg is MISSING from this folder!)
+
+The snipcart-templates.html is pointing to the WRONG path.
+These are payment method icons — they are ENGINE-LEVEL assets, NOT brand media.
+They should NOT be in /images/ at all, and certainly not fetched from R2.
+They should be embedded directly into snipcart-templates.html as inline SVGs
+OR placed in a permanent public/billing/ folder and referenced as /billing/*.svg.
+
+🔴 ACTION NEEDED:
+1. Move billing SVGs out of /images/ hierarchy entirely.
+2. Place them at: public/billing/ (permanent, gittracked, not gitignored).
+3. Find/add the missing visa.svg.
+4. Update snipcart-templates.html to reference /billing/*.svg.
+
+---
+
+## SUMMARY: The Correct Final public/ Structure
+
+```
+public/
+  ├── favicon.svg                   ← Dev fallback only. Gittracked.
+  ├── snipcart-templates.html       ← Gittracked.
+  ├── billing/                      ← ENGINE ASSETS. Permanent. Gittracked.
+  │   ├── apple-pay.svg
+  │   ├── google-pay.svg
+  │   ├── visa.svg                  ← CURRENTLY MISSING. Must be added.
+  │   └── mastercard.svg
+  └── images/                       ← BRAND MEDIA. Gitignored. R2-synced.
+      ├── products/
+      ├── collections/
+      ├── lookbooks/
+      ├── blogs/
+      ├── brand-shots/
+      ├── marketing/
+      ├── authors/                  ← MISSING. BlogCard.astro needs placeholder here.
+      └── assets/
+          └── brand/
+              ├── favicon.svg       ← R2 source. Dev sync via rclone.
+              └── logo_*.svg        ← FUTURE. Logo variants for Logo.astro upgrade.
+```
+
+---
+
+## COMPONENTS USING IMAGES — STATUS TABLE
+
+| Component                 | Image Source      | Routed via Image.astro? | Status         |
+|---------------------------|-------------------|-------------------------|----------------|
+| GlassProductCard.astro    | Product YAML      | YES                     | ✅ Correct      |
+| SideDrawer.astro          | JS / Product YAML | YES                     | ✅ Correct      |
+| CartToast.astro           | Snipcart event    | YES                     | ✅ Correct      |
+| BlogCard.astro            | Blog YAML         | YES                     | ✅ Correct      |
+| TrustSection.astro        | Prop default      | YES (via Image.astro)   | ✅ Correct      |
+| Snipcart Cart Thumbnail   | data-item-image   | NO — Snipcart renders   | 🔴 Must be full URL in prod |
+| snipcart-templates.html   | /images/billing/  | NO — plain img tag      | 🔴 Wrong path, missing visa.svg |
+| BaseLayout.astro favicon  | R2 gateway / fallback | N/A                 | ✅ Logic correct, verify R2 |
+| Logo.astro                | Text only         | N/A                     | 🟡 Future: add image variants |

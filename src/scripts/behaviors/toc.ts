@@ -38,33 +38,36 @@ export function initTOC() {
     }
 
     if (currentId) {
+      // 1. Identify the target group (H2 slug)
+      const activeHeading = headings.find(h => h.id === currentId);
+      let targetGroupSlug = '';
+      
+      if (activeHeading?.tagName === 'H2') {
+        targetGroupSlug = currentId;
+      } else {
+        // If it's an H3, find its parent group in the DOM
+        const h3Link = document.querySelector(`nav a[href="#${currentId}"], #toc-mobile-bar a[href="#${currentId}"]`);
+        targetGroupSlug = h3Link?.closest('li[data-toc-group]')?.getAttribute('data-toc-group') || '';
+      }
+
+      // 2. Update active group classes (Clear once, Apply to all matches)
+      document.querySelectorAll('li[data-toc-group]').forEach(el => {
+        if (el.getAttribute('data-toc-group') === targetGroupSlug) {
+          el.classList.add('is-active-group');
+        } else {
+          el.classList.remove('is-active-group');
+        }
+      });
+
+      // 3. Update individual link active states
       tocLinks.forEach((link) => {
         const href = link.getAttribute('href');
         const isActive = href === `#${currentId}`;
-        const parentLi = link.closest('li[data-toc-group]');
-        const h2Slug = parentLi?.getAttribute('data-toc-group');
-
+        
         if (isActive) {
           link.setAttribute('data-toc-active', 'true');
         } else {
           link.removeAttribute('data-toc-active');
-        }
-
-        // If this link's target is either the current active H2 
-        // OR the current active H3 belongs to this H2's group
-        if (parentLi) {
-          const isH2Active = currentId === h2Slug;
-          const isH3ActiveChild = headings.find(h => h.id === currentId)?.tagName === 'H3' && 
-                                 link.getAttribute('href') === `#${currentId}`;
-          
-          if (isH2Active || isH3ActiveChild) {
-            // Remove active group from others first to avoid multiple expands
-            // But only if we are actually changing groups
-            if (!parentLi.classList.contains('is-active-group')) {
-              document.querySelectorAll('li[data-toc-group]').forEach(el => el.classList.remove('is-active-group'));
-              parentLi.classList.add('is-active-group');
-            }
-          }
         }
       });
     } else {
