@@ -2,54 +2,54 @@ cards:
   - title: Rings
     slug: rings
     description: Explore our stunning collection of rings.
-    image: https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80
+    image: /images/collections/rings/rings.jpg
     type: category
     is_coming_soon: false
   - title: Earrings
     slug: earrings
     description: Perfect for any occasion.
-    image: https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80
+    image: /images/collections/earrings/earrings.jpg
     type: category
     is_coming_soon: false
   - title: Necklaces
     slug: necklaces
     description: Timeless pieces to complete your look.
-    image: https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80
+    image: /images/collections/necklaces/necklaces.jpg
     type: category
     is_coming_soon: false
   - title: Bracelets
     slug: bracelets
     description: Elegant wristwear for every style.
-    image: https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80
+    image: /images/collections/bracelets/bracelets.jpg
     type: category
     is_coming_soon: false
   - title: Jewellery Sets
     slug: jewellery-sets
     description: Curated matches, that vibe when put on together.
-    image: /images/products/1549492423-400259a2e574.jpg
+    image: /images/collections/gift-sets.jpg
     type: category
     is_coming_soon: true
   - title: Waterproof Collection
     slug: waterproof
     description: Shower-proof, swim-proof jewelry that never tarnishes.
-    image: https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80
+    image: /images/collections/waterproof/waterproof.jpg
     type: tag
     is_coming_soon: false
   - title: Luxury Statement
     slug: luxury
     description: Make an impression with our premium, high-end pieces.
-    image: https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&q=80
+    image: /images/collections/luxury/luxury.jpg
     type: tag
     is_coming_soon: false
   - title: Everyday Essentials
     slug: everyday
     description: The foundations of your jewelry box, designed for daily wear.
-    image: https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80
+    image: /images/collections/everyday/everyday.jpg
     type: tag
     is_coming_soon: false
   - title: Gift Sets
     slug: gift
     description: Perfect pairings for your loved ones.
-    image: /images/products/1549492423-400259a2e574.jpg
+    image: /images/collections/gift-sets.jpg
     type: tag
     is_coming_soon: false

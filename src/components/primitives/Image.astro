@@ -12,6 +12,7 @@ interface Props {
   sizes?: string;
   widths?: number[];
   draggable?: boolean | "true" | "false"; // Corrected type for draggable
+  fade?: boolean; // Control whether to show the fade-in animation
   [key: string]: any; // Catch-all for Alpine attributes like :src, :alt, etc.
 }
 
@@ -26,6 +27,7 @@ const {
   sizes,
   widths,
   draggable,
+  fade = true,
   ...rest 
 } = Astro.props;
 
@@ -86,8 +88,8 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
     decoding={decoding}
     fetchpriority={fetchpriority}
     draggable={draggable}
-    onload="this.style.opacity=1"
-    style="opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;"
+    onload={fade ? "this.style.opacity=1" : ""}
+    style={fade ? "opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;" : ""}
     {...rest}
   />
 ) : (
@@ -101,8 +103,8 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
     decoding={decoding}
     fetchpriority={fetchpriority}
     draggable={draggable}
-    onload="this.style.opacity=1"
-    style="opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;"
+    onload={fade ? "this.style.opacity=1" : ""}
+    style={fade ? "opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;" : ""}
     {...rest} 
   />
 )}

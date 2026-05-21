@@ -5,7 +5,7 @@ hero:
   text: >-
     Zelia Vance exists because the 'Old Money' look shouldn't require an 'Old
     Money' bank account. Period.
-  image: /images/brand-shots/HeroCheck.jpg
+  image: /images/theme/home-hero.jpg
   isImmersive: false
 sections:
   - layout: image-right
@@ -53,7 +53,7 @@ sections:
             years under standard care conditions.*
           italic: false
     image:
-      url: /images/brand-shots/HeroCheck.jpg
+      url: /images/theme/home-hero.jpg
       alt: Brand Philosophy Visual
       caption: The glow that lasts.
       shape: vertical
@@ -87,7 +87,7 @@ sections:
             electroplating, making it truly water-resistant and sweat-proof.
           italic: false
     image:
-      url: /images/brand-shots/HeroCheck.jpg
+      url: /images/theme/home-hero.jpg
       alt: Technical Details
       caption: Detailing the PVD process.
       shape: square

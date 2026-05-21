@@ -8,7 +8,7 @@ echo ===================================================
 echo.
 
 :: Runs the safe test first so you can inspect what would change
-rclone sync "D:\Workspace\zee-media-production\R2_Bucket_Media" cloudflare:zee-media-production --fast-list --dry-run --progress
+rclone sync "D:\Workspace\zee-media-production\R2_Bucket_Media" cloudflare:zee-media-production --exclude ".gitkeep" --fast-list --dry-run --progress
 
 echo.
 echo ===================================================
@@ -32,7 +32,7 @@ goto confirm
 :run_sync
 echo.
 echo [LIVE MODE] Syncing and purging cloud assets now...
-rclone sync "D:\Workspace\zee-media-production\R2_Bucket_Media" cloudflare:zee-media-production --fast-list --progress
+rclone sync "D:\Workspace\zee-media-production\R2_Bucket_Media" cloudflare:zee-media-production --exclude ".gitkeep" --fast-list --progress
 echo.
 echo Live Sync and Clean Complete!
 pause

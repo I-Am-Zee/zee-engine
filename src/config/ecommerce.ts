@@ -123,6 +123,23 @@ const formatVariantOptions = (slot: any) => {
 };
 
 /**
+ * Helper function to resolve absolute Snipcart thumbnail URL for production.
+ * Handles fallback for local dev when PUBLIC_IMAGE_GATEWAY_URL is missing.
+ */
+export const getSnipcartThumbUrl = (rawImage: string) => {
+  if (!rawImage) return "";
+  if (rawImage.startsWith("http")) return rawImage;
+  
+  const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
+  const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
+
+  if (!gateway) return rawImage; // Fallback for pure local dev
+  
+  // Transform /images/products/ring.webp -> gateway/brandId/products/ring.webp?w=200
+  return `${gateway}/${brandId}${rawImage.replace('/images/', '/')}?w=200`;
+};
+
+/**
  * Generates an object of data-item-* attributes for Astro HTML buttons.
  */
 export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any, hsnCode: string = "0000") => {
@@ -134,7 +151,7 @@ export const getSnipcartHTMLAttrs = (input: CollectionEntry<"products"> | any, h
     "data-item-name": product.title,
     "data-item-price": product.salePrice !== undefined ? product.salePrice : product.price,
     "data-item-url": `/products/${product.id}`,
-    "data-item-image": product.image,
+    "data-item-image": getSnipcartThumbUrl(product.image),
     "data-item-has-taxes-included": "true", // Crucial for Indian GST - User expects Rs. 500 to NOT increase at checkout
   };
 
@@ -190,7 +207,7 @@ export const getSnipcartJSItem = (input: CollectionEntry<"products"> | any, sele
     // Use salePrice if it's explicitly set (even if lower), otherwise fall back to price
     price: product.salePrice !== undefined ? Number(product.salePrice) : Number(product.price),
     url: `/products/${product.id}`,
-    image: product.image,
+    image: getSnipcartThumbUrl(product.image),
     // Snipcart v3 JS API uses nested dimensions.weight (confirmed by network inspection of Snipcart's own requests).
     // Flat 'weight' at root level is silently ignored, causing the security crawl mismatch.
     // Math.round required: Snipcart rejects decimal weights (must be integer).

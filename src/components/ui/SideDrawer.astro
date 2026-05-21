@@ -21,6 +21,7 @@ import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
 import Image from "../primitives/Image.astro";
 import FreeShippingNudge from "../features/FreeShippingNudge.astro";
+import DrawerProductCard from "./DrawerProductCard.astro";
 
 // Fetch default HSN from legal-taxonomy settings
 const legalTaxonomyEntry = await getEntry("settings", "legal-taxonomy");
@@ -55,7 +56,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
   >
   </div>
 
-  <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
+  <div class="fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
     <div
       x-show="isOpen"
       x-transition:enter="transform-gpu transition-transform ease-out duration-500"
@@ -64,12 +65,12 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
       x-transition:leave="transform-gpu transition-transform ease-in duration-400"
       x-transition:leave-start="translate-x-0"
       x-transition:leave-end="translate-x-full"
-      class="w-screen max-w-md will-change-transform"
+      class="w-full max-w-md will-change-transform"
       x-cloak
     >
       <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
-        <div class="border-border-subtle bg-surface/50 border-b px-6 py-6 sm:px-8">
+        <div class="border-border-subtle bg-surface/50 border-b px-5 py-6 sm:px-8">
           <div class="mb-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
               <template x-if="mode === 'upsell'">
@@ -123,7 +124,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
         </div>
 
         <!-- Body: Product List -->
-        <div class="flex-1 overflow-y-auto px-6 py-8 sm:px-8">
+        <div class="flex-1 overflow-y-auto px-4 py-8 sm:px-8">
           {/* Dynamic Free Shipping Nudge */}
           <div class="mb-10">
             <FreeShippingNudge threshold={threshold} />
@@ -134,119 +135,15 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
             <div class="bg-accent-brass mt-2 h-1 w-12"></div>
           </div>
 
-          <div class="space-y-10">
+          <div class="space-y-6">
             <template x-for="(item, index) in products" :key="item.id">
-              <div
-                class="group border-border-subtle/30 relative flex gap-6 border-b pb-2 last:border-0"
-              >
-                <!-- Checkbox (Only for Upsell mode where items are optional) -->
-                <template x-if="mode === 'upsell'">
-                  <div class="absolute top-0 right-0">
-                    <input
-                      type="checkbox"
-                      :id="'drawer-' + item.id"
-                      x-model="selectedItems"
-                      :value="item.id"
-                      class="border-border-strong text-primary focus-glow h-5 w-5 cursor-pointer rounded"
-                    />
-                  </div>
-                </template>
-
-                <!-- Product Image -->
-                <div
-                  class="border-border-subtle/40 bg-surface-muted h-28 w-28 shrink-0 overflow-hidden rounded-2xl border"
-                >
-                  <a
-                    :href="'/products/' + item.id"
-                    @click="close()"
-                    class="focus-glow block h-full"
-                  >
-                    <Image
-                      src=""
-                      :src="item.image"
-                      alt=""
-                      :alt="item.title"
-                      class="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                      ratio="auto"
-                    />
-                  </a>
-                </div>
-
-                <!-- Product Info -->
-                <div class="flex flex-1 flex-col">
-                  <div>
-                    <div class="flex justify-between">
-                      <Heading
-                        as="h3"
-                        color="main"
-                        class="line-clamp-1 leading-normal font-semibold tracking-tight"
-                        style="font-size: clamp(1rem, 2.5vw, 1.15rem);"
-                      >
-                        <a
-                          :href="'/products/' + item.id"
-                          @click="close()"
-                          class="focus-glow rounded"
-                          x-text="item.title"></a>
-                      </Heading>
-                    </div>
-                    <div class="mt-2 flex items-center gap-2">
-                      <template
-                        x-if="item.salePrice && Number(item.salePrice) < Number(item.price)"
-                      >
-                        <Text
-                          variant="metadata"
-                          color="muted"
-                          class="font-medium line-through"
-                          x-text="'₹' + Number(item.price).toLocaleString('en-IN')"
-                        />
-                      </template>
-                      <Text
-                        variant="paragraph"
-                        weight="bold"
-                        color="main"
-                        x-text="'₹' + (Number(item.salePrice) || Number(item.price)).toLocaleString('en-IN')"
-                      />
-                    </div>
-                  </div>
-
-                  <!-- Variant Selectors (Flexible for up to 3 slots) -->
-                  <div class="mt-4 space-y-3">
-                    <template
-                      x-for="v in [item.variant_1, item.variant_2, item.variant_3].filter(slot => slot && slot.values)"
-                      :key="v.name"
-                    >
-                      <div>
-                        <div class="mb-2 flex items-center justify-between">
-                          <Text variant="eyebrow" x-text="v.name" />
-                          <template x-if="selections[item.id]?.[v.name]">
-                            <Text variant="eyebrow" x-text="selections[item.id][v.name]" />
-                          </template>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                          <template
-                            x-for="val in (v.values || '').split(',').map(v => v.trim()).filter(v => v !== '')"
-                            :key="val"
-                          >
-                            <button
-                              @click="selectOption(item.id, v.name, val)"
-                              class="focus-glow inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded border px-2.5 transition-all disabled:cursor-not-allowed"
-                              :class="selections[item.id]?.[v.name] === val ? 'border-primary bg-primary text-text-inverse' : 'border-border-strong bg-background text-text-main hover:border-accent-brass hover:text-accent-brass hover:bg-surface'"
-                            >
-                              <Text variant="label" color="inherit" x-text="val" />
-                            </button>
-                          </template>
-                        </div>
-                      </div>
-                    </template>
-                  </div>
-                </div>
-              </div>
+              <DrawerProductCard />
             </template>
           </div>
         </div>
 
         <!-- Footer (Sticky) -->
-        <div class="border-border-subtle bg-surface/80 border-t px-6 py-8 backdrop-blur-md sm:px-8">
+        <div class="border-border-subtle bg-surface/80 border-t px-5 py-8 backdrop-blur-md sm:px-8">
           <!-- Validation Message -->
           <div
             x-show="typeof validationError !== 'undefined' && validationError"

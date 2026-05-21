@@ -29,6 +29,15 @@ Instead of navigating Cloudflare dashboards, running local Node servers, or mana
 
 ## ⚙️ Component Breakdown & Workflow
 
+### 0. 📦 Asset Management & The Append-Only Rule
+To ensure 100% reliability during R2/Rclone synchronization and prevent accidental data loss, the engine follows an **Append-Only Media Strategy**.
+
+*   **Slots (Singletons):** Images like `home-hero.jpg`, `trust-section.jpg`, `cover.jpg`, or `avatar.jpg` are "slots". Replacing them in the CMS intentionally overwrites the file. These are used for primary branding and visibility.
+*   **Identity (Galleries):** Gallery images are assigned unique, immutable IDs following the `[slug]-gn.jpg` pattern (e.g., `celestial-diamond-ring-g1.jpg`). 
+*   **Decoupled Order:** Reordering images in the CMS (Keystatic) only updates the MDX/YAML metadata. The physical files on disk never change names and are never deleted by the CMS.
+*   **Asset Sovereignty:** All assets must live in `public/images/[category]/[slug]/`. External URLs are strictly forbidden in production content; all assets must be localized.
+*   **Sync Safety:** Because filenames are immutable (except for slot overwrites), `rclone sync` can operate with 100% confidence. Deleted local assets do NOT trigger cloud deletions unless a manual "Purge" is executed.
+
 ### 1. App Initialization & Security (The Entry Point)
 * **Pre-Baked Environment Keys:** Unique executables are built per client. Client-specific variables (`PUBLIC_BRAND_ID`, payment keys) and GitHub Tokens are compiled directly into the Rust machine code. There are no `.env` files on disk for users to read.
 * **Volatile RAM Bootstrapping:** On launch, Rust fetches the readable Astro repository as a compressed archive directly from your private GitHub branch. It decrypts this strictly into volatile memory before moving to the execution phase.

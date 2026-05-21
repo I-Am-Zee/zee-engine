@@ -1,0 +1,123 @@
+---
+/**
+ * DrawerProductCard Component
+ * 
+ * A compact, bordered card for product selection within the SideDrawer.
+ * Features a horizontal identity header and vertical option rows.
+ * Designed to be used within an Alpine.js x-for loop.
+ */
+
+import Image from "../primitives/Image.astro";
+import Heading from "../primitives/Heading.astro";
+import Text from "../primitives/Text.astro";
+
+---
+
+<div
+  class="group border-border-subtle bg-surface/30 relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300"
+  :class="mode === 'upsell' && !selectedItems.includes(item.id) ? 'opacity-60 grayscale-[0.5]' : 'shadow-sm'"
+>
+  <!-- Checkbox Overlay (Only for Upsell mode) -->
+  <template x-if="mode === 'upsell'">
+    <div class="absolute top-4 right-4 z-10">
+      <input
+        type="checkbox"
+        :id="'drawer-' + item.id"
+        x-model="selectedItems"
+        :value="item.id"
+        class="border-border-strong text-primary focus-glow h-5 w-5 cursor-pointer rounded transition-all"
+      />
+    </div>
+  </template>
+
+  <!-- 1. Identity Header: Horizontal -->
+  <div class="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+    <!-- Thumbnail -->
+    <div
+      class="border-border-subtle/40 bg-surface-muted aspect-square w-16 flex-shrink-0 overflow-hidden rounded-lg border sm:w-20 sm:rounded-xl"
+    >
+      <a
+        :href="'/products/' + item.id"
+        @click="close()"
+        class="focus-glow block h-full"
+      >
+        <Image
+          src=""
+          :src="item.image"
+          alt=""
+          :alt="item.title"
+          class="h-full w-full object-cover object-center"
+          ratio="auto"
+          fade={false}
+        />
+      </a>
+    </div>
+
+    <!-- Info -->
+    <div class="min-w-0 flex-1 flex flex-col gap-0.5">
+      <Heading
+        as="h4"
+        color="main"
+        class="truncate line-clamp-1 text-sm font-semibold leading-tight tracking-tight sm:text-base"
+      >
+        <a
+          :href="'/products/' + item.id"
+          @click="close()"
+          class="focus-glow rounded"
+          x-text="item.title"></a>
+      </Heading>
+      
+      <div class="flex items-center gap-2">
+        <Text
+          variant="paragraph"
+          weight="bold"
+          color="main"
+          class="text-sm sm:text-base"
+          x-text="'₹' + (Number(item.salePrice) || Number(item.price)).toLocaleString('en-IN')"
+        />
+        <template x-if="item.salePrice && Number(item.salePrice) < Number(item.price)">
+          <Text
+            variant="metadata"
+            color="muted"
+            class="font-medium line-through opacity-50 text-[11px] sm:text-xs"
+            x-text="'₹' + Number(item.price).toLocaleString('en-IN')"
+          />
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Action Rows: Vertical Variant Selectors -->
+  <div class="flex flex-col pb-3 sm:pb-4">
+    <template
+      x-for="v in [item.variant_1, item.variant_2, item.variant_3].filter(slot => slot && slot.values)"
+      :key="v.name"
+    >
+      <div class="px-3 py-2 sm:px-4 sm:py-3">
+        <div class="mb-2.5 flex items-center justify-between sm:mb-3">
+          <Text variant="eyebrow" class="text-[9px] tracking-[0.15em] opacity-60 uppercase sm:text-[10px]" x-text="v.name" />
+          <template x-if="selections[item.id]?.[v.name]">
+            <Text variant="label" weight="bold" class="text-primary text-[10px] sm:text-[11px]" x-text="selections[item.id][v.name]" />
+          </template>
+        </div>
+        
+        <div class="flex flex-wrap gap-2">
+          <template
+            x-for="val in (v.values || '').split(',').map(v => v.trim()).filter(v => v !== '')"
+            :key="val"
+          >
+            <button
+              @click="selectOption(item.id, v.name, val)"
+              class="focus-glow inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-lg border px-2.5 transition-all sm:h-9 sm:min-w-9 sm:px-3"
+              :class="selections[item.id]?.[v.name] === val 
+                ? 'border-primary bg-primary text-text-inverse shadow-sm scale-[1.02]' 
+                : 'border-border-strong bg-background/50 text-text-main hover:border-accent-brass hover:bg-surface'"
+            >
+              <Text variant="label" color="inherit" class="text-[11px] sm:text-xs" x-text="val" />
+            </button>
+          </template>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>

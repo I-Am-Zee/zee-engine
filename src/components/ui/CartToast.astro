@@ -115,6 +115,7 @@ const { autoDismissMs = 4000 } = Astro.props;
           x-show="productImage"
           x-cloak
           ratio="auto"
+          fade={false}
         />
         <div x-show="!productImage" class="h-full w-full flex items-center justify-center bg-surface-muted" x-cloak>
           <Icon name="PhShoppingBag" size={24} class="text-text-muted" />
