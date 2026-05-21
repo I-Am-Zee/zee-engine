@@ -10,8 +10,9 @@ import yaml from '@rollup/plugin-yaml';
 
 import cloudflare from '@astrojs/cloudflare';
 import path from 'path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'url';
-import { loadEnv } from 'vite';
+import { loadEnv, searchForWorkspaceRoot } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,7 +90,13 @@ export default defineConfig({
       ]
     },
     server: {
-      allowedHosts: ['dev.zeliavance.com']
+      allowedHosts: ['dev.zeliavance.com'],
+      fs: {
+        allow: [
+          searchForWorkspaceRoot(process.cwd()),
+          ...(env.LOCAL_MEDIA_PATH ? [path.resolve(__dirname, env.LOCAL_MEDIA_PATH)] : [])
+        ]
+      }
     },
     optimizeDeps: {
       // Pre-bundle common Keystatic UI dependencies to prevent 404s and CJS/ESM syntax errors

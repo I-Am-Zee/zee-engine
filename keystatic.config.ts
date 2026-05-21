@@ -146,7 +146,13 @@ export default config({
         button_text: fields.text({ label: 'Button Label', defaultValue: 'Subscribe' }),
         disclaimer: fields.text({ label: 'Disclaimer Text', defaultValue: 'We only accept Gmail addresses for high-intent delivery.' }),
         success_message: fields.text({ label: 'Success Message' }),
-        image: fields.text({ label: 'Editorial Image URL', description: 'Paste the R2 path: /images/newsletter/filename.webp' }),
+        image: fields.image({
+          label: 'Editorial Image',
+          description: 'Used for the background of the newsletter section/modal.',
+          directory: 'public/images/marketing',
+          publicPath: '/images/marketing/',
+          validation: { isRequired: false }
+        }),
       }
     }),
     // ── Products ──────────────────────────────────────────────────
@@ -165,17 +171,23 @@ export default config({
         // ── Pricing (Moved to D2C block below to hide for affiliates) ──
 
         // ── Media ──
-        image: fields.text({
-          label: 'Featured Image URL',
-          description: 'Paste the R2 path: /images/products/filename.webp (or full Worker URL in production).',
+        image: fields.image({
+          label: 'Featured Image',
+          description: 'The primary product image shown on cards and at the top of the PDP.',
+          directory: 'public/images/products',
+          publicPath: '/images/products/',
           validation: { isRequired: true },
         }),
         gallery: fields.array(
-          fields.text({ label: 'Image URL', description: 'R2 path: /images/products/filename.webp' }),
+          fields.image({ 
+            label: 'Gallery Image',
+            directory: 'public/images/products',
+            publicPath: '/images/products/'
+          }),
           {
             label: 'Gallery',
             description: 'Max 10 images for performance.',
-            itemLabel: (props) => props.value || 'New image URL',
+            itemLabel: (props) => (typeof props.value === 'string' ? props.value : props.value?.filename || 'New Image'),
           }
         ),
 
@@ -318,13 +330,22 @@ export default config({
       format: { contentField: 'body' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        hero_image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/lookbooks/filename.webp or R2 URL', validation: { isRequired: true } }),
+        hero_image: fields.image({ 
+          label: 'Hero Image',
+          directory: 'public/images/lookbooks',
+          publicPath: '/images/lookbooks/',
+          validation: { isRequired: true } 
+        }),
         description: fields.text({ label: 'Description', multiline: true }),
         gallery: fields.array(
-          fields.text({ label: 'Image URL', description: 'e.g. /images/lookbooks/filename.webp' }),
+          fields.image({ 
+            label: 'Gallery Image',
+            directory: 'public/images/lookbooks',
+            publicPath: '/images/lookbooks/'
+          }),
           { 
             label: 'Gallery',
-            itemLabel: (props) => props.value || 'New Image'
+            itemLabel: (props) => (typeof props.value === 'string' ? props.value : props.value?.filename || 'New Image')
           }
         ),
         products: fields.array(
@@ -350,7 +371,12 @@ export default config({
         excerpt: fields.text({ label: 'Excerpt', multiline: true, validation: { isRequired: true } }),
         publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: true } }),
         author: fields.relationship({ label: 'Author', collection: 'authors', validation: { isRequired: true } }),
-        image: fields.text({ label: 'Cover Image URL', validation: { isRequired: true } }),
+        image: fields.image({ 
+          label: 'Cover Image',
+          directory: 'public/images/blogs',
+          publicPath: '/images/blogs/',
+          validation: { isRequired: true } 
+        }),
         category: fields.select({
           label: 'Category',
           description: 'Single category this post belongs to. Drives the Category pages and filters.',
@@ -374,7 +400,12 @@ export default config({
       format: { data: 'yaml' },
       schema: {
         name: fields.slug({ name: { label: 'Name' } }),
-        avatar: fields.text({ label: 'Avatar Path', description: 'e.g. /images/authors/zee.jpg' }),
+        avatar: fields.image({
+          label: 'Avatar',
+          directory: 'public/images/authors',
+          publicPath: '/images/authors/',
+          validation: { isRequired: false }
+        }),
         bio: fields.text({ label: 'Short Bio', multiline: true }),
       }
     }),
@@ -414,7 +445,12 @@ export default config({
         hero: fields.object({
           heading: fields.text({ label: 'Hero Heading' }),
           text: fields.text({ label: 'Hero Description/Italic Lead', multiline: true }),
-          image: fields.text({ label: 'Hero Image Path (R2/Local)' }),
+          image: fields.image({
+            label: 'Hero Image',
+            directory: 'public/images/theme',
+            publicPath: '/images/theme/',
+            validation: { isRequired: false }
+          }),
           isImmersive: fields.checkbox({ label: 'Enable Immersive Reveal (GSAP)', defaultValue: false }),
         }, { label: 'Hero Section (Top of Page)' }),
 
@@ -503,7 +539,12 @@ export default config({
             }, { label: 'Content Stack' }),
 
             image: fields.object({
-              url: fields.text({ label: 'Image URL/Path' }),
+              url: fields.image({
+                label: 'Image',
+                directory: 'public/images/theme',
+                publicPath: '/images/theme/',
+                validation: { isRequired: false }
+              }),
               alt: fields.text({ label: 'Alt Text' }),
               caption: fields.text({ label: 'Visible Caption' }),
               shape: fields.select({
@@ -746,7 +787,12 @@ export default config({
           title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
           description: fields.text({ label: 'Description', multiline: true }),
           coupon_code: fields.text({ label: 'Coupon Code' }),
-          image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/discount.webp' }),
+          image: fields.image({
+            label: 'Image',
+            directory: 'public/images/marketing',
+            publicPath: '/images/marketing/',
+            validation: { isRequired: false }
+          }),
           cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
           denylist: fields.array(
             fields.text({ label: 'Path', description: 'e.g. /checkout' }),
@@ -771,7 +817,12 @@ export default config({
           }),
           title: fields.text({ label: 'Title', defaultValue: 'Join the Inner Circle' }),
           description: fields.text({ label: 'Description', multiline: true }),
-          image: fields.text({ label: 'Image URL', description: 'e.g. /images/popups/newsletter.webp' }),
+          image: fields.image({
+            label: 'Image',
+            directory: 'public/images/marketing',
+            publicPath: '/images/marketing/',
+            validation: { isRequired: false }
+          }),
           denylist: fields.array(
             fields.text({ label: 'Path', description: 'e.g. /checkout' }),
             { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
@@ -798,7 +849,12 @@ export default config({
         cta_link_primary: fields.text({ label: 'Primary Button Link', defaultValue: '/shop' }),
         cta_label_secondary: fields.text({ label: 'Secondary Button Label', defaultValue: 'View Lookbooks' }),
         cta_link_secondary: fields.text({ label: 'Secondary Button Link', defaultValue: '/lookbooks' }),
-        image: fields.text({ label: 'Hero Image URL', description: 'e.g. /images/hero/filename.webp' }),
+        image: fields.image({
+          label: 'Hero Image',
+          directory: 'public/images/theme',
+          publicPath: '/images/theme/',
+          validation: { isRequired: false }
+        }),
       }
     }),
 
@@ -864,7 +920,12 @@ export default config({
       format: { data: 'yaml' },
       schema: {
         main_heading: fields.text({ label: 'Main Section Heading (Above columns)' }),
-        hero_image: fields.text({ label: 'Editorial Hero Image', description: 'R2 path: /images/identity/filename.webp' }),
+        hero_image: fields.image({
+          label: 'Editorial Hero Image',
+          directory: 'public/images/theme',
+          publicPath: '/images/theme/',
+          validation: { isRequired: false }
+        }),
         markers: fields.array(
           fields.object({
             title: fields.text({ label: 'Title' }),
@@ -947,7 +1008,12 @@ export default config({
             title: fields.text({ label: 'Title', validation: { isRequired: true } }),
             slug: fields.text({ label: 'Target Slug', description: 'The exact category name or tag slug (e.g. rings, waterproof)', validation: { isRequired: true } }),
             description: fields.text({ label: 'Description', validation: { isRequired: true } }),
-            image: fields.text({ label: 'Image URL', description: 'e.g. /images/collections/filename.webp', validation: { isRequired: true } }),
+            image: fields.image({ 
+              label: 'Collection Thumbnail',
+              directory: 'public/images/collections',
+              publicPath: '/images/collections/',
+              validation: { isRequired: true } 
+            }),
             type: fields.select({
               label: 'Collection Type',
               options: [

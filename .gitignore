@@ -23,8 +23,12 @@ pnpm-debug.log*
 # Content Migration
 migration_to_r2/
 
-# Media Assets (Moved to R2)
+# Media Assets (Local Staging for R2)
 public/images/
+!public/images/.gitkeep
+!public/images/**/
+!public/images/**/.gitkeep
+!public/images/FolderStructure.txt
 public/favicon.svg
 
 # macOS-specific files
@@ -46,3 +50,12 @@ public/images/billing/.wrangler/
 
 # TEMP_TALK.txt
 # conversation_log.txt
+jules_payload.json
+.astro/
+dist/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.wrangler/
