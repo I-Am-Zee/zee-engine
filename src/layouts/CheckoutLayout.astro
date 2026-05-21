@@ -13,8 +13,26 @@ import "../styles/global.css";
 import Logo from "../components/primitives/Logo.astro";
 import { getEntry } from "astro:content";
 
+import fs from "node:fs";
+import path from "node:path";
+
 const brandSettings = await getEntry("settings", "brand");
 const brandName = brandSettings?.data?.name;
+
+const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
+const brandId = import.meta.env.PUBLIC_BRAND_ID || "sample-brand";
+
+// Zee Engine Fallback Favicon (Base64) - Used only if brand favicon is missing
+const fallbackFavicon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMGYxNzJhIiByeD0iNCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiPlo8L3RleHQ+PC9zdmc+";
+
+// Build-time check for local junctioned favicon
+const localFaviconPath = path.join(process.cwd(), "public/images/assets/brand/favicon.svg");
+const hasLocalFavicon = fs.existsSync(localFaviconPath);
+
+// Dynamic Favicon Strategy: R2 Gateway (Production) -> Local Junction (Dev) -> Base64 (Fallback)
+const faviconUrl = gateway 
+  ? `${gateway}/${brandId}/assets/brand/favicon.svg` 
+  : (hasLocalFavicon ? "/images/assets/brand/favicon.svg" : fallbackFavicon);
 
 interface Props {
   pageTitle?: string;
@@ -40,7 +58,7 @@ const fullTitle = pageTitle ? `${pageTitle} | ${brandName}` : (title || brandNam
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={faviconUrl} />
     <title>{fullTitle}</title>
 
     <!-- Additional per-page head content (e.g. payment SDK scripts) -->

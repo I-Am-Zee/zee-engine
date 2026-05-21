@@ -10,6 +10,9 @@ import SideDrawer from "../components/ui/SideDrawer.astro";
 import AffiliateQuickView from "../components/features/AffiliateQuickView.astro";
 import Lightbox from "../components/ui/Lightbox.astro";
 
+import fs from "node:fs";
+import path from "node:path";
+
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === 'true';
 const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
 
@@ -21,8 +24,17 @@ if (!brandId) {
   brandId = isAffiliate ? 'sample-affiliate' : 'sample-brand';
 }
 
-// Dynamic Favicon Strategy: R2 Gateway (Production) -> Local Fallback (Dev)
-const faviconUrl = gateway ? `${gateway}/${brandId}/assets/brand/favicon.svg` : "/favicon.svg";
+// Zee Engine Fallback Favicon (Base64) - Used only if brand favicon is missing
+const fallbackFavicon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMGYxNzJhIiByeD0iNCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiPlo8L3RleHQ+PC9zdmc+";
+
+// Build-time check for local junctioned favicon
+const localFaviconPath = path.join(process.cwd(), "public/images/assets/brand/favicon.svg");
+const hasLocalFavicon = fs.existsSync(localFaviconPath);
+
+// Dynamic Favicon Strategy: R2 Gateway (Production) -> Local Junction (Dev) -> Base64 (Fallback)
+const faviconUrl = gateway 
+  ? `${gateway}/${brandId}/assets/brand/favicon.svg` 
+  : (hasLocalFavicon ? "/images/assets/brand/favicon.svg" : fallbackFavicon);
 
 // Fetch Modular Settings from Content Layer
 const brandSettings = await getEntry("settings", "brand");

@@ -1,43 +1,76 @@
-# Astro Starter Kit: Minimal
+# 🚀 Zelia Vance: Multi-Tenant E-Commerce Engine
 
-```sh
-npm create astro@latest -- --template minimal
-```
+This repository is the "Brain" of a sophisticated, multi-tenant e-commerce platform built on **Astro 5**. It is designed to host multiple distinct brands from a single codebase using a **Sovereign Asset Architecture**.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+## 🏛️ Architecture: The "Brain vs. Body" Split
 
-Inside of your Astro project, you'll see the following folders and files:
+This engine enforces a strict separation between code and media to ensure the Git repository stays lightweight (~25MB) while managing GBs of high-resolution media.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+### 1. The Brain (This Repo)
+- **Framework**: Astro 5 (Island Architecture).
+- **Styling**: Tailwind CSS v4 (Atomic Design).
+- **CMS**: Keystatic (Local YAML/MDX editor).
+- **Responsibility**: Logic, UI components, and brand configuration.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### 2. The Body (External Media)
+- **Source**: `D:\Workspace\zee-media-production` (Master Repository).
+- **Cloud**: Cloudflare R2 (Object Storage).
+- **Sync**: Rclone delta-syncing.
+- **Local Linking**: Windows Directory Junction.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+---
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🛠️ Local Development Setup
 
-## 🧞 Commands
+To set up this platform on a fresh machine:
 
-All commands are run from the root of the project, from a terminal:
+1.  **Clone the Repo**: `git clone <repo-url>`
+2.  **Install Dependencies**: `npm install`
+3.  **Link Media (The Junction)**:
+    - You must have the media repository cloned locally.
+    - Run the following command in an Admin Terminal from the project root:
+      `mklink /J "public/images" "D:\Workspace\zee-media-production\R2_Bucket_Media\zelia-vance"`
+4.  **Environment Variables**:
+    - Copy `.env.example` to `.env`.
+    - `PUBLIC_BRAND_ID`: Set to the brand you are working on (e.g., `zelia-vance`).
+    - `PUBLIC_IMAGE_GATEWAY_URL`: Leave blank for local junction use.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
+## 🖼️ The Image Pipeline (Image Engine)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Local Mode
+When `PUBLIC_IMAGE_GATEWAY_URL` is empty, the `Image.astro` primitive resolves paths to `/images/...`. The browser finds these files via the Directory Junction.
+
+### Production Mode (Cloudflare)
+In production, `PUBLIC_IMAGE_GATEWAY_URL` points to your **Image Engine Worker**.
+1.  **Request**: Website asks for `/images/products/ring.jpg?w=400`.
+2.  **Worker**: The Cloudflare Worker catches the request, transforms the path to the R2 bucket key, and fetches the original image.
+3.  **Resize**: Cloudflare's Image Resizing service snaps the image to the requested width.
+4.  **Edge Cache**: The result is cached at the edge for 1 year, ensuring blisteringly fast subsequent loads.
+
+---
+
+## 📦 Content Management (Keystatic)
+
+Access the CMS at `/keystatic`.
+
+- **Windows Junction Patch**: We have applied a `patch-package` to `@keystatic/core` to ensure it can follow Windows Junctions. 
+- **Image Fields**: Always use `fields.image` in the schema. This allows Keystatic to show thumbnails and navigate the junctioned folder structure.
+
+---
+
+## 🚀 Deployment
+
+- **Hosting**: Cloudflare Pages.
+- **Image Worker**: Deploy via `cd image-engine && npx wrangler deploy`.
+- **Multi-Tenant Deployment**: Create a separate Cloudflare Pages project for each brand, pointing to the same GitHub repo but with a different `PUBLIC_BRAND_ID` environment variable.
+
+---
+
+## 🛡️ Sovereign Asset Rules
+1.  **Never** commit an image to this repository.
+2.  **Never** use raw hex colors in code; use CSS Design Tokens.
+3.  **Always** use the `Image.astro` primitive for rendering assets.
