@@ -13,8 +13,8 @@ metadata:
 
 # Tailwind CSS v4 — Engine Rules
 
-> **Prerequisite:** Read `zelia-vance-engine` skill first.
-> This skill is an authoritative extension of that skill's §5 (Token Syntax) and §9 (Error Patterns).
+> **Prerequisite:** Read `zee-engine-core` skill first.
+> This skill is an authoritative extension of that skill's §5 (Token Syntax) and §10 (Error Patterns).
 
 ---
 

@@ -1,11 +1,11 @@
 ---
-name: zelia-vance-engine-apis
-description: Use this skill alongside zelia-vance-engine when working on this codebase. Provides exact component prop APIs for all primitives, canonical page data-flow patterns, how to extend the engine with new content types or components, and a full debugging protocol for visual bugs, Alpine.js issues, CMS data problems, and build failures.
+name: zee-engine-apis
+description: Use this skill alongside zee-engine-core when working on the Zee Engine platform. Provides exact component prop APIs for all primitives, canonical page data-flow patterns, how to extend the engine with new content types or components, MDX blog patterns with AdSense slots, and a full debugging protocol for visual bugs, Alpine.js issues, CMS data problems, and build failures.
 ---
 
-# Zelia Vance — Component APIs, Patterns & Debugging
+# Zee Engine — Component APIs, Patterns & Debugging
 
-> **Prerequisite:** Read `zelia-vance-engine` skill first.
+> **Prerequisite:** Read `zee-engine-core` skill first.
 
 ---
 
@@ -76,7 +76,8 @@ External links auto-get `target="_blank" rel="noopener noreferrer"`. Never add m
 />
 ```
 R2 transform is automatic: `/images/products/ring.webp` → `assets.zeliavance.com/zelia-vance/products/ring.webp?w=800`
-Srcset generated at 200w, 400w, 800w, 1200w. Dev falls back to local files if no gateway URL.
+Srcset generated at **4 widths: 200w, 400w, 800w, 1200w**. (200w was added for PDP gallery thumbnails — do not remove it.)
+Dev falls back to local files if `PUBLIC_IMAGE_GATEWAY_URL` is empty.
 **NEVER use raw `<img>` tags in components. Always use this primitive.**
 
 ### `Icon.astro`
@@ -109,12 +110,29 @@ Sizes: nav=`h-5 w-5`, small UI=`h-4 w-4`, feature=`h-6 w-6`, empty state=`size="
 />
 ```
 
+### `Modal.astro`
+```astro
+<Modal id="my-modal">
+  <!-- slot content -->
+</Modal>
+```
+Opened via `document.getElementById('my-modal').showModal()`. Alpine-compatible.
+
+### `AdSlot.astro`
+```astro
+<AdSlot
+  slot="in-article"  -- REQUIRED. Maps to AdSense slot type.
+  class="..."        -- Optional.
+/>
+```
+Used exclusively inside `.mdx` blog content. Never place in UI or Feature components.
+
 ---
 
 ## 2. Canonical Page Data-Flow Pattern
 
 ```
-CMS (YAML/MD) → getEntry()/getCollection() → Flatten to plain objects → Props → Components → Alpine (client)
+CMS (YAML/MDX/MD) → getEntry()/getCollection() → Flatten to plain objects → Props → Components → Alpine (client)
 ```
 
 **Mode 1: SSR rendering (most common)**
@@ -155,7 +173,88 @@ const serialized = products.map(p => ({
 
 ---
 
-## 3. How to Add a New CMS Content Type
+## 3. MDX Blog Patterns & AdSense Strategy
+
+### Content Type Rules
+
+> **Engine Filesystem Reality:** ALL text content managed by Keystatic uses `.mdx`. There is no `.md` in this engine. The distinction between blog and legal is a **content policy** enforced by convention, NOT by file extension.
+
+| File Type | Use For | Commercial Components Allowed? |
+|---|---|---|
+| `.mdx` (blog) | Blog posts | ✅ YES — `<AdSlot>`, React components |
+| `.mdx` (legal) | Legal pages (T&C, Privacy, Returns, Shipping) | ❌ NO — purely informational only |
+| `.yaml` | Settings, products, lookbooks | N/A (not rendered) |
+
+**The rule is not about the extension — it's about the content.** Both are `.mdx`. Legal files are prohibited from importing `<AdSlot>`, `<AffiliateProductCTA>`, or any commerce-related component by strict content policy. This is a legal and trust issue.
+
+### MDX Blog File Anatomy
+
+```mdx
+---
+title: "How to Care for Your Jewelry"
+description: "A guide to making your pieces last."
+pubDate: 2026-05-01
+category: "Care Guide"
+tags: ["care", "maintenance", "signature-line"]
+author: "zee"
+image: "/images/blog/care-guide-hero.webp"
+readTime: "4 min read"
+---
+
+import AdSlot from '@/components/primitives/AdSlot.astro';
+
+Opening paragraph...
+
+<AdSlot slot="in-article" class="my-8" />
+
+Middle content continues here...
+
+<AdSlot slot="in-article" class="my-8" />
+
+Closing content...
+```
+
+### AdSense Slot Rules
+
+- Import `AdSlot.astro` at the top of the MDX file — it is an Astro component, not a React component.
+- `AdSlot` works in MDX because Astro treats `.mdx` as a hybrid renderer supporting both Astro components and React.
+- **Placement strategy:** Insert one `<AdSlot>` after the first paragraph or ~300 words. Insert a second after the midpoint. Never place above the fold.
+- **Legal pages (`.mdx`) MUST NOT contain AdSlots or any commercial component** — they are `.mdx` on the filesystem, but are prohibited from importing commerce-related primitives by content policy. This is a legal and trust issue.
+- In Affiliate Mode, AdSense ads function independently of affiliate links — they coexist fine on the same page.
+- `AdSlot` must only receive a `slot` prop matching an actual registered AdSense unit. Do not invent slot names.
+
+### Blog Data Fetching Pattern
+
+```astro
+---
+// Blog listing page
+import { getCollection } from "astro:content";
+import { calculateReadTime } from "@/scripts/utils/reading-time";
+
+const brandId = import.meta.env.PUBLIC_BRAND_ID;
+const allPosts = await getCollection("blog");
+
+// Flatten for Alpine (never pass raw entries to client)
+const posts = allPosts.map(p => ({
+  slug: p.id,
+  title: p.data.title,
+  category: p.data.category,
+  tags: p.data.tags ?? [],
+  pubDate: p.data.pubDate.toISOString(),
+  readTime: calculateReadTime(p.body ?? ""),
+}));
+---
+```
+
+### Blog Taxonomy vs Product Taxonomy
+
+- **Blog posts** → `getEntry("settings", "blog-taxonomy")` → `.data.categories`
+- **Products** → `getEntry("settings", "taxonomy")` → `.data.categories`
+- **NEVER cross-wire these two.** They are separate YAML files with separate schemas.
+
+---
+
+## 4. How to Add a New CMS Content Type
 
 Follow this exact checklist. Never skip a step.
 
@@ -176,7 +275,7 @@ export const collections = { ...existing, my_collection };
 
 ---
 
-## 4. How to Add a New Component
+## 5. How to Add a New Component
 
 **Decision tree:**
 ```
@@ -200,7 +299,7 @@ export function initMyFeature() {
 
 ---
 
-## 5. Debugging Protocol
+## 6. Debugging Protocol
 
 ### Visual Bug (Wrong styles)
 1. Inspect element. Find actual applied classes.
@@ -231,17 +330,24 @@ export function initMyFeature() {
 5. Zod schema validation failure in `config.ts`?
 6. Run `npx astro check` for TypeScript errors without full dev server.
 
-### Image Not Loading
-1. Dev without gateway: `PUBLIC_IMAGE_GATEWAY_URL` should be empty to use local files.
-2. Dev with gateway: Check R2 bucket has file at `{brandId}/products/filename.webp`.
-3. Check `PUBLIC_BRAND_ID` matches R2 folder prefix.
-4. If `onerror` fires: the R2 file is missing — upload it.
+### Image Not Loading (Local Dev)
+1. Is `PUBLIC_IMAGE_GATEWAY_URL` empty? It should be in dev to use local files.
+2. Does `public/images/` junction exist? Run `dir public\` and look for `<JUNCTION>`.
+3. Is `LOCAL_MEDIA_PATH` set in `.env` pointing to the external media repo?
+4. Is `server.fs.allow` present in `astro.config.mjs`? Never remove it.
+5. Check the junction path is correct — the external drive must be mounted.
+6. **Do NOT assume the file is missing from the repo** — the junction or Vite bridge is misconfigured.
+
+### Image Not Loading (Production / R2)
+1. Check R2 bucket `zee-media-production` has file at `{brandId}/products/filename.webp`.
+2. Check `PUBLIC_BRAND_ID` matches R2 folder prefix.
+3. If `onerror` fires: the R2 file is missing — upload via Rclone.
 
 ---
 
-## 6. Version & Upgrade Notes
+## 7. Version & Upgrade Notes
 
-### Pinned Versions (2026-04-30)
+### Pinned Versions (2026-05-22)
 ```
 astro: ^5.16.11
 tailwindcss: ^4.1.18
@@ -249,6 +355,7 @@ tailwindcss: ^4.1.18
 alpinejs: ^3.15.4
 @alpinejs/collapse: ^3.15.6
 @astrojs/cloudflare: ^12.6.13
+@keystatic/core: ^0.5.50
 @keystatic/astro: ^5.0.6
 @splidejs/splide: ^4.1.4
 fuse.js: ^7.1.0
@@ -269,16 +376,21 @@ razorpay: ^2.9.6
 - Important: `flex!` postfix not `!flex` prefix
 - Smallest shadow: `shadow-xs` not `shadow-sm`
 
+### Keystatic Junction Patch
+
+The `@keystatic/core@0.5.50` patch at `patches/@keystatic+core+0.5.50.patch` is auto-applied on `npm install`. If you upgrade `@keystatic/core` to a new version, re-generate the patch. Delete `node_modules/.vite` after any patch update.
+
 ---
 
-## 7. Scalability: When to Update Which Section
+## 8. Scalability: When to Update Which Section
 
 | What happened | Update this section |
 |---|---|
 | New primitive created | §1 (add prop API) |
-| New content collection added | GEMINI.md directory map + `zelia-vance-engine` §6 |
-| New settings YAML | `zelia-vance-engine` §6 settings table |
-| New behavior file | `zelia-vance-engine` §13 behaviors table |
-| Dependency upgraded | §6 Version table + breaking changes |
+| New content collection added | `GEMINI.md` directory map + `zee-engine-core` §6 |
+| New settings YAML | `zee-engine-core` §6 settings table |
+| New behavior file | `zee-engine-core` §12 behaviors table |
+| Dependency upgraded | §7 Version table + breaking changes |
 | New page pattern | §2 (add to data-flow patterns) |
-| New error pattern discovered | `zelia-vance-engine` §9 error table |
+| New error pattern discovered | `zee-engine-core` §10 error table |
+| New brand added | `AGENTS.md` §2, `GEMINI.md`, `src/content/{newBrandId}/` |

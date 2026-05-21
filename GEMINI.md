@@ -25,8 +25,8 @@ A **Multi-Tenant White-Label E-Commerce Engine** built on Astro 5.
 **Read these skill files first. Always. No exceptions.**
 
 ```
-@Project_Skill/zelia-vance-engine/SKILL.md          ← Core rules, tokens, architecture
-@Project_Skill/zelia-vance-engine-apis/SKILL.md     ← Component APIs, page patterns, debugging
+@Project_Skill/zee-engine-core/SKILL.md          ← Core rules, tokens, Ghost Operator, architecture
+@Project_Skill/zee-engine-apis/SKILL.md          ← Component APIs, page patterns, MDX/AdSense, debugging
 ```
 
 Also read `AGENTS.md` at the repo root — it is the single source of truth for all business logic and operational decisions.
@@ -51,7 +51,7 @@ Also read `AGENTS.md` at the repo root — it is the single source of truth for 
 ```
 src/
 ├── components/
-│   ├── primitives/   Badge, Button, FilterChip, Heading, Icon, Image, Input, Link, Logo, Modal, Section, Text
+│   ├── primitives/   AdSlot, Badge, Button, FilterChip, Heading, Icon, Image, Input, Link, Logo, Modal, Section, Text
 │   ├── ui/           BlogCard, GlassProductCard, SideDrawer, SectionHeader, NewsletterForm, etc.
 │   └── features/     Navbar, Footer, WishlistButton, LookbookCarousel, NewsletterWidget, etc.
 ├── content/[brandId]/
@@ -74,7 +74,7 @@ src/
 
 | Variable | Purpose |
 |---|---|
-| `PUBLIC_BRAND_ID` | `"zelia-vance"` — drives all content paths |
+| `PUBLIC_BRAND_ID` | Brand folder name (e.g. `"zelia-vance"`) — drives all content paths |
 | `PUBLIC_SNIPCART_API_KEY` | Snipcart public key |
 | `PUBLIC_IMAGE_GATEWAY_URL` | R2 Worker base URL |
 | `SNIPCART_SECRET_API_KEY` | Server only |
