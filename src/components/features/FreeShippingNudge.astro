@@ -10,21 +10,31 @@
  * @component Feature (features/)
  */
 
+import { getEntry } from "astro:content";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 
 interface Props {
-  threshold?: number; // Free shipping threshold (default ₹10,000)
   class?: string;
 }
 
-const { threshold = 10000, class: className } = Astro.props;
+const { class: className } = Astro.props;
+
+// Fetch shipping settings (Strictly CMS-driven)
+const shippingSettings = await getEntry("settings", "shipping");
+const threshold = shippingSettings?.data?.free_shipping_threshold;
+
+// If threshold is not set or 0, we don't render the nudge at all
+if (!threshold || threshold <= 0) {
+  return null;
+}
 ---
 
 <div
   x-data={`{
     cartTotal: 0,
     threshold: ${threshold},
+    unsubscribe: null,
 
     get amountNeeded() {
       return Math.max(0, this.threshold - this.cartTotal);
@@ -39,17 +49,31 @@ const { threshold = 10000, class: className } = Astro.props;
     },
 
     updateCartTotal() {
-      if (typeof Snipcart === 'undefined') return;
-      const state = Snipcart.store.getState();
-      this.cartTotal = state.cart.total || 0;
+      if (typeof window.Snipcart === 'undefined' || !window.Snipcart.store) return;
+      const state = window.Snipcart.store.getState();
+      
+      // Use subtotal to avoid tax/shipping interference
+      this.cartTotal = state.cart.subtotal || 0;
     },
 
     init() {
-      if (typeof Snipcart !== 'undefined') {
-        Snipcart.events.on('snipcart.ready', () => { this.updateCartTotal(); });
-        Snipcart.events.on('item.added',     () => this.updateCartTotal());
-        Snipcart.events.on('item.removed',   () => this.updateCartTotal());
-        Snipcart.events.on('cart.confirmed', () => this.updateCartTotal());
+      const setupSync = () => {
+        this.updateCartTotal();
+        // Memory Leak Fix: Store the unsubscribe function
+        this.unsubscribe = window.Snipcart.store.subscribe(() => this.updateCartTotal());
+      };
+
+      if (typeof window.Snipcart !== 'undefined' && window.Snipcart.store) {
+        setupSync();
+      } else {
+        document.addEventListener('snipcart.ready', setupSync, { once: true });
+      }
+    },
+
+    // Memory Leak Fix: Cleanup subscription when component is destroyed
+    destroy() {
+      if (this.unsubscribe) {
+        this.unsubscribe();
       }
     }
   }`}
@@ -60,13 +84,13 @@ const { threshold = 10000, class: className } = Astro.props;
   ]}
 >
 
-  <!-- Qualified: Dopamine hit — success state -->
+  <!-- Qualified: Success state -->
   <div x-show="isQualified" class="flex items-center gap-3" x-cloak>
     <svg class="w-6 h-6 shrink-0 text-(--color-success)" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
     </svg>
     <div class="flex-1">
-      <Text variant="label" weight="semibold" color="main" class="m-0 block">🎉 Free shipping unlocked!</Text>
+      <Text variant="label" weight="semibold" color="main" class="m-0 tracking-wider block">🎉 Free shipping unlocked!</Text>
       <Text variant="caption" color="muted" class="mt-0.5 m-0 block">Your order ships at no extra cost</Text>
     </div>
   </div>
@@ -75,7 +99,7 @@ const { threshold = 10000, class: className } = Astro.props;
   <div x-show="!isQualified" class="flex flex-col gap-2" x-cloak>
     <div class="flex items-center justify-between">
       <Text variant="caption" weight="medium" color="muted" class="m-0">
-        <Text as="span" variant="caption" weight="bold" color="accent" x-text="`₹${amountNeeded.toLocaleString('en-IN')}`"></Text>
+        <Text as="span" variant="caption" weight="bold" color="accent" x-text="'₹' + amountNeeded.toLocaleString('en-IN')"></Text>
         away from free shipping
       </Text>
       <Icon name="PhTruck" class="h-5 w-5 shrink-0 text-(--color-accent)" />
@@ -83,7 +107,10 @@ const { threshold = 10000, class: className } = Astro.props;
 
     <!-- Progress Bar -->
     <div class="w-full h-1 bg-(--color-border-subtle) rounded-xs overflow-hidden" role="progressbar" :aria-valuenow="progressPercent" aria-valuemin="0" aria-valuemax="100">
-      <div class="h-full bg-linear-to-r from-(--color-primary) to-(--color-accent) rounded-xs transition-[width] duration-500 ease-out" :style="`width: ${progressPercent}%`"></div>
+      <div 
+        class="h-full bg-linear-to-r from-(--color-primary) to-(--color-accent) rounded-xs transition-[width] duration-500 ease-out" 
+        :style="`width: ${progressPercent}%`"
+      ></div>
     </div>
 
     <Text variant="metadata" color="muted" class="m-0 tracking-tight">

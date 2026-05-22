@@ -10,7 +10,7 @@
 - [ ] **Cloudflare Pages Setup**: Finalize the transition from Netlify. Configure environment variables, build settings, and deployment hooks in the Cloudflare dashboard.
 - [ ] **Affiliate Link Verification**: Integrate and verify links for platforms like Cuelinks and Admitad to ensure correct tracking and redirection.
 - [ ] **"Sold Out" UI Mapping**: Map Snipcart's inventory data to our UI components. The "Add to Cart" button should dynamically switch to a disabled "Sold Out" state based on stock levels.
-- [ ] **Free Shipping Nudge (Visual Fix)**: Fix the progress bar logic so it doesn't say "₹3,000 more" when the cart is already above the threshold.
+- [x] **Free Shipping Nudge (Visual Fix)**: Fix the progress bar logic so it doesn't say "₹3,000 more" when the cart is already above the threshold.
 - [ ] **PopupModal Scoping**: Implement the denylist logic to prevent the global popup from appearing on sensitive pages (Checkout, PDP, Lookbooks).
 
 ## Phase 2: Medium Priority (Growth & Management)
