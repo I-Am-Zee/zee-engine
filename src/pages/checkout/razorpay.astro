@@ -40,10 +40,10 @@ const faviconUrl = gateway
 
   <!-- ── Checkout Card ── -->
   <div class="w-full max-w-[460px] bg-(--color-surface) border border-(--color-border-subtle) rounded-xs overflow-hidden">
-    <div class="h-[3px] bg-linear-to-r from-(--color-primary) to-(--color-accent-brass)" aria-hidden="true"></div>
+    <div class="h-[3px] bg-linear-to-r from-(--color-primary) to-(--color-accent)" aria-hidden="true"></div>
 
     <div class="p-10 pb-8 sm:px-6 sm:py-8">
-      <p class="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase text-(--color-accent-brass) mb-2">Step 3 of 3</p>
+      <p class="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase text-(--color-accent) mb-2">Step 3 of 3</p>
       <h1 class="font-serif font-normal text-[1.75rem] tracking-tight text-(--color-primary) mb-1">{hubData.title}</h1>
       <p class="text-sm text-(--color-text-muted) mb-8 min-h-[1.25rem]" id="email-display">{hubData.subtitle_loading}</p>
 
@@ -69,12 +69,12 @@ const faviconUrl = gateway
       </button>
 
       <p class="mt-4 text-[0.8125rem] text-(--color-text-muted) text-center min-h-[1.25rem]" id="status" role="status" aria-live="polite"></p>
-      <div class="mt-5 p-4 border-l-3 border-(--color-accent-coral) bg-(--color-accent-coral)/5 rounded-xs text-sm leading-relaxed text-(--color-accent-coral) hidden" id="error" role="alert"></div>
+      <div class="mt-5 p-4 border-l-3 border-(--color-danger) bg-(--color-danger)/5 rounded-xs text-sm leading-relaxed text-(--color-danger) hidden" id="error" role="alert"></div>
     </div>
 
     <!-- Trust strip -->
     <div class="flex items-center justify-center gap-2.5 p-4 px-8 border-t border-(--color-border-subtle) bg-(--color-background) text-[0.6875rem] tracking-[0.06em] uppercase font-medium text-(--color-text-muted) sm:flex-wrap sm:gap-2 sm:px-5 sm:py-3.5" aria-label="Security information">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-(--color-accent-brass) shrink-0" aria-hidden="true">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-(--color-accent) shrink-0" aria-hidden="true">
         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
       </svg>
       {hubData.trust_badge_ssl}

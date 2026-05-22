@@ -14,7 +14,7 @@ const { intent = "info", title, class: className, ...rest } = Astro.props;
 const intentStyles = {
   info: "bg-surface border-border-subtle",
   warning: "bg-accent-amber/10 border-accent-amber/20",
-  success: "bg-accent-emerald/10 border-accent-emerald/20",
+  success: "bg-(--color-success)/10 border-(--color-success)/20",
 };
 
 // Intent icon mapping (Phosphor names with Ph prefix)
@@ -28,7 +28,7 @@ const intentIcons = {
 const intentTextColors = {
   info: "text-text-main",
   warning: "text-accent-amber",
-  success: "text-accent-emerald",
+  success: "text-(--color-success)",
 };
 ---
 

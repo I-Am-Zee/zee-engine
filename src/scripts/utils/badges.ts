@@ -13,7 +13,7 @@
 // TYPE DEFINITIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type BadgeIntent = "coral" | "brass" | "surface" | "outline" | "primary" | "accent";
+export type BadgeIntent = "danger" | "accent" | "success" | "surface" | "outline" | "primary";
 
 export interface BadgeConfig {
   id: string;
@@ -27,28 +27,28 @@ export interface BadgeConfig {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Tier 1: URGENCY (Coral) - Conversion Drivers
+ * Tier 1: URGENCY (Danger) - Conversion Drivers
  * High-energy badges that trigger FOMO or price consciousness
  */
 const URGENCY_BADGES: BadgeConfig[] = [
-  { id: "sale", label: "Sale", intent: "coral", order: 10 },
-  { id: "last-chance", label: "Last Chance", intent: "coral", order: 20 },
-  { id: "flash-deal", label: "Flash Deal", intent: "coral", order: 30 },
+  { id: "sale", label: "Sale", intent: "danger", order: 10 },
+  { id: "last-chance", label: "Last Chance", intent: "danger", order: 20 },
+  { id: "flash-deal", label: "Flash Deal", intent: "danger", order: 30 },
 ];
 
 /**
- * Tier 2: PRESTIGE (Brass) - Status & Freshness
+ * Tier 2: PRESTIGE (Accent) - Status & Freshness
  * Premium positioning badges for luxury, novelty, social proof
  */
 const PRESTIGE_BADGES: BadgeConfig[] = [
-  { id: "new", label: "New", intent: "brass", order: 40 },
-  { id: "new-drop", label: "New Drop", intent: "brass", order: 41 },
-  { id: "bestseller", label: "Bestseller", intent: "brass", order: 50 },
-  { id: "limited-edition", label: "Limited Edition", intent: "brass", order: 60 },
-  { id: "restocked", label: "Restocked", intent: "brass", order: 70 },
-  { id: "staff-pick", label: "Staff Pick", intent: "brass", order: 80 },
-  { id: "exclusive", label: "Exclusive", intent: "brass", order: 90 },
-  { id: "luxury", label: "Luxury", intent: "brass", order: 95 }, // Added from product files
+  { id: "new", label: "New", intent: "accent", order: 40 },
+  { id: "new-drop", label: "New Drop", intent: "accent", order: 41 },
+  { id: "bestseller", label: "Bestseller", intent: "accent", order: 50 },
+  { id: "limited-edition", label: "Limited Edition", intent: "accent", order: 60 },
+  { id: "restocked", label: "Restocked", intent: "accent", order: 70 },
+  { id: "staff-pick", label: "Staff Pick", intent: "accent", order: 80 },
+  { id: "exclusive", label: "Exclusive", intent: "accent", order: 90 },
+  { id: "luxury", label: "Luxury", intent: "accent", order: 95 }, // Added from product files
 ];
 
 /**

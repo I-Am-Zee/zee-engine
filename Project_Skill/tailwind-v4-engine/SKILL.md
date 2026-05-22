@@ -150,9 +150,9 @@ Full token reference (from `src/styles/global.css`):
 | `--color-text-inverse` | `text-(--color-text-inverse)` |
 | `--color-border-subtle` | `border-(--color-border-subtle)` |
 | `--color-border-strong` | `border-(--color-border-strong)` |
-| `--color-accent-coral` | `bg-(--color-accent-coral)` `text-(--color-accent-coral)` |
-| `--color-accent-brass` | `bg-(--color-accent-brass)` `text-(--color-accent-brass)` |
-| `--color-accent-emerald` | `bg-(--color-accent-emerald)` `text-(--color-accent-emerald)` |
+| `--color-danger` | `bg-(--color-danger)` `text-(--color-danger)` |
+| `--color-accent` | `bg-(--color-accent)` `text-(--color-accent)` |
+| `--color-success` | `bg-(--color-success)` `text-(--color-success)` |
 
 **NEVER use raw hex values in component files. Always use tokens.**
 

@@ -178,10 +178,10 @@ const readMoreLabel = uiBlog?.data?.labels?.readMore || "Read";
               @click="clearFilters()" 
               class="group cursor-pointer inline-flex items-center gap-2"
             >
-              <Text variant="metadata" class="text-accent-brass border-b border-accent-brass/30 pb-0.5 group-hover:text-primary group-hover:border-primary transition-colors">
+              <Text variant="metadata" color="accent" class="border-b border-(--color-accent)/30 pb-0.5 group-hover:text-(--color-primary) group-hover:border-(--color-primary) transition-colors">
                 {uiLabels.showAll}
               </Text>
-              <Icon name="PhArrowCounterClockwise" class="h-3 w-3 text-accent-brass group-hover:text-primary transition-colors" />
+              <Icon name="PhArrowCounterClockwise" class="h-3 w-3 text-(--color-accent) group-hover:text-(--color-primary) transition-colors" />
             </button>
           </div>
 

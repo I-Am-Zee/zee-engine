@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
-   SNIPCART UI OVERRIDES — Zelia Vance
+   SNIPCART UI OVERRIDES — Zee Engine Standard
 
    Structure:
-     § 1. THEME       — CSS variable palette (brand tokens)
+     § 1. THEME       — CSS variable palette (semantic tokens)
      § 2. TYPOGRAPHY  — Font family overrides
      § 3. COMPONENTS  — Direct selector behavioral overrides
      § 4. STRUCTURE   — Layout + anti-squash specificity fixes
@@ -11,119 +11,108 @@
 
 
 /* ──────────────────────────────────────────────────────────────
-   § 1. THEME — Zelia Vance Royal Conservatory Palette
-   All Snipcart CSS variables overridden to match brand identity.
-   Inspired by razorpay.astro: sharp, conversion-focused, luxury.
-
-   Palette:
-     Midnight Jungle  #052b22  — primary authority
-     Lighter Silk     #fefcfa  — elevated surface
-     Luminous Silk    #f9f5f0  — page background
-     Muted Silk       #f3ede6  — inactive / muted areas
-     Warm Sand        #e8ddd3  — borders
-     Polished Brass   #bfa05f  — accent, focus, links
-     Warm Gray        #6b5e54  — secondary text
-     Spiced Coral     #e65142  — errors / urgency
-     Jungle Emerald   #15803d  — success
+   § 1. THEME — Semantic Design Tokens
+   All Snipcart CSS variables mapped to Zee Engine theme variables.
+   Ensures checkout UI matches active brand identity automatically.
    ────────────────────────────────────────────────────────────── */
 
 #snipcart {
   /* ── Typography ── */
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-family: var(--font-sans-serif) !important;
 
   /* ── Colors: Text ── */
-  --color-default:              #052b22; /* Midnight Jungle  → body text */
-  --color-alt:                  #6b5e54; /* Warm Gray        → muted/secondary */
-  --color-link:                 #bfa05f; /* Polished Brass   → hyperlinks */
-  --color-icon:                 #bfa05f; /* Polished Brass   → icon fills */
-  --color-input:                #052b22; /* Midnight Jungle  → input text */
-  --color-inputLabel:           #052b22; /* Midnight Jungle  → form labels */
-  --color-inputPlaceholder:     #6b5e54; /* Warm Gray        → placeholder */
-  --color-inputIcon:            #6b5e54; /* Warm Gray        → inner icons */
-  --color-inputIcon-hover:      #052b22; /* Midnight Jungle  → icon on hover */
-  --color-inputIcon-focus:      #bfa05f; /* Polished Brass   → icon on focus */
-  --color-error:                #e65142; /* Spiced Coral     → errors */
-  --color-success:              #15803d; /* Jungle Emerald   → success */
+  --color-default:              var(--color-text-main);
+  --color-alt:                  var(--color-text-muted);
+  --color-link:                 var(--color-accent);
+  --color-icon:                 var(--color-accent);
+  --color-input:                var(--color-text-main);
+  --color-inputLabel:           var(--color-text-main);
+  --color-inputPlaceholder:     var(--color-text-muted);
+  --color-inputIcon:            var(--color-text-muted);
+  --color-inputIcon-hover:      var(--color-text-main);
+  --color-inputIcon-focus:      var(--color-accent);
+  --color-error:                var(--color-danger);
+  --color-success:              var(--color-success);
 
   /* ── Colors: Badges (step indicators 1, 2, 3) ── */
-  --color-badge:                #052b22; /* Midnight Jungle  → badge number */
-  --color-badge-active:         #fefcfa; /* Lighter Silk     → active badge text */
-  --color-badge-disabled:       #6b5e54; /* Warm Gray        → inactive badge text */
+  --color-badge:                var(--color-text-main);
+  --color-badge-active:         var(--color-text-inverse);
+  --color-badge-disabled:       var(--color-text-muted);
 
   /* ── Colors: Checkboxes ── */
-  --color-input-checked:        #fefcfa; /* Lighter Silk     → checkmark tick */
+  --color-input-checked:        var(--color-text-inverse);
 
   /* ── Colors: Primary Button ── */
-  --color-buttonPrimary:        #fefcfa; /* Lighter Silk     → button text */
-  --color-buttonPrimary-hover:  #052b22; /* Midnight Jungle  → inverted hover text */
-  --color-buttonPrimary-focus:  #fefcfa;
-  --color-buttonPrimary-active: #fefcfa;
+  --color-buttonPrimary:        var(--color-primary-foreground);
+  --color-buttonPrimary-hover:  var(--color-primary);
+  --color-buttonPrimary-focus:  var(--color-primary-foreground);
+  --color-buttonPrimary-active: var(--color-primary-foreground);
 
   /* ── Colors: Secondary Button (+/- quantity) ── */
-  --color-buttonSecondary:        #052b22;
-  --color-buttonSecondary-hover:  #052b22;
-  --color-buttonSecondary-focus:  #052b22;
-  --color-buttonSecondary-active: #052b22;
+  --color-buttonSecondary:        var(--color-text-main);
+  --color-buttonSecondary-hover:  var(--color-text-main);
+  --color-buttonSecondary-focus:  var(--color-text-main);
+  --color-buttonSecondary-active: var(--color-text-main);
 
   /* ── Colors: Danger Button (trash/delete) ── */
-  --color-buttonDanger:        #e65142; /* Spiced Coral */
-  --color-buttonDanger-hover:  #e65142;
+  --color-buttonDanger:        var(--color-danger);
+  --color-buttonDanger-hover:  var(--color-danger);
 
   /* ── Backgrounds: Surfaces ── */
-  --bgColor-default:            #fefcfa; /* Lighter Silk     → cards / forms */
-  --bgColor-alt:                #f3ede6; /* Muted Silk       → inactive sections */
-  --bgColor-modal:              #f9f5f0; /* Luminous Silk    → overall modal bg */
+  --bgColor-default:            var(--color-surface);
+  --bgColor-alt:                var(--color-surface-muted);
+  --bgColor-modal:              var(--color-background);
 
   /* ── Backgrounds: Inputs ── */
-  --bgColor-input:              #fefcfa;
-  --bgColor-input-hover:        #fefcfa;
-  --bgColor-input-focus:        #fefcfa;
-  --bgColor-input-autofill:     #f3ede6; /* Muted Silk → autofill wash */
+  --bgColor-input:              var(--color-surface);
+  --bgColor-input-hover:        var(--color-surface);
+  --bgColor-input-focus:        var(--color-surface);
+  --bgColor-input-autofill:     var(--color-surface-muted);
 
   /* ── Backgrounds: Checkboxes ── */
-  --bgColor-input-checked:      #052b22; /* Midnight Jungle  → checked fill */
+  --bgColor-input-checked:      var(--color-primary);
 
   /* ── Backgrounds: Step Badges ── */
-  --bgColor-badge:              #fefcfa;
-  --bgColor-badge-active:       #e8ddd3; /* Warm Sand        → active badge bg */
-  --bgColor-badge-disabled:     #f3ede6; /* Muted Silk       → inactive badge bg */
+  --bgColor-badge:              var(--color-surface);
+  --bgColor-badge-active:       var(--color-border-subtle);
+  --bgColor-badge-disabled:     var(--color-surface-muted);
 
   /* ── Backgrounds: Primary Button ── */
-  --bgColor-buttonPrimary:          #052b22;    /* Midnight Jungle → CTA fill */
-  --bgColor-buttonPrimary-hover:    transparent; /* Inverted hover — razorpay.astro pattern */
-  --bgColor-buttonPrimary-focus:    #052b22;
-  --bgColor-buttonPrimary-active:   #052b22;
-  --bgColor-buttonPrimary-disabled: #6b5e54;
+  --bgColor-buttonPrimary:          var(--color-primary);
+  --bgColor-buttonPrimary-hover:    transparent;
+  --bgColor-buttonPrimary-focus:    var(--color-primary);
+  --bgColor-buttonPrimary-active:   var(--color-primary);
+  --bgColor-buttonPrimary-disabled: var(--color-text-muted);
 
   /* ── Backgrounds: Secondary Button ── */
-  --bgColor-buttonSecondary:          #f3ede6; /* Muted Silk */
-  --bgColor-buttonSecondary-hover:    #e8ddd3; /* Warm Sand on hover */
-  --bgColor-buttonSecondary-focus:    #f3ede6;
-  --bgColor-buttonSecondary-active:   #e8ddd3;
-  --bgColor-buttonSecondary-disabled: #f3ede6;
+  --bgColor-buttonSecondary:          var(--color-surface-muted);
+  --bgColor-buttonSecondary-hover:    var(--color-border-subtle);
+  --bgColor-buttonSecondary-focus:    var(--color-surface-muted);
+  --bgColor-buttonSecondary-active:   var(--color-border-subtle);
+  --bgColor-buttonSecondary-disabled: var(--color-surface-muted);
 
   /* ── Backgrounds: Danger Button ── */
-  --bgColor-buttonDanger:          rgba(230, 81, 66, 0.06);
-  --bgColor-buttonDanger-hover:    rgba(230, 81, 66, 0.12);
+  --bgColor-buttonDanger:          color-mix(in srgb, var(--color-danger), transparent 94%);
+  --bgColor-buttonDanger-hover:    color-mix(in srgb, var(--color-danger), transparent 88%);
 
   /* ── Backgrounds: States ── */
-  --bgColor-error:              rgba(230, 81, 66, 0.05);
-  --bgColor-success:            rgba(21, 128, 61, 0.05);
+  --bgColor-error:              color-mix(in srgb, var(--color-danger), transparent 95%);
+  --bgColor-success:            color-mix(in srgb, var(--color-success), transparent 95%);
 
   /* ── Borders ── */
-  --borderColor-default:        #e8ddd3; /* Warm Sand        → all borders */
-  --borderColor-input:          #e8ddd3; /* Warm Sand        → input border */
-  --borderColor-input-hover:    #bfa05f; /* Polished Brass   → hover */
-  --borderColor-input-focus:    #bfa05f; /* Polished Brass   → focus */
-  --borderColor-input-checked:  #052b22; /* Midnight Jungle  → checked */
-  --borderColor-input-error:    #e65142; /* Spiced Coral     → error */
-  --borderColor-link:           #bfa05f; /* Polished Brass   → link underline */
+  --borderColor-default:        var(--color-border-subtle);
+  --borderColor-input:          var(--color-border-subtle);
+  --borderColor-input-hover:    var(--color-accent);
+  --borderColor-input-focus:    var(--color-accent);
+  --borderColor-input-checked:  var(--color-primary);
+  --borderColor-input-error:    var(--color-danger);
+  --borderColor-link:           var(--color-accent);
 
-  /* Primary button border — enables inverted hover shape */
-  --borderColor-buttonPrimary:          #052b22;
-  --borderColor-buttonPrimary-hover:    #052b22;
-  --borderColor-buttonPrimary-focus:    #052b22;
-  --borderColor-buttonPrimary-active:   #052b22;
+  /* Primary button border ── enables inverted hover shape */
+  --borderColor-buttonPrimary:          var(--color-primary);
+  --borderColor-buttonPrimary-hover:    var(--color-primary);
+  --borderColor-buttonPrimary-focus:    var(--color-primary);
+  --borderColor-buttonPrimary-active:   var(--color-primary);
   --borderColor-buttonPrimary-disabled: transparent;
 
   /* Secondary button border */
@@ -137,19 +126,14 @@
   --borderColor-buttonDanger-hover:    transparent;
 
   /* ── Shadows ── */
-  /* Jungle-tinted airy lift — no more heavy generic black */
-  --shadow-default:              0 4px 12px rgba(5, 43, 34, 0.06), 0 1px 3px rgba(5, 43, 34, 0.04);
-  /* Polished Brass glow on input focus */
-  --shadow-input-focus:          0 0 0 3px rgba(191, 160, 95, 0.22);
-  /* CTA: clean flat inversion, no shadow theatre */
+  --shadow-default:              0 4px 12px color-mix(in srgb, var(--color-primary), transparent 94%), 0 1px 3px color-mix(in srgb, var(--color-primary), transparent 96%);
+  --shadow-input-focus:          0 0 0 3px color-mix(in srgb, var(--color-accent), transparent 78%);
   --shadow-buttonPrimary-hover:  none;
   --shadow-buttonPrimary-active: none;
-  --shadow-buttonPrimary-focus:  0 0 0 3px rgba(191, 160, 95, 0.4);
-  /* Secondary */
+  --shadow-buttonPrimary-focus:  0 0 0 3px color-mix(in srgb, var(--color-accent), transparent 60%);
   --shadow-buttonSecondary-hover: none;
-  --shadow-buttonSecondary-focus: 0 0 0 3px rgba(191, 160, 95, 0.35);
-  /* Tooltip */
-  --shadow-tooltip:              0 4px 16px rgba(5, 43, 34, 0.1);
+  --shadow-buttonSecondary-focus: 0 0 0 3px color-mix(in srgb, var(--color-accent), transparent 65%);
+  --shadow-tooltip:              0 4px 16px color-mix(in srgb, var(--color-primary), transparent 90%);
 }
 
 
@@ -157,10 +141,10 @@
    § 2. TYPOGRAPHY — Brand font hierarchy
    ────────────────────────────────────────────────────────────── */
 
-/* Fraunces for checkout section headings (editorial, like razorpay.astro .card-title) */
+/* Fraunces for checkout section headings */
 #snipcart .snipcart__font--subtitle,
 #snipcart .snipcart__font--subtitle-small {
-  font-family: "Fraunces", ui-serif, Georgia, Cambria, serif !important;
+  font-family: var(--font-serif) !important;
   letter-spacing: 0.01em !important;
 }
 
@@ -169,58 +153,58 @@
    § 3. COMPONENTS — Behavioral + visual selector overrides
    ────────────────────────────────────────────────────────────── */
 
-/* Primary CTA: Inverted hover — mirrors razorpay.astro .pay-button */
+/* Primary CTA: Inverted hover */
 #snipcart .snipcart-button-primary:hover:not(:disabled):not(.is-loading) {
   background-color: transparent !important;
-  color: #052b22 !important;
-  border: 1px solid #052b22 !important;
+  color: var(--color-primary) !important;
+  border: 1px solid var(--color-primary) !important;
   box-shadow: none !important;
 }
 
-/* Primary CTA: Polished Brass focus ring */
+/* Primary CTA: Focus ring */
 #snipcart .snipcart-button-primary:focus-visible {
   box-shadow:
-    0 0 0 2px #f9f5f0,
-    0 0 0 4px #bfa05f,
-    0 0 12px rgba(191, 160, 95, 0.28) !important;
+    0 0 0 2px var(--color-background),
+    0 0 0 4px var(--color-accent),
+    0 0 12px color-mix(in srgb, var(--color-accent), transparent 72%) !important;
 }
 
-/* Error flash: left-border only (razorpay.astro .error-box pattern) */
+/* Error flash: left-border only */
 #snipcart .snipcart-flash-message--error {
   border: none !important;
-  border-left: 3px solid #e65142 !important;
-  background-color: rgba(230, 81, 66, 0.04) !important;
+  border-left: 3px solid var(--color-danger) !important;
+  background-color: color-mix(in srgb, var(--color-danger), transparent 96%) !important;
   border-radius: 2px !important;
 }
 
-/* Links: Polished Brass with Midnight Jungle on hover */
+/* Links */
 #snipcart .snipcart__actions--link,
 #snipcart .snipcart-button-link {
-  color: #bfa05f !important;
-  border-color: #bfa05f !important;
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
 }
 #snipcart .snipcart__actions--link:hover,
 #snipcart .snipcart-button-link:hover {
-  color: #052b22 !important;
-  border-color: #052b22 !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
-/* Cart header close icon + action icons: Polished Brass */
+/* Cart header close icon + action icons */
 #snipcart .snipcart-cart-header .snipcart-modal__close-icon,
 #snipcart .snipcart-cart-header__icon {
-  color: #bfa05f !important;
+  color: var(--color-accent) !important;
 }
 
 /* Step badges: active = authority, inactive = muted */
 #snipcart .snipcart__box--badge-highlight {
-  color: #fefcfa !important;
-  background-color: #052b22 !important;
+  color: var(--color-text-inverse) !important;
+  background-color: var(--color-primary) !important;
   border-color: transparent !important;
 }
 #snipcart .snipcart__box--badge-disabled {
-  color: #6b5e54 !important;
-  background-color: #f3ede6 !important;
-  border-color: #e8ddd3 !important;
+  color: var(--color-text-muted) !important;
+  background-color: var(--color-surface-muted) !important;
+  border-color: var(--color-border-subtle) !important;
 }
 
 
@@ -253,9 +237,7 @@
 /*
    MASTER SPECIFICITY OVERRIDES
    Targets checkout labels via unique IDs (ov-1 to ov-14) + class.
-   Math: #id.class = (1,1,0) — beats Snipcart's default (0,1,0).
    IDs assigned in public/snipcart-templates.html for rendering stability.
-   See: snipcart-templates.html for the full ID-to-label mapping.
 */
 :is(#ov-1, #ov-2, #ov-3, #ov-4, #ov-5, #ov-6, #ov-7, #ov-8, #ov-9, #ov-10, #ov-11, #ov-12, #ov-13, #ov-14).snipcart__font--tiny {
   text-wrap: wrap !important;
@@ -290,11 +272,11 @@ body.zav-guest-user .snipcart-discount-box::after {
   padding: 1.25rem;
   font-size: 0.875rem;
   line-height: 1.8;
-  color: #6b5e54;      /* Warm Gray */
+  color: var(--color-text-muted);
   text-align: center;
-  background: #f3ede6; /* Muted Silk */
+  background: var(--color-surface-muted);
   border-radius: 4px;
   margin-top: 0.5rem;
-  border: 1px dashed #e8ddd3; /* Warm Sand */
+  border: 1px dashed var(--color-border-subtle);
   white-space: pre-line;
 }

@@ -179,9 +179,9 @@ Brand-specific overrides in `src/styles/{brandId}/theme.css` (aliased as `@brand
 --color-text-inverse      #fefcfa   On dark bg
 --color-border-subtle     #e8ddd3   Dividers
 --color-border-strong     #bfa05f   Input outlines
---color-accent-coral      #e65142   SALE/NEW/urgency
---color-accent-brass      #bfa05f   Premium details
---color-accent-emerald    #15803d   Success states
+--color-danger          #e65142   SALE/NEW/urgency
+--color-accent          #bfa05f   Premium details
+--color-success         #15803d   Success states
 ```
 
 Tailwind v4 syntax: `bg-(--color-primary)` ✅ — NEVER `bg-[var(--color-primary)]` ❌

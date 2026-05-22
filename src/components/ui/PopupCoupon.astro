@@ -39,7 +39,7 @@ const config = {
 >
   <div class="flex flex-col md:flex-row h-full">
     {data.image && (
-      <div class="w-full md:w-2/5 h-48 md:h-auto relative bg-gray-100">
+      <div class="w-full md:w-2/5 h-48 md:h-auto relative bg-(--color-surface-muted)">
         <Image src={data.image} alt="" class="absolute inset-0 w-full h-full object-cover" />
       </div>
     )}
@@ -48,8 +48,8 @@ const config = {
       <Heading as="h3" class="mb-2">{data.title}</Heading>
       <Text variant="caption" color="muted" class="mb-6 leading-relaxed">{data.description}</Text>
 
-      <div class="bg-gray-50 border border-gray-200 rounded p-3 mb-6 flex items-center justify-between">
-        <Text as="code" variant="code" weight="bold" class="text-lg tracking-widest text-gray-900">{data.coupon_code}</Text>
+      <div class="bg-(--color-surface) border border-(--color-border-subtle) rounded p-3 mb-6 flex items-center justify-between">
+        <Text as="code" variant="code" weight="bold" class="text-lg tracking-widest text-(--color-text-main)">{data.coupon_code}</Text>
         <CopyButton text={data.coupon_code} class="underline" />
       </div>
 

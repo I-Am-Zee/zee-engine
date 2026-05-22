@@ -268,16 +268,16 @@ import Footer from "../components/features/Footer.astro";
         <div>
           <div class="mb-3 flex items-center gap-3">
             <Text variant="caption" class="uppercase">Tier 1: Urgency</Text>
-            <Badge size="sm" intent="coral">Spiced Coral</Badge>
+            <Badge size="sm" intent="danger">Spiced Coral</Badge>
           </div>
           <Text variant="caption" class="mb-3 text-text-muted">
             Conversion drivers - FOMO & price consciousness. 85% opacity background with white text ensures visibility on ANY product image.
           </Text>
           <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface p-6">
-            <Badge size="sm" intent="coral">Sale</Badge>
-            <Badge size="sm" intent="coral">20% OFF</Badge>
-            <Badge size="sm" intent="coral">Last Chance</Badge>
-            <Badge size="sm" intent="coral">Flash Deal</Badge>
+            <Badge size="sm" intent="danger">Sale</Badge>
+            <Badge size="sm" intent="danger">20% OFF</Badge>
+            <Badge size="sm" intent="danger">Last Chance</Badge>
+            <Badge size="sm" intent="danger">Flash Deal</Badge>
           </div>
         </div>
 
@@ -285,18 +285,18 @@ import Footer from "../components/features/Footer.astro";
         <div>
           <div class="mb-3 flex items-center gap-3">
             <Text variant="caption" class="uppercase">Tier 2: Prestige</Text>
-            <Badge size="sm" intent="brass">Polished Brass</Badge>
+            <Badge size="sm" intent="accent">Polished Brass</Badge>
           </div>
           <Text variant="caption" class="mb-3 text-text-muted">
             Premium positioning - luxury, novelty, social proof. 85% opacity + backdrop-blur for glassmorphism effect.
           </Text>
           <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface p-6">
-            <Badge size="sm" intent="brass">New</Badge>
-            <Badge size="sm" intent="brass">Bestseller</Badge>
-            <Badge size="sm" intent="brass">Limited Edition</Badge>
-            <Badge size="sm" intent="brass">Restocked</Badge>
-            <Badge size="sm" intent="brass">Staff Pick</Badge>
-            <Badge size="sm" intent="brass">Exclusive</Badge>
+            <Badge size="sm" intent="accent">New</Badge>
+            <Badge size="sm" intent="accent">Bestseller</Badge>
+            <Badge size="sm" intent="accent">Limited Edition</Badge>
+            <Badge size="sm" intent="accent">Restocked</Badge>
+            <Badge size="sm" intent="accent">Staff Pick</Badge>
+            <Badge size="sm" intent="accent">Exclusive</Badge>
           </div>
         </div>
 
@@ -337,8 +337,8 @@ import Footer from "../components/features/Footer.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">Size Variants</Text>
           <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface p-6">
-            <Badge size="sm" intent="coral">Small Badge</Badge>
-            <Badge size="md" intent="brass">Medium Badge</Badge>
+            <Badge size="sm" intent="danger">Small Badge</Badge>
+            <Badge size="md" intent="accent">Medium Badge</Badge>
           </div>
         </div>
 
@@ -346,10 +346,10 @@ import Footer from "../components/features/Footer.astro";
         <div>
           <Text variant="caption" class="mb-3 uppercase">Visibility on Dark Background</Text>
           <div class="flex flex-wrap items-center gap-3 rounded-lg bg-primary p-6">
-            <Badge size="sm" intent="coral">Sale</Badge>
-            <Badge size="sm" intent="brass">Bestseller</Badge>
-            <Badge size="sm" intent="surface">Waterproof</Badge>
-            <Badge size="sm" intent="outline">Coming Soon</Badge>
+            <Badge size="sm" intent="danger" onDark>Sale</Badge>
+            <Badge size="sm" intent="accent" onDark>Bestseller</Badge>
+            <Badge size="sm" intent="surface" onDark>Waterproof</Badge>
+            <Badge size="sm" intent="outline" onDark>Coming Soon</Badge>
           </div>
         </div>
       </div>
@@ -371,7 +371,7 @@ import Footer from "../components/features/Footer.astro";
           <Text variant="caption" class="mb-3 uppercase">Error State</Text>
           <div class="space-y-3 rounded-lg bg-surface p-6">
             <Input id="example-error" type="email" placeholder="invalid@email" error={true} />
-            <Text variant="caption" class="text-red-500">Please enter a valid email address</Text>
+            <Text variant="caption" color="coral">Please enter a valid email address</Text>
           </div>
         </div>
       </div>

@@ -30,7 +30,7 @@ const { text, label = "Copy", successLabel = "Copied!", class: className } = Ast
     type="ghost"
     size="sm"
     class="transition-colors duration-200"
-    :class="copied ? 'text-green-600' : 'text-text-muted hover:text-text-main'"
+    :class="copied ? 'text-(--color-success)' : 'text-text-muted hover:text-text-main'"
   >
     <Text variant="label" color="inherit" x-text={`copied ? ${JSON.stringify(successLabel)} : ${JSON.stringify(label)}`}></Text>
   </Button>

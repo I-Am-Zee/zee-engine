@@ -55,14 +55,14 @@ const { threshold = 10000, class: className } = Astro.props;
   }`}
   x-init="init()"
   class:list={[
-    "p-4 sm:px-5 bg-(--color-surface) border-l-3 border-(--color-accent-brass) rounded-xs animate-nudge-in", 
+    "p-4 sm:px-5 bg-(--color-surface) border-l-3 border-(--color-accent) rounded-xs animate-nudge-in", 
     className
   ]}
 >
 
   <!-- Qualified: Dopamine hit — success state -->
   <div x-show="isQualified" class="flex items-center gap-3" x-cloak>
-    <svg class="w-6 h-6 shrink-0 text-(--color-accent-emerald)" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+    <svg class="w-6 h-6 shrink-0 text-(--color-success)" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
     </svg>
     <div class="flex-1">
@@ -78,12 +78,12 @@ const { threshold = 10000, class: className } = Astro.props;
         <Text as="span" variant="caption" weight="bold" color="accent" x-text="`₹${amountNeeded.toLocaleString('en-IN')}`"></Text>
         away from free shipping
       </Text>
-      <Icon name="PhTruck" class="h-5 w-5 shrink-0 text-(--color-accent-brass)" />
+      <Icon name="PhTruck" class="h-5 w-5 shrink-0 text-(--color-accent)" />
     </div>
 
     <!-- Progress Bar -->
     <div class="w-full h-1 bg-(--color-border-subtle) rounded-xs overflow-hidden" role="progressbar" :aria-valuenow="progressPercent" aria-valuemin="0" aria-valuemax="100">
-      <div class="h-full bg-linear-to-r from-(--color-primary) to-(--color-accent-brass) rounded-xs transition-[width] duration-500 ease-out" :style="`width: ${progressPercent}%`"></div>
+      <div class="h-full bg-linear-to-r from-(--color-primary) to-(--color-accent) rounded-xs transition-[width] duration-500 ease-out" :style="`width: ${progressPercent}%`"></div>
     </div>
 
     <Text variant="metadata" color="muted" class="m-0 tracking-tight">

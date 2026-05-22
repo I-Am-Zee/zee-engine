@@ -23,7 +23,7 @@
   --color-ring: #3b82f6; /* Blue 500 */
   --color-ring-glow: rgba(59, 130, 246, 0.2);
 
-  --color-accent-coral: #f43f5e;
-  --color-accent-brass: #d97706;
-  --color-accent-emerald: #10b981;
+  --color-accent: #d97706;
+  --color-success: #10b981;
+  --color-danger: #f43f5e;
 }

@@ -23,7 +23,7 @@
   --color-ring: #bfa05f;
   --color-ring-glow: rgba(191, 160, 95, 0.4);
 
-  --color-accent-coral: #e65142;
-  --color-accent-brass: #bfa05f;
-  --color-accent-emerald: #15803d;
+  --color-accent: #bfa05f;
+  --color-success: #15803d;
+  --color-danger: #e65142;
 }

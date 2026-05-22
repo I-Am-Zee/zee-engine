@@ -50,11 +50,11 @@ const brandName = brandSettings.data.name;
     <div class="bg-(--color-surface) border border-(--color-border-subtle) rounded-[4px] p-10">
       <div class="font-serif text-[2rem] text-(--color-primary) text-center mb-8">{brandName}</div>
       
-      <div id="error-message" class="bg-(--color-accent-coral)/5 border border-(--color-accent-coral)/20 text-(--color-accent-coral) p-4 rounded-[4px] mb-6 text-sm" style="display: none;"></div>
+      <div id="error-message" class="bg-(--color-danger)/5 border border-(--color-danger)/20 text-(--color-danger) p-4 rounded-[4px] mb-6 text-sm" style="display: none;"></div>
       <div id="status-message" class="text-center mb-6 text-(--color-text-muted) text-sm">Loading payment details...</div>
       
       {!stripeConfigured ? (
-        <div class="bg-(--color-accent-coral)/5 border border-(--color-accent-coral)/20 text-(--color-accent-coral) p-4 rounded-[4px] mb-6 text-sm">
+        <div class="bg-(--color-danger)/5 border border-(--color-danger)/20 text-(--color-danger) p-4 rounded-[4px] mb-6 text-sm">
           Stripe is not configured yet. Please add settings to environment variables.
         </div>
       ) : (

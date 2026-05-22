@@ -220,12 +220,12 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
             {/* Coming Soon Countdown */}
             {
               isComingSoon && publishDate && (
-                <div class="rounded-lg border border-(--color-accent-brass)/20 bg-(--color-accent-brass)/10 p-4 text-center">
+                <div class="rounded-lg border border-(--color-accent)/20 bg-(--color-accent)/10 p-4 text-center">
                   <Text variant="label" color="accent" class="mb-1">
                     Dropping Soon
                   </Text>
                   <div
-                    class="text-lg font-semibold text-(--color-accent-brass)"
+                    class="text-lg font-semibold text-(--color-accent)"
                     id="countdown"
                     data-release={publishDate.toISOString()}
                   >
@@ -254,7 +254,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
                 x-show="error"
                 x-transition
                 x-cloak
-                class="mt-6 bg-(--color-accent-coral)/10 border border-(--color-accent-coral)/20 text-(--color-accent-coral) px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-xs"
+                class="mt-6 bg-(--color-danger)/10 border border-(--color-danger)/20 text-(--color-danger) px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center shadow-xs"
               >
                 <span x-text="error" />
               </div>

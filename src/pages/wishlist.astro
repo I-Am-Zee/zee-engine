@@ -54,7 +54,7 @@ const emptyState = uiWishlist?.data?.empty_states || {
         x-cloak
       >
         <div class="flex flex-col items-center gap-4">
-          <Icon name="PhCircleNotch" class="h-10 w-10 animate-spin text-(--color-accent-brass)" />
+          <Icon name="PhCircleNotch" class="h-10 w-10 animate-spin text-(--color-accent)" />
           <Text variant="caption" class="tracking-widest uppercase opacity-50">Loading Collection</Text>
         </div>
       </div>
@@ -95,7 +95,7 @@ const emptyState = uiWishlist?.data?.empty_states || {
             <Button
               type="ghost"
               @click="if(confirm('Clear all saved items?')) { $store.wishlist.items = []; $store.wishlist.save(); }"
-              class="text-red-500 hover:text-red-600"
+              class="text-(--color-danger) hover:text-(--color-danger)/80"
             >
               <Icon name="PhTrash" class="mr-2 h-4 w-4" />
               Clear Wishlist

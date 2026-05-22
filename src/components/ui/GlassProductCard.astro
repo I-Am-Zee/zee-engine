@@ -141,11 +141,11 @@ const affiliateLinks = p.affiliate_links;
              focus-glow cursor-pointer disabled:cursor-not-allowed group relative"
       x-data={`{ id: '${id}' }`}
       x-on:click.prevent="$store.wishlist.toggle(id)"
-      x-bind:class="$store.wishlist.has(id) ? 'text-red-500! bg-white! border-transparent!' : ''"
+      x-bind:class="$store.wishlist.has(id) ? 'text-(--color-danger)! bg-white! border-transparent!' : ''"
       aria-label="Toggle wishlist"
     >
       <Icon name="PhHeart" size={17} weight="regular" class="absolute shrink-0 transition-colors" x-show="!$store.wishlist.has(id)" />
-      <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 text-red-500! transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
+      <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 text-(--color-danger)! transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
     </button>
 
     <button

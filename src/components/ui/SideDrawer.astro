@@ -75,7 +75,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
             <div class="flex items-center gap-3">
               <template x-if="mode === 'upsell'">
                 <div
-                  class="bg-accent-emerald/10 text-accent-emerald flex h-10 w-10 items-center justify-center rounded-full"
+                  class="bg-(--color-success)/10 text-(--color-success) flex h-10 w-10 items-center justify-center rounded-full"
                 >
                   <Icon name="PhCheck" size={24} weight="bold" />
                 </div>
@@ -134,7 +134,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
 
           <div class="mb-8">
             <Text variant="paragraph" weight="bold" x-text="subHeading" />
-            <div class="bg-accent-brass mt-2 h-1 w-12"></div>
+            <div class="bg-(--color-accent) mt-2 h-1 w-12"></div>
           </div>
 
           <div class="space-y-6">
@@ -149,7 +149,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
           <!-- Validation Message -->
           <div
             x-show="typeof validationError !== 'undefined' && validationError"
-            class="bg-accent-coral/10 border-accent-coral/20 mb-5 rounded-lg border p-3"
+            class="bg-(--color-danger)/10 border border-(--color-danger)/20 mb-5 rounded-lg p-3"
             x-transition
             x-cloak
           >

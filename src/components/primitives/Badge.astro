@@ -1,28 +1,38 @@
 ---
 interface Props {
-  intent?: "surface" | "primary" | "accent" | "outline" | "coral" | "brass";
+  intent?: "surface" | "primary" | "accent" | "outline" | "danger" | "success" | "coral" | "brass";
   size?: "xs" | "sm" | "md";
+  onDark?: boolean;
   class?: string;
 }
 
-const { intent = "surface", size = "sm", class: className, ...rest } = Astro.props;
+const { intent: rawIntent = "surface", size = "sm", onDark = false, class: className, ...rest } = Astro.props;
+
+// Backward-compatibility mapping for literal color names
+const intentMap: Record<string, string> = {
+  coral: "danger",
+  brass: "accent",
+};
+const intent = intentMap[rawIntent] || rawIntent;
 
 // Base pill-shaped styles with "eyebrow" typography
 const baseStyles =
   "inline-flex items-center justify-center rounded-full uppercase tracking-[0.15em] font-sans font-bold leading-none";
 
-// Intent determines color scheme (updated for premium contrast)
+// Intent determines color scheme (updated for premium contrast and onDark support)
 const intentStyles = {
-  surface:
-    "bg-(--color-surface)/90 text-(--color-text-main) border border-(--color-border-subtle) shadow-xs backdrop-blur-sm",
+  surface: onDark
+    ? "bg-white/10 text-(--color-text-inverse) border border-white/20 shadow-xs backdrop-blur-md"
+    : "bg-(--color-surface)/90 text-(--color-text-main) border border-(--color-border-subtle) shadow-xs backdrop-blur-sm",
   primary: "bg-(--color-primary) text-(--color-primary-foreground) shadow-xs",
   accent: "bg-(--color-secondary) text-(--color-primary) border border-(--color-primary)/20 shadow-xs",
-  outline:
-    "bg-transparent text-(--color-text-main) border border-(--color-border-subtle) hover:border-(--color-border-strong) transition-colors",
-  coral:
-    "bg-(--color-accent-coral)/90 text-white border border-(--color-accent-coral) shadow-md backdrop-blur-sm",
-  brass:
-    "bg-(--color-accent-brass)/90 text-(--color-primary) border border-(--color-accent-brass) shadow-md backdrop-blur-sm",
+  outline: onDark
+    ? "bg-transparent text-(--color-text-inverse) border border-white/30"
+    : "bg-transparent text-(--color-text-main) border border-(--color-border-subtle)",
+  danger:
+    "bg-(--color-danger)/90 text-white border border-(--color-danger) shadow-md backdrop-blur-sm",
+  success:
+    "bg-(--color-success)/90 text-white border border-(--color-success) shadow-md backdrop-blur-sm",
 };
 
 // Size variants

@@ -80,7 +80,7 @@ if (typeof document !== 'undefined' && !(window as any)._zeliavanceValidatorBoun
           let errorMsg = container?.parentElement?.querySelector('.inline-variant-error') as HTMLElement;
           if (!errorMsg) {
              errorMsg = document.createElement('p');
-             errorMsg.className = 'inline-variant-error mt-4 text-sm font-medium text-red-500 w-full animate-fade-in bg-red-50 p-3 rounded-lg border border-red-100';
+             errorMsg.className = 'inline-variant-error mt-4 text-sm font-medium text-(--color-danger) w-full animate-fade-in bg-(--color-danger)/5 p-3 rounded-lg border border-(--color-danger)/20';
              if (container) {
                  container.insertAdjacentElement('afterend', errorMsg);
              } else {

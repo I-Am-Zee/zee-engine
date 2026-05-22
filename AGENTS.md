@@ -255,7 +255,7 @@ This codebase strictly follows Atomic Design Methodology. Every component lives 
 - **Tailwind CSS v4 exclusively.** No `<style>` blocks in Feature components or page files.
 - Vanilla CSS is only allowed in `src/styles/global.css`, `src/styles/base.css`, and `src/styles/snipcart.css` for design token definitions and global resets.
 - Brand-specific tokens live in `src/styles/{brandId}/theme.css`. Aliased as `@brand-theme` in Vite config.
-- Colors are always referenced via CSS custom properties: `var(--color-primary)`, `var(--color-accent-brass)`, etc. **Never raw hex values in components.**
+- Colors are always referenced via CSS custom properties: `var(--color-primary)`, `var(--color-accent)`, etc. **Never raw hex values in components.**
 - Tailwind v4 uses `bg-(--color-primary)` syntax. **NOT** `bg-[var(--color-primary)]`. This is intentional and correct.
 - **Flatten before Alpine.** Never pass raw Astro `CollectionEntry` objects to client JS — always serialize to plain objects first.
 

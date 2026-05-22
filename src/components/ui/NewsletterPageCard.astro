@@ -27,14 +27,14 @@ const brand = await getBrandSettings();
   <div class="w-full max-w-md border border-border-subtle bg-surface px-8 py-12 md:px-12 text-center">
 
     {emblem && (
-      <div class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-accent-brass">
+      <div class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-(--color-accent)">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="var(--color-accent-brass)"
+          stroke="var(--color-accent)"
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -47,7 +47,7 @@ const brand = await getBrandSettings();
 
     <Text variant="eyebrow" class="mb-4 block">{brand.name}</Text>
 
-    <div class="mx-auto mb-8 h-px w-8 bg-accent-brass"></div>
+    <div class="mx-auto mb-8 h-px w-8 bg-(--color-accent)"></div>
 
     <Heading as="h1" class="mb-4">
       {heading}

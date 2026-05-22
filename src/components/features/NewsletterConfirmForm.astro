@@ -83,7 +83,7 @@ const hasEmail = email.length > 0;
           @input="hideEmailError"
           @blur="validateEmail"
         />
-        <p id="newsletter-email-error" class="px-1 font-sans text-xs text-accent-coral" x-show="emailError" x-cloak>
+        <p id="newsletter-email-error" class="px-1 font-sans text-xs text-(--color-danger)" x-show="emailError" x-cloak>
           {emailError}
         </p>
       </div>
@@ -99,7 +99,7 @@ const hasEmail = email.length > 0;
       <span x-text={`isSubmitting ? 'Processing...' : '${submitLabel}'`}>{submitLabel}</span>
     </Button>
 
-    <p id="newsletter-form-error" class="text-center font-sans text-xs text-accent-coral" x-show="formError" x-cloak>
+    <p id="newsletter-form-error" class="text-center font-sans text-xs text-(--color-danger)" x-show="formError" x-cloak>
       Something went wrong. Please try again in a moment.
     </p>
   </form>

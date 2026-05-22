@@ -129,7 +129,7 @@ const isAffiliateMode = initialMode === "affiliate";
                 class="focus-glow inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-lg border px-2.5 transition-all sm:h-9 sm:min-w-9 sm:px-3"
                 :class="typeof selections !== 'undefined' && selections[item.id]?.[v.name] === val 
                   ? 'border-primary bg-primary text-text-inverse shadow-sm scale-[1.02]' 
-                  : 'border-border-strong bg-background/50 text-text-main hover:border-accent-brass hover:bg-surface'"
+                  : 'border-border-strong bg-background/50 text-text-main hover:border-(--color-accent) hover:bg-surface'"
               >
                 <Text variant="label" color="inherit" class="text-[11px] sm:text-xs" x-text="val" />
               </button>
