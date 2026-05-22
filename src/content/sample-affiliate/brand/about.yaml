@@ -3,7 +3,7 @@ isDraft: false
 hero:
   heading: Our Curated World.
   text: We find the best products so you don't have to.
-  image: /images/placeholder.jpg
+  image: /images/theme/about-hero.jpg
   isImmersive: false
 sections:
   - layout: no-image

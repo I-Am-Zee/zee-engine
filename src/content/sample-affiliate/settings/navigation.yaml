@@ -1,7 +1,19 @@
-navigation:
-  - label: "Home"
-    link: "/"
-  - label: "Shop"
-    link: "/shop"
-  - label: "Blog"
-    link: "/blog"
+main_menus:
+  - label: "Collections"
+    href: "/collections"
+  - label: "Lookbooks"
+    href: "/lookbooks"
+  - label: "Journal"
+    href: "/blog"
+support_links:
+  - label: "Help & FAQ"
+    href: "/faq"
+  - label: "Contact Us"
+    href: "/contact"
+legal_links:
+  - label: "Privacy Policy"
+    href: "/legal/privacy-policy"
+  - label: "Terms of Service"
+    href: "/legal/terms-and-conditions"
+labels:
+  allJewelry: "All Curated"

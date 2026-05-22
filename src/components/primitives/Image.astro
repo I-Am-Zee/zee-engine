@@ -90,6 +90,7 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
     draggable={draggable}
     onload={fade ? "this.style.opacity=1" : ""}
     style={fade ? "opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;" : ""}
+    onerror="this.onerror=null; this.srcset=''; this.src='https://placehold.co/800x800?text=Placeholder';"
     {...rest}
   />
 ) : (
@@ -105,6 +106,7 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
     draggable={draggable}
     onload={fade ? "this.style.opacity=1" : ""}
     style={fade ? "opacity: 0; transition-property: opacity; transition-duration: 0.8s; transition-timing-function: ease-out;" : ""}
+    onerror="this.onerror=null; this.srcset=''; this.src='https://placehold.co/800x800?text=Placeholder';"
     {...rest} 
   />
 )}

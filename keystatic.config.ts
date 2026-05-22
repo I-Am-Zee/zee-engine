@@ -83,7 +83,7 @@ export default config({
       'UI MICROCOPY': ['ui_blog', 'ui_search', 'ui_wishlist'],
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': isAffiliate 
-        ? ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_affiliate', 'settings_shipping', 'settings_tracking']
+        ? ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_affiliate', 'settings_tracking']
         : ['settings_brand', 'settings_legal', 'settings_navigation', 'settings_marketing', 'settings_store_checkout', 'settings_shipping', 'settings_tracking'],
       'PEOPLE': ['authors'],
     }

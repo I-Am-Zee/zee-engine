@@ -2,6 +2,6 @@ cards:
   - title: Curated Tech
     slug: tech
     description: High-end gadgets for the modern nomad.
-    image: /images/placeholder.jpg
+    image: /images/collections/tech/tech.jpg
     type: category
     is_coming_soon: false

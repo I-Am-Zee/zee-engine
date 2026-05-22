@@ -4,8 +4,21 @@ announcement_bar:
   link: "/shop"
 discount_popup:
   enabled: false
+  trigger: "timed"
+  delay_seconds: 8
+  title: "Unlock 10% Off"
+  description: "Join our list for exclusive partner deals."
+  coupon_code: "WELCOME10"
+  cta_text: "Claim My Discount"
+  denylist: []
 newsletter_popup:
   enabled: true
+  trigger: "exit"
+  delay_seconds: 15
   title: "Join the Curator's List"
   description: "Get weekly updates on the best products we've found."
-  button_text: "Subscribe"
+  denylist: []
+delivery_email_template: |
+  Hi there! Your curated selection from {{brandName}} has been delivered.
+  We would love to hear your feedback: {{feedbackUrl}}
+  Stay in the loop: {{newsletterUrl}}

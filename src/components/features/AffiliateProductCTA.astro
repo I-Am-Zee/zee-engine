@@ -15,24 +15,25 @@ import Button from "../primitives/Button.astro";
 import Icon from "../primitives/Icon.astro";
 
 interface Props {
-  links?: any[]; // Optional if bound via Alpine x-bind:links
+  links?: any[]; // Optional if static data is available (e.g., PDP)
+  alpineLinks?: string; // Optional if data is dynamic inside Alpine (e.g., "product.affiliate_links")
   isComingSoon?: boolean;
   size?: "sm" | "md" | "lg";
   class?: string;
-  [key: string]: any; // Allow Alpine attributes
+  [key: string]: any; 
 }
 
-const { links = [], isComingSoon = false, size = "lg", class: className, ...rest } = Astro.props;
+const { links = [], alpineLinks, isComingSoon = false, size = "lg", class: className, ...rest } = Astro.props;
+
+// If an alpine string expression is provided, use it directly. 
+// Otherwise, serialize the static Astro props into JSON for Alpine.
+const linksExpression = alpineLinks ? alpineLinks : JSON.stringify(links);
 ---
 
-<div 
-  x-data={links.length > 0 ? `{ links: ${JSON.stringify(links)} }` : undefined} 
-  class:list={[className]}
-  {...rest}
->
+<div class:list={[className]} {...rest}>
   <Button
     as="a"
-    x-bind:href="$store.region.getActiveLink(links)?.url || '#'"
+    x-bind:href={`$store.region.getActiveLink(${linksExpression})?.url || '#'`}
     target="_blank"
     rel="noopener noreferrer"
     size={size}
@@ -43,7 +44,7 @@ const { links = [], isComingSoon = false, size = "lg", class: className, ...rest
       "Coming Soon"
     ) : (
       <div class="flex items-center justify-center gap-2">
-        <span x-text="`Shop on ${$store.region.getActiveLink(links)?.platform || 'Partner'}`">Shop on Partner</span>
+        <span x-text={`'Shop on ' + ($store.region.getActiveLink(${linksExpression})?.platform || 'Partner')`}>Shop on Partner</span>
         <Icon name="PhArrowUpRight" size={size === "sm" ? 14 : 18} weight="bold" />
       </div>
     )}

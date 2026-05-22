@@ -22,6 +22,7 @@ export interface ZeliaProduct {
   id: string;        // The technical slug (used for URLs)
   sku?: string;      // The business ID (used for Invoices)
   title: string;
+  description?: string;
   price: number;
   salePrice?: number;
   image: string;
@@ -59,6 +60,7 @@ export const mapProduct = (input: any): ZeliaProduct => {
       id: input.id,
       sku: input.data.sku,
       title: input.data.title,
+      description: input.data.description,
       price: input.data.price,
       salePrice: input.data.salePrice,
       image: input.data.image,
@@ -76,6 +78,7 @@ export const mapProduct = (input: any): ZeliaProduct => {
       id: input.id || "",
       sku: input.sku || input.id,
       title: input.title || "",
+      description: input.description || "",
       price: Number(input.price) || 0,
       salePrice: input.salePrice ? Number(input.salePrice) : undefined,
       image: input.image || "",

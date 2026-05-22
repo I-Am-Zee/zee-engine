@@ -3,7 +3,7 @@
  * AffiliateQuickView - Feature Organism
  * 
  * A simplified side drawer for Affiliate-mode brands.
- * Shows high-level product details and a direct outbound CTA.
+ * Redesigned to use DrawerProductCard for a consistent, premium "Quick Shop" experience.
  * No cart logic, no variants, no upsells.
  */
 
@@ -11,8 +11,7 @@ import Heading from "../primitives/Heading.astro";
 import Text from "../primitives/Text.astro";
 import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
-import Image from "../primitives/Image.astro";
-import Badge from "../primitives/Badge.astro";
+import DrawerProductCard from "../ui/DrawerProductCard.astro";
 import AffiliateProductCTA from "./AffiliateProductCTA.astro";
 ---
 
@@ -28,7 +27,7 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
   role="dialog"
   aria-modal="true"
 >
-  <!-- Background backdrop -->
+  <!-- Background backdrop (Shared structure with SideDrawer) -->
   <div
     x-show="isOpen"
     x-transition:enter="ease-in-out duration-500"
@@ -42,7 +41,7 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
     x-cloak
   ></div>
 
-  <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
+  <div class="fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
     <div
       x-show="isOpen"
       x-transition:enter="transform-gpu transition-transform ease-out duration-500"
@@ -51,12 +50,12 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
       x-transition:leave="transform-gpu transition-transform ease-in duration-400"
       x-transition:leave-start="translate-x-0"
       x-transition:leave-end="translate-x-full"
-      class="w-screen max-w-md will-change-transform"
+      class="w-full max-w-md will-change-transform"
       x-cloak
     >
-      <div class="bg-(--color-surface) lg:bg-(--color-background) flex h-full flex-col overflow-hidden shadow-2xl">
+      <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
-        <div class="border-(--color-border-subtle) bg-(--color-surface)/50 border-b px-6 py-6 sm:px-8">
+        <div class="border-border-subtle bg-surface/50 border-b px-5 py-6 sm:px-8">
           <div class="flex items-center justify-between">
             <Heading as="h2" id="quick-view-title">Quick Look</Heading>
             <Button
@@ -73,77 +72,53 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
         </div>
 
         <!-- Scrollable Content -->
-        <div class="relative flex-1 overflow-y-auto px-6 py-8 sm:px-8">
+        <div class="relative flex-1 overflow-y-auto px-4 py-8 sm:px-8">
           <div x-show="isLoading" class="flex items-center justify-center py-12" x-cloak>
-            <div class="animate-spin text-(--color-accent-brass)">
+            <div class="animate-spin text-accent-brass">
               <Icon name="PhCircleNotch" size={32} weight="bold" />
             </div>
           </div>
 
           <template x-if="!isLoading && product">
             <div class="space-y-8">
-              <!-- Product Image -->
-              <div class="aspect-square relative overflow-hidden rounded-2xl bg-(--color-surface-muted) shadow-inner">
-                 <Image src="" :src="product.image" alt="" :alt="product.title" class="absolute inset-0 h-full w-full" ratio="auto" />
+              <!-- Compact Identity block via DrawerProductCard -->
+              <div class="space-y-6">
+                <template x-for="item in [product]" :key="item.id">
+                  <DrawerProductCard mode="affiliate" />
+                </template>
               </div>
 
-              <!-- Product Info -->
-              <div>
-                <div class="mb-4 flex items-start justify-between gap-4">
-                  <div class="min-w-0 flex-1">
-                    <Heading as="h3" class="mb-1 truncate text-2xl" x-text="product.title" />
-                    <Text variant="caption" color="muted" x-text="product.category" />
-                  </div>
-                  <div class="text-right">
-                    <template x-if="product.affiliate_links">
-                      <div class="flex flex-col items-end gap-1">
-                        <!-- Active Price -->
-                        <Text 
-                          variant="price" 
-                          class="text-2xl" 
-                          x-text="`Approx. ${$store.region.format($store.region.getActiveLink(product.affiliate_links)?.salePrice || $store.region.getActiveLink(product.affiliate_links)?.price || product.price)}`"
-                        />
-                        
-                        <!-- Sale Info -->
-                        <div class="flex items-center gap-2" x-show="$store.region.getActiveLink(product.affiliate_links)?.salePrice < $store.region.getActiveLink(product.affiliate_links)?.price" x-cloak>
-                          <Text 
-                            variant="price_sale" 
-                            class="opacity-60" 
-                            x-text="$store.region.format($store.region.getActiveLink(product.affiliate_links)?.price)"
-                          />
-                          <Badge intent="coral" size="xs">
-                            <span x-text="Math.round((($store.region.getActiveLink(product.affiliate_links)?.price - $store.region.getActiveLink(product.affiliate_links)?.salePrice) / $store.region.getActiveLink(product.affiliate_links)?.price) * 100)"></span>% OFF
-                          </Badge>
-                        </div>
-                      </div>
-                    </template>
-                  </div>
-                </div>
-
-                <Text variant="paragraph" color="muted" class="leading-relaxed" x-text="product.description" />
-              </div>
-
-              <!-- Features / Tags -->
-              <div class="flex flex-wrap gap-2">
-                  <template x-for="tag in product.tags" :key="tag">
-                      <Text variant="tag" color="muted" x-text="tag" />
-                  </template>
+              <!-- Editorial context (Optional Description) -->
+              <div class="border-border-subtle/30 border-t pt-8">
+                <Text variant="eyebrow" class="mb-4 block">Editor's Note</Text>
+                <Text variant="paragraph" color="muted" class="text-sm leading-relaxed italic" x-text="product.description" />
               </div>
             </div>
           </template>
         </div>
 
-        <!-- Footer Footer CTA -->
-        <div class="border-(--color-border-subtle) bg-(--color-surface)/80 border-t p-6 sm:p-8 backdrop-blur-md">
+        <!-- Sticky Footer CTA -->
+        <div class="border-border-subtle bg-surface/80 border-t px-5 py-8 backdrop-blur-md sm:px-8">
            <template x-if="product">
-              <AffiliateProductCTA 
-                x-bind:links="product.affiliate_links || []" 
-                class="w-full" 
-              />
+              <div class="space-y-4">
+                <AffiliateProductCTA 
+                  alpineLinks="product.affiliate_links || []" 
+                  class="w-full shadow-xl" 
+                />
+                <Text variant="caption" color="muted" class="block text-center opacity-70">
+                  Redirecting to verified partner platform.
+                </Text>
+              </div>
            </template>
-           <Text variant="caption" color="muted" class="mt-4 block text-center opacity-70">
-              You will be redirected to our partner platform.
-           </Text>
+           
+           <div class="mt-6 flex justify-center text-center">
+            <button
+              @click="close()"
+              class="focus-glow cursor-pointer rounded p-2"
+            >
+              <Text variant="eyebrow" color="muted" class="hover:text-primary transition-colors">Return to Shop</Text>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -152,11 +127,10 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
 
 <script>
   import { affiliateQuickView } from "../../scripts/behaviors/affiliate-quick-view";
-  // import Alpine from "alpinejs";
-
-  // Register behavior if not already registered
+  
+  // Register behavior
   if (!(window as any).Alpine) {
-    // This shouldn't happen with our Astro/Alpine setup, but safety first
+    // Safety check handled by Astro island entry
   }
   
   (window as any).Alpine.data("affiliateQuickView", affiliateQuickView);
