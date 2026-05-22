@@ -106,6 +106,8 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
                 :alt="mainItem.name"
                 class="h-16 w-16 rounded-lg object-cover"
                 ratio="auto"
+                sizes="64px"
+                widths={[200, 400]}
               />
               <div class="min-w-0 flex-1">
                 <Text variant="paragraph" weight="bold" class="truncate" x-text="mainItem.name" />

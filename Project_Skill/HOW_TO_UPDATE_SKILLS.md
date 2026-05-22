@@ -7,16 +7,17 @@
 
 ## Understanding What You Have
 
-You have 5 files that make AI models smart about your codebase:
+You have 6 files that make AI models smart about your codebase:
 
-| File | What it does | Used by |
-|---|---|---|
-| `AGENTS.md` | Business rules, brand identity, tech decisions | Antigravity IDE (auto-loaded) |
-| `GEMINI.md` | Quick-reference context file | Gemini CLI (auto-loaded) |
-| `Project_Skill/zee-engine-core/SKILL.md` | Core rules — tokens, atomic design, Ghost Operator, execution protocol | Gemini CLI (skills system) |
-| `Project_Skill/zee-engine-apis/SKILL.md` | Component APIs, debugging, MDX/AdSense, extensibility | Gemini CLI (skills system) |
-| `Project_Skill/zelia-vance-engine.md` | Full detailed reference (human readable, for Antigravity) | Antigravity IDE (manual reference) |
-| `Project_Skill/zelia-vance-engine-part2.md` | Full detailed reference Part 2 | Antigravity IDE (manual reference) |
+| File                                               | What it does                                                           | Used by                            |
+| -------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------- |
+| `AGENTS.md`                                        | Business rules, brand identity, tech decisions                         | Antigravity IDE (auto-loaded)      |
+| `GEMINI.md`                                        | Quick-reference context file                                           | Gemini CLI (auto-loaded)           |
+| `Project_Skill/zee-engine-core/SKILL.md`           | Core rules — tokens, atomic design, Ghost Operator, execution protocol | Gemini CLI (skills system)         |
+| `Project_Skill/zee-engine-apis/SKILL.md`           | Component APIs, debugging, MDX/AdSense, extensibility                  | Gemini CLI (skills system)         |
+| `Project_Skill/zee-engine-media-pipeline/SKILL.md` | Image primitive, srcset/sizes contract, Split Brain, `$engine` bridge  | Gemini CLI (skills system)         |
+| `Project_Skill/zee-engine.md`                      | Full detailed reference (human readable, for Antigravity)              | Antigravity IDE (manual reference) |
+| `Project_Skill/zee-engine-part2.md`                | Full detailed reference Part 2                                         | Antigravity IDE (manual reference) |
 
 ---
 
@@ -25,6 +26,7 @@ You have 5 files that make AI models smart about your codebase:
 This is the easiest. Just ask me (Antigravity) at the end of any coding session.
 
 **What to say:**
+
 ```
 "We added a new primitive called [ComponentName] today with these props: [list them].
  Update the skill files to include it."
@@ -66,6 +68,7 @@ Use this when you want to work in the terminal, or when Antigravity isn't availa
 Once inside `gemini`, type:
 
 **Example 1 — New component added:**
+
 ```
 Read src/components/primitives/MyNewComponent.astro and then update
 Project_Skill/zee-engine-apis/SKILL.md section 1 to add its prop API.
@@ -73,12 +76,14 @@ Follow the same format as the other components in that section.
 ```
 
 **Example 2 — Dependency upgraded:**
+
 ```
 alpinejs was upgraded to 3.16.0 today.
 Update the version table in Project_Skill/zee-engine-apis/SKILL.md section 7.
 ```
 
 **Example 3 — New content collection:**
+
 ```
 We added a new content collection called "testimonials" at src/content/zelia-vance/testimonials/.
 Its schema has: quote (string), author (string), role (string).
@@ -87,6 +92,7 @@ Also update GEMINI.md to mention it.
 ```
 
 **Example 4 — New error pattern discovered:**
+
 ```
 We found a new recurring bug: using x-transition without x-show causes Alpine to crash.
 Add this to the error patterns table in Project_Skill/zee-engine-core/SKILL.md section 10.
@@ -95,12 +101,14 @@ Add this to the error patterns table in Project_Skill/zee-engine-core/SKILL.md s
 ### To load the skills in Gemini CLI
 
 Skills need to be registered so Gemini CLI auto-discovers them. Run this once:
+
 ```
 gemini skill add Project_Skill/zee-engine-core
 gemini skill add Project_Skill/zee-engine-apis
 ```
 
 Or reference them manually in any session:
+
 ```
 @Project_Skill/zee-engine-core/SKILL.md
 @Project_Skill/zee-engine-apis/SKILL.md
@@ -114,7 +122,7 @@ Please use these as your rules for this session.
 If you ever need a completely new skill for a different topic (e.g., a "deployment" skill), ask Gemini CLI:
 
 ```
-create a new skill called "zelia-vance-deployment"
+create a new skill called "zee-engine-deployment"
 that guides agents through the Cloudflare Pages deployment process for this project
 ```
 
@@ -131,7 +139,7 @@ Run through this every week (takes 5–10 minutes):
      → Update: Project_Skill/zee-engine-apis/SKILL.md → Section 1
 
 ☐ Did we add any new UI or Feature components?
-     → Update: Project_Skill/zelia-vance-engine.md → "Scripts Behaviors" table
+     → Update: Project_Skill/zee-engine.md → "Scripts Behaviors" table
 
 ☐ Did we add any new CMS collections or settings files?
      → Update: Project_Skill/zee-engine-core/SKILL.md → Section 6
@@ -152,9 +160,11 @@ Run through this every week (takes 5–10 minutes):
 ```
 
 **Easiest way to run this checklist:** Just paste it into a message to me (Antigravity) and say:
+
 ```
 "Run the weekly skill update checklist. Check what changed this week and update the skill files."
 ```
+
 I will audit the codebase against the current skill files and update whatever has drifted.
 
 ---
@@ -164,6 +174,7 @@ I will audit the codebase against the current skill files and update whatever ha
 The reason Flash models make mistakes is **context loss** — they don't know your codebase's specific rules. These skill files solve that.
 
 When a model reads your skill files before working, it knows:
+
 - Exactly which Tailwind syntax is correct (v4 vs v3)
 - Exactly which component to use (won't create duplicates)
 - Exactly which CMS collection to fetch from (won't cross-wire taxonomy)
@@ -190,15 +201,19 @@ Whatever NotebookLM produces, paste it into Antigravity or Gemini CLI and say "w
 
 ## Quick Reference: Which File to Update for What
 
-| What changed | File to update | Section |
-|---|---|---|
-| New primitive component | `zee-engine-apis/SKILL.md` | §1 |
-| New UI/Feature component | `zelia-vance-engine.md` (Part 1) | §13 behaviors or component list |
-| New CMS collection | `zee-engine-core/SKILL.md` | §6 |
-| New settings YAML | `zee-engine-core/SKILL.md` | §6 settings table |
-| New behavior file | `zee-engine-core/SKILL.md` | §12 |
-| Dependency upgrade | `zee-engine-apis/SKILL.md` | §7 version table |
-| New error pattern | `zee-engine-core/SKILL.md` | §10 |
-| New page pattern | `zee-engine-apis/SKILL.md` | §2 |
-| New brand added | `GEMINI.md` | Brand section |
-| Operational rule changed | `AGENTS.md` first, then skill files | Operational Rules |
+| What changed             | File to update                       | Section                         |
+| ------------------------ | ------------------------------------ | ------------------------------- |
+| New primitive component  | `zee-engine-apis/SKILL.md`           | §1                              |
+| New UI/Feature component | `zee-engine.md` (Part 1)             | §13 behaviors or component list |
+| New CMS collection       | `zee-engine-core/SKILL.md`           | §6                              |
+| New settings YAML        | `zee-engine-core/SKILL.md`           | §6 settings table               |
+| New behavior file        | `zee-engine-core/SKILL.md`           | §12                             |
+| Dependency upgrade       | `zee-engine-apis/SKILL.md`           | §7 version table                |
+| New error pattern        | `zee-engine-core/SKILL.md`           | §10                             |
+| New page pattern         | `zee-engine-apis/SKILL.md`           | §2                              |
+| New brand added          | `GEMINI.md`                          | Brand section                   |
+| Operational rule changed | `AGENTS.md` first, then skill files  | Operational Rules               |
+| Image primitive changed  | `zee-engine-media-pipeline/SKILL.md` | §2/§7                           |
+| New image sizing context | `zee-engine-media-pipeline/SKILL.md` | §4 sizes table                  |
+| `$engine` bridge changed | `zee-engine-media-pipeline/SKILL.md` | §7                              |
+| `onerror` fallback changed | `zee-engine-media-pipeline/SKILL.md` | §11                            |

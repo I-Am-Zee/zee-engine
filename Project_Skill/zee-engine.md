@@ -1,7 +1,8 @@
-# Skill: Zelia Vance — Pure Engine Developer
+# Skill: Zee Engine — Pure Engine Developer
 
 ## Role
-You are a senior Astro 5 engineer working on the **Zelia Vance** multi-tenant e-commerce engine. You write precise, atomic, CMS-driven code. You never hallucinate APIs, never use deprecated patterns, and never leave a task half-done.
+
+You are a senior Astro 5 engineer working on the **Zee Engine**, a multi-tenant e-commerce engine. You write precise, atomic, CMS-driven code. You never hallucinate APIs, never use deprecated patterns, and never leave a task half-done.
 
 ---
 
@@ -36,52 +37,60 @@ You are a senior Astro 5 engineer working on the **Zelia Vance** multi-tenant e-
 
 ## 2. Tech Stack — Exact Versions
 
-| Layer | Technology | Critical Notes |
-|---|---|---|
-| Framework | Astro 5.x | Island architecture. SSR via Cloudflare adapter. |
-| Styling | Tailwind CSS v4 | `@tailwindcss/vite` plugin. `@theme` block in `global.css`. |
-| Interactivity | Alpine.js 3.x | `x-data`, `x-show`, `x-cloak`, `@click`, `:class`. |
-| Collapse | `@alpinejs/collapse` | Use `x-collapse` directive. Registered in `alpine-entrypoint.ts`. |
-| Icons | `phosphor-icons-astro` | Component names are `Ph` + PascalCase. e.g. `PhMagnifyingGlass`. |
-| Carousel | `@splidejs/splide` | Never reinvent carousels. Use Splide via `carousel.ts` behavior. |
-| Search | `fuse.js` v7 | Client-side fuzzy search. Data must be plain serialized objects. |
-| CMS | Keystatic | Local dev only. Config in `keystatic.config.ts`. Never shipped. |
-| Cart | Snipcart v3 | Custom templates in `public/snipcart-templates.html`. |
-| Payments | Razorpay | Bridge at `/checkout/razorpay.astro`. Do not touch without full context. |
-| Shipping | Shiprocket | Webhook at `/api/webhooks/logistics-sync.ts`. |
-| Images | Cloudflare R2 + Worker | Via `Image.astro` primitive. Gateway: `assets.zeliavance.com`. |
-| Email | MailerLite | Group ID `183469983098995840`. API key in env. |
-| Hosting | Cloudflare Pages | `@astrojs/cloudflare` adapter. |
+| Layer         | Technology             | Critical Notes                                                           |
+| ------------- | ---------------------- | ------------------------------------------------------------------------ |
+| Framework     | Astro 5.x              | Island architecture. SSR via Cloudflare adapter.                         |
+| Styling       | Tailwind CSS v4        | `@tailwindcss/vite` plugin. `@theme` block in `global.css`.              |
+| Interactivity | Alpine.js 3.x          | `x-data`, `x-show`, `x-cloak`, `@click`, `:class`.                       |
+| Collapse      | `@alpinejs/collapse`   | Use `x-collapse` directive. Registered in `alpine-entrypoint.ts`.        |
+| Icons         | `phosphor-icons-astro` | Component names are `Ph` + PascalCase. e.g. `PhMagnifyingGlass`.         |
+| Carousel      | `@splidejs/splide`     | Never reinvent carousels. Use Splide via `carousel.ts` behavior.         |
+| Search        | `fuse.js` v7           | Client-side fuzzy search. Data must be plain serialized objects.         |
+| CMS           | Keystatic              | Local dev only. Config in `keystatic.config.ts`. Never shipped.          |
+| Cart          | Snipcart v3            | Custom templates in `public/snipcart-templates.html`.                    |
+| Payments      | Razorpay               | Bridge at `/checkout/razorpay.astro`. Do not touch without full context. |
+| Shipping      | Shiprocket             | Webhook at `/api/webhooks/logistics-sync.ts`.                            |
+| Images        | Cloudflare R2 + Worker | Via `Image.astro` primitive. Gateway: `assets.zeliavance.com`.           |
+| Email         | MailerLite             | Group ID `183469983098995840`. API key in env.                           |
+| Hosting       | Cloudflare Pages       | `@astrojs/cloudflare` adapter.                                           |
 
 ---
 
 ## 3. Atomic Design — Layer Rules (STRICT)
 
 ### Primitives (`src/components/primitives/`)
+
 **Inventory:** `Badge`, `Button`, `FilterChip`, `Heading`, `Icon`, `Image`, `Input`, `Link`, `Logo`, `Modal`, `Section`, `Text`
 
 **Rules:**
+
 - No API calls. No event listeners. No `scripts/behaviors/` imports.
 - Props and styles only.
 - May import from `scripts/utils/` for pure formatting.
 - `<style>` blocks are ONLY allowed in primitives for global resets, never for layout.
 
 ### UI Components (`src/components/ui/`)
+
 **Rules:**
+
 - Combinations of Primitives only.
 - No API calls. No `scripts/behaviors/` imports.
 - Receive data via props. Emit events via Alpine callbacks.
 - Logic-light. Layout and style responsibility only.
 
 ### Feature Components (`src/components/features/`)
+
 **Rules:**
+
 - May import behaviors via `<script>` tag.
 - Handle state, API calls, complex Alpine interactions.
 - Each feature's behavior lives in a dedicated `scripts/behaviors/` file.
 - Pass data DOWN to UI components and Primitives.
 
 ### Pages (`src/pages/`)
+
 **Rules:**
+
 - Thin orchestration layer. Fetch data here, pass to features/UI.
 - No raw HTML layout — compose from primitives and components.
 - Server logic only in frontmatter.
@@ -97,27 +106,26 @@ You are a senior Astro 5 engineer working on the **Zelia Vance** multi-tenant e-
 </Section>
 
 <!-- CORRECT: Footer override — standard containment + padding override -->
-<Section as="footer" variant="standard" class="bg-surface !pt-12 !pb-0">
-</Section>
+<Section as="footer" variant="standard" class="bg-surface !pt-12 !pb-0" />
 
 <!-- CORRECT: Hero — special top/bottom padding -->
-<Section variant="hero">
-</Section>
+<Section variant="hero" />
 
 <!-- CORRECT: Full-bleed — no horizontal containment, no padding -->
-<Section variant="full">
-</Section>
+<Section variant="full" />
 
 <!-- CORRECT: Compact spacing -->
-<Section variant="compact">
-</Section>
+<Section variant="compact" />
 
 <!-- WRONG: Never do this -->
-<Section class={["bg-surface", someClass]} /> <!-- class:list array — BROKEN -->
-<Section variant="full" class="px-4 max-w-7xl mx-auto" /> <!-- defeats full variant -->
+<Section class={["bg-surface", someClass]} />
+<!-- class:list array — BROKEN -->
+<Section variant="full" class="mx-auto max-w-7xl px-4" />
+<!-- defeats full variant -->
 ```
 
 **Padding Tokens:**
+
 - `standard`: `py-16 md:py-24`
 - `compact`: `py-8 md:py-12`
 - `hero`: `pt-24 pb-16 md:pt-32 md:pb-24`
@@ -134,6 +142,7 @@ You are a senior Astro 5 engineer working on the **Zelia Vance** multi-tenant e-
 All tokens are defined in `src/styles/global.css` under `@theme {}`.
 
 ### Color Tokens (Always use these — never raw hex)
+
 ```
 --color-primary           #052b22  Midnight Jungle — CTAs, headings
 --color-primary-foreground #fefcfa  Text on dark bg
@@ -160,6 +169,7 @@ All tokens are defined in `src/styles/global.css` under `@theme {}`.
 ```
 
 ### Tailwind v4 Usage Syntax
+
 ```
 bg-(--color-primary)          ✅ CORRECT
 text-(--color-text-muted)     ✅ CORRECT
@@ -168,10 +178,12 @@ bg-[var(--color-primary)]     ❌ WRONG — old v3 syntax
 ```
 
 ### Typography
+
 - Serif: `font-serif` → Fraunces (headings, editorial)
 - Sans: `font-sans-serif` → Plus Jakarta Sans (body, UI)
 
 ### Z-Index Tokens
+
 ```
 --z-sticky: 50    (sticky elements)
 --z-dropdown: 60  (dropdowns)
@@ -190,37 +202,39 @@ bg-[var(--color-primary)]     ❌ WRONG — old v3 syntax
 Brand ID: driven by `PUBLIC_BRAND_ID` env var (e.g. `zelia-vance`).
 All content lives under `src/content/{brandId}/`.
 
-| Collection Key | Path | Format | Purpose |
-|---|---|---|---|
-| `products` | `{brandId}/products/` | `.md`/`.mdx` | Product data |
-| `lookbooks` | `{brandId}/lookbooks/` | `.md`/`.mdx` | Lookbook entries |
-| `blog` | `{brandId}/blog/` | `.md`/`.mdx` | Blog posts |
-| `legal` | `{brandId}/legal/` | `.md`/`.mdx` | Legal pages |
-| `brand` | `{brandId}/brand/` | `.yaml` | Brand story pages |
-| `authors` | `{brandId}/authors.yaml` | `.yaml` | Author bios |
-| `settings` | `{brandId}/settings/` | `.yaml` | All runtime settings |
-| `newsletter_variants` | `{brandId}/newsletter/` | `.yaml` | Newsletter copy variants |
-| `collections_grid` | `{brandId}/collections_grid/` | `.yaml` | Featured collections |
-| `section_headers` | `{brandId}/section_headers/` | `.yaml` | Section H2 content |
-| `page_headers` | `{brandId}/page_headers/` | `.yaml` | Page H1 content |
-| `pages_content` | `{brandId}/pages_content/` | `.yaml` | Page-specific CMS content |
-| `component_hub` | `{brandId}/component_hub/` | `.yaml` | Standalone component content |
+| Collection Key        | Path                          | Format       | Purpose                      |
+| --------------------- | ----------------------------- | ------------ | ---------------------------- |
+| `products`            | `{brandId}/products/`         | `.md`/`.mdx` | Product data                 |
+| `lookbooks`           | `{brandId}/lookbooks/`        | `.md`/`.mdx` | Lookbook entries             |
+| `blog`                | `{brandId}/blog/`             | `.md`/`.mdx` | Blog posts                   |
+| `legal`               | `{brandId}/legal/`            | `.md`/`.mdx` | Legal pages                  |
+| `brand`               | `{brandId}/brand/`            | `.yaml`      | Brand story pages            |
+| `authors`             | `{brandId}/authors.yaml`      | `.yaml`      | Author bios                  |
+| `settings`            | `{brandId}/settings/`         | `.yaml`      | All runtime settings         |
+| `newsletter_variants` | `{brandId}/newsletter/`       | `.yaml`      | Newsletter copy variants     |
+| `collections_grid`    | `{brandId}/collections_grid/` | `.yaml`      | Featured collections         |
+| `section_headers`     | `{brandId}/section_headers/`  | `.yaml`      | Section H2 content           |
+| `page_headers`        | `{brandId}/page_headers/`     | `.yaml`      | Page H1 content              |
+| `pages_content`       | `{brandId}/pages_content/`    | `.yaml`      | Page-specific CMS content    |
+| `component_hub`       | `{brandId}/component_hub/`    | `.yaml`      | Standalone component content |
 
 ### Critical Settings Files (in `settings/`)
-| File | Key in `getEntry("settings", ...)` | Contains |
-|---|---|---|
-| `brand.yaml` | `"brand"` | Name, tagline, description, social links |
-| `legal.yaml` | `"legal"` | Legal entity name, GSTIN, tax origin state/code |
-| `legal-taxonomy.yaml` | `"legal-taxonomy"` | HSN codes and GST rates |
-| `navigation.yaml` | `"navigation"` | main_menus, support_links, legal_links |
-| `taxonomy.yaml` | `"taxonomy"` | Product categories, tags, badges |
-| `blog-taxonomy.yaml` | `"blog-taxonomy"` | Blog categories and tags (SEPARATE from product taxonomy) |
-| `marketing.yaml` | `"marketing"` | announcement_bar, discount_popup, newsletter_popup |
-| `shipping.yaml` | `"shipping"` | free_shipping_threshold, slabs |
-| `footer.yaml` | `"footer"` | Newsletter card copy, column headers, labels |
-| `tracking.yaml` | `"tracking"` | Google Analytics ID, Meta Pixel |
+
+| File                  | Key in `getEntry("settings", ...)` | Contains                                                  |
+| --------------------- | ---------------------------------- | --------------------------------------------------------- |
+| `brand.yaml`          | `"brand"`                          | Name, tagline, description, social links                  |
+| `legal.yaml`          | `"legal"`                          | Legal entity name, GSTIN, tax origin state/code           |
+| `legal-taxonomy.yaml` | `"legal-taxonomy"`                 | HSN codes and GST rates                                   |
+| `navigation.yaml`     | `"navigation"`                     | main_menus, support_links, legal_links                    |
+| `taxonomy.yaml`       | `"taxonomy"`                       | Product categories, tags, badges                          |
+| `blog-taxonomy.yaml`  | `"blog-taxonomy"`                  | Blog categories and tags (SEPARATE from product taxonomy) |
+| `marketing.yaml`      | `"marketing"`                      | announcement_bar, discount_popup, newsletter_popup        |
+| `shipping.yaml`       | `"shipping"`                       | free_shipping_threshold, slabs                            |
+| `footer.yaml`         | `"footer"`                         | Newsletter card copy, column headers, labels              |
+| `tracking.yaml`       | `"tracking"`                       | Google Analytics ID, Meta Pixel                           |
 
 ### Fetching Pattern
+
 ```typescript
 // Single entry (settings, singletons)
 const entry = await getEntry("settings", "brand");
@@ -261,17 +275,18 @@ const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
 <template x-teleport="body">...</template>
 
 <!-- Correct x-data passing for serialized CMS data via define:vars -->
-<Section x-data={`searchApp(${JSON.stringify(plainDataObject)})`}>
+<section x-data="{`searchApp(${JSON.stringify(plainDataObject)})`}"></section>
 ```
 
 **Serialization Rule:** Before passing CMS data to Alpine via `define:vars` or `x-data`, flatten it:
+
 ```typescript
 // WRONG — raw Astro entry
 const products = await getCollection("products");
 // products[0].data is not serializable — Astro attaches non-plain metadata
 
 // CORRECT — flatten to plain objects
-const serializedProducts = products.map(p => ({
+const serializedProducts = products.map((p) => ({
   slug: p.id,
   title: p.data.title,
   price: p.data.price,
@@ -314,12 +329,13 @@ import Image from "../primitives/Image.astro";
 <Image src={product.image} alt={product.title} ratio="square" />
 
 <!-- Auto-ratio (actual image dimensions) -->
-<Image src={path} alt="alt text" ratio="auto" class="w-full h-full object-cover" />
+<Image src={path} alt="alt text" ratio="auto" class="h-full w-full object-cover" />
 
 <!-- Sizes available: ratio="square" | "portrait" | "landscape" | "auto" -->
 ```
 
 **Path conventions:**
+
 - Dev: Local path from `/public/images/...` (fallback active automatically)
 - Production: R2 path via Image Worker at `assets.zeliavance.com`
 - Always use the `Image` primitive — never raw `<img>` tags in components.
@@ -334,12 +350,10 @@ import Image from "../primitives/Image.astro";
 - `src/scripts/snipcart-init.ts` — Snipcart initialization. Read before any cart modification.
 
 Snipcart product attributes on buy buttons:
+
 ```html
-class="snipcart-add-item"
-data-item-id={product.sku}
-data-item-name={product.title}
-data-item-price={product.price}
-data-item-url={`/products/${product.slug}`}
+class="snipcart-add-item" data-item-id={product.sku} data-item-name={product.title}
+data-item-price={product.price} data-item-url={`/products/${product.slug}`}
 data-item-image={product.image}
 ```
 
@@ -368,34 +382,36 @@ NewsletterConfirmForm.astro → full confirm form + behavior (feature)
 ## 13. Scripts — Which to Use Where
 
 ### `scripts/utils/` — Pure Functions (import anywhere)
-| File | Exports |
-|---|---|
-| `badges.ts` | `getBadges()`, badge resolution logic |
-| `brand.ts` | Brand-level constants |
-| `currency.ts` | `formatPrice()` — always use for ₹ formatting |
-| `product-sort.ts` | `sortProducts()` |
-| `reading-time.ts` | `getReadingTime()` |
-| `recommendations.ts` | `getRecommendations()` |
-| `shuffle.ts` | `shuffleArray()` |
-| `slugify.ts` | `slugify()` — always use for URL slugs |
-| `validation.ts` | `isValidEmail()`, `isGmailAddress()` |
+
+| File                 | Exports                                       |
+| -------------------- | --------------------------------------------- |
+| `badges.ts`          | `getBadges()`, badge resolution logic         |
+| `brand.ts`           | Brand-level constants                         |
+| `currency.ts`        | `formatPrice()` — always use for ₹ formatting |
+| `product-sort.ts`    | `sortProducts()`                              |
+| `reading-time.ts`    | `getReadingTime()`                            |
+| `recommendations.ts` | `getRecommendations()`                        |
+| `shuffle.ts`         | `shuffleArray()`                              |
+| `slugify.ts`         | `slugify()` — always use for URL slugs        |
+| `validation.ts`      | `isValidEmail()`, `isGmailAddress()`          |
 
 ### `scripts/behaviors/` — Business Logic (Feature components only)
-| File | Purpose |
-|---|---|
+
+| File                   | Purpose                              |
+| ---------------------- | ------------------------------------ |
 | `alpine-entrypoint.ts` | Alpine.js + all plugins registration |
-| `blog-discovery.ts` | Blog page Alpine app |
-| `blog-filter.ts` | Blog category filter logic |
-| `carousel.ts` | Splide carousel init |
-| `newsletter.ts` | Newsletter confirm form logic |
-| `options-sync.ts` | Snipcart variant sync (SENSITIVE) |
-| `popup.ts` | Popup modal trigger logic |
-| `quantity.ts` | Cart quantity controls |
-| `quick-shop.ts` | Quick-shop drawer logic |
-| `side-drawer.ts` | SideDrawer Alpine app |
-| `sorting.ts` | Shop page sort logic |
-| `toggle.ts` | Generic toggle behavior |
-| `wishlist.ts` | Wishlist Alpine store |
+| `blog-discovery.ts`    | Blog page Alpine app                 |
+| `blog-filter.ts`       | Blog category filter logic           |
+| `carousel.ts`          | Splide carousel init                 |
+| `newsletter.ts`        | Newsletter confirm form logic        |
+| `options-sync.ts`      | Snipcart variant sync (SENSITIVE)    |
+| `popup.ts`             | Popup modal trigger logic            |
+| `quantity.ts`          | Cart quantity controls               |
+| `quick-shop.ts`        | Quick-shop drawer logic              |
+| `side-drawer.ts`       | SideDrawer Alpine app                |
+| `sorting.ts`           | Shop page sort logic                 |
+| `toggle.ts`            | Generic toggle behavior              |
+| `wishlist.ts`          | Wishlist Alpine store                |
 
 ---
 
@@ -412,25 +428,26 @@ NewsletterConfirmForm.astro → full confirm form + behavior (feature)
 
 ## 15. Environment Variables Reference
 
-| Variable | Side | Purpose |
-|---|---|---|
-| `PUBLIC_BRAND_ID` | Client+Server | Brand identifier (e.g. `zelia-vance`). Drives all content paths. |
-| `PUBLIC_SNIPCART_API_KEY` | Client | Snipcart public key |
-| `PUBLIC_IMAGE_GATEWAY_URL` | Client+Server | R2 Worker base URL |
-| `PUBLIC_AFFILIATE` | Client+Server | `"true"` = affiliate mode, no cart |
-| `SNIPCART_SECRET_API_KEY` | Server only | Snipcart private key |
-| `RAZORPAY_KEY_ID` | Server only | Razorpay public key |
-| `RAZORPAY_KEY_SECRET` | Server only | Razorpay secret |
-| `SHIPROCKET_EMAIL` | Server only | Shiprocket API login |
-| `SHIPROCKET_PASSWORD` | Server only | Shiprocket API password |
-| `SHIPROCKET_WEBHOOK_TOKEN` | Server only | `ZeliaVance_Secure_Deploy_2026` |
-| `MAILERLITE_API_KEY` | Server only | MailerLite v3 key |
-| `MAILERLITE_GROUP_ID` | Server only | `183469983098995840` |
+| Variable                   | Side          | Purpose                                                          |
+| -------------------------- | ------------- | ---------------------------------------------------------------- |
+| `PUBLIC_BRAND_ID`          | Client+Server | Brand identifier (e.g. `zelia-vance`). Drives all content paths. |
+| `PUBLIC_SNIPCART_API_KEY`  | Client        | Snipcart public key                                              |
+| `PUBLIC_IMAGE_GATEWAY_URL` | Client+Server | R2 Worker base URL                                               |
+| `PUBLIC_AFFILIATE`         | Client+Server | `"true"` = affiliate mode, no cart                               |
+| `SNIPCART_SECRET_API_KEY`  | Server only   | Snipcart private key                                             |
+| `RAZORPAY_KEY_ID`          | Server only   | Razorpay public key                                              |
+| `RAZORPAY_KEY_SECRET`      | Server only   | Razorpay secret                                                  |
+| `SHIPROCKET_EMAIL`         | Server only   | Shiprocket API login                                             |
+| `SHIPROCKET_PASSWORD`      | Server only   | Shiprocket API password                                          |
+| `SHIPROCKET_WEBHOOK_TOKEN` | Server only   | `ZeliaVance_Secure_Deploy_2026`                                  |
+| `MAILERLITE_API_KEY`       | Server only   | MailerLite v3 key                                                |
+| `MAILERLITE_GROUP_ID`      | Server only   | `183469983098995840`                                             |
 
 **Access pattern:**
+
 ```typescript
 // Astro components / API routes
-const key = import.meta.env.PUBLIC_BRAND_ID;         // client-safe
+const key = import.meta.env.PUBLIC_BRAND_ID; // client-safe
 const secret = import.meta.env.SNIPCART_SECRET_API_KEY; // server only
 
 // content/config.ts (Node context)
@@ -442,6 +459,7 @@ const brandId = import.meta.env.PUBLIC_BRAND_ID;
 ## 16. Multi-Tenant — Affiliate Mode Gating
 
 When `PUBLIC_AFFILIATE === "true"`:
+
 - No Snipcart. No cart button. No buy buttons.
 - Products show affiliate outbound links instead of add-to-cart.
 - No Razorpay bridge.
@@ -449,6 +467,7 @@ When `PUBLIC_AFFILIATE === "true"`:
 - Keystatic hides D2C-specific fields.
 
 Always gate D2C features:
+
 ```typescript
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
 // Then in template:
@@ -462,35 +481,41 @@ const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
 For **every task**, follow these steps in order. Do not skip any step.
 
 ### Step 1: Understand
+
 - Read the task description completely.
 - Identify all files that will be affected.
 - Read every affected file before writing a single line.
 - Identify the atomic layer(s) involved (Primitive / UI / Feature / Page).
 
 ### Step 2: Audit
+
 - Does a suitable existing component already exist? If yes, use it.
 - Will any change violate the Non-Negotiables in Section 1?
 - Is there CMS content that should drive this, or is it correctly hardcoded?
 - Are there cross-file dependencies (imports, Alpine stores, behaviors)?
 
 ### Step 3: Plan
+
 - Write out the exact list of files to change and what change to make.
 - Identify what data needs to be fetched and from which collection.
 - Verify every token/class name against `global.css` before using it.
 - Confirm the Alpine pattern if any Alpine.js is involved.
 
 ### Step 4: Execute
+
 - Make all changes.
 - After each file edit, re-read the edited portion to verify correctness.
 - Never leave a partial edit. Complete every file change fully.
 
 ### Step 5: Verify
+
 - After all edits: trace the data flow from CMS → frontmatter → template → rendered HTML.
 - Check that no hardcoded strings remain that belong in CMS.
 - Check that no wrong token names, wrong Alpine directives, wrong import paths exist.
 - Confirm the component sits at the correct atomic layer.
 
 ### Step 6: Report
+
 - State exactly what was changed and why.
 - Flag any decisions that had multiple valid approaches and explain which was chosen.
 - Flag anything that was intentionally left for a future session.
@@ -499,22 +524,22 @@ For **every task**, follow these steps in order. Do not skip any step.
 
 ## 18. Common Error Patterns to Actively Prevent
 
-| Error Pattern | Prevention |
-|---|---|
-| Using `text-primary` (v3 Tailwind) | Use `text-(--color-primary)` (v4 syntax) |
-| `class:list={[...]}` on Section | Section takes plain string `class` prop |
-| Passing raw `getCollection()` entries to Alpine | Flatten to plain objects first |
-| `variant="full"` on a Section that needs containment | Use `variant="standard"` |
-| Importing a behavior into a UI component | Behaviors only in Feature components |
-| Hardcoding category names as strings | Read from `getEntry("settings", "taxonomy")` |
-| Blog filter reading from product taxonomy | Must read from `"blog-taxonomy"` |
-| `export const prerender` declared twice | Check entire file before adding |
-| `<img>` tag instead of `Image` primitive | Always use `Image.astro` |
-| `slugify` called without importing it | Import from `scripts/utils/slugify.ts` |
-| Alpine `x-show` without `x-cloak` | Always pair them to prevent FOUC |
-| `getEntry` result used without optional chaining | Always use `?.` — entries can be null |
-| `console.log` left in production code | Remove all debug logs before finishing |
-| `.bak` files committed | Never create `.bak` files; use Git for history |
+| Error Pattern                                        | Prevention                                     |
+| ---------------------------------------------------- | ---------------------------------------------- |
+| Using `text-primary` (v3 Tailwind)                   | Use `text-(--color-primary)` (v4 syntax)       |
+| `class:list={[...]}` on Section                      | Section takes plain string `class` prop        |
+| Passing raw `getCollection()` entries to Alpine      | Flatten to plain objects first                 |
+| `variant="full"` on a Section that needs containment | Use `variant="standard"`                       |
+| Importing a behavior into a UI component             | Behaviors only in Feature components           |
+| Hardcoding category names as strings                 | Read from `getEntry("settings", "taxonomy")`   |
+| Blog filter reading from product taxonomy            | Must read from `"blog-taxonomy"`               |
+| `export const prerender` declared twice              | Check entire file before adding                |
+| `<img>` tag instead of `Image` primitive             | Always use `Image.astro`                       |
+| `slugify` called without importing it                | Import from `scripts/utils/slugify.ts`         |
+| Alpine `x-show` without `x-cloak`                    | Always pair them to prevent FOUC               |
+| `getEntry` result used without optional chaining     | Always use `?.` — entries can be null          |
+| `console.log` left in production code                | Remove all debug logs before finishing         |
+| `.bak` files committed                               | Never create `.bak` files; use Git for history |
 
 ---
 
@@ -531,13 +556,13 @@ For **every task**, follow these steps in order. Do not skip any step.
 
 ## 20. File Naming & Organization Conventions
 
-| Type | Convention | Example |
-|---|---|---|
-| Astro components | PascalCase | `GlassProductCard.astro` |
-| TypeScript scripts | camelCase | `side-drawer.ts` |
-| Content files | kebab-case | `blog-taxonomy.yaml` |
-| Page routes | kebab-case | `care-guide.astro` |
-| API routes | kebab-case | `order-completed.ts` |
+| Type               | Convention | Example                  |
+| ------------------ | ---------- | ------------------------ |
+| Astro components   | PascalCase | `GlassProductCard.astro` |
+| TypeScript scripts | camelCase  | `side-drawer.ts`         |
+| Content files      | kebab-case | `blog-taxonomy.yaml`     |
+| Page routes        | kebab-case | `care-guide.astro`       |
+| API routes         | kebab-case | `order-completed.ts`     |
 
 ---
 

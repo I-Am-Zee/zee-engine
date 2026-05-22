@@ -27,6 +27,7 @@ A **Multi-Tenant White-Label E-Commerce Engine** built on Astro 5.
 ```
 @Project_Skill/zee-engine-core/SKILL.md          ← Core rules, tokens, Ghost Operator, architecture
 @Project_Skill/zee-engine-apis/SKILL.md          ← Component APIs, page patterns, MDX/AdSense, debugging
+@Project_Skill/zee-engine-media-pipeline/SKILL.md ← Image primitive, srcset/sizes, Split Brain, $engine bridge
 ```
 
 Also read `AGENTS.md` at the repo root — it is the single source of truth for all business logic and operational decisions.

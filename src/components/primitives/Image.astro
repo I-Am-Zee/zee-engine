@@ -1,5 +1,6 @@
 ---
 import { Image as AstroImage } from "astro:assets";
+import { resolveImage, resolveSrcset } from "../../scripts/utils/images";
 
 interface Props {
   src: any; // Can be a local import or remote string
@@ -11,9 +12,9 @@ interface Props {
   decoding?: "async" | "sync" | "auto";
   sizes?: string;
   widths?: number[];
-  draggable?: boolean | "true" | "false"; // Corrected type for draggable
-  fade?: boolean; // Control whether to show the fade-in animation
-  [key: string]: any; // Catch-all for Alpine attributes like :src, :alt, etc.
+  draggable?: boolean | "true" | "false"; 
+  fade?: boolean; 
+  [key: string]: any; 
 }
 
 const { 
@@ -25,7 +26,7 @@ const {
   fetchpriority = "auto", 
   decoding = "async",
   sizes,
-  widths,
+  widths = [400, 800, 1200],
   draggable,
   fade = true,
   ...rest 
@@ -41,31 +42,16 @@ if (!src && !rest[':src']) return null;
 // Remote if it's a string starting with http or /, or if it has an Alpine :src attribute
 const isRemote = (typeof src === "string" && (src.startsWith("http") || src.startsWith("/"))) || !!rest[':src'];
 
-const resolveSrc = (path: string, width?: number) => {
-  if (!path) return "";
-  const gateway = import.meta.env.PUBLIC_IMAGE_GATEWAY_URL || "";
-  const brandId = import.meta.env.PUBLIC_BRAND_ID;
-  
-  if (path.startsWith("http")) return path;
-  
-  let resolvedPath = path;
-  if (path.startsWith("/")) {
-    // Transform path: /images/products/photo.jpg -> /zelia-vance/products/photo.jpg
-    const r2Path = path.replace(/^\/images\//, `/${brandId}/`);
-    resolvedPath = r2Path !== path ? r2Path : `/${brandId}${path}`;
-  }
-  
-  const url = `${gateway}${resolvedPath.startsWith("/") ? "" : "/"}${resolvedPath}`;
-  return width ? `${url}?w=${width}` : url;
-};
-
-const finalSrc = isRemote && typeof src === "string" ? resolveSrc(src) : (src || "");
-
-// Generate srcset for remote images if it's a gateway URL
-const remoteWidths = widths || [400, 800, 1200];
+// Server-side resolve (Astro)
+const finalSrc = isRemote && typeof src === "string" ? resolveImage(src) : (src || "");
 const srcset = (isRemote && typeof src === "string" && finalSrc.includes(import.meta.env.PUBLIC_IMAGE_GATEWAY_URL))
-  ? remoteWidths.map(w => `${resolveSrc(src, w)} ${w}w`).join(", ")
+  ? resolveSrcset(src, widths)
   : undefined;
+
+// Client-side resolve (Alpine)
+// If :src is passed, we intelligently inject the engine resolver
+const alpineSrc = rest[':src'] ? `$engine.image(${rest[':src']})` : undefined;
+const alpineSrcset = rest[':src'] ? `$engine.srcset(${rest[':src']}, [${widths.join(", ")}])` : undefined;
 
 const aspectClasses = {
   portrait: "aspect-2/3",
@@ -81,6 +67,8 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
   <img
     src={finalSrc}
     srcset={srcset}
+    x-bind:src={alpineSrc}
+    x-bind:srcset={alpineSrcset}
     sizes={sizes || "(max-width: 800px) 100vw, 800px"}
     alt={alt}
     loading={loading}
@@ -99,7 +87,7 @@ const combinedClasses = `${aspectClasses[ratio]} ${className} object-cover`.trim
     alt={alt}
     loading={loading}
     class={combinedClasses}
-    widths={widths || [400, 800, 1200]}
+    widths={widths}
     sizes={sizes || "(max-width: 800px) 100vw, 800px"}
     decoding={decoding}
     fetchpriority={fetchpriority}

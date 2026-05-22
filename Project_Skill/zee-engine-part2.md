@@ -1,6 +1,6 @@
 # Skill Part 2: Component APIs, Page Patterns, Extensibility & Debugging
 
-> **Prerequisite:** Part 1 (`zelia-vance-engine.md`) must be read first.
+> **Prerequisite:** Part 1 (`zee-engine.md`) must be read first.
 > This part covers: exact prop APIs for all primitives, canonical page data-flow patterns, how to extend the engine with new content/components, and a full debugging protocol.
 
 ---

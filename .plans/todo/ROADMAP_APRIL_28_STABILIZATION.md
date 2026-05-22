@@ -6,7 +6,7 @@
 - [x] **Blog Engine Overhaul**:
   - [x] **Blog Cards**: Refine `src/components/ui/BlogCard.astro` for a more premium editorial feel.
   - [x] **Layout & TOC**: Implement a sticky Table of Contents (TOC) sidebar and magazine-style layout for `src/pages/blog/[...slug].astro`.
-- [ ] **Affiliate Quick Shop (Redesign)**: Perform a premium design overhaul of the Quick Shop component used in Affiliate mode (currently functional but basic).
+- [x] **Affiliate Quick Shop (Redesign)**: Perform a premium design overhaul of the Quick Shop component used in Affiliate mode (currently functional but basic).
 - [ ] **Cloudflare Pages Setup**: Finalize the transition from Netlify. Configure environment variables, build settings, and deployment hooks in the Cloudflare dashboard.
 - [ ] **Affiliate Link Verification**: Integrate and verify links for platforms like Cuelinks and Admitad to ensure correct tracking and redirection.
 - [ ] **"Sold Out" UI Mapping**: Map Snipcart's inventory data to our UI components. The "Add to Cart" button should dynamically switch to a disabled "Sold Out" state based on stock levels.

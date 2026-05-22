@@ -8,10 +8,17 @@ import { sideDrawer } from './side-drawer';
 import { carousel } from './carousel';
 
 import { blogDiscovery } from './blog-discovery';
+import { resolveImage, resolveSrcset } from '../utils/images';
 
 export default (Alpine: Alpine) => {
   // Register plugins
   Alpine.plugin(collapse);
+  
+  // Register the engine magic helper
+  Alpine.magic('engine', () => ({
+    image: resolveImage,
+    srcset: resolveSrcset
+  }));
   
   // Register the wishlist & region stores
   Alpine.store('wishlist', wishlistStore);

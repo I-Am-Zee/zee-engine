@@ -19,6 +19,13 @@ export const affiliateQuickView = () => ({
   },
 
   async open(productData: any) {
+    // If the user clicked the exact same product card, just open the drawer.
+    // Do NOT overwrite the data, do NOT force Alpine to re-render the image.
+    if (this.product && (this.product.id === productData.id)) {
+      this.isOpen = true;
+      return;
+    }
+
     this.isOpen = true;
     this.isLoading = false;
     
