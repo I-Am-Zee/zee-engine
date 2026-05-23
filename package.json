@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "npm run build && wrangler dev",
     "astro": "astro",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@alpinejs/collapse": "^3.15.6",
@@ -28,7 +30,8 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "razorpay": "^2.9.6",
     "tailwindcss": "^4.1.18",
-    "yaml": "^2.8.3"
+    "yaml": "^2.8.3",
+    "@astrojs/cloudflare": "12"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
@@ -43,6 +46,6 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "typescript": "^5.9.3",
-    "wrangler": "^4.80.0"
+    "wrangler": "^4.94.0"
   }
 }

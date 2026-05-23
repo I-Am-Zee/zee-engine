@@ -32,3 +32,6 @@ desktop.ini
 
 # ─── KEYSTATIC LOCAL ────────────────────────────────────────────────────────
 .keystatic
+
+.dev.vars*
+!.dev.vars.example

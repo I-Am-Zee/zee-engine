@@ -132,7 +132,5 @@ export default defineConfig({
     mdx()
   ],
 
-  adapter: cloudflare({
-    platformProxy: { enabled: true }
-  })
+  adapter: cloudflare()
 });
