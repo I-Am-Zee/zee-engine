@@ -1,0 +1,66 @@
+{
+  // ============================================================
+  // Zee Engine — Cloudflare Workers Configuration
+  // ============================================================
+  // Managed by: @astrojs/cloudflare adapter (Astro 5, Workers mode)
+  // Deploy command: npx astro build && npx wrangler deploy
+  //
+  // This file is the source of truth for all Cloudflare bindings
+  // and plain-text environment variables at deploy time.
+  //
+  // Secrets (KV_ADMIN_SECRET etc.) are set via:
+  //   npx wrangler secret put <KEY>
+  // They are NEVER committed to this file or to version control.
+  // ============================================================
+
+  "name": "zelia-vance",
+  "main": "dist/_worker.js/index.js",
+  "compatibility_date": "2026-05-23",
+  "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
+
+  // Workers for Assets — static files served from dist/
+  // The _worker.js directory inside dist/ is the server-side script entry.
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // ============================================================
+  // KV Namespace Bindings
+  // ============================================================
+  // ZEE_INVENTORY — Real-time sold-out registry (Phase 2)
+  // Namespace ID: 6639ee6f6bef41bb887c3a78954454cc
+  // Architecture: Registry Pattern (one key per brand)
+  // Key format:  {PUBLIC_BRAND_ID}:sold_out_registry
+  // ============================================================
+  "kv_namespaces": [
+    {
+      "binding": "ZEE_INVENTORY",
+      "id": "6639ee6f6bef41bb887c3a78954454cc"
+    }
+  ],
+
+  // ============================================================
+  // Environment Variables (plain text — non-sensitive only)
+  // ============================================================
+  "vars": {
+    // KV edge cache TTL in seconds.
+    // 900 = 15 minutes (optimal for free tier, 1 brand).
+    // Adjustable from Cloudflare dashboard — no redeployment needed.
+    // See: ENGINE GUIDE - DO NOT EDIT/sold_out_sync_and_kv_usage.md §6
+    "KV_CACHE_TTL": "900"
+  }
+
+  // ============================================================
+  // Secrets (encrypted — set via CLI, NEVER in this file)
+  // ============================================================
+  // KV_ADMIN_SECRET — Bearer token for POST /api/stock/admin/reconcile
+  //
+  // To set: npx wrangler secret put KV_ADMIN_SECRET
+  // Value is stored in .env (local dev only, gitignored)
+  // ============================================================
+}
