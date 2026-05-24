@@ -20,7 +20,7 @@
 
   // Automatically triggers the scheduled reconciliation loop
   "triggers": {
-    "crons": ["0 0 * * 0"] // Every Sunday at 00:00 UTC
+    "crons": ["0 0 * * SUN"] // Every Sunday at 00:00 UTC
   },
 
   // Workers for Assets — static files served from dist/
