@@ -14,9 +14,14 @@
   // ============================================================
 
   "name": "zelia-vance",
-  "main": "dist/_worker.js/index.js",
+  "main": "worker.js",
   "compatibility_date": "2026-05-23",
   "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
+
+  // Automatically triggers the scheduled reconciliation loop
+  "triggers": {
+    "crons": ["0 0 * * 0"] // Every Sunday at 00:00 UTC
+  },
 
   // Workers for Assets — static files served from dist/
   // The _worker.js directory inside dist/ is the server-side script entry.
