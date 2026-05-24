@@ -84,12 +84,30 @@ export const popupBehavior = (config: PopupConfig) => ({
 
   isOnDeniedPath() {
     const currentPath = window.location.pathname;
-    const denylist = config.denylist || [];
+    
+    // Default sensitive system, checkout, and product paths to avoid distracting users
+    const defaultDenylist = [
+      '/checkout', '/checkout/*',
+      '/products', '/products/*',
+      '/lookbooks', '/lookbooks/*',
+      '/keystatic', '/keystatic/*',
+      '/newsletter/*',
+      '/cart', '/cart/*'
+    ];
+
+    const denylist = [
+      ...defaultDenylist,
+      ...(config.denylist || [])
+    ];
+
     return denylist.some(path => {
-      if (currentPath === path) return true;
-      if (path.endsWith('/*')) {
-        const base = path.slice(0, -2);
-        return currentPath.startsWith(base);
+      const normPath = currentPath.endsWith('/') && currentPath !== '/' ? currentPath.slice(0, -1) : currentPath;
+      const normRule = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path;
+
+      if (normPath === normRule) return true;
+      if (normRule.endsWith('/*')) {
+        const base = normRule.slice(0, -2);
+        return normPath.startsWith(base);
       }
       return false;
     });

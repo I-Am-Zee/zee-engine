@@ -13,7 +13,7 @@ const intentMap: Record<string, string> = {
   coral: "danger",
   brass: "accent",
 };
-const intent = intentMap[rawIntent] || rawIntent;
+const intent = (intentMap[rawIntent] || rawIntent) as keyof typeof intentStyles;
 
 // Base pill-shaped styles with "eyebrow" typography
 const baseStyles =

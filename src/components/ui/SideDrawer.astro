@@ -8,11 +8,9 @@
  * 3. Multi-item Lookbook Bundles (master-set mode)
  */
 
-interface Props {
-  threshold: number;
-}
+interface Props {}
 
-const { threshold = 3000 } = Astro.props;
+const {} = Astro.props;
 
 import { getEntry } from "astro:content";
 import Heading from "../primitives/Heading.astro";
@@ -129,7 +127,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
         <div class="flex-1 overflow-y-auto px-4 py-8 sm:px-8">
           {/* Dynamic Free Shipping Nudge */}
           <div class="mb-10">
-            <FreeShippingNudge threshold={threshold} />
+            <FreeShippingNudge />
           </div>
 
           <div class="mb-8">

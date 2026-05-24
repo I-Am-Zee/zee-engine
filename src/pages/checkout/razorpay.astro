@@ -3,6 +3,8 @@ export const prerender = false;
 import { getEntry } from "astro:content";
 import CheckoutLayout from "../../layouts/CheckoutLayout.astro";
 
+import { getBrandSettings } from "../../scripts/utils/brand";
+
 const publicToken = Astro.url.searchParams.get("publicToken");
 
 // Guard: no token → back to home
@@ -20,6 +22,17 @@ const brandId = import.meta.env.PUBLIC_BRAND_ID;
 if (!brandId) {
   throw new Error("PUBLIC_BRAND_ID is required for the checkout bridge.");
 }
+
+const brandSettings = await getBrandSettings();
+const brandName = brandSettings.name;
+const brandColor = brandSettings.primary_color || "#000000";
+
+const checkoutPage = await getEntry("pages_content" as any, "checkout_razorpay");
+if (!checkoutPage) {
+  throw new Error("[Checkout Razorpay] Page content missing in 'pages_content/checkout_razorpay'.");
+}
+const hubData = checkoutPage.data;
+const currencySymbol = "₹";
 
 // Zee Engine Fallback Favicon (Base64) - Used only if brand favicon is missing
 const fallbackFavicon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMGYxNzJhIiByeD0iNCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiPlo8L3RleHQ+PC9zdmc+";
@@ -159,41 +172,64 @@ const faviconUrl = gateway
     }
 
     // ── Step 2: Open Razorpay Standard Checkout ──
-    function openRazorpay() {
-      setStatus(hubData.status_opening);
+    async function openRazorpay() {
+      try {
+        setStatus(hubData.status_opening);
+        setButtonBusy("Initiating...");
 
-      const amountInPaise = Math.round(paymentSession.invoice.amount * 100);
+        // Securely initiate Razorpay order on server
+        const initRes = await fetch("/api/checkout/initiate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            publicToken,
+            paymentSessionId: paymentSession.id,
+          }),
+        });
 
-      const options = {
-        key: razorpayKeyId,
-        amount: amountInPaise,
-        currency: currencyCode,
-        name: brandName,
-        description: `Order #${String(paymentSession.id).substring(0, 8).toUpperCase()}`,
-        image: faviconUrl,
-        prefill: {
-          name:    paymentSession.invoice.billingAddress?.name || "",
-          email:   paymentSession.invoice.email               || "",
-          contact: "",
-        },
-        theme: { color: brandColor },
-        modal: {
-          ondismiss() {
-            setStatus("Payment cancelled.");
-            setButtonReady(hubData.button_ready);
+        if (!initRes.ok) {
+          const initErr = await initRes.json();
+          throw new Error(initErr.error || "Failed to initiate secure order");
+        }
+
+        const { orderId, amount: amountInPaise, currency } = await initRes.json();
+
+        const options = {
+          key: razorpayKeyId,
+          amount: amountInPaise,
+          currency: currency,
+          order_id: orderId, // CRITICAL: Locks the amount and enables signature verification
+          name: brandName,
+          description: `Order #${String(paymentSession.id).substring(0, 8).toUpperCase()}`,
+          image: faviconUrl,
+          prefill: {
+            name:    paymentSession.invoice.billingAddress?.name || "",
+            email:   paymentSession.invoice.email               || "",
+            contact: "",
           },
-        },
-        handler: async (response) => {
-          await verifyPayment(response);
-        },
-      };
+          theme: { color: brandColor },
+          modal: {
+            ondismiss() {
+              setStatus("Payment cancelled.");
+              setButtonReady(hubData.button_ready);
+            },
+          },
+          handler: async (response) => {
+            await verifyPayment(response);
+          },
+        };
 
-      const rzp = new Razorpay(options);
-      rzp.on("payment.failed", (ev) => {
-        showError("Payment failed", ev.error?.description || "Unknown error");
-        setButtonReady("Try Again");
-      });
-      rzp.open();
+        const rzp = new Razorpay(options);
+        rzp.on("payment.failed", (ev) => {
+          showError("Payment failed", ev.error?.description || "Unknown error");
+          setButtonReady("Try Again");
+        });
+        rzp.open();
+      } catch (err) {
+        console.error("[Razorpay] Initiation error:", err);
+        showError("Security check failed", err.message);
+        setButtonReady("Retry Checkout");
+      }
     }
 
     // ── Step 3: Verify & confirm with Snipcart ──

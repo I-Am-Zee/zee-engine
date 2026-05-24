@@ -13,67 +13,65 @@ import type { APIRoute } from 'astro';
 import crypto from 'crypto';
 
 interface VerifyRequest {
-  razorpay_order_id?: string; // Optional: only for order-based payments
+  razorpay_order_id: string; 
   razorpay_payment_id: string;
-  razorpay_signature?: string; // Optional: only for order-based payments
+  razorpay_signature: string; 
   paymentSessionId: string;  // Snipcart payment session ID
-  amount?: number; // For logging
-  currency?: string; // For logging
 }
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body: VerifyRequest = await request.json();
     
-    console.log('[verify] Verifying Razorpay payment');
-    console.log('[verify] Order ID:', body.razorpay_order_id || 'N/A (direct payment)');
+    console.log('[verify] Verifying Razorpay payment signature');
+    console.log('[verify] Order ID:', body.razorpay_order_id);
     console.log('[verify] Payment ID:', body.razorpay_payment_id);
-    console.log('[verify] Payment Session ID:',body.paymentSessionId);
-    if (body.amount) console.log('[verify] Amount:', body.amount, body.currency);
+    console.log('[verify] Payment Session ID:', body.paymentSessionId);
 
     // Validate required fields
-    if (!body.razorpay_payment_id || !body.paymentSessionId) {
+    if (!body.razorpay_order_id || !body.razorpay_payment_id || !body.razorpay_signature || !body.paymentSessionId) {
+      console.error('[verify] Missing required verification fields');
       return new Response(JSON.stringify({ 
-        error: 'Missing required fields: razorpay_payment_id, paymentSessionId' 
+        error: 'Missing required security verification fields' 
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Step 1: Verify Razorpay signature (only if order_id and signature are provided)
-    if (body.razorpay_order_id && body.razorpay_signature) {
-      console.log('[verify] Order-based payment - verifying signature...');
-      
-      const isValidSignature = verifyRazorpaySignature(
-        body.razorpay_order_id,
-        body.razorpay_payment_id,
-        body.razorpay_signature,
-        import.meta.env.RAZORPAY_KEY_SECRET
-      );
-
-      if (!isValidSignature) {
-        console.error('[verify] Invalid Razorpay signature!');
-        
-        // Notify Snipcart of failed payment
-        await notifySnipcartPayment(body.paymentSessionId, 'failed', body.razorpay_payment_id, {
-          code: 'signature_verification_failed',
-          message: 'Payment signature verification failed'
-        });
-
-        return new Response(JSON.stringify({ 
-          error: 'Invalid payment signature',
-          success: false
-        }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-
-      console.log('[verify] Signature verified successfully!');
-    } else {
-      console.log('[verify] Direct payment (no order) - proceeding without signature verification');
+    // Step 1: Verify Razorpay signature
+    // Signature = HMAC-SHA256(order_id + "|" + payment_id, secret)
+    const keySecret = import.meta.env.RAZORPAY_KEY_SECRET?.trim();
+    if (!keySecret) {
+      throw new Error('Razorpay secret is not configured');
     }
+
+    const isValidSignature = verifyRazorpaySignature(
+      body.razorpay_order_id,
+      body.razorpay_payment_id,
+      body.razorpay_signature,
+      keySecret
+    );
+
+    if (!isValidSignature) {
+      console.error('[verify] INVALID SIGNATURE! Possible fraud attempt.');
+      
+      // Notify Snipcart of failed payment
+      await notifySnipcartPayment(body.paymentSessionId, 'failed', body.razorpay_payment_id, {
+        code: 'signature_verification_failed',
+        message: 'Payment signature verification failed. The transaction was flagged as insecure.'
+      });
+
+      return new Response(JSON.stringify({ 
+        error: 'Security verification failed: Invalid payment signature',
+        success: false
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('[verify] Signature verified successfully!');
 
     // Step 2: Confirm payment to Snipcart
     const snipcartResult = await notifySnipcartPayment(
@@ -129,19 +127,28 @@ function verifyRazorpaySignature(
   signature: string, 
   secret: string
 ): boolean {
-  const payload = `${orderId}|${paymentId}`;
-  const expectedSignature = crypto
-    .createHmac('sha256', secret)
-    .update(payload)
-    .digest('hex');
-  
-  // Use timing-safe comparison to prevent timing attacks
   try {
-    return crypto.timingSafeEqual(
-      Buffer.from(signature, 'hex'),
-      Buffer.from(expectedSignature, 'hex')
-    );
-  } catch {
+    const payload = `${orderId}|${paymentId}`;
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(payload)
+      .digest('hex');
+    
+    // Use timing-safe comparison to prevent timing attacks
+    // signature is provided as hex from Razorpay
+    const sigBuffer = Buffer.from(signature, 'hex');
+    const expBuffer = Buffer.from(expectedSignature, 'hex');
+
+    // Explicit length check prevents "TypeError: Inputs must be of equal length"
+    // which timingSafeEqual throws in Node/Cloudflare if buffers differ.
+    if (sigBuffer.length !== expBuffer.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(sigBuffer, expBuffer);
+  } catch (err) {
+    // This now only catches actual system or cryptographic failures
+    console.error('[verifySignature] Crypto error:', err);
     return false;
   }
 }
@@ -168,8 +175,6 @@ async function notifySnipcartPayment(
       payload.error = error;
     }
 
-    console.log('[verify] Notifying Snipcart:', JSON.stringify(payload));
-
     const response = await fetch(
       'https://payment.snipcart.com/api/private/custom-payment-gateway/payment',
       {
@@ -184,12 +189,11 @@ async function notifySnipcartPayment(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('[verify] Snipcart API error:', response.status, errorText);
+      console.error('[notifySnipcart] API error:', response.status, errorText);
       return { success: false, error: errorText };
     }
 
     const result = await response.json() as any;
-    console.log('[verify] Snipcart response:', JSON.stringify(result));
     
     return { 
       success: true, 
@@ -197,19 +201,7 @@ async function notifySnipcartPayment(
     };
 
   } catch (error: any) {
-    console.error('[verify] Snipcart notification error:', error);
+    console.error('[notifySnipcart] Error:', error);
     return { success: false, error: error.message };
   }
 }
-
-// Debug endpoint
-export const GET: APIRoute = async () => {
-  return new Response(JSON.stringify({ 
-    message: 'Razorpay Payment Verification Endpoint',
-    status: 'ready',
-    hint: 'POST with razorpay_order_id, razorpay_payment_id, razorpay_signature, paymentSessionId'
-  }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' }
-  });
-};

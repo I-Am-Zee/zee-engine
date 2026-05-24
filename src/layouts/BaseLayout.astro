@@ -39,10 +39,8 @@ const faviconUrl = gateway
 // Fetch Modular Settings from Content Layer
 const brandSettings = await getEntry("settings", "brand");
 const marketingSettings = await getEntry("settings", "marketing");
-const shippingSettings = await getEntry("settings", "shipping");
 const affiliateSettings = isAffiliate ? await getEntry("settings", "affiliate_settings") : null;
 
-const threshold = shippingSettings?.data?.free_shipping_threshold || 3000;
 const discount_popup = marketingSettings?.data?.discount_popup;
 const newsletter_popup = marketingSettings?.data?.newsletter_popup;
 
@@ -133,7 +131,7 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     {isAffiliate ? (
       <AffiliateQuickView />
     ) : (
-      <SideDrawer threshold={threshold} />
+      <SideDrawer />
     )}
     <PopupCoupon data={discount_popup} />
     <PopupNewsletter data={newsletter_popup} />

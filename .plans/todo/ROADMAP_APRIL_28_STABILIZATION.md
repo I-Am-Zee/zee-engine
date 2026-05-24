@@ -7,11 +7,12 @@
   - [x] **Blog Cards**: Refine `src/components/ui/BlogCard.astro` for a more premium editorial feel.
   - [x] **Layout & TOC**: Implement a sticky Table of Contents (TOC) sidebar and magazine-style layout for `src/pages/blog/[...slug].astro`.
 - [x] **Affiliate Quick Shop (Redesign)**: Perform a premium design overhaul of the Quick Shop component used in Affiliate mode (currently functional but basic).
-- [ ] **Cloudflare Pages Setup**: Finalize the transition from Netlify. Configure environment variables, build settings, and deployment hooks in the Cloudflare dashboard.
+- [x] **Cloudflare Pages Setup**: Finalize the transition from Netlify. Configure environment variables, build settings, and deployment hooks in the Cloudflare dashboard.
 - [ ] **Affiliate Link Verification**: Integrate and verify links for platforms like Cuelinks and Admitad to ensure correct tracking and redirection.
-- [ ] **"Sold Out" UI Mapping**: Map Snipcart's inventory data to our UI components. The "Add to Cart" button should dynamically switch to a disabled "Sold Out" state based on stock levels.
+- [x] **"Sold Out" UI Mapping**: Map Snipcart's inventory data to our UI components. The "Add to Cart" button should dynamically switch to a disabled "Sold Out" state based on stock levels.
 - [x] **Free Shipping Nudge (Visual Fix)**: Fix the progress bar logic so it doesn't say "₹3,000 more" when the cart is already above the threshold.
-- [ ] **PopupModal Scoping**: Implement the denylist logic to prevent the global popup from appearing on sensitive pages (Checkout, PDP, Lookbooks).
+- [x] **PopupModal Scoping**: Implement the denylist logic to prevent the global popup from appearing on sensitive pages (Checkout, PDP, Lookbooks).
+- [ ] **Payment Robustness Audit**: Simulate bank failures, session timeouts, and window-closing events in the Razorpay bridge to ensure no "ghost orders." We got a critical security bug in razorpay that if someone will change the price as 1 rupee, razorpay will not ask, and i will get scammed. Must fix.
 
 ## Phase 2: Medium Priority (Growth & Management)
 
@@ -29,7 +30,6 @@
 
 ## Phase 3: Low Priority / On-Hold
 
-- [ ] **Payment Robustness Audit**: Simulate bank failures, session timeouts, and window-closing events in the Razorpay bridge to ensure no "ghost orders."
 - [ ] **Accessibility (a11y) Audit**: Ensure the `SideDrawer`, `PopupModal`, and filters are fully navigable for screen readers and keyboard users.
 - [ ] **Immersive Animations (WIP)**: Currently on hold. Controlled via "Enable Immersive Reveal (GSAP)" toggle in Keystatic.
 - [ ] **Multi-Currency (Global Sync)**: Ensure multi-currency logic is consistent across D2C and Affiliate modes (Geo-detection).

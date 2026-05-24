@@ -90,7 +90,61 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
     showStickyCart: false,
     error: '',
     errorTimer: null,
+    registry: {},
+    isSoldOut: false,
+    async init() {
+      if (${isAffiliate}) return;
+      try {
+        const res = await fetch('/api/stock/registry');
+        if (res.ok) {
+          this.registry = await res.json();
+          this.updateSoldOut();
+        }
+      } catch (e) {
+        console.error('Failed to fetch stock registry', e);
+      }
+    },
+    updateSoldOut() {
+      const soldOuts = this.registry['${product.data.sku || product.id}'] || [];
+      if (soldOuts.includes('__all__')) {
+        this.isSoldOut = true;
+        return;
+      }
+      
+      const selectors = Array.from(document.querySelectorAll('.product-variant-selector'));
+      if (selectors.length === 0) {
+        this.isSoldOut = false;
+        return;
+      }
+
+      const selections = selectors.map(s => ({
+        name: s.getAttribute('data-variant-name') || '',
+        value: s.value || ''
+      }));
+
+      if (selections.some(s => !s.value)) {
+        this.isSoldOut = false;
+        return;
+      }
+
+      // Generate identical lowercase, trimmed, alphabetically sorted variant key client-side
+      const currentKey = selections
+        .map(s => ({
+          name: s.name.trim().toLowerCase(),
+          value: s.value.trim().toLowerCase()
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(s => s.name + ':' + s.value)
+        .join('|');
+
+      this.isSoldOut = soldOuts.includes(currentKey);
+    },
     validateAdd(e) {
+      if (this.isSoldOut) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
       const btn = e.currentTarget;
       for(let i=1; i<=3; i++) {
         const customName = btn.dataset['itemCustom' + i + 'Name'];
@@ -117,7 +171,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
     }
   }`}
     @scroll.window="showStickyCart = window.scrollY > 500 && (document.documentElement.scrollHeight - window.scrollY - window.innerHeight) > 800"
-    @change="if($event.target.closest('fieldset')) { error = ''; if(errorTimer) clearTimeout(errorTimer); }"
+    @change="if($event.target.closest('fieldset')) { error = ''; if(errorTimer) clearTimeout(errorTimer); updateSoldOut(); }"
   >
     <Section variant="standard">
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
@@ -274,9 +328,11 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
                     size="lg"
                     class="w-full sm:flex-1 whitespace-nowrap h-13"
                     disabled={!!isComingSoon}
+                    x-bind:disabled={`isSoldOut || ${!!isComingSoon}`}
+                    x-bind:class="isSoldOut ? 'opacity-50 cursor-not-allowed !bg-(--color-surface-muted) !text-(--color-text-muted) !border-(--color-border-subtle)' : ''"
                     @click="validateAdd($event)"
                   >
-                    {isComingSoon ? "Coming Soon" : "Add to Cart"}
+                    <span x-text={`isSoldOut ? 'Sold Out' : '${isComingSoon ? "Coming Soon" : "Add to Cart"}'`}>{isComingSoon ? "Coming Soon" : "Add to Cart"}</span>
                   </AddToCartButton>
                 )
               }
@@ -355,9 +411,11 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
               size="md"
               disabled={!!isComingSoon}
               class="shrink-0"
+              x-bind:disabled={`isSoldOut || ${!!isComingSoon}`}
+              x-bind:class="isSoldOut ? 'opacity-50 cursor-not-allowed !bg-(--color-surface-muted) !text-(--color-text-muted) !border-(--color-border-subtle)' : ''"
               @click="validateAdd($event)"
             >
-              {isComingSoon ? "Soon" : "Add"}
+              <span x-text={`isSoldOut ? 'Sold Out' : '${isComingSoon ? "Soon" : "Add"}'`}>{isComingSoon ? "Soon" : "Add"}</span>
             </AddToCartButton>
           )
         }

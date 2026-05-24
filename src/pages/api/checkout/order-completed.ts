@@ -3,6 +3,7 @@ export const prerender = false;
 
 import type { APIRoute } from "astro";
 import { getEntry } from "astro:content";
+import { generateVariantKey } from "../../../scripts/utils/inventory";
 
 // Global cache for Shiprocket Auth Token to avoid logging in on every request under high load
 let cachedToken: string | null = null;
@@ -40,8 +41,30 @@ async function getShiprocketToken(): Promise<string> {
   return data.token;
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    const env = (locals as any).runtime?.env;
+    const snipcartSecret = env?.SNIPCART_SECRET_API_KEY || import.meta.env.SNIPCART_SECRET_API_KEY;
+
+    // ── Snipcart Request Token Validation ──
+    if (!import.meta.env.DEV) {
+      const token = request.headers.get("x-snipcart-requesttoken");
+      if (!token) {
+        console.error("[Inventory] Missing Snipcart Request Token");
+        return new Response(JSON.stringify({ error: "Missing token" }), { status: 401 });
+      }
+      const validationRes = await fetch(`https://app.snipcart.com/api/requestvalidation/${token}`, {
+        headers: {
+          "Authorization": `Basic ${btoa(snipcartSecret + ":")}`,
+          "Accept": "application/json"
+        }
+      });
+      if (!validationRes.ok) {
+        console.error("[Inventory] Snipcart Token Validation Failed");
+        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+      }
+    }
+
     const isSyncEnabled = import.meta.env.SHIPROCKET_SYNC_ENABLED === "true";
     
     let body;
@@ -115,6 +138,76 @@ export const POST: APIRoute = async ({ request }) => {
       console.log(`[MailerLite] ${order.email} opted out at checkout. Skipping.`);
     }
     // ── End MailerLite block ──
+
+    // ── Sold Out Sync: Inventory Check ──
+    try {
+      if (env?.ZEE_INVENTORY) {
+        const brandId = import.meta.env.PUBLIC_BRAND_ID || "zelia-vance";
+        const key = `${brandId}:sold_out_registry`;
+        
+        // Transition: Handle both array (Phase 1) and object (Phase 2 Path B)
+        const rawRegistry = await env.ZEE_INVENTORY.get(key, "json");
+        let registry: Record<string, string[]> = Array.isArray(rawRegistry) ? {} : (rawRegistry || {});
+        let registryChanged = false;
+
+        for (const item of order.items) {
+          console.log(`[Inventory] Checking stock for ${item.name} (${item.id})...`);
+          const stockRes = await fetch(`https://app.snipcart.com/api/products/${item.productId}`, {
+            headers: {
+              "Authorization": `Basic ${btoa(snipcartSecret + ":")}`,
+              "Accept": "application/json"
+            }
+          });
+          
+          if (stockRes.ok) {
+            const product = await stockRes.json() as any;
+            const soldOuts: string[] = registry[item.id] || [];
+            let itemChanged = false;
+
+            if (Array.isArray(product.variants) && product.variants.length > 0) {
+              // Path B: Variant-level stock
+              product.variants.forEach((v: any) => {
+                if (v.stock === 0) {
+                  const variantKey = generateVariantKey(v.options);
+                  
+                  if (!soldOuts.includes(variantKey)) {
+                    soldOuts.push(variantKey);
+                    itemChanged = true;
+                  }
+                }
+              });
+
+              const allVariantsSoldOut = product.variants.every((v: any) => v.stock === 0);
+              if ((allVariantsSoldOut || product.stock === 0) && !soldOuts.includes("__all__")) {
+                soldOuts.push("__all__");
+                itemChanged = true;
+              }
+            } else if (product.stock === 0 && !soldOuts.includes("__all__")) {
+              // Standard product (no variants)
+              soldOuts.push("__all__");
+              itemChanged = true;
+            }
+
+            if (itemChanged) {
+              registry[item.id] = soldOuts;
+              registryChanged = true;
+            }
+          } else {
+            console.warn(`[Inventory] Failed to fetch stock for ${item.productId}: ${stockRes.status}`);
+          }
+        }
+
+        if (registryChanged) {
+          await env.ZEE_INVENTORY.put(key, JSON.stringify(registry));
+          console.log(`[Inventory] Registry updated with sold out variants.`);
+        }
+      } else {
+        console.warn("[Inventory] ZEE_INVENTORY KV not available. Skipping stock sync.");
+      }
+    } catch (invErr: any) {
+      console.error("[Inventory] Non-fatal stock sync error:", invErr.message);
+    }
+    // ── End Inventory Check ──
 
 
     // 1. Snipcart Payload Extraction
