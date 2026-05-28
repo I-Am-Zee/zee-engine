@@ -19,7 +19,7 @@ import Icon from "../primitives/Icon.astro";
 import Button from "../primitives/Button.astro";
 import Image from "../primitives/Image.astro";
 import FreeShippingNudge from "../features/FreeShippingNudge.astro";
-import DrawerProductCard from "./DrawerProductCard.astro";
+import DrawerProductCard from "../ui/DrawerProductCard.astro";
 
 // Fetch default HSN from legal-taxonomy settings
 const legalTaxonomyEntry = await getEntry("settings", "legal-taxonomy");
@@ -66,9 +66,9 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
       class="w-full max-w-md will-change-transform"
       x-cloak
     >
-      <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
+      <div class="bg-(--color-surface) lg:bg-(--color-background) flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
-        <div class="border-border-subtle bg-surface/50 border-b px-5 py-6 sm:px-8">
+        <div class="border-(--color-border-subtle) bg-(--color-surface)/50 border-b px-5 py-6 sm:px-8">
           <div class="mb-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
               <template x-if="mode === 'upsell'">
@@ -95,7 +95,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
           <!-- Main Item Summary (Only for upsell) -->
           <template x-if="mode === 'upsell' && mainItem">
             <div
-              class="bg-background border-border-subtle mt-6 flex items-center gap-4 rounded-xl border p-3 shadow-xs"
+              class="bg-(--color-background) border-(--color-border-subtle) mt-6 flex items-center gap-4 rounded-xl border p-3 shadow-xs"
             >
               <Image
                 src=""
@@ -143,7 +143,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
         </div>
 
         <!-- Footer (Sticky) -->
-        <div class="border-border-subtle bg-surface/80 border-t px-5 py-8 backdrop-blur-md sm:px-8">
+        <div class="border-(--color-border-subtle) bg-(--color-surface)/80 border-t px-5 py-8 backdrop-blur-md sm:px-8">
           <!-- Validation Message -->
           <div
             x-show="typeof validationError !== 'undefined' && validationError"
@@ -179,7 +179,7 @@ const hsnCode = legalTaxonomyEntry?.data?.tax_classes?.[0]?.hsn || "0000";
               @click="close()"
               class="focus-glow cursor-pointer rounded p-2 disabled:cursor-not-allowed"
             >
-              <Text variant="eyebrow" color="muted" class="hover:text-primary transition-colors"
+              <Text variant="eyebrow" color="muted" class="hover:text-(--color-primary) transition-colors"
                 >Continue Shopping</Text
               >
             </button>

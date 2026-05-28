@@ -30,7 +30,7 @@ const { title, subtitle, align = "left", class: className = "" } = Astro.props;
     
     {subtitle && (
       <Text class:list={[
-        "max-w-2xl text-text-muted text-sm md:text-base leading-relaxed",
+        "max-w-2xl text-(--color-text-muted) text-sm md:text-base leading-relaxed",
         align === "center" ? "mx-auto" : ""
       ]}>
         {subtitle}

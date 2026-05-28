@@ -25,13 +25,13 @@ const { title, href, image, description, itemCount, class: className } = Astro.p
 <a
   href={href}
   class:list={[
-    "group relative block overflow-hidden rounded-2xl bg-surface transition-all duration-300 ease-out",
-    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 focus-glow cursor-pointer",
+    "group relative block overflow-hidden rounded-2xl bg-(--color-surface) transition-all duration-300 ease-out",
+    "hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] focus-glow cursor-pointer",
     className,
   ]}
 >
   {/* Image Container */}
-  <div class="relative aspect-[4/5] w-full overflow-hidden bg-surface-muted">
+  <div class="relative aspect-[4/5] w-full overflow-hidden bg-(--color-surface-muted)">
     <Image
       src={image}
       alt={title}
@@ -39,13 +39,13 @@ const { title, href, image, description, itemCount, class: className } = Astro.p
       sizes="(max-width: 768px) 100vw, 50vw"
       class="h-full w-full object-cover motion-soft group-hover:scale-[1.04]"
     />
-    
+
     {/* Dark Gradient Scrim overlay for text legibility */}
     <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90"></div>
 
     {itemCount && (
       <div class="absolute top-4 left-4 z-20">
-        <Badge intent="surface" size="sm" class="border border-white/50 bg-white/95 text-text-main shadow-md backdrop-blur-md font-bold tracking-wide">
+        <Badge intent="surface" size="sm" class="border border-white/50 bg-white/95 text-(--color-text-main) shadow-md backdrop-blur-md font-bold tracking-wide">
           {typeof itemCount === 'number' ? `${itemCount} ${itemCount === 1 ? 'Item' : 'Items'}` : itemCount}
         </Badge>
       </div>
@@ -53,16 +53,16 @@ const { title, href, image, description, itemCount, class: className } = Astro.p
 
     {/* Text Content overlaying image at bottom */}
     <div class="absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end p-6 sm:p-8">
-      <Heading 
-        as="h3" 
-        color="inverse" 
-        class="mb-2 translate-y-0 font-serif text-2xl tracking-tight transition-transform duration-500 group-hover:-translate-y-1 sm:text-3xl"
+      <Heading
+        as="h3"
+        color="inverse"
+        class="mb-2 font-serif text-2xl tracking-tight sm:text-3xl"
       >
         {title}
       </Heading>
-      
+
       {description && (
-        <p class="max-h-0 translate-y-4 line-clamp-2 text-sm leading-relaxed text-white/80 opacity-0 transition-all duration-500 group-hover:max-h-24 group-hover:translate-y-0 group-hover:opacity-100 sm:text-base">
+        <p class="hidden lg:block max-h-0 translate-y-4 line-clamp-2 text-sm leading-relaxed text-white/80 opacity-0 transition-all duration-500 group-hover:max-h-24 group-hover:translate-y-0 group-hover:opacity-100 sm:text-base">
           {description}
         </p>
       )}

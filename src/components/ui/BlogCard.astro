@@ -38,7 +38,7 @@ const {
   class: className
 } = Astro.props;
 
-const { title, excerpt, publishDate, image, author: authorName, category } = post.data;
+const { title, excerpt, publishDate, cover: image, author: authorName, category } = post.data;
 
 const readTime = calculateReadTime(post.body || "");
 
@@ -63,7 +63,7 @@ const isHorizontal = variant === "horizontal";
   <article
     class:list={[
       "group relative overflow-hidden rounded-2xl transition-all duration-300 ease-out bg-(--color-surface)",
-      "shadow-xs hover:shadow-xs hover:-translate-y-1",
+      "shadow-xs hover:shadow-xs",
       "border border-(--color-border-subtle)/40 group-hover:border-(--color-border-subtle)/80",
       /* Responsive Layout: 
          Mobile/Tablet: Portrait Overlay (full width)
@@ -233,7 +233,7 @@ const isHorizontal = variant === "horizontal";
     class:list={[
       "group relative flex transition-all duration-300 ease-out",
       "bg-(--color-surface) rounded-2xl h-full",
-      "shadow-xs hover:shadow-xs hover:-translate-y-1",
+      "shadow-xs hover:shadow-xs",
       className
     ]}
   >

@@ -23,8 +23,8 @@ const { heading, description, emblem = false } = Astro.props;
 const brand = await getBrandSettings();
 ---
 
-<div class="min-h-[80dvh] flex items-center justify-center bg-background px-4 py-16 md:py-24">
-  <div class="w-full max-w-md border border-border-subtle bg-surface px-8 py-12 md:px-12 text-center">
+<div class="min-h-[80dvh] flex items-center justify-center bg-(--color-background) px-4 py-16 md:py-24">
+  <div class="w-full max-w-md border border-(--color-border-subtle) bg-(--color-surface) px-8 py-12 md:px-12 text-center">
 
     {emblem && (
       <div class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-(--color-accent)">

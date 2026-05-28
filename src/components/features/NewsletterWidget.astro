@@ -58,7 +58,7 @@ const isModal = variant === 'modal';
   class:list={[
     "relative overflow-hidden w-full group transition-all duration-300 ease-out",
     isSection && "py-24 px-6 bg-linear-to-b from-surface to-background-soft",
-    isModal && "p-6 md:p-10 bg-white shadow-xl hover:-translate-y-1 hover:shadow-2xl",
+    isModal && "p-6 md:p-10 bg-white shadow-xl",
     isFooter && "py-0",
     isSidebar && "p-6 bg-white border border-(--color-divider) rounded-xl hover:shadow-lg hover:-translate-y-1",
     className
@@ -87,7 +87,7 @@ const isModal = variant === 'modal';
         <Text 
           variant="body" 
           class:list={[
-            "text-text-muted",
+            "text-(--color-text-muted)",
             (isSection || isModal) && "text-lg",
             isFooter && "leading-relaxed",
             isSidebar && "text-sm"

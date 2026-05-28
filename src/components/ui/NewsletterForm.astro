@@ -30,7 +30,7 @@ const {
 ---
 
 <form
-  x-data="newsletterWidget()"
+  x-data={`newsletterWidget(${JSON.stringify({ defaultLabel: buttonText })})`}
   @submit.prevent="submitForm"
   class:list={[
     "flex gap-3",

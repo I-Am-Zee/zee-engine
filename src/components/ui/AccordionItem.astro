@@ -10,10 +10,10 @@ interface Props {
 const { title, id, class: className } = Astro.props;
 ---
 
-<div class:list={["border-b border-border-subtle py-4 md:py-6", className]}>
+<div class:list={["border-b border-(--color-border-subtle) py-4 md:py-6", className]}>
   <button
     type="button"
-    class="flex w-full items-center justify-between text-left transition-colors hover:text-text-muted rounded-xs focus-glow"
+    class="flex w-full items-center justify-between text-left transition-colors hover:text-(--color-text-muted) rounded-xs focus-glow"
     @click={`activeAccordion = activeAccordion === '${id}' ? null : '${id}'`}
   >
     <Text as="span" variant="lead" class="font-serif">{title}</Text>
@@ -36,7 +36,7 @@ const { title, id, class: className } = Astro.props;
     class="pt-4 md:pt-6"
     x-cloak
   >
-    <div class="prose prose-stone prose-p:text-text-muted max-w-none">
+    <div class="prose prose-stone prose-p:text-(--color-text-muted) max-w-none">
        <slot />
     </div>
   </div>

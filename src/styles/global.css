@@ -3,6 +3,10 @@
 @import "@brand-theme";
 @plugin "@tailwindcss/typography";
 
+/* ── Hardware Abstraction: Global Hover Shield ── */
+@custom-variant hover (@media (hover: hover) { &:hover });
+@custom-variant group-hover (@media (hover: hover) { :merge(.group):hover & });
+
 html {
   scroll-padding-top: 7rem;
   scroll-behavior: smooth;

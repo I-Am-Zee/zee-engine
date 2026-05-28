@@ -67,16 +67,18 @@ const productsForButton = ([
       class={`mt-12 md:mt-16 border-t border-(--color-border-subtle) ${className || ""}`}
       id="perfect-pairings"
     >
-      <script is:inline define:vars={{ 
-        relatedItems: productsForButton.slice(1).map(item => mapProduct(item))
-      }}>
-        // Expose related products for the Upsell Drawer with relative URLs
-        // This ensures Snipcart's crawler resolves them against the CURRENT origin (tunnel, dev, or production)
-        window.ENGINE_UPSELL_CONTEXT = relatedItems.map(item => ({
-          ...item,
-          url: `/products/${item.id}`
-        }));
-      </script>
+      {!isAffiliate && (
+        <script is:inline define:vars={{ 
+          relatedItems: productsForButton.slice(1).map(item => mapProduct(item))
+        }}>
+          // Expose related products for the Upsell Drawer with relative URLs
+          // This ensures Snipcart's crawler resolves them against the CURRENT origin (tunnel, dev, or production)
+          window.ENGINE_UPSELL_CONTEXT = relatedItems.map(item => ({
+            ...item,
+            url: `/products/${item.id}`
+          }));
+        </script>
+      )}
 
       <SectionHeader 
         title={data.title} 
@@ -89,7 +91,7 @@ const productsForButton = ([
             {productsForButton.length} Items Total
           </Text>
         )}
-        {data.button_mode === "feature" && (
+        {!isAffiliate && data.button_mode === "feature" && (
           <Fragment slot="action">
             <BuySetButton 
               products={productsForButton} 

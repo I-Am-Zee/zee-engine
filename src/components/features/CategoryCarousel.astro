@@ -20,7 +20,7 @@ const options = {
   perPage: 4, 
   perMove: 1, 
   gap: 24, 
-  type: 'loop', 
+  type: categories.length > 4 ? 'loop' : 'slide', 
   pagination: true, 
   breakpoints: { 
     1024: { perPage: 3, gap: 24 }, 
@@ -34,6 +34,7 @@ const options = {
   options={options}
   class:list={["w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 pb-16", className]}
   trackClass="py-4"
+  showArrows={categories.length > 4}
 >
   {categories.map((category) => (
     <li class="splide__slide h-auto py-4">

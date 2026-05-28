@@ -49,7 +49,7 @@ const getUrl = (pg: number): string => {
     class:list={[
       "flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200",
       hasPrev 
-        ? "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none" 
+        ? "border-(--color-border-subtle) hover:border-(--color-primary) hover:text-(--color-primary) focus-glow outline-none" 
         : "pointer-events-none border-(--color-border-subtle) opacity-30"
     ]}
     aria-disabled={!hasPrev}
@@ -62,15 +62,15 @@ const getUrl = (pg: number): string => {
   {
     pageNumbers.map((page) => (
       page === "..." ? (
-        <span class="flex h-10 w-10 items-center justify-center text-text-muted">...</span>
+        <span class="flex h-10 w-10 items-center justify-center text-(--color-text-muted)">...</span>
       ) : (
         <a
           href={page === currentPage ? "#" : getUrl(page)}
           class:list={[
             "flex h-10 w-10 items-center justify-center rounded-md border text-sm font-medium transition-all duration-200",
             page === currentPage
-              ? "border-primary bg-primary text-text-inverse shadow-xs"
-              : "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none"
+              ? "border-(--color-primary) bg-(--color-primary) text-(--color-text-inverse) shadow-xs"
+              : "border-(--color-border-subtle) hover:border-(--color-primary) hover:text-(--color-primary) focus-glow outline-none"
           ]}
           aria-current={page === currentPage ? "page" : undefined}
         >
@@ -86,7 +86,7 @@ const getUrl = (pg: number): string => {
     class:list={[
       "flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-200",
       hasNext 
-        ? "border-(--color-border-subtle) hover:border-primary hover:text-primary focus-glow outline-none" 
+        ? "border-(--color-border-subtle) hover:border-(--color-primary) hover:text-(--color-primary) focus-glow outline-none" 
         : "pointer-events-none border-(--color-border-subtle) opacity-30"
     ]}
     aria-disabled={!hasNext}

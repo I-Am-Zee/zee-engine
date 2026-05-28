@@ -20,7 +20,7 @@ const isAffiliateMode = initialMode === "affiliate";
 ---
 
 <div
-  class="group border-border-subtle bg-surface/30 relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300"
+  class="group border-(--color-border-subtle) bg-(--color-surface)/30 relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300"
   :class={isAffiliateMode ? "'shadow-sm'" : "mode === 'upsell' && !selectedItems.includes(item.id) ? 'opacity-60 grayscale-[0.5]' : 'shadow-sm'"}
 >
   <!-- Checkbox Overlay (Only for Upsell mode) -->
@@ -32,7 +32,7 @@ const isAffiliateMode = initialMode === "affiliate";
           :id="'drawer-' + item.id"
           x-model="selectedItems"
           :value="item.id"
-          class="border-border-strong text-primary focus-glow h-5 w-5 cursor-pointer rounded transition-all"
+          class="border-(--color-border-strong) text-(--color-primary) focus-glow h-5 w-5 cursor-pointer rounded transition-all"
         />
       </div>
     </template>
@@ -41,7 +41,7 @@ const isAffiliateMode = initialMode === "affiliate";
   <!-- 1. Identity Header: Horizontal -->
   <div class="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
     <!-- Thumbnail -->
-    <div class="border-border-subtle/40 bg-surface-muted aspect-square w-16 flex-shrink-0 overflow-hidden rounded-lg border sm:w-20 sm:rounded-xl">
+    <div class="border-(--color-border-subtle)/40 bg-(--color-surface-muted) aspect-square w-16 flex-shrink-0 overflow-hidden rounded-lg border sm:w-20 sm:rounded-xl">
       <a :href="'/products/' + item.id" @click="close()" class="focus-glow block h-full">
         <Image
           src=""
@@ -118,7 +118,7 @@ const isAffiliateMode = initialMode === "affiliate";
           <div class="mb-2.5 flex items-center justify-between sm:mb-3">
             <Text variant="eyebrow" class="text-[9px] tracking-[0.15em] opacity-60 uppercase sm:text-[10px]" x-text="v.name" />
             <template x-if="typeof selections !== 'undefined' && selections[item.id]?.[v.name]">
-              <Text variant="label" weight="bold" class="text-primary text-[10px] sm:text-[11px]" x-text="selections[item.id][v.name]" />
+              <Text variant="label" weight="bold" class="text-(--color-primary) text-[10px] sm:text-[11px]" x-text="selections[item.id][v.name]" />
             </template>
           </div>
 
@@ -127,7 +127,7 @@ const isAffiliateMode = initialMode === "affiliate";
               <button
                 @click="selectOption(item.id, v.name, val)"
                 class="focus-glow inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-lg border px-2.5 transition-all sm:h-9 sm:min-w-9 sm:px-3"
-                :class="typeof selections !== 'undefined' && selections[item.id]?.[v.name] === val ? 'border-primary bg-primary text-text-inverse shadow-sm scale-[1.02]' : 'border-border-strong bg-background/50 text-text-main hover:border-(--color-accent) hover:bg-surface'"
+                :class="typeof selections !== 'undefined' && selections[item.id]?.[v.name] === val ? 'border-(--color-primary) bg-(--color-primary) text-(--color-text-inverse) shadow-sm scale-[1.02]' : 'border-(--color-border-strong) bg-(--color-background)/50 text-(--color-text-main) hover:border-(--color-accent) hover:bg-(--color-surface)'"
               >
                 <Text variant="label" color="inherit" class="text-[11px] sm:text-xs" x-text="val" />
               </button>

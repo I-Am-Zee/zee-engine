@@ -62,7 +62,7 @@ const savings = regularTotal - totalPrice;
 
   {/* Supplementary Info (Count & Savings) */}
   {!hideSavingsText && (savings > 0 || products.length > 1) && (
-    <div class="flex items-center justify-center gap-2 w-full text-sm pt-2 text-text-muted">
+    <div class="flex items-center justify-center gap-2 w-full text-sm pt-2 text-(--color-text-muted)">
       {products.length > 1 && (
         <span>{products.length} Items Total</span>
       )}

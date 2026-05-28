@@ -53,9 +53,9 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
       class="w-full max-w-md will-change-transform"
       x-cloak
     >
-      <div class="bg-surface lg:bg-background flex h-full flex-col overflow-hidden shadow-2xl">
+      <div class="bg-(--color-surface) lg:bg-(--color-background) flex h-full flex-col overflow-hidden shadow-2xl">
         <!-- Header -->
-        <div class="border-border-subtle bg-surface/50 border-b px-5 py-6 sm:px-8">
+        <div class="border-(--color-border-subtle) bg-(--color-surface)/50 border-b px-5 py-6 sm:px-8">
           <div class="flex items-center justify-between">
             <Heading as="h2" id="quick-view-title">Quick Look</Heading>
             <Button
@@ -89,7 +89,7 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
               </div>
 
               <!-- Editorial context (Optional Description) -->
-              <div class="border-border-subtle/30 border-t pt-8">
+              <div class="border-(--color-border-subtle)/30 border-t pt-8">
                 <Text variant="eyebrow" class="mb-4 block">Editor's Note</Text>
                 <Text variant="paragraph" color="muted" class="text-sm leading-relaxed italic" x-text="product.description" />
               </div>
@@ -98,7 +98,7 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
         </div>
 
         <!-- Sticky Footer CTA -->
-        <div class="border-border-subtle bg-surface/80 border-t px-5 py-8 backdrop-blur-md sm:px-8">
+        <div class="border-(--color-border-subtle) bg-(--color-surface)/80 border-t px-5 py-8 backdrop-blur-md sm:px-8">
            <template x-if="product">
               <div class="space-y-4">
                 <AffiliateProductCTA 
@@ -116,7 +116,7 @@ import AffiliateProductCTA from "./AffiliateProductCTA.astro";
               @click="close()"
               class="focus-glow cursor-pointer rounded p-2"
             >
-              <Text variant="eyebrow" color="muted" class="hover:text-primary transition-colors">Return to Shop</Text>
+              <Text variant="eyebrow" color="muted" class="hover:text-(--color-primary) transition-colors">Return to Shop</Text>
             </button>
           </div>
         </div>

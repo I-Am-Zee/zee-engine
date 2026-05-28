@@ -53,7 +53,7 @@ const { trigger, items, class: className, dark = false, ...rest } = Astro.props;
     x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
     class:list={[
       "absolute top-full left-0 mt-1 min-w-[200px] rounded-xl border p-2 shadow-2xl z-[60]",
-      dark ? "bg-(--color-primary) border-white/10 text-white" : "bg-background border-border-subtle/60 text-(--color-text-main)"
+      dark ? "bg-(--color-primary) border-white/10 text-white" : "bg-(--color-background) border-(--color-border-subtle)/60 text-(--color-text-main)"
     ]}
     x-cloak
   >
@@ -63,7 +63,7 @@ const { trigger, items, class: className, dark = false, ...rest } = Astro.props;
           href={ddItem.href}
           class:list={[
             "block rounded-md px-3 py-2 transition-colors duration-150",
-            dark ? "hover:bg-white/5" : "hover:bg-surface"
+            dark ? "hover:bg-white/5" : "hover:bg-(--color-surface)"
           ]}
         >
           <Text variant="caption" color="inherit">

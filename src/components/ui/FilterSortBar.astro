@@ -49,7 +49,7 @@ const finalSortOptions = manualOptions || enabledSorts.map((val: string) => ({
   ]}
 >
 <!-- Count Display -->
-  <Text variant="metadata" class="text-text-muted">
+  <Text variant="metadata" class="text-(--color-text-muted)">
     {/* Reactive Count for Blog (when filteredCount is available in scope) */}
     {context === 'blog' ? (
       <span x-cloak>
@@ -69,14 +69,14 @@ const finalSortOptions = manualOptions || enabledSorts.map((val: string) => ({
       id="sort-select"
       x-model="sortBy"
       @change="sort()"
-      class="appearance-none rounded-md border border-(--color-border-subtle) bg-background py-2 pr-10 pl-4 text-sm text-text-main transition-colors hover:border-primary focus:border-primary focus-glow outline-none cursor-pointer"
+      class="appearance-none rounded-md border border-(--color-border-subtle) bg-(--color-background) py-2 pr-10 pl-4 text-sm text-(--color-text-main) transition-colors hover:border-(--color-primary) focus:border-(--color-primary) focus-glow outline-none cursor-pointer"
     >
       {finalSortOptions.map((opt: any) => (
         <option value={opt.value}>{opt.label}</option>
       ))}
     </select>
     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-      <Icon name="PhCaretDown" class="h-4 w-4 text-text-muted" />
+      <Icon name="PhCaretDown" class="h-4 w-4 text-(--color-text-muted)" />
     </div>
   </div>
 </div>

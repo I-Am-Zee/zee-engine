@@ -6,7 +6,7 @@ import PopupCoupon from "../components/ui/PopupCoupon.astro";
 import PopupNewsletter from "../components/ui/PopupNewsletter.astro";
 import Navbar from "../components/features/Navbar.astro";
 import Footer from "../components/features/Footer.astro";
-import SideDrawer from "../components/ui/SideDrawer.astro";
+import SideDrawer from "../components/features/SideDrawer.astro";
 import AffiliateQuickView from "../components/features/AffiliateQuickView.astro";
 import Lightbox from "../components/ui/Lightbox.astro";
 
@@ -133,7 +133,7 @@ const defaultRegionId = affiliateSettings?.data?.regions?.[0]?.id || 'india';
     ) : (
       <SideDrawer />
     )}
-    <PopupCoupon data={discount_popup} />
+    {!isAffiliate && <PopupCoupon data={discount_popup} />}
     <PopupNewsletter data={newsletter_popup} />
     <Lightbox />
   </body>

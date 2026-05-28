@@ -5,8 +5,8 @@ import NewsletterWidget from "../features/NewsletterWidget.astro";
 interface Props {
   data: {
     enabled?: boolean;
-    title: string;
-    description: string;
+    title?: string; // Kept as optional legacy support to prevent type-check errors in other areas if referenced
+    description?: string;
     image?: string;
     denylist?: string[];
     trigger?: 'timed' | 'exit' | 'scroll';
