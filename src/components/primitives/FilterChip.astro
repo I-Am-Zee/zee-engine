@@ -31,16 +31,16 @@ const baseStyles = "shrink-0 px-4 py-2 rounded-full border text-xs font-bold tra
 
 // Variant-specific styles (Default/Inactive)
 const inactiveStyles = {
-  pill: "bg-surface border-(--color-border-subtle) text-text-muted hover:border-primary hover:text-primary",
-  outline: "bg-transparent border-(--color-border-subtle) text-text-muted hover:border-primary hover:text-primary",
-  sidebar: "flex items-center gap-3 w-full text-left transition-colors hover:text-primary group",
+  pill: "bg-(--color-surface) border-(--color-border-subtle) text-(--color-text-muted) hover:border-(--color-primary) hover:text-(--color-primary)",
+  outline: "bg-transparent border-(--color-border-subtle) text-(--color-text-muted) hover:border-(--color-primary) hover:text-(--color-primary)",
+  sidebar: "flex items-center gap-3 w-full text-left transition-colors hover:text-(--color-primary) group",
 };
 
 // Active-specific styles
 const activeStyles = {
-  pill: "bg-primary border-primary text-text-inverse shadow-md",
-  outline: "bg-primary/10 border-primary text-primary font-bold",
-  sidebar: "text-primary font-bold",
+  pill: "bg-(--color-primary) border-(--color-primary) text-(--color-text-inverse) shadow-md",
+  outline: "bg-(--color-primary)/10 border-(--color-primary) text-(--color-primary) font-bold",
+  sidebar: "text-(--color-primary) font-bold",
 };
 ---
 
@@ -56,8 +56,8 @@ const activeStyles = {
 >
   {variant === "sidebar" && (
     <span 
-      class="h-4 w-4 rounded border border-(--color-border-subtle) flex items-center justify-center transition-all group-hover:border-primary"
-      :class={`(${isActive}) ? 'bg-primary border-primary' : ''`}
+      class="h-4 w-4 rounded border border-(--color-border-subtle) flex items-center justify-center transition-all group-hover:border-(--color-primary)"
+      :class={`(${isActive}) ? 'bg-(--color-primary) border-(--color-primary)' : ''`}
     >
       <template x-if={isActive}>
         <Icon name="PhCheck" class="h-2.5 w-2.5 text-white" weight="bold" />
@@ -68,7 +68,7 @@ const activeStyles = {
   <Text 
     variant="label" 
     color="inherit" 
-    class="transition-colors group-hover:text-primary"
+    class="transition-colors group-hover:text-(--color-primary)"
   >
     {label}
   </Text>
