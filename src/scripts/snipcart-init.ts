@@ -106,21 +106,17 @@ function initSnipcartLogic() {
   toggleGuestState();
 
   // --- 3. DUAL-LAYER VALIDATION API HOOK (BLOCKING) ---
-  window.Snipcart.events.on('page.validating', (ev: any, data: any) => {
-    // Target both billing and shipping steps
-    const isAddressStep = ev.type === 'shipping-address' || ev.type === 'billing-address' || ev.name === 'shipping-address' || ev.name === 'billing-address';
-    if (!isAddressStep) return;
-
-    const billing = data || {};
+  const validateEmailAndPhone = (ev: any, data: any) => {
+    const formData = data || {};
     
     // DIRECT FIELD CHECK (Zero-Bypass): Look at the screen if data is missing
     const emailInput = document.querySelector('snipcart-input[name="email"] input, input[name="email"]') as HTMLInputElement;
     const phoneInput = document.querySelector('snipcart-input[name="phone"] input, input[name="phone"]') as HTMLInputElement;
     const countryInput = document.querySelector('select[name="country"], .snipcart-typeahead__input') as unknown as HTMLSelectElement;
 
-    const email = (emailInput ? emailInput.value : (billing.email || '')).trim().toLowerCase();
-    const phone = (phoneInput ? phoneInput.value : (billing.phone || '')).trim();
-    const rawCountry = countryInput ? countryInput.value : (billing.country || 'IN');
+    const email = (emailInput ? emailInput.value : (formData.email || '')).trim().toLowerCase();
+    const phone = (phoneInput ? phoneInput.value : (formData.phone || '')).trim();
+    const rawCountry = countryInput ? countryInput.value : (formData.country || 'IN');
     
     // NATIVE COUNTRY MAPPING: Handle full names like 'India' or 'United States'
     let countryCode = rawCountry;
@@ -159,6 +155,20 @@ function initSnipcartLogic() {
         else if (ev.reject) ev.reject(msg);
       }
     }
+  };
+
+  window.Snipcart.events.on('page.validating', (ev: any, data: any) => {
+    const isAddressStep = ev.type === 'shipping-address' || ev.type === 'billing-address' || ev.name === 'shipping-address' || ev.name === 'billing-address';
+    if (isAddressStep) validateEmailAndPhone(ev, data);
+  });
+
+  // Reusing validation logic for Sign In and Registration
+  window.Snipcart.events.on('authentication.validating', (ev: any, data: any) => {
+    validateEmailAndPhone(ev, data);
+  });
+  
+  window.Snipcart.events.on('customer.validating', (ev: any, data: any) => {
+    validateEmailAndPhone(ev, data);
   });
 
   // HTML5 Physical DOM Validation + Digit Stripper

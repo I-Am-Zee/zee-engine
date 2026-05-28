@@ -221,6 +221,83 @@
     </div>
   </featured-payment-methods>
 
+  <!-- ============================================== -->
+  <!-- 4. SIGN IN & REGISTER OVERRIDES                -->
+  <!-- ============================================== -->
+  <customer-signin>
+    <div>
+      <div class="snipcart__box">
+        <div class="snipcart__box--header">
+          <div class="snipcart__box--title">
+            <h1 class="snipcart__font--subtitle">Sign In</h1>
+          </div>
+        </div>
+        
+        <snipcart-form-error></snipcart-form-error>
+
+        <fieldset class="snipcart-form__set">
+          <div class="snipcart-form__field">
+            <snipcart-label id="ov-15" class="snipcart__font--tiny" for="email">Email (Please use a Gmail address to access discounts)</snipcart-label>
+            <snipcart-input name="email" required autocomplete="email"></snipcart-input>
+            <snipcart-field-error name="email"></snipcart-field-error>
+          </div>
+          <div class="snipcart-form__field">
+            <snipcart-label id="ov-16" class="snipcart__font--tiny" for="password">Password</snipcart-label>
+            <snipcart-password name="password" required autocomplete="current-password"></snipcart-password>
+            <snipcart-field-error name="password"></snipcart-field-error>
+          </div>
+        </fieldset>
+
+        <div class="snipcart-form__footer">
+          <snipcart-submit label="Sign In"></snipcart-submit>
+          <div class="snipcart-signin__actions">
+             <a href="#/register" class="snipcart__actions--link snipcart__font--tiny">Don't have an account? Register</a>
+             <a href="#/forgot-password" class="snipcart__actions--link snipcart__font--tiny">Forgot your password?</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </customer-signin>
+
+  <register>
+    <div>
+      <div class="snipcart__box">
+        <div class="snipcart__box--header">
+          <div class="snipcart__box--title">
+            <h1 class="snipcart__font--subtitle">Register</h1>
+          </div>
+        </div>
+        
+        <snipcart-form-error></snipcart-form-error>
+
+        <fieldset class="snipcart-form__set">
+          <div class="snipcart-form__field">
+            <snipcart-label id="ov-17" class="snipcart__font--tiny" for="email">Email (Please use a Gmail address)</snipcart-label>
+            <snipcart-input name="email" required autocomplete="email"></snipcart-input>
+            <snipcart-field-error name="email"></snipcart-field-error>
+          </div>
+          <div class="snipcart-form__field">
+            <snipcart-label id="ov-18" class="snipcart__font--tiny" for="password">Password</snipcart-label>
+            <snipcart-password name="password" required autocomplete="new-password"></snipcart-password>
+            <snipcart-field-error name="password"></snipcart-field-error>
+          </div>
+          <div class="snipcart-form__field">
+            <snipcart-label id="ov-19" class="snipcart__font--tiny" for="passwordConfirmation">Confirm Password</snipcart-label>
+            <snipcart-password name="passwordConfirmation" required autocomplete="new-password"></snipcart-password>
+            <snipcart-field-error name="passwordConfirmation"></snipcart-field-error>
+          </div>
+        </fieldset>
+
+        <div class="snipcart-form__footer">
+          <snipcart-submit label="Register"></snipcart-submit>
+          <div class="snipcart-signin__actions">
+             <a href="#/signin" class="snipcart__actions--link snipcart__font--tiny">Already have an account? Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </register>
+
 
 </div>
 
