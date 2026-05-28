@@ -16,6 +16,7 @@ import Image from "../primitives/Image.astro";
 import PriceTag from "./PriceTag.astro";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 import { mapProduct } from "../../config/ecommerce";
+import { calculateDiscount } from "../../scripts/utils/currency";
 import type { CollectionEntry } from "astro:content";
 
 const isAffiliate = import.meta.env.PUBLIC_AFFILIATE === "true";
@@ -64,7 +65,12 @@ const href = manualHref || `/products/${p.id}`;
 const id = p.id;
 const badges = manualBadges || (product?.data?.badges) || [];
 
-const sortedBadges = sortBadgesByHierarchy(badges);
+const discountPercent = salePrice && salePrice < price ? calculateDiscount(price, salePrice) : 0;
+const hasSale = discountPercent > 0;
+
+// Filter out 'Sale' badge if we are showing the percentage
+const filteredBadges = badges.filter(b => b.toLowerCase() !== 'sale');
+const sortedBadges = sortBadgesByHierarchy(filteredBadges);
 
 const affiliateLinks = p.affiliate_links;
 ---
@@ -113,15 +119,33 @@ const affiliateLinks = p.affiliate_links;
   </div>
 
   {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
-  {sortedBadges.length > 0 && (
-    <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30 flex flex-col gap-1.5 sm:gap-2">
-      {sortedBadges.map((badge) => (
-        <Badge intent={getBadgeIntent(badge)} size="xs">
-          {badge}
+  <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30 flex flex-col gap-1.5 sm:gap-2">
+    {/* Discount Badge (Affiliate - Dynamic) */}
+    {isAffiliate ? (
+      <Badge 
+        intent="danger" 
+        size="xs" 
+        class:list={[!hasSale && "hidden"]}
+        x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
+        x-cloak
+      >
+        <span x-text={`Math.round((($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price - $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice) / $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price) * 100)`}>{discountPercent}</span>% OFF
+      </Badge>
+    ) : (
+      hasSale && (
+        <Badge intent="danger" size="xs">
+          {discountPercent}% OFF
         </Badge>
-      ))}
-    </div>
-  )}
+      )
+    )}
+
+    {/* Static Badges (Filtered) */}
+    {sortedBadges.map((badge) => (
+      <Badge intent={getBadgeIntent(badge)} size="xs">
+        {badge}
+      </Badge>
+    ))}
+  </div>
 
   {/* Protective radial scrim for icon contrast on light backgrounds */}
   <div class="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-black/20 via-black/0 to-transparent z-20 pointer-events-none rounded-tr-2xl"></div>
@@ -134,7 +158,7 @@ const affiliateLinks = p.affiliate_links;
   <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2 isolate
               lg:opacity-0 lg:translate-x-2 lg:group-hover:opacity-100 lg:group-hover:translate-x-0 transition-all duration-300">
     <button
-      class="flex items-center justify-center w-9 h-9 rounded-full isolate
+      class="flex items-center justify-center w-[clamp(2rem,6vw,2.25rem)] h-[clamp(2rem,6vw,2.25rem)] rounded-full isolate
              bg-white/50 backdrop-blur-3xl border border-white/60 shadow-md
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-(--color-primary) hover:shadow-lg hover:scale-110
@@ -144,12 +168,12 @@ const affiliateLinks = p.affiliate_links;
       x-bind:class="$store.wishlist.has(id) ? 'text-(--color-danger)! bg-white! border-transparent!' : ''"
       aria-label="Toggle wishlist"
     >
-      <Icon name="PhHeart" size={17} weight="regular" class="absolute shrink-0 transition-colors" x-show="!$store.wishlist.has(id)" />
-      <Icon name="PhHeart" size={17} weight="fill"    class="absolute shrink-0 text-(--color-danger)! transition-colors" x-show="$store.wishlist.has(id)" x-cloak />
+      <Icon name="PhHeart" class="absolute shrink-0 transition-colors w-[45%] h-[45%]" x-show="!$store.wishlist.has(id)" />
+      <Icon name="PhHeart" weight="fill"    class="absolute shrink-0 text-(--color-danger)! transition-colors w-[45%] h-[45%]" x-show="$store.wishlist.has(id)" x-cloak />
     </button>
 
     <button
-      class="flex items-center justify-center w-9 h-9 rounded-full isolate relative
+      class="flex items-center justify-center w-[clamp(2rem,6vw,2.25rem)] h-[clamp(2rem,6vw,2.25rem)] rounded-full isolate relative
              bg-white/50 backdrop-blur-3xl border border-white/60 text-(--color-text-main) shadow-md delay-75
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-(--color-primary) hover:shadow-lg hover:scale-110
@@ -157,7 +181,7 @@ const affiliateLinks = p.affiliate_links;
       x-on:click.prevent.stop={isAffiliate ? `$dispatch('engine:affiliate-quick-view', ${JSON.stringify(p)})` : `$dispatch('engine:quick-shop', ${JSON.stringify(p)})`}
       aria-label={"Quick shop " + title}
     >
-      <Icon name="PhShoppingBagOpen" size={17} weight="regular" class="absolute shrink-0" />
+      <Icon name="PhShoppingBagOpen" class="absolute shrink-0 w-[45%] h-[45%]" />
     </button>
   </div>
 

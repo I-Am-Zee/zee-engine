@@ -38,7 +38,6 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
       <Text 
         as="span" 
         variant="price" 
-        class={variant === "compact" ? "text-base md:text-lg" : ""}
       >
         {formatCurrency(salePrice || price)}
       </Text>
@@ -47,7 +46,6 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
         <Text 
           as="span" 
           variant="price_sale" 
-          class={variant === "compact" ? "text-[10px] md:text-xs" : ""}
         >
           {formatCurrency(price)}
         </Text>
@@ -61,7 +59,6 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
       <Text 
         as="span" 
         variant="price" 
-        class={variant === "compact" ? "text-base md:text-lg" : ""}
         x-text={`${showPrefix ? "'Approx. ' + " : ""}$store.region.format($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice || $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price || ${price})`}
       >
         {showPrefix && "Approx. "}{formatCurrency(salePrice || price)}
@@ -70,7 +67,7 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
       <Text 
         as="span" 
         variant="price_sale" 
-        class:list={[variant === "compact" ? "text-[10px] md:text-xs" : "", !ssrHasSale && "hidden"]} 
+        class:list={[!ssrHasSale && "hidden"]} 
         x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
         x-cloak
         x-text={`$store.region.format($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price)`}
@@ -78,24 +75,5 @@ const discountPercent = calculateDiscount(price, salePrice || 0);
         {formatCurrency(price)}
       </Text>
     </div>
-  )}
-
-  {/* Discount Badge */}
-  {isAffiliate ? (
-    <Badge 
-      intent="coral" 
-      size="xs" 
-      class:list={[!ssrHasSale && "hidden"]}
-      x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
-      x-cloak
-    >
-      <span x-text={`Math.round((($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price - $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice) / $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price) * 100)`}>{discountPercent}</span>% OFF
-    </Badge>
-  ) : (
-    ssrHasSale && discountPercent > 0 && (
-      <Badge intent="coral" size="xs">
-        {discountPercent}% OFF
-      </Badge>
-    )
   )}
 </div>
