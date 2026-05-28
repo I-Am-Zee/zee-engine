@@ -18,10 +18,6 @@ discount_popup:
 newsletter_popup:
   enabled: false
   trigger: exit
-  title: Join the Inner Circle
-  description: >-
-    Get early access to luxury drops and exclusive styling tips before anyone
-    else.
   denylist: []
 delivery_email_template: >-
   <p>Your piece has made it home — and we genuinely hope it brings a quiet kind of joy when you first wear it. That moment when something just <em>fits</em>, not just physically but in the way it feels like it was always yours? That's what {{brandName}} is here for.</p>

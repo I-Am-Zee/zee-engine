@@ -1,5 +1,5 @@
 main_heading: "Quality You Can Trust"
-hero_image: "/images/placeholder.jpg"
+hero: "/images/placeholder.jpg"
 markers:
   - title: "Premium Materials"
     description: "Only the best for our samples."

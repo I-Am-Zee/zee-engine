@@ -1,0 +1,60 @@
+title: Contact
+isDraft: false
+hero:
+  heading: Get in Touch.
+  text: >-
+    A product query, partnership inquiry, or site feedback — we would love to hear from you.
+  isImmersive: false
+sections:
+  - layout: no-image
+    alignment: left
+    stack:
+      - discriminant: text
+        value:
+          type: eyebrow
+          content: General Inquiry
+          italic: false
+      - discriminant: heading
+        value:
+          type: h2
+          content: Got a question?
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: >-
+            Have a question about a product recommendation, catalog details, or just general feedback? Send us a message.
+          italic: false
+      - discriminant: button
+        value:
+          label: Send a Message
+          action_type: modal
+          embed_url: PLACEHOLDER_GENERAL
+    image:
+      shape: vertical
+  - layout: no-image
+    alignment: left
+    stack:
+      - discriminant: text
+        value:
+          type: eyebrow
+          content: Partnerships & Feedback
+          italic: false
+      - discriminant: heading
+        value:
+          type: h2
+          content: Interested in partnering?
+          italic: false
+      - discriminant: text
+        value:
+          type: paragraph
+          content: >-
+            For business inquiries, advertising, collaborations, or feedback regarding our curated listings, let us know.
+          italic: false
+      - discriminant: button
+        value:
+          label: Contact Partnerships
+          action_type: modal
+          embed_url: PLACEHOLDER_SUPPORT
+    image:
+      shape: vertical

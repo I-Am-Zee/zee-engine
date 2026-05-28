@@ -2,7 +2,6 @@ name: "Sample Brand"
 tagline: "Elevated Essentials for the Modern Individual"
 description: "Sample Brand provides high-quality, thoughtfully designed essentials that bridge the gap between timeless elegance and modern functionality. Our curated collections are crafted with precision and care."
 primary_color: "#1a1a1a"
-site_url: "https://example.com"
 feedback_url: "https://tally.so/r/sample"
 social:
   - platform: "Instagram"
@@ -11,3 +10,4 @@ social:
     url: "https://facebook.com/sample"
   - platform: "Pinterest"
     url: "https://pinterest.com/sample"
+legal_entity: "Sample Brand Ltd"
