@@ -116,6 +116,15 @@ const dynamicNavigation: NavItem[] = [
         </div>
 
         <div class="flex items-center gap-2 md:hidden">
+          <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" class="text-white! hover:bg-white/10!"><Icon name="PhMagnifyingGlass" /></Button>
+          {!isAffiliate && (
+            <button class="snipcart-checkout relative cursor-pointer" aria-label={labels.cart}>
+              <Button type="ghost" variant="icon-only" size="sm" as="span" class="text-white! hover:bg-white/10!">
+                <Icon name="PhShoppingCart" />
+              </Button>
+              <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-(--color-primary) shadow-xs"></span>
+            </button>
+          )}
           <Button type="ghost" variant="icon-only" size="sm" class="text-white! hover:bg-white/10!" @click="mobileMenuOpen = true"><Icon name="PhList" /></Button>
         </div>
       </div>
@@ -172,11 +181,24 @@ const dynamicNavigation: NavItem[] = [
         
         <div class="flex items-center gap-2 md:hidden">
           <Button as="a" href="/search" type="ghost" variant="icon-only" size="sm" class="text-(--color-text-main)! hover:bg-black/5!"><Icon name="PhMagnifyingGlass" /></Button>
+          {!isAffiliate && (
+            <button class="snipcart-checkout relative cursor-pointer" aria-label={labels.cart}>
+              <Button type="ghost" variant="icon-only" size="sm" as="span" class="text-(--color-text-main)! hover:bg-black/5!">
+                <Icon name="PhShoppingCart" />
+              </Button>
+              <span class="snipcart-items-count absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-(--color-primary) text-[10px] font-bold text-(--color-primary-foreground) shadow-xs"></span>
+            </button>
+          )}
           <Button type="ghost" variant="icon-only" size="sm" @click="mobileMenuOpen = true" class="text-(--color-text-main)! hover:bg-black/5!"><Icon name="PhList" /></Button>
         </div>
       </div>
     </header>
   </div>
 
-  <MobileMenu brandName={brandName} dynamicNavigation={dynamicNavigation} />
+  <MobileMenu 
+    brandName={brandName} 
+    dynamicNavigation={dynamicNavigation} 
+    isAffiliate={isAffiliate}
+    labels={labels}
+  />
 </div>
