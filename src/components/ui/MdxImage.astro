@@ -1,0 +1,49 @@
+---
+/**
+ * MdxImage - Smart Alt Component
+ * 
+ * Intercepts standard Markdown images ![]() to:
+ * 1. Process them through our R2 Image Gateway.
+ * 2. Support optional visible captions via the "Pipe Trick": ![SEO Alt | Visible Caption](/path.jpg)
+ */
+import Image from "../primitives/Image.astro";
+
+interface Props {
+  src: any;
+  alt?: string;
+  [key: string]: any;
+}
+
+const { alt: altProp = "", src, ...props } = Astro.props;
+
+// The "Pipe Trick" Logic
+// If alt contains |, split it. First part is SEO alt, second is visible caption.
+const hasPipe = altProp.includes("|");
+const [altText, captionText] = hasPipe
+  ? altProp.split("|").map((s: string) => s.trim())
+  : [altProp.trim(), null];
+---
+
+<figure class="my-10 md:my-16 group not-prose">
+  <div class="relative overflow-hidden rounded-lg border border-(--color-border-subtle)/30 shadow-sm transition-all duration-700 group-hover:shadow-xl group-hover:border-(--color-primary)/20">
+    <Image
+      src={src}
+      {...props}
+      alt={altText}
+      class="w-full h-auto transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+    />
+
+    {/* Subtle Overlay for context depth */}
+    <div class="absolute inset-0 bg-gradient-to-t from-(--color-surface)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>   
+  </div>
+
+  {captionText && (
+    <figcaption class="mt-5 text-center px-6 max-w-2xl mx-auto">
+      <span class="inline-block text-sm text-(--color-text-muted) italic font-medium leading-relaxed tracking-wide relative">
+        <span class="relative z-10">{captionText}</span>
+        {/* Animated Underline */}
+        <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-(--color-primary)/20 transition-all duration-700 ease-in-out group-hover:w-full"></span>
+      </span>
+    </figcaption>
+  )}
+</figure>

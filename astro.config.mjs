@@ -113,8 +113,13 @@ export default defineConfig({
         '@keystatic/core',
         '@keystatic/core/ui', 
         '@keystatic/core/renderer',
+        '@keystatic/astro/ui',
+        '@keystatic/astro/api',
         'lodash/debounce'
       ]
+    },
+    ssr: {
+      noExternal: ['@keystatic/core', '@keystar/ui']
     },
     build: {
       rollupOptions: {

@@ -7,6 +7,7 @@
  * ADR-003: Keystatic is Local-Dev Only
  */
 import { config, fields, collection, singleton } from '@keystatic/core';
+import { mark, block, inline } from '@keystatic/core/content-components';
 let brandId = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_BRAND_ID) || (typeof process !== 'undefined' && process.env?.PUBLIC_BRAND_ID);
 const isAffiliate = ((typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_AFFILIATE) || (typeof process !== 'undefined' && process.env?.PUBLIC_AFFILIATE)) === 'true';
 
@@ -43,6 +44,13 @@ const blogCategories = (blogTaxonomyJson.categories || []).map((c: any) => ({
 }));
 const blogTags = (blogTaxonomyJson.tags || []).map((t: any) => ({ label: String(t), value: String(t) }));
 
+// ── Brand Settings (Dynamic via Glob) ───────────────────
+const brandFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/brand.yaml', { eager: true });
+const brandJson = brandFiles[`./src/content/${brandId}/settings/brand.yaml`]?.default || { emails: [], phones: [] };
+
+const emailOptions = (brandJson.emails || []).map((e: any) => ({ label: e.label, value: e.label }));
+const phoneOptions = (brandJson.phones || []).map((p: any) => ({ label: p.label, value: p.label }));
+
 // ── Legal Taxonomy (Dynamic via Glob) ───────────────────
 const legalTaxFiles: Record<string, any> = import.meta.glob('./src/content/*/settings/legal-taxonomy.yaml', { eager: true });
 const legalTaxJson = legalTaxFiles[`./src/content/${brandId}/settings/legal-taxonomy.yaml`]?.default || { tax_classes: [] };
@@ -62,6 +70,52 @@ const shippingSlabOptions = Object.entries(shippingJson.slabs || {}).map(([key, 
   value: key,
 }));
 
+// ── Contact Duo Schema (Shared) ─────────────────────────
+const contactIcon = (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="24" height="24" fill="currentColor">
+    <path d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16,-16V64A16,16,0,0,0,224,48ZM224,192H32V64H224V192ZM88,140a24,24,0,1,1,24-24A24,24,0,0,1,88,140Zm48-40h64a8,8,0,0,1,0,16H136a8,8,0,0,1,0,-16Zm0,40h64a8,8,0,0,1,0,16H136a8,8,0,0,1,0,-16Zm-74.7,24h53.4a8,8,0,0,1,0,16H61.3a8,8,0,0,1,0,-16Z" />
+  </svg>
+);
+
+const contactSchema = {
+  contactType: fields.conditional(
+    fields.select({
+      label: 'Data Type',
+      options: [
+        { label: 'Email Address', value: 'email' },
+        { label: 'Phone Number', value: 'phone' },
+      ],
+      defaultValue: 'email',
+    }),
+    {
+      email: fields.select({
+        label: 'Which Email?',
+        options: emailOptions.length > 0 ? emailOptions : [{ label: 'No emails configured', value: '' }],
+        defaultValue: emailOptions[0]?.value ?? '',
+      }),
+      phone: fields.select({
+        label: 'Which Number?',
+        options: phoneOptions.length > 0 ? phoneOptions : [{ label: 'No phones configured', value: '' }],
+        defaultValue: phoneOptions[0]?.value ?? '',
+      })
+    }
+  )
+};
+
+const contactMark = mark({
+  label: 'Contact Mark',
+  tag: 'a', // Link-style visual in editor
+  icon: contactIcon,
+  schema: contactSchema,
+});
+
+const contactToken = inline({
+  label: 'Contact Token',
+  icon: contactIcon,
+  schema: contactSchema,
+  ContentView: (props: any) => <span>[Token] {props.value.contactType.discriminant}: {props.value.contactType.value}</span>
+});
+
 
 export default config({
   storage: { kind: 'local' },
@@ -80,7 +134,7 @@ export default config({
         'page_newsletter_success'
       ],
       'COMPONENT HUB': ['page_headers', 'section_headers', 'newsletter_variants', 'component_coming_soon'],
-      'UI MICROCOPY': ['ui_blog', 'ui_search', 'ui_wishlist'],
+      'UI MICROCOPY': ['ui_blog', 'ui_search', 'ui_wishlist', 'ui_404'],
       'GENERAL UI': ['lookbook_settings'],
       'SETTINGS': isAffiliate 
         ? ['settings_brand', 'settings_navigation', 'settings_marketing', 'settings_affiliate', 'settings_tracking']
@@ -151,6 +205,7 @@ export default config({
           description: 'Used for the background of the newsletter section/modal.',
           directory: 'public/images/marketing',
           publicPath: '/images/marketing/',
+          transformFilename: (slug: string) => `newsletter-${slug}`,
           validation: { isRequired: false }
         }),
       }
@@ -171,23 +226,28 @@ export default config({
         // ── Pricing (Moved to D2C block below to hide for affiliates) ──
 
         // ── Media ──
-        image: fields.image({
+        featured: fields.image({
           label: 'Featured Image',
           description: 'The primary product image shown on cards and at the top of the PDP.',
           directory: 'public/images/products',
           publicPath: '/images/products/',
+          transformFilename: (slug: string) => 'featured',
           validation: { isRequired: true },
         }),
-        gallery: fields.array(
-          fields.image({ 
+          gallery: fields.array(
+          fields.image({
             label: 'Gallery Image',
             directory: 'public/images/products',
-            publicPath: '/images/products/'
-          }),
-          {
+            publicPath: '/images/products/',
+            transformFilename: (slug: string, count?: number) => `${slug}-g${count}`
+          }),          {
             label: 'Gallery',
             description: 'Max 10 images for performance.',
-            itemLabel: (props) => (typeof props.value === 'string' ? props.value : props.value?.filename || 'New Image'),
+            itemLabel: (props) => {
+              if (!props.value) return 'Empty Slot';
+              const filename = typeof props.value === 'string' ? props.value : props.value.filename;
+              return filename?.split('/').pop() || 'New Image';
+            },
           }
         ),
 
@@ -318,7 +378,21 @@ export default config({
         } : {}),
 
         // ── Full Description (rich text / MDX) ──
-        body: fields.mdx({ label: 'Full Description', description: 'Rich text shown on the product detail page. Insert formatting, lists, and specs here.' }),
+        body: fields.mdx({
+          label: 'Full Description',
+          description: 'Rich text shown on the product detail page. Insert formatting, lists, and specs here.',
+          options: {
+            image: {
+              directory: 'public/images/products',
+              publicPath: '/images/products/',
+              transformFilename: (slug: string, count?: number) => `${slug}-i${count}`
+            }
+          },
+          components: {
+            ContactMark: contactMark,
+            ContactToken: contactToken,
+          }
+        }),
       },
     }),
 
@@ -330,10 +404,11 @@ export default config({
       format: { contentField: 'body' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        hero_image: fields.image({ 
+        hero: fields.image({ 
           label: 'Hero Image',
           directory: 'public/images/lookbooks',
           publicPath: '/images/lookbooks/',
+          transformFilename: (slug: string) => 'hero',
           validation: { isRequired: true } 
         }),
         description: fields.text({ label: 'Description', multiline: true }),
@@ -341,11 +416,16 @@ export default config({
           fields.image({ 
             label: 'Gallery Image',
             directory: 'public/images/lookbooks',
-            publicPath: '/images/lookbooks/'
+            publicPath: '/images/lookbooks/',
+            transformFilename: (slug: string, count?: number) => `${slug}-g${(count || 1) - 1}`
           }),
           { 
             label: 'Gallery',
-            itemLabel: (props) => (typeof props.value === 'string' ? props.value : props.value?.filename || 'New Image')
+            itemLabel: (props) => {
+              if (!props.value) return 'Empty Slot';
+              const filename = typeof props.value === 'string' ? props.value : props.value.filename;
+              return filename?.split('/').pop() || 'New Image';
+            },
           }
         ),
         products: fields.array(
@@ -356,7 +436,20 @@ export default config({
             itemLabel: (props) => props.value || 'Select a product',
           }
         ),
-        body: fields.mdx({ label: 'Content' }),
+        body: fields.mdx({ 
+          label: 'Content',
+          options: {
+            image: {
+              directory: 'public/images/lookbooks',
+              publicPath: '/images/lookbooks/',
+              transformFilename: (slug: string, count?: number) => `${slug}-i${count}`
+            }
+          },
+          components: {
+            ContactMark: contactMark,
+            ContactToken: contactToken,
+          }
+        }),
       },
     }),
 
@@ -371,10 +464,11 @@ export default config({
         excerpt: fields.text({ label: 'Excerpt', multiline: true, validation: { isRequired: true } }),
         publishDate: fields.date({ label: 'Publish Date', validation: { isRequired: true } }),
         author: fields.relationship({ label: 'Author', collection: 'authors', validation: { isRequired: true } }),
-        image: fields.image({ 
+        cover: fields.image({ 
           label: 'Cover Image',
           directory: 'public/images/blogs',
           publicPath: '/images/blogs/',
+          transformFilename: (slug: string) => 'cover',
           validation: { isRequired: true } 
         }),
         category: fields.select({
@@ -388,7 +482,20 @@ export default config({
           { label: 'Tags', itemLabel: (props) => props.value || 'Select a tag' }
         ),
         isDraft: fields.checkbox({ label: 'Save as Draft', defaultValue: false }),
-        content: fields.mdx({ label: 'Content' }),
+        content: fields.mdx({ 
+          label: 'Content',
+          options: {
+            image: {
+              directory: 'public/images/blogs',
+              publicPath: '/images/blogs/',
+              transformFilename: (slug: string, count?: number) => `${slug}-i${count}`
+            }
+          },
+          components: {
+            ContactMark: contactMark,
+            ContactToken: contactToken,
+          }
+        }),
       },
     }),
 
@@ -404,6 +511,7 @@ export default config({
           label: 'Avatar',
           directory: 'public/images/authors',
           publicPath: '/images/authors/',
+          transformFilename: (slug: string) => 'avatar',
           validation: { isRequired: false }
         }),
         bio: fields.text({ label: 'Short Bio', multiline: true }),
@@ -425,9 +533,14 @@ export default config({
           label: 'Content',
           options: {
             image: {
-              directory: `src/assets/images/legal`,
-              publicPath: `../../assets/images/legal`,
-            },
+              directory: 'public/images/legal',
+              publicPath: '/images/legal/',
+              transformFilename: (slug: string, count?: number) => `${slug}-i${count}`
+            }
+          },
+          components: {
+            ContactMark: contactMark,
+            ContactToken: contactToken,
           },
         }),
       },
@@ -449,6 +562,7 @@ export default config({
             label: 'Hero Image',
             directory: 'public/images/theme',
             publicPath: '/images/theme/',
+            transformFilename: (slug: string) => 'hero',
             validation: { isRequired: false }
           }),
           isImmersive: fields.checkbox({ label: 'Enable Immersive Reveal (GSAP)', defaultValue: false }),
@@ -543,6 +657,7 @@ export default config({
                 label: 'Image',
                 directory: 'public/images/theme',
                 publicPath: '/images/theme/',
+                transformFilename: (slug: string, count?: number) => `${slug}-s${count}`,
                 validation: { isRequired: false }
               }),
               alt: fields.text({ label: 'Alt Text' }),
@@ -604,9 +719,11 @@ export default config({
         name: fields.text({ label: 'Brand Name', validation: { isRequired: true } }),
         tagline: fields.text({ label: 'Tagline', validation: { isRequired: true } }),
         description: fields.text({ label: 'SEO Description', multiline: true, validation: { isRequired: true } }),
+        legal_entity: fields.text({ label: 'Legal / Copyright Entity Name', description: 'The official company or individual name used for copyright footer (e.g. "I Am Zee" or "Sample Affiliate LLC"). Defaults to Brand Name if blank.', defaultValue: 'I Am Zee' }),
         primary_color: fields.text({ label: 'Primary Brand Color (Hex)', description: 'e.g. #052b22. Used for Razorpay theme and external UI.', defaultValue: '#052b22' }),
-        site_url: fields.text({ label: 'Site URL', description: 'The public URL of the website (e.g. https://brand.com)', validation: { isRequired: true } }),
-        feedback_url: fields.text({ label: 'Feedback Form URL', description: 'Tally.so or similar URL for post-delivery feedback.', validation: { isRequired: true } }),
+        ...(!isAffiliate ? {
+          feedback_url: fields.text({ label: 'Feedback Form URL', description: 'Tally.so or similar URL for post-delivery feedback.', validation: { isRequired: true } }),
+        } : {}),
         social: fields.array(
           fields.object({
             platform: fields.select({
@@ -630,6 +747,26 @@ export default config({
             itemLabel: props => props.fields.platform.value || 'New link'
           }
         ),
+        emails: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label (e.g. Support, Legal)', validation: { isRequired: true } }),
+            value: fields.text({ label: 'Email Address', validation: { isRequired: true } }),
+          }),
+          {
+            label: 'Contact Emails',
+            itemLabel: (props) => `${props.fields.label.value}: ${props.fields.value.value}` || 'New email'
+          }
+        ),
+        phones: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label (e.g. WhatsApp, Office)', validation: { isRequired: true } }),
+            value: fields.text({ label: 'Phone Number', validation: { isRequired: true } }),
+          }),
+          {
+            label: 'Contact Phone Numbers',
+            itemLabel: (props) => `${props.fields.label.value}: ${props.fields.value.value}` || 'New phone'
+          }
+        ),
       },
     }),
 
@@ -638,7 +775,6 @@ export default config({
       path: `src/content/${brandId}/settings/legal`,
       format: { data: 'yaml' },
       schema: {
-        legal_entity: fields.text({ label: 'Legal Entity Name', description: 'e.g. I Am Zee. Used for Copyright text at the bottom of the page.', defaultValue: 'I Am Zee' }),
         gstin: fields.text({ label: 'GSTIN Number', description: 'Your business GST registration number.', defaultValue: '03AALFI7890P1ZK' }),
         tax_origin_state: fields.text({ label: 'Tax Origin State (for CGST/SGST)', description: 'e.g. Punjab. Used to trigger intra-state tax split.', defaultValue: 'Punjab' }),
         tax_origin_state_code: fields.text({ label: 'Tax Origin State Code (ISO Abbreviation)', description: 'e.g. PB for Punjab. Must be the 2-letter ISO state code, not the full name. Used for province matching in the tax engine.', defaultValue: 'PB' }),
@@ -756,6 +892,18 @@ export default config({
       },
     }),
 
+    ui_404: singleton({
+      label: '404 Page UI',
+      path: `src/content/${brandId}/settings/ui_404`,
+      format: { data: 'yaml' },
+      schema: {
+        title: fields.text({ label: 'Heading', defaultValue: 'Celestial Disconnect' }),
+        description: fields.text({ label: 'Description', multiline: true, defaultValue: "The path you're seeking seems to have drifted into the cosmic void. Let us guide you back to our celestial collections." }),
+        cta_home_label: fields.text({ label: 'Home Button Label', defaultValue: 'Return Home' }),
+        cta_shop_label: fields.text({ label: 'Shop Button Label', defaultValue: 'Shop All' }),
+      }
+    }),
+
     // ── Marketing & Conversion ─────────────────────────────────────
     settings_marketing: singleton({
       label: 'Marketing & Conversion',
@@ -769,36 +917,38 @@ export default config({
         }, { label: 'Announcement Bar 📢' }),
 
         // --- POPUP HUB ---
-        discount_popup: fields.object({
-          enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
-          trigger: fields.select({
-            label: 'Trigger Mode',
-            options: [
-              { label: 'Timed Delay', value: 'timed' },
-              { label: 'Exit Intent', value: 'exit' },
-            ],
-            defaultValue: 'timed'
-          }),
-          delay_seconds: fields.integer({ 
-            label: 'Delay (Seconds)', 
-            description: 'Only applicable if Trigger Mode is "Timed Delay".',
-            defaultValue: 8 
-          }),
-          title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
-          description: fields.text({ label: 'Description', multiline: true }),
-          coupon_code: fields.text({ label: 'Coupon Code' }),
-          image: fields.image({
-            label: 'Image',
-            directory: 'public/images/marketing',
-            publicPath: '/images/marketing/',
-            validation: { isRequired: false }
-          }),
-          cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
-          denylist: fields.array(
-            fields.text({ label: 'Path', description: 'e.g. /checkout' }),
-            { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
-          )
-        }, { label: 'Discount Popup (D2C Only) 🏷️' }),
+        ...(!isAffiliate ? {
+          discount_popup: fields.object({
+            enabled: fields.checkbox({ label: 'Enable Discount (Coupon) Popup', defaultValue: false }),
+            trigger: fields.select({
+              label: 'Trigger Mode',
+              options: [
+                { label: 'Timed Delay', value: 'timed' },
+                { label: 'Exit Intent', value: 'exit' },
+              ],
+              defaultValue: 'timed'
+            }),
+            delay_seconds: fields.integer({ 
+              label: 'Delay (Seconds)', 
+              description: 'Only applicable if Trigger Mode is "Timed Delay".',
+              defaultValue: 8 
+            }),
+            title: fields.text({ label: 'Title', defaultValue: 'Unlock 10% Off' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+            coupon_code: fields.text({ label: 'Coupon Code' }),
+            image: fields.image({
+              label: 'Image',
+              directory: 'public/images/marketing',
+              publicPath: '/images/marketing/',
+              validation: { isRequired: false }
+            }),
+            cta_text: fields.text({ label: 'Button Text', defaultValue: 'Claim My Discount' }),
+            denylist: fields.array(
+              fields.text({ label: 'Path', description: 'e.g. /checkout' }),
+              { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
+            )
+          }, { label: 'Discount Popup (D2C Only) 🏷️' }),
+        } : {}),
 
         newsletter_popup: fields.object({
           enabled: fields.checkbox({ label: 'Enable Newsletter Popup', defaultValue: false }),
@@ -815,14 +965,6 @@ export default config({
             description: 'Only applicable if Trigger Mode is "Timed Delay".',
             defaultValue: 15 
           }),
-          title: fields.text({ label: 'Title', defaultValue: 'Join the Inner Circle' }),
-          description: fields.text({ label: 'Description', multiline: true }),
-          image: fields.image({
-            label: 'Image',
-            directory: 'public/images/marketing',
-            publicPath: '/images/marketing/',
-            validation: { isRequired: false }
-          }),
           denylist: fields.array(
             fields.text({ label: 'Path', description: 'e.g. /checkout' }),
             { label: 'Exclusion Patterns', description: 'Pages where this popup is hidden.' }
@@ -830,11 +972,13 @@ export default config({
         }, { label: 'Newsletter Popup 📧' }),
 
         // --- TRANSACTIONAL EMAIL COPY ---
-        delivery_email_template: fields.text({ 
-          label: 'Delivery Notification Template (HTML)', 
-          multiline: true,
-          description: 'Use {{brandName}}, {{feedbackUrl}}, and {{newsletterUrl}} as placeholders.'
-        }),
+        ...(!isAffiliate ? {
+          delivery_email_template: fields.text({ 
+            label: 'Delivery Notification Template (HTML)', 
+            multiline: true,
+            description: 'Use {{brandName}}, {{feedbackUrl}}, and {{newsletterUrl}} as placeholders.'
+          }),
+        } : {}),
       },
     }),
     // ── Page Content ──────────────────────────────────────────────
@@ -849,10 +993,11 @@ export default config({
         cta_link_primary: fields.text({ label: 'Primary Button Link', defaultValue: '/shop' }),
         cta_label_secondary: fields.text({ label: 'Secondary Button Label', defaultValue: 'View Lookbooks' }),
         cta_link_secondary: fields.text({ label: 'Secondary Button Link', defaultValue: '/lookbooks' }),
-        image: fields.image({
+        hero: fields.image({
           label: 'Hero Image',
           directory: 'public/images/theme',
           publicPath: '/images/theme/',
+          transformFilename: (slug: string) => 'hero',
           validation: { isRequired: false }
         }),
       }
@@ -920,10 +1065,11 @@ export default config({
       format: { data: 'yaml' },
       schema: {
         main_heading: fields.text({ label: 'Main Section Heading (Above columns)' }),
-        hero_image: fields.image({
+        hero: fields.image({
           label: 'Editorial Hero Image',
           directory: 'public/images/theme',
           publicPath: '/images/theme/',
+          transformFilename: (slug: string) => 'hero',
           validation: { isRequired: false }
         }),
         markers: fields.array(

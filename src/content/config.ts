@@ -110,7 +110,7 @@ const products = defineCollection({
       : z.enum(hsnCodes).optional().default(""),
 
     // MOLECULE: Product Media
-    image: z.string().min(1, "Featured image is required"),
+    featured: z.string().min(1, "Featured image is required"),
     gallery: z
       .array(z.string())
       .max(10, "Gallery supports max 10 images for performance")
@@ -206,7 +206,7 @@ const lookbooks = defineCollection({
   }),
   schema: z.object({
     title: z.string(),
-    hero_image: z.string(),
+    hero: z.string(),
     gallery: z.array(z.string()).optional(),
     description: z.string().optional(),
     products: z.array(z.string()),
@@ -232,7 +232,7 @@ const blog = defineCollection({
         errorMap: () => ({ message: `Category must be one of: ${blogCategories.join(', ')}` }),
       }
     ),
-    image: z.string().min(1, "Cover image is required for all blog posts"),
+    cover: z.string().min(1, "Cover image is required for all blog posts"),
     tags: z.array(z.enum([blogTags[0], ...blogTags.slice(1)])).optional(),
     isDraft: z.boolean().default(false),
   }),
@@ -407,3 +407,4 @@ export const collections = {
   pages_content,
   component_hub,
 };
+;

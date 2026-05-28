@@ -1,0 +1,62 @@
+---
+/**
+ * BrandVariable - Data Injection Feature (Hybrid Mark/Token)
+ * 
+ * Logic upgraded to support Keystatic Conditional Fields.
+ * If used as a Mark, it wraps text in a mailto/tel link.
+ * If used as a Token, it prints the raw email/phone value.
+ */
+import { getEntry } from 'astro:content';
+
+interface Props {
+  contactType?: {
+    discriminant: 'email' | 'phone';
+    value: string;
+  };
+}
+
+const { contactType } = Astro.props;
+
+// 1. Resolve Type & Identifier safely
+const type = contactType?.discriminant || 'email';
+const label = contactType?.value || '';
+
+// 2. Fetch Master Registry
+const brandSettings = await getEntry('settings', 'brand');
+const data = brandSettings?.data;
+
+let value = '';
+let hrefPrefix = '';
+
+// 3. Match Value from Registry
+if (type === 'email') {
+  const emailObj = data?.emails?.find((e: any) => e.label.toLowerCase() === label.toLowerCase());
+  value = emailObj?.value || '';
+  hrefPrefix = 'mailto:';
+} else if (type === 'phone') {
+  const phoneObj = data?.phones?.find((p: any) => p.label.toLowerCase() === label.toLowerCase());
+  value = phoneObj?.value || '';
+  hrefPrefix = 'tel:';
+}
+
+if (!value && import.meta.env.DEV) {
+  console.warn(`[BrandVariable] Missing ${type} variable: "${label}"`);
+}
+
+// 4. Ghost Space Protection
+let hasRealText = false;
+let slotContent = '';
+
+if (Astro.slots.has('default')) {
+  slotContent = await Astro.slots.render('default');
+  hasRealText = !!(slotContent && slotContent.trim().length > 0);
+}
+---
+
+{value ? (
+  <a href={`${hrefPrefix}${value}`} class="brand-link font-medium text-(--color-primary) hover:underline decoration-(--color-accent)/30 underline-offset-4 transition-all">
+    {hasRealText ? <Fragment set:html={slotContent} /> : value}
+  </a>
+) : (
+  hasRealText ? <Fragment set:html={slotContent} /> : null
+)}

@@ -1,5 +1,5 @@
 diff --git a/node_modules/@keystatic/core/dist/read-local-b6b71900.node.react-server.js b/node_modules/@keystatic/core/dist/read-local-b6b71900.node.react-server.js
-index cc6c2cb..a69d894 100644
+index cc6c2cb..019c5e9 100644
 --- a/node_modules/@keystatic/core/dist/read-local-b6b71900.node.react-server.js
 +++ b/node_modules/@keystatic/core/dist/read-local-b6b71900.node.react-server.js
 @@ -1,4 +1,5 @@
@@ -8,11 +8,16 @@ index cc6c2cb..a69d894 100644
  import path from 'path';
  import { b as getDirectoriesForTreeKey, c as getCollectionPath, o as object, e as getSingletonFormat, h as getSingletonPath, u as updateTreeWithChanges, i as blobSha } from './index-ca270311.node.react-server.js';
  import 'react/jsx-runtime';
-@@ -27,10 +28,20 @@ async function collectEntriesInDir(baseDir, ancestors) {
-   const gitignoreFilterForDescendents = gitignore ? ignore().add(await fs.readFile(path.join(baseDir, currentRelativeDir, gitignore.name), 'utf8')).createFilter() : () => true;
+@@ -23,43 +24,43 @@ async function readDirEntries(dir) {
+ async function collectEntriesInDir(baseDir, ancestors) {
+   const currentRelativeDir = ancestors.map(p => p.segment).join('/');
+   const entries = await readDirEntries(path.join(baseDir, currentRelativeDir));
+-  const gitignore = entries.find(entry => entry.isFile() && entry.name === '.gitignore');
+-  const gitignoreFilterForDescendents = gitignore ? ignore().add(await fs.readFile(path.join(baseDir, currentRelativeDir, gitignore.name), 'utf8')).createFilter() : () => true;
    const pathSegments = ancestors.map(x => x.segment);
    return (await Promise.all(entries.filter(entry => {
 -    if (!entry.isDirectory() && !entry.isFile() || entry.name === '.git' || entry.name === 'node_modules' || entry.name === '.next') {
+-      return false;
 +    const fullPath = path.join(baseDir, currentRelativeDir, entry.name);
 +    let isDir = entry.isDirectory();
 +    let isFile = entry.isFile();
@@ -22,17 +27,20 @@ index cc6c2cb..a69d894 100644
 +        isDir = stat.isDirectory();
 +        isFile = stat.isFile();
 +      } catch (e) {}
-+    }
+     }
+-    const innerPath = `${pathSegments.concat(entry.name).join('/')}${entry.isDirectory() ? '/' : ''}`;
+-    if (!gitignoreFilterForDescendents(innerPath)) {
 +    if (!isDir && !isFile || entry.name === '.git' || entry.name === 'node_modules' || entry.name === '.next') {
        return false;
      }
--    const innerPath = `${pathSegments.concat(entry.name).join('/')}${entry.isDirectory() ? '/' : ''}`;
-+    const innerPath = `${pathSegments.concat(entry.name).join('/')}${isDir ? '/' : ''}`;
-     if (!gitignoreFilterForDescendents(innerPath)) {
-       return false;
-     }
-@@ -44,22 +55,27 @@ async function collectEntriesInDir(baseDir, ancestors) {
-     }
+-    let currentPath = entry.name;
+-    for (let i = ancestors.length - 1; i >= 0; i--) {
+-      const ancestor = ancestors[i];
+-      currentPath = `${ancestor.segment}/${currentPath}`;
+-      if (!ancestor.gitignoreFilterForDescendents(currentPath)) {
+-        return false;
+-      }
+-    }
      return true;
    }).map(async entry => {
 -    if (entry.isDirectory()) {
@@ -45,7 +53,7 @@ index cc6c2cb..a69d894 100644
 +    }
 +    if (isDir) {
        return collectEntriesInDir(baseDir, [...ancestors, {
-         gitignoreFilterForDescendents,
+-        gitignoreFilterForDescendents,
          segment: entry.name
        }]);
 -    } else {
@@ -71,7 +79,7 @@ index cc6c2cb..a69d894 100644
  }
  async function readToDirEntries(baseDir) {
 diff --git a/node_modules/@keystatic/core/dist/read-local-bc5599c1.node.js b/node_modules/@keystatic/core/dist/read-local-bc5599c1.node.js
-index 7756c22..8ef2e79 100644
+index 7756c22..874e033 100644
 --- a/node_modules/@keystatic/core/dist/read-local-bc5599c1.node.js
 +++ b/node_modules/@keystatic/core/dist/read-local-bc5599c1.node.js
 @@ -1,4 +1,5 @@
@@ -80,11 +88,16 @@ index 7756c22..8ef2e79 100644
  import path from 'path';
  import { b as getDirectoriesForTreeKey, c as getCollectionPath, o as object, e as getSingletonFormat, h as getSingletonPath, u as updateTreeWithChanges, i as blobSha } from './index-360e5820.node.js';
  import 'react/jsx-runtime';
-@@ -27,10 +28,20 @@ async function collectEntriesInDir(baseDir, ancestors) {
-   const gitignoreFilterForDescendents = gitignore ? ignore().add(await fs.readFile(path.join(baseDir, currentRelativeDir, gitignore.name), 'utf8')).createFilter() : () => true;
+@@ -23,43 +24,43 @@ async function readDirEntries(dir) {
+ async function collectEntriesInDir(baseDir, ancestors) {
+   const currentRelativeDir = ancestors.map(p => p.segment).join('/');
+   const entries = await readDirEntries(path.join(baseDir, currentRelativeDir));
+-  const gitignore = entries.find(entry => entry.isFile() && entry.name === '.gitignore');
+-  const gitignoreFilterForDescendents = gitignore ? ignore().add(await fs.readFile(path.join(baseDir, currentRelativeDir, gitignore.name), 'utf8')).createFilter() : () => true;
    const pathSegments = ancestors.map(x => x.segment);
    return (await Promise.all(entries.filter(entry => {
 -    if (!entry.isDirectory() && !entry.isFile() || entry.name === '.git' || entry.name === 'node_modules' || entry.name === '.next') {
+-      return false;
 +    const fullPath = path.join(baseDir, currentRelativeDir, entry.name);
 +    let isDir = entry.isDirectory();
 +    let isFile = entry.isFile();
@@ -94,17 +107,20 @@ index 7756c22..8ef2e79 100644
 +        isDir = stat.isDirectory();
 +        isFile = stat.isFile();
 +      } catch (e) {}
-+    }
+     }
+-    const innerPath = `${pathSegments.concat(entry.name).join('/')}${entry.isDirectory() ? '/' : ''}`;
+-    if (!gitignoreFilterForDescendents(innerPath)) {
 +    if (!isDir && !isFile || entry.name === '.git' || entry.name === 'node_modules' || entry.name === '.next') {
        return false;
      }
--    const innerPath = `${pathSegments.concat(entry.name).join('/')}${entry.isDirectory() ? '/' : ''}`;
-+    const innerPath = `${pathSegments.concat(entry.name).join('/')}${isDir ? '/' : ''}`;
-     if (!gitignoreFilterForDescendents(innerPath)) {
-       return false;
-     }
-@@ -44,22 +55,27 @@ async function collectEntriesInDir(baseDir, ancestors) {
-     }
+-    let currentPath = entry.name;
+-    for (let i = ancestors.length - 1; i >= 0; i--) {
+-      const ancestor = ancestors[i];
+-      currentPath = `${ancestor.segment}/${currentPath}`;
+-      if (!ancestor.gitignoreFilterForDescendents(currentPath)) {
+-        return false;
+-      }
+-    }
      return true;
    }).map(async entry => {
 -    if (entry.isDirectory()) {
@@ -117,7 +133,7 @@ index 7756c22..8ef2e79 100644
 +    }
 +    if (isDir) {
        return collectEntriesInDir(baseDir, [...ancestors, {
-         gitignoreFilterForDescendents,
+-        gitignoreFilterForDescendents,
          segment: entry.name
        }]);
 -    } else {

@@ -63,7 +63,7 @@ export const mapProduct = (input: any): ZeliaProduct => {
       description: input.data.description,
       price: input.data.price,
       salePrice: input.data.salePrice,
-      image: input.data.image,
+      image: input.data.featured,
       weight: input.data.weight,
       shipping_slab: input.data.shipping_slab,
       variant_1: input.data.variant_1,
