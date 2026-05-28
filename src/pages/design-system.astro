@@ -58,8 +58,8 @@ import Footer from "../components/features/Footer.astro";
 
         <div>
           <Text variant="label" class="mb-3">Intent-Based Text Primitives (Plus Jakarta Sans)</Text>
-          <div class="grid gap-6 rounded-lg bg-surface p-6 md:grid-cols-2 lg:grid-cols-3">
-            <div class="space-y-4 rounded-lg border border-border-subtle p-6">
+          <div class="grid gap-6 rounded-lg bg-(--color-surface) p-6 md:grid-cols-2 lg:grid-cols-3">
+            <div class="space-y-4 rounded-lg border border-(--color-border-subtle) p-6">
               <Text variant="eyebrow" class="mb-1">Editorial Intent</Text>
               <Text variant="lead">Lead Paragraph</Text>
               <Text variant="paragraph">
@@ -67,7 +67,7 @@ import Footer from "../components/features/Footer.astro";
               </Text>
             </div>
             
-            <div class="space-y-4 rounded-lg border border-border-subtle p-6">
+            <div class="space-y-4 rounded-lg border border-(--color-border-subtle) p-6">
               <Text variant="label" class="mb-1">UI Elements</Text>
               <div class="flex flex-col gap-2">
                 <Text variant="metadata">Order #12345 • Shipped 2 days ago</Text>
@@ -79,7 +79,7 @@ import Footer from "../components/features/Footer.astro";
               </div>
             </div>
 
-            <div class="space-y-4 rounded-lg border border-border-subtle p-6">
+            <div class="space-y-4 rounded-lg border border-(--color-border-subtle) p-6">
               <Text variant="label" class="mb-1">Technical & Commerce</Text>
               <div class="flex flex-col gap-2">
                 <Text variant="code">const price = 2500;</Text>
@@ -90,7 +90,7 @@ import Footer from "../components/features/Footer.astro";
               </div>
             </div>
 
-            <div class="col-span-full space-y-4 rounded-lg border border-border-subtle p-6">
+            <div class="col-span-full space-y-4 rounded-lg border border-(--color-border-subtle) p-6">
               <Text variant="label" class="mb-1">Specialized Content</Text>
               <div class="grid gap-6 md:grid-cols-2">
                 <Text variant="quote">
@@ -118,7 +118,7 @@ import Footer from "../components/features/Footer.astro";
               <Text variant="caption" class="mb-3 uppercase">
                 {size === "sm" ? "Small" : size === "md" ? "Medium" : "Large"} Buttons
               </Text>
-              <div class="grid grid-cols-1 gap-6 rounded-xl bg-surface p-8 sm:grid-cols-2 lg:grid-cols-4">
+              <div class="grid grid-cols-1 gap-6 rounded-xl bg-(--color-surface) p-8 sm:grid-cols-2 lg:grid-cols-4">
                 {(["primary", "secondary", "neutral", "ghost"] as const).map((type) => (
                   <div class="flex flex-col gap-4">
                     <Text variant="caption" color="muted" class="text-[10px] uppercase tracking-wider">{type}</Text>
@@ -250,7 +250,7 @@ import Footer from "../components/features/Footer.astro";
             width={400}
             height={225}
           />
-          <Text variant="caption" class="mt-2 text-center text-text-muted">Optimized Landscape (16:9)</Text>
+          <Text variant="caption" class="mt-2 text-center text-(--color-text-muted)">Optimized Landscape (16:9)</Text>
         </div>
       </div>
     </section>
@@ -258,8 +258,8 @@ import Footer from "../components/features/Footer.astro";
     <!-- Badges Section - Royal Conservatory System -->
     <section class="mb-16">
       <Heading as="h2" class="mb-6">Badge System - 4-Tier Hierarchy</Heading>
-      <Text variant="body" class="mb-6 text-text-muted">
-        Badges are centralized in <code class="rounded bg-surface px-2 py-1 text-sm">badges.ts</code>
+      <Text variant="body" class="mb-6 text-(--color-text-muted)">
+        Badges are centralized in <code class="rounded bg-(--color-surface) px-2 py-1 text-sm">badges.ts</code>
         and automatically sort by hierarchy: Urgency → Prestige → Attributes → State.
       </Text>
 
@@ -270,10 +270,10 @@ import Footer from "../components/features/Footer.astro";
             <Text variant="caption" class="uppercase">Tier 1: Urgency</Text>
             <Badge size="sm" intent="danger">Spiced Coral</Badge>
           </div>
-          <Text variant="caption" class="mb-3 text-text-muted">
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
             Conversion drivers - FOMO & price consciousness. 85% opacity background with white text ensures visibility on ANY product image.
           </Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface p-6">
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
             <Badge size="sm" intent="danger">Sale</Badge>
             <Badge size="sm" intent="danger">20% OFF</Badge>
             <Badge size="sm" intent="danger">Last Chance</Badge>
@@ -287,10 +287,10 @@ import Footer from "../components/features/Footer.astro";
             <Text variant="caption" class="uppercase">Tier 2: Prestige</Text>
             <Badge size="sm" intent="accent">Polished Brass</Badge>
           </div>
-          <Text variant="caption" class="mb-3 text-text-muted">
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
             Premium positioning - luxury, novelty, social proof. 85% opacity + backdrop-blur for glassmorphism effect.
           </Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface p-6">
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
             <Badge size="sm" intent="accent">New</Badge>
             <Badge size="sm" intent="accent">Bestseller</Badge>
             <Badge size="sm" intent="accent">Limited Edition</Badge>
@@ -306,10 +306,10 @@ import Footer from "../components/features/Footer.astro";
             <Text variant="caption" class="uppercase">Tier 3: Attributes</Text>
             <Badge size="sm" intent="surface">Informational</Badge>
           </div>
-          <Text variant="caption" class="mb-3 text-text-muted">
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
             Product features - USPs & specifications
           </Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface p-6">
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
             <Badge size="sm" intent="surface">Waterproof</Badge>
             <Badge size="sm" intent="surface">PVD Gold</Badge>
             <Badge size="sm" intent="surface">Gift Set</Badge>
@@ -324,10 +324,10 @@ import Footer from "../components/features/Footer.astro";
             <Text variant="caption" class="uppercase">Tier 4: State</Text>
             <Badge size="sm" intent="outline">Low Hierarchy</Badge>
           </div>
-          <Text variant="caption" class="mb-3 text-text-muted">
+          <Text variant="caption" class="mb-3 text-(--color-text-muted)">
             Availability status - logistics
           </Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface p-6">
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-surface) p-6">
             <Badge size="sm" intent="outline">Coming Soon</Badge>
             <Badge size="sm" intent="outline">Sold Out</Badge>
           </div>
@@ -336,7 +336,7 @@ import Footer from "../components/features/Footer.astro";
         <!-- Badge Size Variants -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">Size Variants</Text>
-          <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface p-6">
+          <div class="flex flex-wrap items-center gap-4 rounded-lg bg-(--color-surface) p-6">
             <Badge size="sm" intent="danger">Small Badge</Badge>
             <Badge size="md" intent="accent">Medium Badge</Badge>
           </div>
@@ -345,7 +345,7 @@ import Footer from "../components/features/Footer.astro";
         <!-- Dark Background Test -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">Visibility on Dark Background</Text>
-          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-primary p-6">
+          <div class="flex flex-wrap items-center gap-3 rounded-lg bg-(--color-primary) p-6">
             <Badge size="sm" intent="danger" onDark>Sale</Badge>
             <Badge size="sm" intent="accent" onDark>Bestseller</Badge>
             <Badge size="sm" intent="surface" onDark>Waterproof</Badge>
@@ -361,7 +361,7 @@ import Footer from "../components/features/Footer.astro";
       <div class="space-y-4">
         <div>
           <Text variant="caption" class="mb-3 uppercase">Normal State</Text>
-          <div class="space-y-3 rounded-lg bg-surface p-6">
+          <div class="space-y-3 rounded-lg bg-(--color-surface) p-6">
             <Input id="example-name" type="text" placeholder="Enter your name" />
             <Input id="example-email" type="email" placeholder="Enter your email" />
             <Input id="example-password" type="password" placeholder="Enter your password" />
@@ -369,7 +369,7 @@ import Footer from "../components/features/Footer.astro";
         </div>
         <div>
           <Text variant="caption" class="mb-3 uppercase">Error State</Text>
-          <div class="space-y-3 rounded-lg bg-surface p-6">
+          <div class="space-y-3 rounded-lg bg-(--color-surface) p-6">
             <Input id="example-error" type="email" placeholder="invalid@email" error={true} />
             <Text variant="caption" color="coral">Please enter a valid email address</Text>
           </div>
@@ -384,7 +384,7 @@ import Footer from "../components/features/Footer.astro";
         <!-- CopyButton -->
         <div>
           <Text variant="caption" class="mb-3 uppercase">CopyButton (Composed with Button primitive)</Text>
-          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-surface p-6">
+          <div class="flex flex-wrap items-center gap-8 rounded-lg bg-(--color-surface) p-6">
             <CopyButton text="ZELIA20" label="Copy" successLabel="Copied!" />
           </div>
         </div>
@@ -417,7 +417,7 @@ import Footer from "../components/features/Footer.astro";
           <Text variant="caption" class="mb-3 uppercase">Surfaces</Text>
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div class="rounded-lg border border-(--color-border-subtle) p-4">
-              <div class="mb-2 h-16 rounded border bg-background"></div>
+              <div class="mb-2 h-16 rounded border bg-(--color-background)"></div>
               <Text variant="caption">Background (#ffffff)</Text>
             </div>
             <div class="rounded-lg border border-(--color-border-subtle) p-4">
@@ -569,7 +569,7 @@ import Footer from "../components/features/Footer.astro";
           <div class="rounded-lg bg-(--color-surface) p-6">
             <MenuToggle label="Navigation menu">
               <div
-                class="w-48 rounded-lg border border-(--color-border-subtle) bg-background p-2 shadow-lg"
+                class="w-48 rounded-lg border border-(--color-border-subtle) bg-(--color-background) p-2 shadow-lg"
               >
                 <a
                   href="#"
@@ -652,7 +652,7 @@ import Footer from "../components/features/Footer.astro";
           <Text variant="caption" class="mb-3 uppercase">EmptyState (Sad Paths)</Text>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div
-              class="rounded-lg border border-(--color-border-subtle) bg-background"
+              class="rounded-lg border border-(--color-border-subtle) bg-(--color-background)"
             >
               <EmptyState
                 icon="PhBag"
@@ -662,7 +662,7 @@ import Footer from "../components/features/Footer.astro";
               />
             </div>
             <div
-              class="rounded-lg border border-(--color-border-subtle) bg-background"
+              class="rounded-lg border border-(--color-border-subtle) bg-(--color-background)"
             >
               <EmptyState
                 icon="PhMagnifyingGlass"
@@ -671,7 +671,7 @@ import Footer from "../components/features/Footer.astro";
               />
             </div>
             <div
-              class="rounded-lg border border-(--color-border-subtle) bg-background"
+              class="rounded-lg border border-(--color-border-subtle) bg-(--color-background)"
             >
               <EmptyState
                 icon="PhHeart"
@@ -752,7 +752,7 @@ import Footer from "../components/features/Footer.astro";
         style="background-image: url('https://images.unsplash.com/photo-1617500603321-ece5f30d8f16?w=1400&auto=format&fit=crop&q=80'); background-size: cover; background-position: center;"
       >
         {/* Subtle dark veil over image for contrast */}
-        <div class="absolute inset-0 bg-primary/30 backdrop-blur-[2px] rounded-xl" />
+        <div class="absolute inset-0 bg-(--color-primary)/30 backdrop-blur-[2px] rounded-xl" />
 
         <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-6 p-8">
 
@@ -797,13 +797,13 @@ import Footer from "../components/features/Footer.astro";
       </div>
 
       {/* Notes panel */}
-      <div class="mt-4 rounded-lg bg-surface p-5 space-y-1.5">
+      <div class="mt-4 rounded-lg bg-(--color-surface) p-5 space-y-1.5">
         <Text variant="eyebrow" class="mb-2">Implementation Notes</Text>
-        <Text variant="caption" color="muted">• Component: <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">src/components/ui/GlassProductCard.astro</code> (UI Molecule — no scripts/behavior imports)</Text>
+        <Text variant="caption" color="muted">• Component: <code class="rounded bg-(--color-surface-muted) px-1.5 py-0.5 text-xs font-mono">src/components/ui/GlassProductCard.astro</code> (UI Molecule — no scripts/behavior imports)</Text>
         <Text variant="caption" color="muted">• Hover a card on desktop: glass panel expands upward, Quick Shop fades in with a 75ms delay</Text>
         <Text variant="caption" color="muted">• On mobile (&lt;md): Quick Shop is hidden; a shopping bag icon links to the PDP</Text>
-        <Text variant="caption" color="muted">• Wishlist heart uses <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">$store.wishlist</code> — same Alpine.js store as ProductCard</Text>
-        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-surface-muted px-1.5 py-0.5 text-xs font-mono">engine:quick-shop</code> event for any Feature to catch</Text>
+        <Text variant="caption" color="muted">• Wishlist heart uses <code class="rounded bg-(--color-surface-muted) px-1.5 py-0.5 text-xs font-mono">$store.wishlist</code> — same Alpine.js store as ProductCard</Text>
+        <Text variant="caption" color="muted">• Quick Shop dispatches <code class="rounded bg-(--color-surface-muted) px-1.5 py-0.5 text-xs font-mono">engine:quick-shop</code> event for any Feature to catch</Text>
       </div>
     </section>
 

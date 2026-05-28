@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 import EngineLayout from "../layouts/EngineLayout.astro";
 import Heading from "../components/primitives/Heading.astro";
 import Text from "../components/primitives/Text.astro";
@@ -7,9 +8,17 @@ import Icon from "../components/primitives/Icon.astro";
 
 // Pre-render 404 page
 export const prerender = true;
+
+const uiSettings = await getEntry("settings", "ui_404");
+const pageData = uiSettings?.data || {
+  title: "Celestial Disconnect",
+  description: "The path you're seeking seems to have drifted into the cosmic void. Let us guide you back to our celestial collections.",
+  cta_home_label: "Return Home",
+  cta_shop_label: "Shop All"
+};
 ---
 
-<EngineLayout pageTitle="Page Not Found">
+<EngineLayout pageTitle={pageData.title}>
   <main class="flex min-h-[60vh] flex-col items-center justify-center px-4 pt-10 pb-20 text-center">
     <div class="flex flex-col items-center mb-6">
       <Icon name="PhMoonStars" size={64} class="text-(--color-accent) animate-pulse mb-2" />
@@ -20,17 +29,17 @@ export const prerender = true;
       </span>
     </div>
 
-    <Heading as="h1" class="mb-4">Celestial Disconnect</Heading>
-    <Text variant="lead" color="muted" class="mb-12 max-w-md mx-auto">
-      The path you're seeking seems to have drifted into the cosmic void. Let us guide you back to our celestial collections.
+    <Heading as="h1" class="mb-4">{pageData.title}</Heading>
+    <Text variant="lead" color="muted" class="mb-12 max-w-xl mx-auto">
+      {pageData.description}
     </Text>
 
     <div class="flex flex-col gap-4 sm:flex-row justify-center">
       <Button as="a" href="/" type="primary" size="lg" class="min-w-40">
-        Return Home
+        {pageData.cta_home_label}
       </Button>
       <Button as="a" href="/shop" type="secondary" size="lg" class="min-w-40">
-        Shop All
+        {pageData.cta_shop_label}
       </Button>
     </div>
   </main>

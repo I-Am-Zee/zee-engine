@@ -19,6 +19,8 @@ import RelatedProducts from "../../components/features/RelatedProducts.astro";
 import ProductGallery from "../../components/features/ProductGallery.astro";
 import WishlistButton from "../../components/features/WishlistButton.astro";
 import AddToCartButton from "../../components/ui/AddToCartButton.astro";
+import MdxImage from "../../components/ui/MdxImage.astro";
+import BrandVariable from "../../components/features/BrandVariable.astro";
 import { getRelatedProducts } from "../../scripts/utils/recommendations";
 import { sortBadgesByHierarchy, getBadgeIntent } from "../../scripts/utils/badges";
 
@@ -42,12 +44,6 @@ interface Props {
 
 const { product } = Astro.props;
 const { Content } = await render(product);
-
-// Use gallery if available, fallback to single image
-const galleryImages =
-  product.data.gallery && product.data.gallery.length > 0
-    ? product.data.gallery
-    : [product.data.image];
 
 // Check if product is "Coming Soon" (publishDate in future)
 const now = new Date();
@@ -177,7 +173,11 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
         {/* Left Column - Gallery (Sticky on Desktop) */}
         <div class="lg:sticky lg:top-24 lg:col-span-7 lg:self-start">
-          <ProductGallery images={galleryImages} alt={product.data.title} />
+          <ProductGallery 
+            mainImage={product.data.featured} 
+            galleryImages={product.data.gallery || []} 
+            alt={product.data.title} 
+          />
         </div>
 
         {/* Right Column - Product Info */}
@@ -347,7 +347,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
 
           {/* Details Zone: The Story (Markdown Content) */}
           <div class="product-story prose max-w-none">
-            <Content />
+            <Content components={{ img: MdxImage, ContactMark: BrandVariable, ContactToken: BrandVariable }} />
           </div>
         </div>
       </div>
@@ -362,7 +362,7 @@ const crossSellSubtitle = crossSellHeader?.data?.subtitle || "Selected specifica
               title: product.data.title,
               price: product.data.price || 0,
               salePrice: product.data.salePrice,
-              image: product.data.image,
+              image: product.data.featured,
             }}
           />
         )

@@ -8,6 +8,8 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import EditorialHero from "../../components/ui/EditorialHero.astro";
 import TableOfContents from "../../components/features/TableOfContents.astro";
+import MdxImage from "../../components/ui/MdxImage.astro";
+import BrandVariable from "../../components/features/BrandVariable.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -18,7 +20,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { title, excerpt, publishDate, author, image, tags } = post.data;
+const { title, excerpt, publishDate, author, cover: image, tags } = post.data;
 const { Content, headings } = await render(post);
 
 const tocHeadings = headings.filter(h => h.depth <= 3);
@@ -57,7 +59,7 @@ const breadcrumbItems = [
     <article id="blog-content" class="py-16 md:py-24 max-w-3xl mx-auto lg:mx-0 lg:max-w-none">
       {/* Content */}
       <div class="prose prose-lg max-w-none">
-        <Content />
+        <Content components={{ img: MdxImage, ContactMark: BrandVariable, ContactToken: BrandVariable }} />
       </div>
 
       {/* Footer Tags */}
@@ -98,4 +100,7 @@ const breadcrumbItems = [
     </aside>
   </div>
 </EngineLayout>
-
+={tocHeadings} />}
+    </aside>
+  </div>
+</EngineLayout>

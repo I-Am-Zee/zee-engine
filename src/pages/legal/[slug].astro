@@ -4,8 +4,9 @@ import EngineLayout from '../../layouts/EngineLayout.astro';
 import Heading from '../../components/primitives/Heading.astro';
 import Text from '../../components/primitives/Text.astro';
 import Section from '../../components/primitives/Section.astro';
-
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import MdxImage from '../../components/ui/MdxImage.astro';
+import BrandVariable from '../../components/features/BrandVariable.astro';
 
 export async function getStaticPaths() {
   const legalPages = await getCollection('legal');
@@ -50,7 +51,11 @@ const breadcrumbItems = [
     </div>
 
     <div class="prose mx-auto max-w-none">
-      <Content />
+      <Content components={{ img: MdxImage, ContactMark: BrandVariable, ContactToken: BrandVariable }} />
+    </div>
+  </Section>
+</EngineLayout>
+: MdxImage }} />
     </div>
   </Section>
 </EngineLayout>

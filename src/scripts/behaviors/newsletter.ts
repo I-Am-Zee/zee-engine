@@ -60,13 +60,13 @@ export function newsletterConfirm(config: { locked: boolean, email: string }) {
   };
 }
 
-export function newsletterWidget() {
+export function newsletterWidget(config?: { defaultLabel?: string }) {
   return {
     email: '',
     emailError: false,
     formError: false,
     isSubmitting: false,
-    submitLabel: 'Subscribe',
+    submitLabel: config?.defaultLabel || 'Subscribe',
 
     hideEmailError() {
       this.emailError = false;

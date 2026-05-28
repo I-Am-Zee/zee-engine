@@ -16,6 +16,8 @@ import RelatedLookbooksCarousel from '../../components/features/RelatedLookbooks
 import SectionHeader from '../../components/ui/SectionHeader.astro';
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import EditorialHero from '../../components/ui/EditorialHero.astro';
+import MdxImage from "../../components/ui/MdxImage.astro";
+import BrandVariable from "../../components/features/BrandVariable.astro";
 
 export const getStaticPaths = (async () => {
   const lookbooks = await getCollection('lookbooks');
@@ -27,7 +29,7 @@ export const getStaticPaths = (async () => {
 
 
 const { lookbook } = Astro.props;
-const { title, description, hero_image, products: productSlugs } = lookbook.data;
+const { title, description, hero: hero_image, products: productSlugs } = lookbook.data;
 const { Content } = await render(lookbook);
 
 // Fetch full product data
@@ -133,7 +135,7 @@ const breadcrumbItems = [
       <div class="max-w-4xl mx-auto">
         <SectionHeader title={storyTitle} />
         <div class="prose max-w-3xl mx-auto">
-          <Content />
+          <Content components={{ img: MdxImage, ContactMark: BrandVariable, ContactToken: BrandVariable }} />
         </div>
       </div>
     </div>

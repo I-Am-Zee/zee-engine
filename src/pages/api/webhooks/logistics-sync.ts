@@ -132,7 +132,7 @@ export const POST: APIRoute = async ({ request }) => {
         
         const brandName = brandData.name;
         const feedbackUrl = brandData.feedback_url || "";
-        const siteUrl = brandData.site_url || "";
+        const siteUrl = import.meta.env.PUBLIC_SITE_URL || "";
         const newsletterUrl = `${siteUrl}/newsletter/confirm?email=${encodeURIComponent(order.email)}`;
 
         // Get template from CMS or use a generic fallback if missing
