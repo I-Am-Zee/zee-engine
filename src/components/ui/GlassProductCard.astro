@@ -119,13 +119,13 @@ const affiliateLinks = p.affiliate_links;
   </div>
 
   {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
-  <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30 flex flex-col gap-1.5 sm:gap-2">
+  <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30 flex flex-col items-start gap-1.5 sm:gap-2 max-w-[85%]">
     {/* Discount Badge (Affiliate - Dynamic) */}
     {isAffiliate ? (
       <Badge 
         intent="danger" 
         size="xs" 
-        class:list={[!hasSale && "hidden"]}
+        class:list={[!hasSale && "hidden", "max-w-full truncate"]}
         x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
         x-cloak
       >
@@ -133,7 +133,7 @@ const affiliateLinks = p.affiliate_links;
       </Badge>
     ) : (
       hasSale && (
-        <Badge intent="danger" size="xs">
+        <Badge intent="danger" size="xs" class="max-w-full truncate">
           {discountPercent}% OFF
         </Badge>
       )
@@ -141,7 +141,7 @@ const affiliateLinks = p.affiliate_links;
 
     {/* Static Badges (Filtered) */}
     {sortedBadges.map((badge) => (
-      <Badge intent={getBadgeIntent(badge)} size="xs">
+      <Badge intent={getBadgeIntent(badge)} size="xs" class="max-w-full truncate">
         {badge}
       </Badge>
     ))}
@@ -154,11 +154,13 @@ const affiliateLinks = p.affiliate_links;
 
   {/*
     TOP-RIGHT: Action buttons.
+    Breakpoint-Aware: size-10 (1-col mobile), size-8 (2-col mobile), size-9 (desktop)
   */}
   <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 flex flex-col gap-1.5 sm:gap-2 isolate
               lg:opacity-0 lg:translate-x-2 lg:group-hover:opacity-100 lg:group-hover:translate-x-0 transition-all duration-300">
     <button
-      class="flex items-center justify-center w-[clamp(2rem,6vw,2.25rem)] h-[clamp(2rem,6vw,2.25rem)] rounded-full isolate
+      class="flex items-center justify-center rounded-full isolate
+             size-10 min-[360px]:size-8 md:size-9
              bg-white/50 backdrop-blur-3xl border border-white/60 shadow-md
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-(--color-primary) hover:shadow-lg hover:scale-110
@@ -173,7 +175,8 @@ const affiliateLinks = p.affiliate_links;
     </button>
 
     <button
-      class="flex items-center justify-center w-[clamp(2rem,6vw,2.25rem)] h-[clamp(2rem,6vw,2.25rem)] rounded-full isolate relative
+      class="flex items-center justify-center rounded-full isolate relative
+             size-10 min-[360px]:size-8 md:size-9
              bg-white/50 backdrop-blur-3xl border border-white/60 text-(--color-text-main) shadow-md delay-75
              transition-all duration-300 ease-out transform-gpu
              hover:bg-white hover:text-(--color-primary) hover:shadow-lg hover:scale-110
