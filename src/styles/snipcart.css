@@ -255,6 +255,35 @@
   align-items: stretch !important;
 }
 
+/* Fix: Prevent form label overflow on narrow screens (320px) */
+#snipcart .snipcart-form__label:not(.snipcart-input__show-label) {
+  white-space: normal !important;
+  display: block !important;
+  word-wrap: break-word !important;
+  line-height: 1.4 !important;
+  margin-bottom: 0.5rem !important;
+  width: 100% !important;
+}
+
+/* Ensure password "Show" toggle stays compact and correctly positioned */
+#snipcart .snipcart-input__show-label {
+  width: auto !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  right: 12px !important;
+  margin-bottom: 0 !important;
+  cursor: pointer !important;
+  font-size: 0.75rem !important;
+}
+
+#snipcart .snipcart-form {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
 
 /* ──────────────────────────────────────────────────────────────
    § 5. BUSINESS LOGIC — Guest state & conditional display
