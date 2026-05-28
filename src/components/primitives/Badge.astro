@@ -2,11 +2,19 @@
 interface Props {
   intent?: "surface" | "primary" | "accent" | "outline" | "danger" | "success" | "coral" | "brass";
   size?: "xs" | "sm" | "md";
+  variant?: "stretchy" | "fixed";
   onDark?: boolean;
   class?: string;
 }
 
-const { intent: rawIntent = "surface", size = "sm", onDark = false, class: className, ...rest } = Astro.props;
+const { 
+  intent: rawIntent = "surface", 
+  size = "sm", 
+  variant = "stretchy",
+  onDark = false, 
+  class: className, 
+  ...rest 
+} = Astro.props;
 
 // Backward-compatibility mapping for literal color names
 const intentMap: Record<string, string> = {
@@ -17,9 +25,9 @@ const intent = (intentMap[rawIntent] || rawIntent) as keyof typeof intentStyles;
 
 // Base pill-shaped styles with "eyebrow" typography
 const baseStyles =
-  "inline-flex items-center justify-center rounded-full uppercase tracking-[0.15em] font-sans font-bold leading-none";
+  "inline-flex items-center justify-center rounded-full uppercase tracking-[0.12em] font-sans font-bold leading-none shrink-0";
 
-// Intent determines color scheme (updated for premium contrast and onDark support)
+// Intent determines color scheme
 const intentStyles = {
   surface: onDark
     ? "bg-white/10 text-(--color-text-inverse) border border-white/20 shadow-xs backdrop-blur-md"
@@ -37,16 +45,24 @@ const intentStyles = {
 
 // Size variants
 const sizeStyles = {
-  xs: "text-[9px] px-2 py-1 h-5",
-  sm: "text-[10px] px-2.5 py-1.5 h-6",
-  md: "text-xs px-3 py-2 h-7",
+  xs: "text-[9px] px-2 h-5",
+  sm: "text-[10px] px-2.5 h-6",
+  md: "text-xs px-3 h-7",
+};
+
+// Luxury Standard: Fixed width ensures visual rhythm
+const variantStyles = {
+  stretchy: "w-auto",
+  fixed: "w-20", // Standardized luxury stamp width (80px)
 };
 
 const combinedClasses =
-  `${baseStyles} ${intentStyles[intent]} ${sizeStyles[size]} ${className || ""}`.trim();
+  `${baseStyles} ${intentStyles[intent]} ${sizeStyles[size]} ${variantStyles[variant]} ${className || ""}`.trim();
 ---
 
 <span class={combinedClasses} {...rest}>
-  <slot />
+  <span class="truncate block w-full text-center px-0.5">
+    <slot />
+  </span>
 </span>
 

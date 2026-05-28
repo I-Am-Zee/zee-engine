@@ -72,6 +72,24 @@ const hasSale = discountPercent > 0;
 const filteredBadges = badges.filter(b => b.toLowerCase() !== 'sale');
 const sortedBadges = sortBadgesByHierarchy(filteredBadges);
 
+// --- POWER OF ONE: LUXURY BADGE SELECTION ---
+// Hierarchy: Dynamic Discount > Sorted Static Badges
+let winnerBadge = null;
+
+if (hasSale) {
+  winnerBadge = {
+    label: `${discountPercent}% OFF`,
+    intent: "danger" as const,
+    isDynamic: true
+  };
+} else if (sortedBadges.length > 0) {
+  winnerBadge = {
+    label: sortedBadges[0],
+    intent: getBadgeIntent(sortedBadges[0]),
+    isDynamic: false
+  };
+}
+
 const affiliateLinks = p.affiliate_links;
 ---
 
@@ -118,34 +136,31 @@ const affiliateLinks = p.affiliate_links;
     />
   </div>
 
-  {/* TOP-LEFT: Badge stack. Fully static - no transforms on hover. */}
-  <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30 flex flex-col items-start gap-1.5 sm:gap-2 max-w-[85%]">
-    {/* Discount Badge (Affiliate - Dynamic) */}
-    {isAffiliate ? (
-      <Badge 
-        intent="danger" 
-        size="xs" 
-        class:list={[!hasSale && "hidden", "max-w-full truncate"]}
-        x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
-        x-cloak
-      >
-        <span x-text={`Math.round((($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price - $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice) / $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price) * 100)`}>{discountPercent}</span>% OFF
-      </Badge>
-    ) : (
-      hasSale && (
-        <Badge intent="danger" size="xs" class="max-w-full truncate">
-          {discountPercent}% OFF
+  {/* TOP-LEFT: Single Luxury Badge. Fixed width for visual rhythm. */}
+  {winnerBadge && (
+    <div class="pointer-events-none absolute top-3 left-3 sm:top-4 sm:left-4 z-30">
+      {/* Dynamic Affiliate Handling */}
+      {isAffiliate && winnerBadge.isDynamic ? (
+        <Badge 
+          intent="danger" 
+          size="xs"
+          variant="fixed"
+          x-show={`$store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice !== undefined && $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice < $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price`} 
+          x-cloak
+        >
+          <span x-text={`Math.round((($store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price - $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.salePrice) / $store.region.getActiveLink(${JSON.stringify(affiliateLinks)})?.price) * 100)`}>{discountPercent}</span>% OFF
         </Badge>
-      )
-    )}
-
-    {/* Static Badges (Filtered) */}
-    {sortedBadges.map((badge) => (
-      <Badge intent={getBadgeIntent(badge)} size="xs" class="max-w-full truncate">
-        {badge}
-      </Badge>
-    ))}
-  </div>
+      ) : (
+        <Badge 
+          intent={winnerBadge.intent} 
+          size="xs"
+          variant="fixed"
+        >
+          {winnerBadge.label}
+        </Badge>
+      )}
+    </div>
+  )}
 
   {/* Protective radial scrim for icon contrast on light backgrounds */}
   <div class="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-black/20 via-black/0 to-transparent z-20 pointer-events-none rounded-tr-2xl"></div>
